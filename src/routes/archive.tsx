@@ -486,7 +486,7 @@ function ArchiveChronicle() {
 </div>
 </div>
 <label className={"flex items-center cursor-pointer"}>
-<input checked={""} className={"hidden"} type={"checkbox"} />
+<input defaultChecked className={"hidden"} type={"checkbox"} />
 <div className={"w-5 h-5 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
 <span className={"material-symbols-outlined text-[14px]"}>check</span>
 </div>
