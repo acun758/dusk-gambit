@@ -63,7 +63,7 @@ function FinisherWorkshop() {
 <div className={"relative w-full aspect-[4/5] sm:aspect-[16/11] bg-surface-container-lowest overflow-hidden flex flex-col justify-between"}>
 
 <div className={"absolute inset-0 bg-cover bg-center"} data-alt={"Ultra dramatic dark gothic fantasy chess climax. An armored hand clad in obsidian and glowing antique gold rings holds a severed obsidian king piece aloft. The crown shatters into glowing crimson geometric crystals and vermilion embers. Deep chiaroscuro shadows, occult cathedral pillars in smoke, floating dark chess monolith board, and volumetric beams of golden and blood-red moonlight. Extreme cinematic fidelity."} style={{ backgroundImage: "url('/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg')" }}>
-<video className={"w-full h-full object-cover"} src={"__FINISHER__"} autoPlay muted loop playsInline aria-label={"斩首终结动画"} />
+<video className={"w-full h-full object-cover"} src={"/__l5e/assets-v1/ed6214a4-f95b-4ad0-97dc-3c2fd811b3f2/finisher_muted.mp4"} autoPlay muted loop playsInline aria-label={"斩首终结动画"} />
 </div>
 
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/70 pointer-events-none"}></div>
