@@ -139,17 +139,17 @@ function Crucible() {
 </div>
 </div>
 <svg className={"absolute inset-0 w-full h-full pointer-events-none z-20"} viewBox="0 0 320 320">
-<defs />
-<lineargradient id="bloodGlow" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stopColor="#e9c349" stopOpacity="0.8" /></stop>
-<stop offset="100%" stopColor="#ffb3ad" stopOpacity="0.9" /></stop>
-</lineargradient>
-<marker id="arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="5" refy="5" viewBox="0 0 10 10">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb3ad" /></path>
+<defs>
+<linearGradient id="bloodGlow" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stopColor="#e9c349" stopOpacity="0.8" />
+<stop offset="100%" stopColor="#ffb3ad" stopOpacity="0.9" />
+</linearGradient>
+<marker id="arrow" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="5" refY="5" viewBox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb3ad" />
 </marker>
 </defs>
-<line markerEnd="url(#arrow)" stroke="url(#bloodGlow)" strokeDasharray="4 3" strokeWidth="2.5" x1="220" x2="300" y1="140" y2="250" /></line>
-<circle cx="220" cy="140" fill="#e9c349" r="4" /></circle>
+<line markerEnd="url(#arrow)" stroke="url(#bloodGlow)" strokeDasharray="4 3" strokeWidth="2.5" x1="220" x2="300" y1="140" y2="250" />
+<circle cx="220" cy="140" fill="#e9c349" r="4" />
 </svg>
 <div className={"relative z-30 bg-surface-container-lowest/90 backdrop-blur-md p-2 flex flex-col gap-1 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"}>
 <div className={"flex items-center justify-between"}>

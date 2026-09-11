@@ -181,7 +181,7 @@ function Matchmaking() {
 
 <div className={"w-24 h-6 flex items-center"}>
 <svg className={"w-full h-full text-error"} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 100 24">
-<path d="M0 12 H25 L32 3 L38 21 L45 8 L52 16 L58 12 H100" strokeLinecap="round" strokeLinejoin="round" /></path>
+<path d="M0 12 H25 L32 3 L38 21 L45 8 L52 16 L58 12 H100" strokeLinecap="round" strokeLinejoin="round" />
 </svg>
 </div>
 
