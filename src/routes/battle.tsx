@@ -28,8 +28,8 @@ function Battle() {
         </div>
       </header>
 
-      <main className="pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg">
-        <section className="w-full lg:max-w-[min(62vw,620px)] flex flex-col items-center gap-space-sm pt-space-sm">
+      <main className="pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg lg:px-space-lg">
+        <section className="w-full lg:max-w-[min(62vw,620px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
           <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
           <div className="w-full flex items-stretch justify-center gap-2">
