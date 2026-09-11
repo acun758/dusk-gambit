@@ -62,7 +62,7 @@ function FinisherWorkshop() {
 
 <div className={"relative w-full aspect-[4/5] sm:aspect-[16/11] bg-surface-container-lowest overflow-hidden flex flex-col justify-between"}>
 
-<div className={"absolute inset-0 bg-cover bg-center"} data-alt={"Ultra dramatic dark gothic fantasy chess climax. An armored hand clad in obsidian and glowing antique gold rings holds a severed obsidian king piece aloft. The crown shatters into glowing crimson geometric crystals and vermilion embers. Deep chiaroscuro shadows, occult cathedral pillars in smoke, floating dark chess monolith board, and volumetric beams of golden and blood-red moonlight. Extreme cinematic fidelity."} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAX_s8lIAjSwUv7b_ZM5zfMb7eKEq3IR7Y_3LUDJCyqDiIKnw9gBQQLOEE7uSdAVgFflVeE83_SeAQ0zd0f_fiMRFeeG_zjE_PV59V4L_Q98Ct2hdhf9YmOKf6cSR85PeXGwVOWpewsPr7yNRDsMeRZrrYQviJce2eVcS8SC4neIf4ReeBv3y6ZB-n7xglQ1eTJ7pYD2JqNPVF9yOOiIv3PKvNwxklwEKgZUyl__D-xHiM5Btr8WBPEMQ')" }}>
+<div className={"absolute inset-0 bg-cover bg-center"} data-alt={"Ultra dramatic dark gothic fantasy chess climax. An armored hand clad in obsidian and glowing antique gold rings holds a severed obsidian king piece aloft. The crown shatters into glowing crimson geometric crystals and vermilion embers. Deep chiaroscuro shadows, occult cathedral pillars in smoke, floating dark chess monolith board, and volumetric beams of golden and blood-red moonlight. Extreme cinematic fidelity."} style={{ backgroundImage: "url('/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg')" }}>
 </div>
 
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/70 pointer-events-none"}></div>
@@ -161,7 +161,7 @@ function FinisherWorkshop() {
 
 <div className={"bg-surface-container-low p-space-xs flex flex-col gap-1 hover:bg-surface-container transition-colors group cursor-pointer"}>
 <div className={"relative aspect-video w-full overflow-hidden bg-surface-container-lowest"}>
-<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Dark occult chess cinematography opening shot. Low angle macro view of a shadowy obsidian queen piece lifting into an abyssal void surrounded by hovering crimson embers."} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDY6s152b6FUpTtFtP0NQYTsh2C9DjsAz9bn-Mt4ejIk_ODPi9eHE0pVtE1OWUMB6aDgnXZblSBf6IL7kFMkHXZYj8r2Em1GYFS22X1Os8XZWl4GsGRxLyMnsV550B8m-clyRfhiAY2a7q5OtGo7XDKzGu3ldYWYy4O02_ZXhUKeZwid3n5y01qEsTyIugqbLPKSYWwTgKFF9JTMuRcib_7JwQ5xQKEpteu9mLrO03qONyo3C_wswm_Ug')" }}>
+<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Dark occult chess cinematography opening shot. Low angle macro view of a shadowy obsidian queen piece lifting into an abyssal void surrounded by hovering crimson embers."} style={{ backgroundImage: "url('/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg')" }}>
 </div>
 <span className={"absolute top-1 left-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-on-surface tracking-wider"}>0.0s</span>
 <span className={"absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-secondary"}>仰视升维</span>
@@ -174,7 +174,7 @@ function FinisherWorkshop() {
 
 <div className={"bg-surface-container-low p-space-xs flex flex-col gap-1 hover:bg-surface-container transition-colors group cursor-pointer"}>
 <div className={"relative aspect-video w-full overflow-hidden bg-surface-container-lowest"}>
-<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Cinematic chess camera cut. High speed motion blur tracking a crimson blade cutting through dark celestial dust toward a golden monarch crown piece."} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzQOzXtSmHdw8DpW1gs32zbin9FELQoHq1aC_OKYXK-6SneZbwjSJQwEy0de8vguxyZrKo3VEjfs8fe4mgaiJnwZSA_Mgnu6w8qvD5nbVKLloaP_hwwp2L1MWu3xo0MJ2ffVt_axcDwxwv9B7O6h0HxUbST1l4ZjPSq8IR0XhUpnQ8Z4pS_Buh5vJGx5jG7stlI0234erXsKKGfrdIevXjZDe5YKCiSL0ZwGFMQGcx26uYVuCukOmFNw')" }}>
+<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Cinematic chess camera cut. High speed motion blur tracking a crimson blade cutting through dark celestial dust toward a golden monarch crown piece."} style={{ backgroundImage: "url('/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg')" }}>
 </div>
 <span className={"absolute top-1 left-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-on-surface tracking-wider"}>0.8s</span>
 <span className={"absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-secondary"}>俯冲特写</span>
@@ -190,7 +190,7 @@ function FinisherWorkshop() {
           ACTIVE
         </div>
 <div className={"relative aspect-video w-full overflow-hidden bg-surface-container-lowest"}>
-<div className={"w-full h-full bg-cover bg-center"} data-alt={"Extreme macro freeze frame climax. An ornate golden king chess crown fracturing under dark celestial pressure, deep ruby crystalline dust exploding outward in slow motion."} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgUK9xw3HRmMV5--8Yx6AFn60lRByy1lS16z3XaCQkaBOrraDed7qGVqec6ULEiXahsFaq_2ui5M27yc0xJF9ftd9CO2MwWm4wyT4eZ8ove0WINvqHeVKb_bQOsvpQxFClBIBt21isz6qksL_ymIDqPdomSmZA5P1KQr0Ky7pfyIGhAMEHko_Dxm7w4tLbFSUWoX0PFDjb-HHz8nqqkGPrp3qQ6F_OrxPiJR3waylX00u3gJzHm3xaYA')" }}>
+<div className={"w-full h-full bg-cover bg-center"} data-alt={"Extreme macro freeze frame climax. An ornate golden king chess crown fracturing under dark celestial pressure, deep ruby crystalline dust exploding outward in slow motion."} style={{ backgroundImage: "url('/__l5e/assets-v1/a4031b0f-43fe-42da-a105-b97d7e0850c1/victory-emblem.png')" }}>
 </div>
 <span className={"absolute top-1 left-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-primary tracking-wider"}>1.6s</span>
 <span className={"absolute bottom-1 right-1 bg-primary-container px-1 py-0.2 font-label-sm text-label-sm text-on-primary-container"}>冠冕碎裂</span>
@@ -203,7 +203,7 @@ function FinisherWorkshop() {
 
 <div className={"bg-surface-container-low p-space-xs flex flex-col gap-1 hover:bg-surface-container transition-colors group cursor-pointer"}>
 <div className={"relative aspect-video w-full overflow-hidden bg-surface-container-lowest"}>
-<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Cinematic chess aftermath wide shot. A massive cracked obsidian chessboard floating in the dark void with glowing red lava fissure veins, ruined opposing pieces turned to ash."} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwHOtuqHc0z8hZpBb5ITFgDY_kvUr3hcoXAjTRb46zEAsorAao8zuNM0adr_1UVeBmIKaz9fJVrrZJxLKm3FwE8njnVLr2Cb7ccNkvaDBfPjqBqKbNj7_wDO_O2JVz9Lb9tpbEsS0nhNXTTC6CoBtOvg4N7vG8Qp8CUU_sGQxB1mY6aoh_wcSw8VhHLxcg4ZtN3t4pOwbzRpaQNQuke2pbJvP0jo7CGH9VKfrTGvAP1v4xQKutwOj1ZQ')" }}>
+<div className={"w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"} data-alt={"Cinematic chess aftermath wide shot. A massive cracked obsidian chessboard floating in the dark void with glowing red lava fissure veins, ruined opposing pieces turned to ash."} style={{ backgroundImage: "url('/__l5e/assets-v1/b46d2699-3ed1-4e73-9f50-dbd0a0e15bfa/hero-throne-portrait.jpg')" }}>
 </div>
 <span className={"absolute top-1 left-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-on-surface tracking-wider"}>2.4s</span>
 <span className={"absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1 py-0.2 font-label-sm text-label-sm text-secondary"}>深空远景</span>

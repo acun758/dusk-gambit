@@ -48,7 +48,7 @@ function Arsenal() {
 </svg>
 
 <div className={"relative w-64 h-72 flex items-center justify-center"}>
-<img className={"w-full h-full object-contain filter drop-shadow-[0_20px_25px_rgba(147,0,10,0.45)] transition-transform duration-700 active:scale-95"} data-alt={"Hyper-realistic obsidian and crimson crystal chess Queen piece with jagged gothic crown, bathed in dramatic cinematic chiaroscuro volumetric red light and floating golden embers, intricate gold filigree runes etched into reflective pitch-black marble pedestal."} id={"heroPieceGraphic"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuBYOcIoTEpM4Hxp9IF1qICPcHg91X-znic2MU0CcLGGST0slE-bfeZ0wyotxd2NQel3oD9VCMFl3z-Sfg6b0YBVEuN5jiw-aRo6AMSMdMAMBSxFI_Aw_b-iov71JLW-pdEPSpkMqzAOz9zpoEU5kwi-zQ4T_W6gZe3ZVNuwD-G58TrkyqJUk52B-93jHspkdKUkH0y9s6cGVekhm6xZ-1kS9eUp7YwrkojAXzbD05Eg2pVWmhH3MCx4wg"} />
+<img className={"w-full h-full object-contain filter drop-shadow-[0_20px_25px_rgba(147,0,10,0.45)] transition-transform duration-700 active:scale-95"} data-alt={"Hyper-realistic obsidian and crimson crystal chess Queen piece with jagged gothic crown, bathed in dramatic cinematic chiaroscuro volumetric red light and floating golden embers, intricate gold filigree runes etched into reflective pitch-black marble pedestal."} id={"heroPieceGraphic"} src={"/__l5e/assets-v1/d6d54e1c-7da9-4c86-a17f-c85264ba2370/skin-gilded.png"} />
 
 <div className={"absolute bottom-2 w-48 h-6 bg-radial from-secondary/20 via-primary-container/30 to-transparent blur-md"}></div>
 </div>
@@ -175,7 +175,7 @@ function Arsenal() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex gap-space-sm overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.6)]"}>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Dramatic dark fantasy chess knight carved from rough black basalt stone with glowing golden cracks and an intense glowing eye, captured on velvet chessboard with smoke atmosphere."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDuShG5om1dvsHd4YlvjfMNVh8OvddnIsUNGiDTSQUX2vZ3QM27_g94X4OOQuX3vpngJONVxeh3pRUETLvbydO6c2PrV5jBaCsnW3AfZrrNghafv67NAE92-9eEvollajkuG8DFHK0jAt7yY7eqTbOZ7-UCJJji6mq4npX1R-3M9fB8XWj0uKQYGMa29JrLp5gUcrBPZUNxSfCzeGwZ6QbPTL5f3fMMntnIL2rfQmPwoFvb8PdmMVqPvQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"Dramatic dark fantasy chess knight carved from rough black basalt stone with glowing golden cracks and an intense glowing eye, captured on velvet chessboard with smoke atmosphere."} src={"/__l5e/assets-v1/2b347765-259e-4e34-90ff-448475092c21/skin-shadow.png"} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-secondary text-on-secondary font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Equipped
           </span>
@@ -207,7 +207,7 @@ function Arsenal() {
 <div className={"relative bg-surface-container p-space-sm flex gap-space-sm overflow-hidden shadow-[0_8px_20px_rgba(139,30,30,0.35)]"}>
 <div className={"absolute left-0 top-0 bottom-0 w-1 bg-primary"}></div>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Gothic royal chess queen piece rendered in blood red polished ruby lacquer with razor sharp points, shrouded in dark occult shadows with subtle golden crest."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuCs2L8FcPWxFcHShmJEUROKpjDKXTFoEZJIJujMgH5Nf0S_m-0eOdqQeddenb7ETWH8T5-fCkf84BiMDf5FVAf5vgzyST35gS44UlpeDg3wGpnKUNmQLToCTvD5iSumepI2i2_33CUAgna_QBRt2sRBcQ8R9xEWGbmpK7Pm-XoJ-aK9EnTofIlhV8J9ztn3yQgAlFiZQQhq0fyatp9sjIqzF2dHtES8BpKLuJzGUHAKrWGNsc7jPph9Yg"} />
+<img className={"w-full h-full object-cover"} data-alt={"Gothic royal chess queen piece rendered in blood red polished ruby lacquer with razor sharp points, shrouded in dark occult shadows with subtle golden crest."} src={"/__l5e/assets-v1/3d15abc2-eee8-49ed-b811-31dbef55bf45/skin-classic.png"} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-tertiary-container text-on-tertiary font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Active Focus
           </span>
@@ -240,7 +240,7 @@ function Arsenal() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex gap-space-sm overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.6)]"}>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Intricate bone and burnished antique gold chess bishop carved like an austere occult grand inquisitor wearing a horned miter, cinematic dark fantasy lighting."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuCq-8ojudPZ5sJXKmgMVgLw9-AaXkwC6pb2B7-rC0wXmRDBxSOJC6NdADEw2-OhyssN9Ubrt6eJL_KQGqJ0NQzs2PkQ2wexLYEOlhZ_G_UHm-yHANdXP6alDzh9jhxSiYtQclhNDMwFV-iJT-wVF0dEA942jtrRrNfOucUcJ7e2K_PYdLyccaMvgu8pznuB9kFmULEYZeOse_EDWaujUdj_xDh1_N7qTjyShlbdnOjI55rOhHraNKPNeA"} />
+<img className={"w-full h-full object-cover"} data-alt={"Intricate bone and burnished antique gold chess bishop carved like an austere occult grand inquisitor wearing a horned miter, cinematic dark fantasy lighting."} src={"/__l5e/assets-v1/d6d54e1c-7da9-4c86-a17f-c85264ba2370/skin-gilded.png"} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-surface-container-high text-on-surface-variant font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Rare
           </span>
@@ -268,7 +268,7 @@ function Arsenal() {
 <div className={"grid grid-cols-2 gap-space-sm md:col-span-2"}>
 <div className={"bg-surface-container-low p-space-sm flex flex-col justify-between"}>
 <div className={"relative w-full h-24 bg-surface-container-lowest mb-2 overflow-hidden flex items-center justify-center"}>
-<img className={"w-full h-full object-cover"} data-alt={"A monolithic chess rook made of cracked basalt stone with crackling lightning arcane blue energy pulsing from within its battlements on a dark moody surface."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuD3Zg2Hk0jFX-5aNyAkCPK0h4Fn3_JiJv_VWrmelfhyWRKjr37FvC17HIsNo3RbpC4PRhvdFOXqeqqsp-umck5taW993xjSAdDYZOSGSudgBl34_HN9w7W5aZs68-9R6A18puF-U1Jbb6fhjjZkbCPiPJspYN1SKlqapccbNTDv6nyZD7i1dnNpzl6b1WJXOFEIuIETExIkseSbE_ncnBzy0uJtrot1p-vIObTHjn_OXvrRtj6BxhJNZQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"A monolithic chess rook made of cracked basalt stone with crackling lightning arcane blue energy pulsing from within its battlements on a dark moody surface."} src={"/__l5e/assets-v1/2b347765-259e-4e34-90ff-448475092c21/skin-shadow.png"} />
 <span className={"absolute bottom-1 right-1 px-1 bg-surface-container-highest text-secondary font-label-sm text-[9px]"}>Rook</span>
 </div>
 <span className={"font-headline-sm text-[13px] text-on-surface uppercase truncate"}>风暴壁垒 · 裂隙</span>
@@ -279,7 +279,7 @@ function Arsenal() {
 </div>
 <div className={"bg-surface-container-low p-space-sm flex flex-col justify-between"}>
 <div className={"relative w-full h-24 bg-surface-container-lowest mb-2 overflow-hidden flex items-center justify-center"}>
-<img className={"w-full h-full object-cover"} data-alt={"Dark wrought iron chess pawn sculpted with a screaming skull crest under dramatic directional golden rim light in an atmospheric grimdark chamber."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuAxI8iI_O6zJEKLk884SHyINohHYhPszOIY-_xOvHkS-H4XU4Q3IhKoofKekx6FWb4WkcA_qlbgHGxM2SaA43hwtVko2-Rz6P8titZsso8aUPzW_R7gqKR-o8X6y0q_eqvzhn6sGUupr_hGWyW6ccha5DgqADg68GuG9B1B043UeaKFR8N7BqeuP7WbSFNDZTHP4S0crKFdxWNONqCk4Ol84pmCJHb03r7uUnVIHVCVi4mXWJDIKold3A"} />
+<img className={"w-full h-full object-cover"} data-alt={"Dark wrought iron chess pawn sculpted with a screaming skull crest under dramatic directional golden rim light in an atmospheric grimdark chamber."} src={"/__l5e/assets-v1/3d15abc2-eee8-49ed-b811-31dbef55bf45/skin-classic.png"} />
 <span className={"absolute bottom-1 right-1 px-1 bg-surface-container-highest text-primary font-label-sm text-[9px]"}>8x Pawns</span>
 </div>
 <span className={"font-headline-sm text-[13px] text-on-surface uppercase truncate"}>无名死侍 · 誓约</span>
@@ -305,7 +305,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Top down diagonal cinematic angle of an ancient gothic chessboard made of deep veined black obsidian and polished gold-accented white marble with atmospheric fog."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuAj85y2ihFDAIZzw-wse5vADaupkfg2UF_oPnUB7cSTPoyvh2QJezHN-jSRDGsZlA5A05CRH2k-7f7UIXr3o9CXLHPCKY7EvIpBc3xlD8AVnQyVtArB0DYfncZtnu-Sro0LUArI8xNtyvrURHD1klma1XJD8GXIJbrmy5-1Iu7Mx34hH6OSxN7ilJoEPdxLs1WLKlS3PVwAqFdBmP-EPysal_XoXNVMnn-_PZIMLN97NANn8IBJyvlzAQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"Top down diagonal cinematic angle of an ancient gothic chessboard made of deep veined black obsidian and polished gold-accented white marble with atmospheric fog."} src={"/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold uppercase tracking-wider"}>
             Active Field
@@ -326,7 +326,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Grimdark battlefield chessboard formed from charred ashen soil with glowing red embers outlining each chess square, surrounded by ancient battle standards."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDSMTP6_p5ROXVrkyuv7lj9HyumU3LD0PzCwqs8qqB8aKk1R8pK67yt4MDYrD7l_8-UVY-6jTQKk7OLVdu2R6mJuMKGLzZ1haKHdZ2F2eV1ftw-CjjBihVC4xRdMVy-jxEN-BGm2oodhJVmCpaMuzQSutVRf01rBy8WefXZavcnkNH_pixDHDuggV79iTgUEAzcVEsTsdQdg4Vtpl577qEUQwEdP_qSL8guBSbVWdVnglpJ7dT8uTWUMA"} />
+<img className={"w-full h-full object-cover"} data-alt={"Grimdark battlefield chessboard formed from charred ashen soil with glowing red embers outlining each chess square, surrounded by ancient battle standards."} src={"/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm uppercase tracking-wider"}>
             Grandmaster Exclusive
@@ -347,7 +347,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"A celestial cosmic chessboard floating in the dark starlit void, surrounded by golden astrological clockwork rings and shimmering nebula dust."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuD_atoeWay_g0G7OaURX8cqFNk5PKtiFwEKlHhcYNIfVfgk90jb_ulhaJqXZesAMMxWh1IfmByx19Bynlntwqi3jV6Zj1FC-SKUDXaIm1vyES7Wwy3MC6MasZTHoeJdq55cjEjFuCSbPNByuFYK3MuPd9j1M4YRgMJRw57JikIffBFZQWwfP6namDbrAyCiHPiV6nD5GKUREZi6s5V88hBvyLc5mEZT-ZwjNr1oVzsx1l3vAJ9Qoo9O5w"} />
+<img className={"w-full h-full object-cover"} data-alt={"A celestial cosmic chessboard floating in the dark starlit void, surrounded by golden astrological clockwork rings and shimmering nebula dust."} src={"/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-surface-container-highest text-on-surface font-label-sm text-label-sm uppercase tracking-wider"}>
             Astral Relic

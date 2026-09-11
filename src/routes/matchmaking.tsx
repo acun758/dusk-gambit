@@ -61,7 +61,7 @@ function Matchmaking() {
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-sm"}>
 <div className={"relative w-14 h-14 rounded bg-surface-container-highest flex-shrink-0 shadow-lg overflow-hidden"}>
-<img className={"w-full h-full object-cover"} alt="Dark gothic armored chess grandmaster with twisted obsidian ram horns, glowing blood red occult eyes, veiled in crimson mist and ancient baroque gold etchings, dark oil painting hyper-detailed digital art." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZuz-liiu2Nd7RjSao4gzG6ZTdlxglAag0c1XXtCA3597QN-gW4KosMmJsKIfwqF6edH3RbgT9fVkQsMkr3cyYP3jTIFtQHeFh_FKWtXdE5GQ5-1joRWwU5dhWrSkr4mGlSnI42_cHvMvcIip3j2vX3GbAxqeSxH0qCqv-Ilb5rBJOFvmyyFMRECN6zZJu8Tu95TjH8_lWh3Fr8fp4T2etG5NL2TiEyj-Yke3zhXPdy4QVRIC0Su08kg"/>
+<img className={"w-full h-full object-cover"} alt="Dark gothic armored chess grandmaster with twisted obsidian ram horns, glowing blood red occult eyes, veiled in crimson mist and ancient baroque gold etchings, dark oil painting hyper-detailed digital art." src="/__l5e/assets-v1/2a28fe39-1bed-4b69-b6ec-63294cb56494/avatar-default.jpg"/>
 <span className={"absolute bottom-0 right-0 bg-primary-container text-on-primary-container font-label-sm text-[9px] px-1 rounded-tl uppercase font-bold"}>GM</span>
 </div>
 <div className={"flex flex-col"}>
@@ -127,7 +127,7 @@ function Matchmaking() {
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-sm"}>
 <div className={"relative w-14 h-14 rounded bg-surface-container-highest flex-shrink-0 shadow-lg overflow-hidden"}>
-<img className={"w-full h-full object-cover"} alt="Sinister aristocratic vampire chess champion with pale skin, platinum parted hair, regal baroque velvet collar, cold calculating eyes holding a carved ivory king piece in dark royal chamber." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQXhGYmJG3c1ZduIQgnuwo-EdA6lOHGQ0w0LvUohUwoEBkehI8hfE8DH60AWWYVj5n6Bzzw2oFrt45DFK_qtGLGZB39MIGBVDD1k0ho6RyWC5u47pB_j4Ezbex3TUcwjmoVoqtsBP550LsuthML_JZjlVpFPElI5KMFTRuofzF3EHZ96aA9ih2ymwjqjW1R0sv2srjonngtN7bIgW6gpkKrg3vUINt1i_npjD8670qnjMeOOORl_QKtQ"/>
+<img className={"w-full h-full object-cover"} alt="Sinister aristocratic vampire chess champion with pale skin, platinum parted hair, regal baroque velvet collar, cold calculating eyes holding a carved ivory king piece in dark royal chamber." src="/__l5e/assets-v1/f2e18a9e-be6c-421d-805c-250b7eddde4c/tarot-king.jpg"/>
 <span className={"absolute bottom-0 right-0 bg-secondary text-on-secondary font-label-sm text-[9px] px-1 rounded-tl uppercase font-bold"}>YOU</span>
 </div>
 <div className={"flex flex-col"}>

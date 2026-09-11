@@ -37,7 +37,7 @@ function PuzzleSolved() {
 <div className={"relative w-full rounded-xl overflow-hidden shadow-2xl bg-surface-container-low p-space-xs"}>
 
 <div className={"relative w-full h-56 rounded-lg overflow-hidden bg-surface-container-lowest"}>
-<img className={"w-full h-full object-cover opacity-75"} data-alt={"Dark dramatic occult gothic chess scene, macro shattered crystalline glowing white king piece exploding under crushing black armored gauntlet, crimson lightning arcs, obsidian chess board cracks glowing red, volumetric smoke, chiaroscuro lighting, cinematic masterpiece"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDWH5xYqYaNgGhOHv8WrVFVWvB67RFROnm5jPfGjV0drK6ZRcxId1bToywpvJmRx9KxGQNb9ocpYKtNb6OwMeD1F1tPp0gIixqAJ7kaWXLFJdM21nTYcKmSXCzDagrXtC7g3loH_QZV_E2ZAyLZUejXLZbUBf_l1FtpejKUvwWD81gdVA55coI9DZzUJvV0iPznKQGeGSoNID7l21xJQspZvFBbIZ6TTuS1Q0EJ_9hi-JXcDhrS0TUvJA"} />
+<img className={"w-full h-full object-cover opacity-75"} data-alt={"Dark dramatic occult gothic chess scene, macro shattered crystalline glowing white king piece exploding under crushing black armored gauntlet, crimson lightning arcs, obsidian chess board cracks glowing red, volumetric smoke, chiaroscuro lighting, cinematic masterpiece"} src={"/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-transparent"}></div>
 
 <div className={"absolute top-3 left-3 flex items-center gap-space-xs bg-surface-container-lowest/90 backdrop-blur-md px-space-sm py-1 rounded"}>

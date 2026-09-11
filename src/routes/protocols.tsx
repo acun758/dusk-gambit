@@ -162,7 +162,7 @@ function Protocols() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex flex-col gap-space-xs overflow-hidden"}>
 <div className={"w-full h-24 relative overflow-hidden bg-surface-container-highest"}>
-<img className={"w-full h-full object-cover"} data-alt={"Dark fantasy gothic queen chess piece sculpture carved from translucent red ruby and obsidian with glowing gold filigree and dramatic dark rim lighting"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuANqv2blwHNcxiH42qbh_UUo8XSANqngg_cN7cRnEz5w7IiXAJS6rDUAOONZEjUXHax3Bew_EDe9MA_lrtzs6cRu9l5gRUQrZeagCJgRFXPz2D5ce9zrQHumEip_gS8fTDTSVhkkT_drJ0002Hx_w5r06Jc-XgL8A0YyLA1ELbpmNeexE4u3HgDedNHW_dYf-bj9wuYHFhrCuyaugIs-JXDenjLp0kvlmWwA-f1yqDX01oVfVAcxSOMDg"} />
+<img className={"w-full h-full object-cover"} data-alt={"Dark fantasy gothic queen chess piece sculpture carved from translucent red ruby and obsidian with glowing gold filigree and dramatic dark rim lighting"} src={"/__l5e/assets-v1/3d15abc2-eee8-49ed-b811-31dbef55bf45/skin-classic.png"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"}></div>
 <span className={"absolute top-1.5 left-1.5 bg-primary-container text-on-primary-container px-1 py-0.5 font-label-sm text-label-sm"}>QUEEN CORE</span>
 </div>
@@ -178,7 +178,7 @@ function Protocols() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex flex-col gap-space-xs overflow-hidden"}>
 <div className={"w-full h-24 relative overflow-hidden bg-surface-container-highest"}>
-<img className={"w-full h-full object-cover"} data-alt={"Menacing armored obsidian gothic chess knight piece with blood red eyes and antique gold cracked battle scars in deep shadow chiaroscuro"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDiJDw26qTkRHCyaDvOzXxZJ1IbjUEu6xhFb0GLIUjvfWrFSyCGuA8ruOmPvqghMekTtko79WXD4fd6AzG1r-WfhoumtSrsatkNjt6HO52bW9mh4j_oG9vTzFrKwoWoGqFSiQLLqli6o-NtUZmnxLEd-z3l8nQXH2aO3SftIenNkrUqBQP0BCda2U2AwyfD_5OGe7VtbPdlEGgVwwJQNsPtduToV4Xfet9Umr-_Og5m0v6BJjJfMhCxhw"} />
+<img className={"w-full h-full object-cover"} data-alt={"Menacing armored obsidian gothic chess knight piece with blood red eyes and antique gold cracked battle scars in deep shadow chiaroscuro"} src={"/__l5e/assets-v1/2b347765-259e-4e34-90ff-448475092c21/skin-shadow.png"} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"}></div>
 <span className={"absolute top-1.5 left-1.5 bg-surface-container-high text-secondary px-1 py-0.5 font-label-sm text-label-sm"}>KNIGHT SOUL</span>
 </div>

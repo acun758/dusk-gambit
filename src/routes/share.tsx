@@ -96,7 +96,7 @@ function ShareCanvas() {
 </div>
 
 <div className={"relative w-full h-44 overflow-hidden bg-surface-container-lowest"}>
-<img className={"w-full h-full object-cover"} data-alt={"Cinematic dark fantasy chess scene showing obsidian gauntleted hands shattering a glowing crystal king piece on a cracked marble chessboard, crimson blood sparks bursting into the atmosphere with volumetric smoke and dramatic chiaroscuro illumination."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuAktkChpKrkUfQpVZ7BoBxG1MdJeR8f8VRTGdTYpOWZMqlH81apVOeUDLVuOg0Op5sbBFBn03TzcHWrX9MWJZNBJVBFjnVHiwOqoOBILRrxqGDtglbWnDkeZ9GUOi865ca1JJGE7u7Nyn-fN7LwL44TWlqJTa0kKbJUWYGY9K3hj1yJX2F3sJiWOkEuz9F1j2w9XfCaIwQQcnbbECSzZVxkzalHM2Vq4SIaVQIDAvpbtju0lTfZfx8TaQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"Cinematic dark fantasy chess scene showing obsidian gauntleted hands shattering a glowing crystal king piece on a cracked marble chessboard, crimson blood sparks bursting into the atmosphere with volumetric smoke and dramatic chiaroscuro illumination."} src={"/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg"} />
 
 <div className={"absolute top-2 left-2 flex items-center gap-1 px-2 py-1 bg-surface-container-lowest/90 backdrop-blur-md"}>
 <span className={"font-headline-sm text-headline-sm text-secondary leading-none"}>A</span>
@@ -191,7 +191,7 @@ function ShareCanvas() {
 
 <div className={"relative w-full bg-surface-container-lowest p-space-sm mb-space-sm shadow-xl"}>
 <div className={"relative w-full aspect-[4/5] bg-surface-container overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Luxury dark occult tarot playing card featuring a crowned royal golden queen chess piece against an ancient gothic parchment background with blood red card suits, gold leaf typography saying THE QUEEN OWNS IT, dramatic rim lighting and fine cracked textures."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuCQzKVtISGUvPxEaCVu86EnQjzA_WVQM480j3EE3vuFA13DTfeS6HrWklUBipOxryW4NyghBLFEcf7CIz2atgyS9QCsxEblcXnXE-JjaF9I-cg8rTKOQz3sphr2WcJOubdmBW4XuGOx_cW6-GFoGnectrBzoXMhQ6KX5AdvQa3zK-UMe5WKCDFDQiMKvSjF9Q71rsLAkH68GYM1QqNxzAfsnwasgSUtkpRgBwfFXtMxE13mJZzP5Y5ezw"} />
+<img className={"w-full h-full object-cover"} data-alt={"Luxury dark occult tarot playing card featuring a crowned royal golden queen chess piece against an ancient gothic parchment background with blood red card suits, gold leaf typography saying THE QUEEN OWNS IT, dramatic rim lighting and fine cracked textures."} src={"/__l5e/assets-v1/73f7f97b-063a-436e-a3e9-0c601ab6c0e4/tarot-queen.jpg"} />
 
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/30"}></div>
 

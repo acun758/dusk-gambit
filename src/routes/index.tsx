@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 const HERO =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBnVOX-kXx8mV3PVsr8DCXDkuhKkPFg3FPwgzrEZR2jqS1iRBa--gRHsSpsOQX01tqxrUvzEUdYLuEqogs7_vxU3GDGPsKI0TlWMP4uXHALJWJc6Q9MJ1oytTy3GzpB3VP00MwJeXVjfDbX-hfBqJ-bBozBHDECtONNRt60wbUGhKLBTsca9P7nq-ln4dZ2VgNuudkZx0NpP4FHc2wdORwrLtHpziEl0Rj_MUZKPHIvn0x4Y9vssEL_Zg";
+  "/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg";
 const RELIC_A =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDQU7MHtc33yS0WtJWpQgNgNC3hha-aI2u0whiRxnontUz4evcu_6Gh75H0LEOiSMbR-UXvxcmi6U38vOk3jT-_zFIqoe7pAC0Uw3QEYmVu1I0mLKhct0-U2sJ_5DhcdQVu-kNJEzVWCLwl1cIwHVQUirW7oeXqBzbCVVaC-h6P43Zk1nXhxxLcuEx6pN0P3YYUMAlrpWVst1VXZdxalH5EX49PRK58mrlYc-H-Up29pBQ5b0bU62e3qg";
+  "/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg";
 const RELIC_B =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCve6cMlHBfp_auljVHd9gVv-q7yb41ic6jcyPC7TT5ibVxL4PZ-cAedeP820Ln57v9h11ru0YF-RdhC9BSuDtbhtVwFZUatMWGE3gcg_Mrr1nvyMZ2jpn3feSe_er162XiEOBECUIb4zlYXOjwklG9zc3ePzhjjCb49uhjUjrYfwIrzGwN5pFxN7sMZKkgq9igI-u1klpRvVqfS3I136DBnA2CvJuExmCWkwOCdu2dclnxKNYGCW18EA";
+  "/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
