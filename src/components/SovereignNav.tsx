@@ -48,6 +48,11 @@ function BiLabel({ en, zh }: { en: string; zh: string }) {
   );
 }
 
+function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
+  const { lang } = useLang();
+  return <span className={lang === "zh" ? "cjk tracking-[0.08em]" : ""}>{lang === "zh" ? zh : en}</span>;
+}
+
 function LangToggle({ className = "" }: { className?: string }) {
   const { lang, setLang } = useLang();
   return (
