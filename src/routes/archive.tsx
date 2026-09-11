@@ -99,7 +99,7 @@ function ArchiveChronicle() {
 </section>
 
 <section className={"px-margin-mobile pt-space-xs pb-space-md"}>
-<div className={"relative w-full rounded-lg bg-surface-container-lowest overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.95)]"} id={"posterPreview"}>
+<div className={"relative w-full max-w-[520px] mx-auto rounded-lg bg-surface-container-lowest overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.95)]"} id={"posterPreview"}>
 
 <div className={"absolute inset-0 pointer-events-none p-2.5 z-20 flex flex-col justify-between"}>
 

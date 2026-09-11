@@ -171,7 +171,7 @@ function Arsenal() {
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>14 / 32 Unlocked</span>
 </div>
 
-<div className={"grid grid-cols-1 gap-space-sm"}>
+<div className={"grid grid-cols-1 md:grid-cols-2 gap-space-sm"}>
 
 <div className={"relative bg-surface-container-low p-space-sm flex gap-space-sm overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.6)]"}>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
@@ -265,7 +265,7 @@ function Arsenal() {
 </div>
 </div>
 
-<div className={"grid grid-cols-2 gap-space-sm"}>
+<div className={"grid grid-cols-2 gap-space-sm md:col-span-2"}>
 <div className={"bg-surface-container-low p-space-sm flex flex-col justify-between"}>
 <div className={"relative w-full h-24 bg-surface-container-lowest mb-2 overflow-hidden flex items-center justify-center"}>
 <img className={"w-full h-full object-cover"} data-alt={"A monolithic chess rook made of cracked basalt stone with crackling lightning arcane blue energy pulsing from within its battlements on a dark moody surface."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuD3Zg2Hk0jFX-5aNyAkCPK0h4Fn3_JiJv_VWrmelfhyWRKjr37FvC17HIsNo3RbpC4PRhvdFOXqeqqsp-umck5taW993xjSAdDYZOSGSudgBl34_HN9w7W5aZs68-9R6A18puF-U1Jbb6fhjjZkbCPiPJspYN1SKlqapccbNTDv6nyZD7i1dnNpzl6b1WJXOFEIuIETExIkseSbE_ncnBzy0uJtrot1p-vIObTHjn_OXvrRtj6BxhJNZQ"} />
