@@ -142,7 +142,7 @@ function Index() {
 </button>
 </div>
 
-<button className={"w-full py-space-md bg-primary-container hover:bg-inverse-primary text-on-primary active:scale-[0.99] transition-all flex items-center justify-center gap-space-sm shadow-[0_8px_24px_rgba(139,30,30,0.45)] mt-space-xs"}>
+<button className={"w-full py-space-md bg-primary-container hover:bg-inverse-primary text-on-primary-container active:scale-[0.99] transition-all flex items-center justify-center gap-space-sm shadow-[0_8px_24px_rgba(139,30,30,0.45)] mt-space-xs"}>
 <span className={"material-symbols-outlined text-[20px] text-secondary"}>swords</span>
 <span className={"font-label-lg text-label-lg uppercase tracking-[0.16em] font-semibold"}>Enter Ranked Battle</span>
 <span className={"material-symbols-outlined text-[18px]"}>arrow_forward</span>
@@ -171,7 +171,7 @@ function Index() {
             </span>
 <h4 className={"font-headline-sm text-headline-sm text-on-surface uppercase mt-0.5"}>The Queen's Decapitation</h4>
 </div>
-<span className={"px-space-xs py-0.5 bg-primary-container text-on-primary font-label-sm text-label-sm uppercase tracking-widest"}>
+<span className={"px-space-xs py-0.5 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest"}>
             Mate in 3
           </span>
 </div>
@@ -254,7 +254,7 @@ function Index() {
 <div className={"bg-surface-container p-space-sm flex flex-col group cursor-pointer hover:bg-surface-container-high transition-colors"}>
 <div className={"relative w-full h-36 bg-surface-container-lowest mb-space-sm overflow-hidden"}>
 <img className={"w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"} data-alt={"Exquisite royal ruby chess queen piece crowned with sharp gothic carmine gemstones and polished blood-red lacquer. Regal dramatic studio lighting against deep black shadow void."} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuCve6cMlHBfp_auljVHd9gVv-q7yb41ic6jcyPC7TT5ibVxL4PZ-cAedeP820Ln57v9h11ru0YF-RdhC9BSuDtbhtVwFZUatMWGE3gcg_Mrr1nvyMZ2jpn3feSe_er162XiEOBECUIb4zlYXOjwklG9zc3ePzhjjCb49uhjUjrYfwIrzGwN5pFxN7sMZKkgq9igI-u1klpRvVqfS3I136DBnA2CvJuExmCWkwOCdu2dclnxKNYGCW18EA"} />
-<span className={"absolute top-1.5 left-1.5 px-space-xs py-0.5 bg-primary-container text-on-primary font-label-sm text-label-sm uppercase tracking-widest"}>
+<span className={"absolute top-1.5 left-1.5 px-space-xs py-0.5 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest"}>
               Ancestral
             </span>
 </div>

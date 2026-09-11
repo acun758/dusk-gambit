@@ -71,7 +71,7 @@ function ForgeStudio() {
 
 <button aria-label={"\u6676\u6838\u738b\u51a0\u805a\u7126"} className={"absolute top-10 left-[50%] -translate-x-1/2 w-6 h-6 flex items-center justify-center z-20 group/spot"} id={"hotspot-crown"}>
 <span className={"w-3 h-3 rounded-full bg-primary animate-ping opacity-75"}></span>
-<span className={"absolute w-4 h-4 rounded-full bg-primary-container border-solid flex items-center justify-center text-[10px] text-on-primary font-bold shadow-[0_0_12px_#ffb3ad]"}>1</span>
+<span className={"absolute w-4 h-4 rounded-full bg-primary-container border-solid flex items-center justify-center text-[10px] text-on-primary-container font-bold shadow-[0_0_12px_#ffb3ad]"}>1</span>
 <span className={"absolute left-6 whitespace-nowrap bg-surface-container-highest/95 backdrop-blur-md text-primary px-2 py-0.5 font-label-sm text-label-sm uppercase tracking-wider opacity-0 group-hover/spot:opacity-100 transition-opacity shadow-md pointer-events-none"}>晶核脉冲 · TIER V</span>
 </button>
 
@@ -83,7 +83,7 @@ function ForgeStudio() {
 
 <button aria-label={"\u57fa\u5ea7\u5171\u9e23\u5370\u8bb0"} className={"absolute bottom-10 left-[34%] w-6 h-6 flex items-center justify-center z-20 group/spot"} id={"hotspot-base"}>
 <span className={"w-2.5 h-2.5 rounded-full bg-primary animate-ping opacity-60"}></span>
-<span className={"absolute w-4 h-4 rounded-full bg-primary-container flex items-center justify-center text-[10px] text-on-primary font-bold shadow-[0_0_10px_#8b1e1e]"}>3</span>
+<span className={"absolute w-4 h-4 rounded-full bg-primary-container flex items-center justify-center text-[10px] text-on-primary-container font-bold shadow-[0_0_10px_#8b1e1e]"}>3</span>
 <span className={"absolute right-6 whitespace-nowrap bg-surface-container-highest/95 backdrop-blur-md text-on-surface px-2 py-0.5 font-label-sm text-label-sm uppercase tracking-wider opacity-0 group-hover/spot:opacity-100 transition-opacity shadow-md pointer-events-none"}>基座共鸣印记 · AURA</span>
 </button>
 </div>
@@ -234,7 +234,7 @@ function ForgeStudio() {
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/60"}></div>
 
 <div className={"absolute z-10 flex flex-col items-center gap-1"}>
-<button className={"w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_0_20px_#8b1e1e] hover:scale-110 active:scale-95 transition-transform"}>
+<button className={"w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_0_20px_#8b1e1e] hover:scale-110 active:scale-95 transition-transform"}>
 <span className={"material-symbols-outlined text-[24px]"}>play_arrow</span>
 </button>
 <span className={"font-label-sm text-label-sm text-on-surface uppercase tracking-widest"}>处决特写实机预览</span>
@@ -265,7 +265,7 @@ function ForgeStudio() {
 <span className={"font-label-sm text-label-sm text-on-surface uppercase tracking-wider"}>深邃大理石</span>
 <span className={"font-label-sm text-label-sm text-on-surface-variant/70"}>Heavy Clack</span>
 </div>
-<div className={"p-space-xs bg-primary-container text-on-primary flex flex-col items-center text-center shadow-[0_0_12px_rgba(139,30,30,0.4)]"}>
+<div className={"p-space-xs bg-primary-container text-on-primary-container flex flex-col items-center text-center shadow-[0_0_12px_rgba(139,30,30,0.4)]"}>
 <span className={"font-label-sm text-label-sm uppercase tracking-wider font-bold"}>黑曜金鸣</span>
 <span className={"font-label-sm text-label-sm text-on-primary-container"}>Crystal Thud</span>
 </div>
@@ -309,7 +309,7 @@ function ForgeStudio() {
 <button className={"h-10 px-3 flex items-center justify-center bg-surface-container-high text-on-surface hover:bg-surface-bright transition-colors font-label-md text-label-md uppercase tracking-widest"}>
         保存方案
       </button>
-<button className={"h-10 px-4 flex items-center justify-center bg-primary-container text-on-primary hover:bg-inverse-primary shadow-[0_0_16px_rgba(139,30,30,0.7)] active:scale-95 transition-all font-label-md text-label-md uppercase tracking-widest font-semibold gap-1"}>
+<button className={"h-10 px-4 flex items-center justify-center bg-primary-container text-on-primary-container hover:bg-inverse-primary shadow-[0_0_16px_rgba(139,30,30,0.7)] active:scale-95 transition-all font-label-md text-label-md uppercase tracking-widest font-semibold gap-1"}>
 <span className={"material-symbols-outlined text-[16px]"}>check_circle</span>
 <span>对局实装</span>
 </button>

@@ -240,7 +240,7 @@ function Battle() {
 
 <div className={"flex flex-col gap-space-xs pt-space-xs"}>
 
-<button className={"w-full py-3 px-4 bg-primary-container hover:bg-tertiary-container text-on-primary flex items-center justify-center gap-space-sm shadow-xl transition-all active:scale-[0.99]"}>
+<button className={"w-full py-3 px-4 bg-primary-container hover:bg-tertiary-container text-on-primary-container flex items-center justify-center gap-space-sm shadow-xl transition-all active:scale-[0.99]"}>
 <span className={"material-symbols-outlined text-[20px]"}>swords</span>
 <span className={"font-label-lg text-label-lg tracking-wider uppercase font-bold"}>
           发起相同残局挑战 (Fork &amp; Play Puzzle)

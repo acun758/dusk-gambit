@@ -214,7 +214,7 @@ function ArchiveChronicle() {
 
 <div className={"flex items-center justify-between pt-1"}>
 <div className={"flex items-center gap-2"}>
-<div className={"w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-on-primary shadow-[0_0_8px_rgba(230,57,70,0.5)]"}>
+<div className={"w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shadow-[0_0_8px_rgba(230,57,70,0.5)]"}>
 <span className={"material-symbols-outlined text-[16px]"}>token</span>
 </div>
 <div className={"flex flex-col"}>
@@ -245,7 +245,7 @@ function ArchiveChronicle() {
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>draw</span>
 <span className={"font-label-sm text-label-sm text-on-surface"}>步法棋谱 (Notation)</span>
 </div>
-<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
+<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
 <span className={"material-symbols-outlined text-[13px]"}>check</span>
 </div>
 </label>
@@ -255,7 +255,7 @@ function ArchiveChronicle() {
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>verified</span>
 <span className={"font-label-sm text-label-sm text-on-surface"}>火漆印章 (Royal Seal)</span>
 </div>
-<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
+<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
 <span className={"material-symbols-outlined text-[13px]"}>check</span>
 </div>
 </label>
@@ -265,7 +265,7 @@ function ArchiveChronicle() {
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>badge</span>
 <span className={"font-label-sm text-label-sm text-on-surface"}>败者铭牌 (Opponent)</span>
 </div>
-<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
+<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
 <span className={"material-symbols-outlined text-[13px]"}>check</span>
 </div>
 </label>
@@ -275,7 +275,7 @@ function ArchiveChronicle() {
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>signature</span>
 <span className={"font-label-sm text-label-sm text-on-surface"}>签名水印 (Signature)</span>
 </div>
-<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
+<div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
 <span className={"material-symbols-outlined text-[13px]"}>check</span>
 </div>
 </label>
@@ -284,7 +284,7 @@ function ArchiveChronicle() {
 
 <section className={"px-margin-mobile pt-space-sm pb-space-lg flex flex-col gap-space-sm"}>
 
-<button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"exportPosterBtn"}>
+<button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"exportPosterBtn"}>
 <div className={"absolute inset-0 bg-gradient-to-r from-secondary/0 via-secondary/20 to-secondary/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"}></div>
 <span className={"material-symbols-outlined text-secondary text-[20px]"}>ios_share</span>
 <span>生成高清典藏海报 (EXPORT 4K POSTER)</span>
@@ -488,14 +488,14 @@ function ArchiveChronicle() {
 </div>
 <label className={"flex items-center cursor-pointer"}>
 <input defaultChecked className={"hidden"} type={"checkbox"} />
-<div className={"w-5 h-5 rounded bg-primary-container flex items-center justify-center text-on-primary"}>
+<div className={"w-5 h-5 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
 <span className={"material-symbols-outlined text-[14px]"}>check</span>
 </div>
 </label>
 </div>
 
 <div className={"pt-1 flex flex-col gap-1.5"}>
-<button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"dispatchNowBtn"}>
+<button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"dispatchNowBtn"}>
 <span className={"material-symbols-outlined text-secondary text-[20px]"}>send</span>
 <span>一键全网分发 (SHARE IMMEDIATELY)</span>
 <span className={"material-symbols-outlined text-[18px]"}>arrow_forward</span>

@@ -231,7 +231,7 @@ function Arsenal() {
 <span className={"material-symbols-outlined text-[14px]"}>toll</span>
 <span className={"font-label-md text-label-md"}>1,200 🩸血晶石</span>
 </div>
-<button className={"px-3 py-1 bg-primary-container text-on-primary font-label-sm text-label-sm tracking-widest uppercase flex items-center gap-1"}>
+<button className={"px-3 py-1 bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center gap-1"}>
 <span>熔铸解锁</span>
 </button>
 </div>
@@ -437,7 +437,7 @@ function Arsenal() {
 <span className={"material-symbols-outlined text-[16px]"}>visibility</span>
 <span className={"hidden sm:inline"}>全屏检视</span>
 </button>
-<button className={"px-4 py-2.5 bg-primary-container hover:bg-tertiary-container text-on-primary font-label-md text-label-md tracking-widest uppercase flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(139,30,30,0.5)]"} id={"forgeBtn"}>
+<button className={"px-4 py-2.5 bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-md text-label-md tracking-widest uppercase flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(139,30,30,0.5)]"} id={"forgeBtn"}>
 <span className={"material-symbols-outlined text-[18px]"}>gavel</span>
 <span>熔铸装备此套</span>
 </button>
