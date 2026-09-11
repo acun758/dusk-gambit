@@ -7,7 +7,7 @@ export const Route = createFileRoute("/puzzle/")({
   component: Puzzle,
 });
 
-const FEN = "6rk/5ppp/8/7Q/4B3/8/8/6K1 w - - 0 1";
+const FEN = "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4";
 
 function Puzzle() {
   const [result, setResult] = useState<"idle" | "win" | "miss">("idle");
