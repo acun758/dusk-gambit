@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { DuelSession } from "@/hooks/useDuelSession";
+import { fmtClock } from "@/hooks/useDuelSession";
 
 type TabKey = "log" | "mind" | "spoils" | "review";
 export type PanelVariant = "duel" | "review";
@@ -16,7 +18,7 @@ const MISTAKES = [
   { ply: "38", tag: "?", zh: "漏算对方后翼突进", tone: "text-primary" },
 ];
 
-const MOVES = [
+const STATIC_MOVES = [
   { n: "34", zh: "弃车诱敌", san: "Rxd5!", eval: "+3.8", tone: "text-secondary" },
   { n: "35", zh: "王翼回防", san: "Kg8", eval: "+3.6", tone: "text-on-surface-variant" },
   { n: "36", zh: "后翼突进", san: "Qh5+", eval: "+7.4", tone: "text-secondary" },
@@ -24,41 +26,94 @@ const MOVES = [
   { n: "38", zh: "终局绝杀", san: "Qf7#", eval: "MATE", tone: "text-primary" },
 ];
 
-const MIND = [
-  { zh: "计算压力", en: "Calculation Load", v: 82 },
-  { zh: "时间焦虑", en: "Clock Anxiety", v: 46 },
-  { zh: "阵型稳定", en: "Structure", v: 71 },
-  { zh: "杀气", en: "Killer Instinct", v: 94 },
+const MIND_META: { key: string; zh: string; en: string }[] = [
+  { key: "load", zh: "计算压力", en: "Calculation Load" },
+  { key: "anxiety", zh: "时间焦虑", en: "Clock Anxiety" },
+  { key: "structure", zh: "阵型稳定", en: "Structure" },
+  { key: "instinct", zh: "杀气", en: "Killer Instinct" },
 ];
 
-function Clocks() {
+const STATIC_MIND: Record<string, number> = { load: 82, anxiety: 46, structure: 71, instinct: 94 };
+
+function cpLabel(cp: number) {
+  const v = cp / 100;
+  return `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+}
+
+const PHASE_LABEL: Record<string, string> = {
+  idle: "待命",
+  connecting: "连接中",
+  live: "实时同步",
+  resyncing: "追帧中",
+  offline: "断线重连",
+};
+
+function Clocks({ session }: { session?: DuelSession }) {
+  const w = session ? fmtClock(session.clock.w) : "02:41";
+  const b = session ? fmtClock(session.clock.b) : "01:07";
+  const turn = session?.state.turn ?? "b";
+  const wName = session?.state.players.w.name ?? "GM Vane";
+  const bName = session?.state.players.b.name ?? "Lord Cinders";
   return (
     <div className="grid grid-cols-2 gap-space-xs">
-      <div className="bg-surface-container-high p-2 flex flex-col gold-hairline">
-        <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-          White · GM Vane
-        </span>
-        <span className="font-headline-sm text-headline-sm text-on-surface tabular-nums">02:41</span>
-      </div>
-      <div className="bg-primary-container/40 p-2 flex flex-col gold-hairline">
-        <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-          Black · Lord Cinders
-        </span>
-        <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">01:07</span>
-      </div>
+      {(["w", "b"] as const).map((c) => (
+        <div
+          key={c}
+          className={`p-2 flex flex-col gold-hairline transition-colors ${
+            turn === c ? "bg-primary-container/40" : "bg-surface-container-high"
+          }`}
+        >
+          <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest truncate">
+            {c === "w" ? `White · ${wName}` : `Black · ${bName}`}
+          </span>
+          <span
+            className={`font-headline-sm text-headline-sm tabular-nums ${
+              turn === c ? "text-secondary" : "text-on-surface"
+            }`}
+          >
+            {c === "w" ? w : b}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
 
-function PanelBody({ tab }: { tab: TabKey }) {
+function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession }) {
+  const logRef = useRef<HTMLDivElement>(null);
+  const count = session?.moves.length ?? 0;
+
+  useEffect(() => {
+    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
+  }, [count]);
+
   if (tab === "log") {
+    const rows = session
+      ? session.moves
+          .slice()
+          .reverse()
+          .map((m) => ({
+            n: String(m.ply),
+            san: m.san,
+            zh: m.zh ?? "",
+            eval: cpLabel(m.cp ?? session.cp),
+            tone: (m.cp ?? 0) >= 0 ? "text-secondary" : "text-primary",
+          }))
+          .reverse()
+      : STATIC_MOVES;
     return (
       <div className="flex flex-col gap-space-xs">
         <div className="lg:hidden">
-          <Clocks />
+          <Clocks session={session} />
         </div>
-        <div className="max-h-[38vh] lg:max-h-[46vh] overflow-y-auto flex flex-col gap-1 pr-0.5">
-          {MOVES.map((m) => (
+        <div
+          ref={logRef}
+          className="max-h-[38vh] lg:max-h-[46vh] overflow-y-auto overscroll-contain flex flex-col gap-1 pr-0.5"
+        >
+          {rows.length === 0 && (
+            <p className="font-body-sm text-body-sm text-on-surface-variant py-3">等待首着 · Waiting for first move</p>
+          )}
+          {rows.map((m) => (
             <div
               key={m.n}
               className="flex items-center justify-between gap-space-sm bg-surface-container px-2 py-2 min-h-11"
@@ -66,9 +121,7 @@ function PanelBody({ tab }: { tab: TabKey }) {
               <span className="font-label-sm text-label-sm text-on-surface-variant w-8 shrink-0 tabular-nums">
                 #{m.n}
               </span>
-              <span className="font-label-md text-label-md text-on-surface font-semibold shrink-0">
-                {m.san}
-              </span>
+              <span className="font-label-md text-label-md text-on-surface font-semibold shrink-0">{m.san}</span>
               <span className="font-body-sm text-body-sm text-on-surface-variant truncate flex-1 text-left">
                 {m.zh}
               </span>
@@ -76,31 +129,57 @@ function PanelBody({ tab }: { tab: TabKey }) {
             </div>
           ))}
         </div>
+        {session && (
+          <div className="grid grid-cols-3 gap-1 pt-1">
+            <button
+              onClick={session.playMove}
+              className="h-11 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+            >
+              落子
+            </button>
+            <button
+              onClick={session.simulateDrop}
+              className="h-11 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+            >
+              模拟断线
+            </button>
+            <button
+              onClick={session.resign}
+              className="h-11 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+            >
+              认输
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 
   if (tab === "mind") {
+    const values = session?.mind ?? STATIC_MIND;
     return (
       <div className="flex flex-col gap-space-sm">
-        {MIND.map((m) => (
-          <div key={m.en} className="flex flex-col gap-1">
-            <div className="flex items-baseline justify-between">
-              <span className="font-label-md text-label-md text-on-surface">{m.zh}</span>
-              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-                {m.en} · {m.v}
-              </span>
+        {MIND_META.map((m) => {
+          const v = Math.round(values[m.key] ?? 0);
+          return (
+            <div key={m.en} className="flex flex-col gap-1">
+              <div className="flex items-baseline justify-between">
+                <span className="font-label-md text-label-md text-on-surface">{m.zh}</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
+                  {m.en} · {v}
+                </span>
+              </div>
+              <div className="h-1.5 w-full bg-surface-container-high overflow-hidden">
+                <div
+                  className="h-full bg-secondary-fixed shadow-[0_0_10px_rgba(233,195,73,0.6)] transition-[width] duration-500"
+                  style={{ width: `${v}%` }}
+                />
+              </div>
             </div>
-            <div className="h-1.5 w-full bg-surface-container-high overflow-hidden">
-              <div
-                className="h-full bg-secondary-fixed shadow-[0_0_10px_rgba(233,195,73,0.6)]"
-                style={{ width: `${m.v}%` }}
-              />
-            </div>
-          </div>
-        ))}
+          );
+        })}
         <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-          压力峰值出现在第 34 步弃车之后，心率与用时同步抬升；随后四手保持稳定，说明算路已经收敛。
+          压力峰值出现在弃子之后，心率与用时同步抬升；随后数手保持稳定，说明算路已经收敛。
         </p>
       </div>
     );
@@ -117,28 +196,17 @@ function PanelBody({ tab }: { tab: TabKey }) {
         </div>
         <div className="h-16 w-full bg-surface-container flex items-end gap-0.5 p-1">
           {[38, 44, 40, 52, 61, 48, 70, 66, 82, 74, 90, 96].map((v, i) => (
-            <div
-              key={i}
-              className="flex-1 bg-secondary-fixed/80"
-              style={{ height: `${v}%` }}
-            />
+            <div key={i} className="flex-1 bg-secondary-fixed/80" style={{ height: `${v}%` }} />
           ))}
         </div>
         <div className="flex flex-col gap-1">
           {MISTAKES.map((m) => (
-            <div
-              key={m.ply}
-              className="flex items-center gap-space-sm bg-surface-container px-2 py-2 min-h-11"
-            >
+            <div key={m.ply} className="flex items-center gap-space-sm bg-surface-container px-2 py-2 min-h-11">
               <span className="font-label-sm text-label-sm text-on-surface-variant w-8 shrink-0 tabular-nums">
                 #{m.ply}
               </span>
-              <span className={`font-label-md text-label-md font-bold w-6 shrink-0 ${m.tone}`}>
-                {m.tag}
-              </span>
-              <span className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                {m.zh}
-              </span>
+              <span className={`font-label-md text-label-md font-bold w-6 shrink-0 ${m.tone}`}>{m.tag}</span>
+              <span className="font-body-sm text-body-sm text-on-surface-variant truncate">{m.zh}</span>
             </div>
           ))}
         </div>
@@ -160,10 +228,32 @@ function PanelBody({ tab }: { tab: TabKey }) {
   );
 }
 
-export function DuelPanel({ variant = "duel" }: { variant?: PanelVariant }) {
+export function DuelPanel({ variant = "duel", session }: { variant?: PanelVariant; session?: DuelSession }) {
   const tabs = variant === "review" ? TABS : TABS.filter((t) => t.key !== "review");
   const [tab, setTab] = useState<TabKey>("log");
   const [open, setOpen] = useState(false);
+  const [drag, setDrag] = useState(0);
+  const startY = useRef<number | null>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  const evalText = session ? cpLabel(session.cp) : "+1.84";
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    startY.current = e.clientY;
+    sheetRef.current?.setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (startY.current === null) return;
+    const dy = e.clientY - startY.current;
+    setDrag(open ? Math.max(0, dy) : Math.min(0, dy));
+  };
+  const onPointerUp = () => {
+    if (startY.current === null) return;
+    if (open && drag > 56) setOpen(false);
+    if (!open && drag < -40) setOpen(true);
+    startY.current = null;
+    setDrag(0);
+  };
 
   const tabStrip = (
     <div className={`grid gap-1 ${variant === "review" ? "grid-cols-4" : "grid-cols-3"}`}>
@@ -184,67 +274,92 @@ export function DuelPanel({ variant = "duel" }: { variant?: PanelVariant }) {
           <span className="material-symbols-outlined text-[16px] shrink-0">{t.icon}</span>
           <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{t.zh}</span>
         </button>
-
       ))}
     </div>
   );
 
   return (
     <>
-      {/* Compact: bottom drawer (iPhone / iPad portrait) — collapsed by default */}
+      {/* Compact: swipeable bottom drawer (iPhone / iPad portrait) */}
       <div className="lg:hidden fixed inset-x-0 bottom-[6.25rem] z-40 px-margin-mobile">
-        <div className="bg-surface-container-lowest/97 backdrop-blur-xl shadow-[0_-10px_30px_rgba(0,0,0,0.85)] gold-hairline">
+        <div
+          ref={sheetRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          style={{
+            transform: `translate3d(0, ${drag}px, 0)`,
+            transition: startY.current === null ? "transform 220ms cubic-bezier(0.22,1,0.36,1)" : "none",
+            willChange: "transform",
+            touchAction: "pan-y",
+          }}
+          className="bg-surface-container-lowest/97 backdrop-blur-xl shadow-[0_-10px_30px_rgba(0,0,0,0.85)] gold-hairline"
+        >
           <button
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             className="w-full h-12 px-space-sm flex items-center justify-between"
           >
             <span className="flex items-center gap-space-xs min-w-0">
-              <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest shrink-0">
-                +1.84
+              <span className="font-label-sm text-label-sm text-secondary uppercase tracking-widest shrink-0 tabular-nums">
+                {evalText}
               </span>
               <span className="w-px h-4 bg-outline-variant/50 shrink-0" />
               <span className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                棋谱 · 心智 · 战利品
+                {variant === "review" ? "棋谱 · 心智 · 战利 · 分析" : "棋谱 · 心智 · 战利品"}
               </span>
             </span>
-            <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
-              {open ? "keyboard_arrow_down" : "keyboard_arrow_up"}
+            <span className="material-symbols-outlined text-on-surface-variant text-[22px] transition-transform duration-200"
+              style={{ transform: open ? "rotate(180deg)" : "none" }}
+            >
+              keyboard_arrow_up
             </span>
           </button>
-          {open && (
+          <div
+            className="overflow-hidden transition-[max-height,opacity] duration-250 ease-out"
+            style={{ maxHeight: open ? "70vh" : 0, opacity: open ? 1 : 0 }}
+            aria-hidden={!open}
+          >
             <div className="px-space-sm pb-space-sm flex flex-col gap-space-sm">
               {tabStrip}
-              <PanelBody tab={tab} />
+              <PanelBody tab={tab} session={session} />
             </div>
-          )}
+          </div>
+          <div className="pb-1 flex justify-center">
+            <span className="w-10 h-1 rounded-full bg-outline-variant/50" />
+          </div>
         </div>
       </div>
 
-      {/* Wide: right column (iPad landscape / desktop) */}
+      {/* Wide: live right column (iPad landscape / desktop) */}
       <aside className="hidden lg:flex flex-col gap-space-sm w-[290px] xl:w-[340px] shrink-0 self-start sticky top-20">
         <div className="bg-surface-container-lowest p-space-md flex flex-col gap-space-sm gold-hairline shadow-xl">
           <div className="flex items-baseline justify-between">
-            <span className="font-headline-sm text-headline-sm text-secondary">+1.84</span>
+            <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{evalText}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-              Depth 32
+              {session ? `${PHASE_LABEL[session.phase]} · ${session.transport === "server" ? "WS" : "Local"}` : "Depth 32"}
             </span>
           </div>
-          <Clocks />
+          <Clocks session={session} />
           <div className="flex flex-col gap-1">
-            {MIND.slice(0, 2).map((m) => (
-              <div key={m.en} className="flex items-center gap-space-sm">
-                <span className="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">
-                  {m.zh}
-                </span>
-                <div className="h-1 flex-1 bg-surface-container-high overflow-hidden">
-                  <div className="h-full bg-secondary-fixed" style={{ width: `${m.v}%` }} />
+            {MIND_META.slice(0, 2).map((m) => {
+              const v = Math.round((session?.mind ?? STATIC_MIND)[m.key] ?? 0);
+              return (
+                <div key={m.en} className="flex items-center gap-space-sm">
+                  <span className="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">{m.zh}</span>
+                  <div className="h-1 flex-1 bg-surface-container-high overflow-hidden">
+                    <div
+                      className="h-full bg-secondary-fixed transition-[width] duration-500"
+                      style={{ width: `${v}%` }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           {tabStrip}
-          <PanelBody tab={tab} />
+          <PanelBody tab={tab} session={session} />
         </div>
       </aside>
     </>
