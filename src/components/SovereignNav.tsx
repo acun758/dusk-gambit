@@ -11,8 +11,11 @@ const PRIMARY = [
 const SANCTUM = [
   { to: "/", label: "Decree 敕令" },
   { to: "/protocols", label: "Arbiters 法则" },
+  { to: "/matchmaking", label: "Matchup 匹配" },
   { to: "/battle", label: "Duel 死斗" },
   { to: "/victory", label: "Execution 处决" },
+  { to: "/crucible", label: "Blindfold 盲棋" },
+  { to: "/dynasty", label: "Dynasty 天梯" },
   { to: "/analysis", label: "Council 定评" },
   { to: "/arsenal", label: "Relics 圣物" },
   { to: "/forge/$id", params: { id: "001" }, label: "Forge 铸造" },
