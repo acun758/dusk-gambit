@@ -351,7 +351,7 @@ export const listEndgameLevels = createServerFn({ method: "GET" }).handler(async
 export const searchPlayers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { query: string }) => ({ query: input.query.trim().slice(0, 24) }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     if (data.query.length < 2) return [];
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const term = data.query.replaceAll("%", "\\%").replaceAll("_", "\\_");
