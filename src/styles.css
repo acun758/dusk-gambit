@@ -243,6 +243,23 @@
 
 }
 
+/* iPad portrait: use the canvas instead of displaying an iPhone-width column. */
+@media (min-width: 700px) and (max-width: 1023px) {
+  .app-shell main > div,
+  .app-shell main > section {
+    max-width: 820px;
+    margin-inline: auto;
+  }
+  .ipad-board {
+    width: min(520px, calc(100vw - 4rem));
+  }
+}
+
+.game-board {
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+}
+
 /* Explicit bilingual helpers for mixed lines: <span class="cjk">中文</span> */
 @utility cjk-serif {
   font-family: var(--font-cjk-serif);

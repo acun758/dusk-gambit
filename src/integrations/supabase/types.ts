@@ -19,46 +19,70 @@ export type Database = {
           brief_en: string
           brief_zh: string
           code: string
+          depth: number
           diamond_reward: number
           elo_required: number
           elo_reward: number
+          explanation_en: string
+          explanation_zh: string
           fen: string
+          hint_en: string
+          hint_zh: string
           id: number
+          move_annotations: Json
           moves_to_mate: number
           name_en: string
           name_zh: string
           objective_en: string
           objective_zh: string
+          theme_en: string
+          theme_zh: string
         }
         Insert: {
           brief_en: string
           brief_zh: string
           code: string
+          depth?: number
           diamond_reward?: number
           elo_required?: number
           elo_reward?: number
+          explanation_en?: string
+          explanation_zh?: string
           fen: string
+          hint_en?: string
+          hint_zh?: string
           id: number
+          move_annotations?: Json
           moves_to_mate?: number
           name_en: string
           name_zh: string
           objective_en: string
           objective_zh: string
+          theme_en?: string
+          theme_zh?: string
         }
         Update: {
           brief_en?: string
           brief_zh?: string
           code?: string
+          depth?: number
           diamond_reward?: number
           elo_required?: number
           elo_reward?: number
+          explanation_en?: string
+          explanation_zh?: string
           fen?: string
+          hint_en?: string
+          hint_zh?: string
           id?: number
+          move_annotations?: Json
           moves_to_mate?: number
           name_en?: string
           name_zh?: string
           objective_en?: string
           objective_zh?: string
+          theme_en?: string
+          theme_zh?: string
         }
         Relationships: []
       }
@@ -68,27 +92,33 @@ export type Database = {
           best_ms: number | null
           id: string
           level_id: number
+          reward_granted: boolean
           solved: boolean
           solved_at: string | null
           user_id: string
+          viewed_explanation: boolean
         }
         Insert: {
           attempts?: number
           best_ms?: number | null
           id?: string
           level_id: number
+          reward_granted?: boolean
           solved?: boolean
           solved_at?: string | null
           user_id: string
+          viewed_explanation?: boolean
         }
         Update: {
           attempts?: number
           best_ms?: number | null
           id?: string
           level_id?: number
+          reward_granted?: boolean
           solved?: boolean
           solved_at?: string | null
           user_id?: string
+          viewed_explanation?: boolean
         }
         Relationships: [
           {
@@ -102,14 +132,17 @@ export type Database = {
       }
       endgame_solutions: {
         Row: {
+          alternate_solutions: Json
           level_id: number
           solution: string[]
         }
         Insert: {
+          alternate_solutions?: Json
           level_id: number
           solution: string[]
         }
         Update: {
+          alternate_solutions?: Json
           level_id?: number
           solution?: string[]
         }
@@ -119,6 +152,83 @@ export type Database = {
             columns: ["level_id"]
             isOneToOne: true
             referencedRelation: "endgame_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          responded_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          responded_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          responded_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      match_invites: {
+        Row: {
+          code: string
+          consumed_by: string | null
+          created_at: string
+          expires_at: string
+          host_id: string
+          id: string
+          invited_id: string | null
+          match_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          consumed_by?: string | null
+          created_at?: string
+          expires_at?: string
+          host_id: string
+          id?: string
+          invited_id?: string | null
+          match_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          consumed_by?: string | null
+          created_at?: string
+          expires_at?: string
+          host_id?: string
+          id?: string
+          invited_id?: string | null
+          match_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_invites_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
             referencedColumns: ["id"]
           },
         ]
@@ -187,6 +297,7 @@ export type Database = {
           created_at: string
           fen: string
           id: string
+          invite_id: string | null
           last_move_at: string
           outcome: string | null
           ply: number
@@ -211,6 +322,7 @@ export type Database = {
           created_at?: string
           fen?: string
           id?: string
+          invite_id?: string | null
           last_move_at?: string
           outcome?: string | null
           ply?: number
@@ -235,6 +347,7 @@ export type Database = {
           created_at?: string
           fen?: string
           id?: string
+          invite_id?: string | null
           last_move_at?: string
           outcome?: string | null
           ply?: number
@@ -249,7 +362,15 @@ export type Database = {
           white_id?: string | null
           white_name?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "matches_invite_id_fkey"
+            columns: ["invite_id"]
+            isOneToOne: false
+            referencedRelation: "match_invites"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -257,6 +378,7 @@ export type Database = {
           diamonds: number
           draws: number
           elo: number
+          handle: string
           id: string
           losses: number
           name: string
@@ -269,6 +391,7 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          handle: string
           id: string
           losses?: number
           name?: string
@@ -281,6 +404,7 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          handle?: string
           id?: string
           losses?: number
           name?: string
@@ -295,7 +419,71 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_ranked_move: {
+        Args: {
+          p_cp: number
+          p_expected_seq: number
+          p_fen: string
+          p_match_id: string
+          p_outcome?: string
+          p_reason?: string
+          p_san: string
+          p_uci: string
+          p_user_id: string
+          p_zh: string
+        }
+        Returns: Json
+      }
+      create_match_invite: {
+        Args: { p_invited_id?: string; p_user_id: string }
+        Returns: {
+          code: string
+          expires_at: string
+          match_id: string
+        }[]
+      }
+      join_match_invite: {
+        Args: { p_code: string; p_user_id: string }
+        Returns: string
+      }
+      record_endgame_result: {
+        Args: {
+          p_correct: boolean
+          p_level_id: number
+          p_ms: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      remove_friendship: {
+        Args: { p_friendship_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      respond_friend_request: {
+        Args: { p_accept: boolean; p_friendship_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      search_player_profiles: {
+        Args: { q: string }
+        Returns: {
+          diamonds: number
+          draws: number
+          elo: number
+          handle: string
+          id: string
+          losses: number
+          name: string
+          wins: number
+        }[]
+      }
+      send_friend_request: {
+        Args: { p_target_id: string; p_user_id: string }
+        Returns: string
+      }
+      settle_ranked_match: {
+        Args: { p_match_id: string; p_outcome: string; p_reason: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

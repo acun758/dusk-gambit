@@ -7,6 +7,7 @@ import {
   type MoveFrame,
   type ServerMessage,
 } from "./duel-protocol";
+import { Chess } from "chess.js";
 
 /**
  * Transport-agnostic duel client.
@@ -142,12 +143,12 @@ export class DuelClient {
     if (!this.url) this.localHandle(msg);
   }
 
-  playMove() {
+  playMove(uci?: string) {
     this.send({
       t: "move",
       matchId: this.matchId,
       ply: this.state.moves.length + 1,
-      uci: "",
+      uci: uci ?? "",
       clientTs: Date.now(),
     });
   }
@@ -223,7 +224,7 @@ export class DuelClient {
         );
         return;
       }
-      this.applyMove();
+      this.applyMove(msg.uci || undefined);
     }
     if (msg.t === "resign") {
       this.state.status = "over";
@@ -239,9 +240,23 @@ export class DuelClient {
     }
   }
 
-  private applyMove() {
+  private applyMove(requested?: string) {
     const idx = this.state.moves.length;
-    const s = SCRIPT[idx % SCRIPT.length]!;
+    const chess = new Chess(this.state.fen);
+    const scripted = SCRIPT[idx % SCRIPT.length]!;
+    const uci = requested || scripted.uci;
+    let played;
+    try {
+      const promotion = uci[4];
+      played = chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
+    } catch { played = null; }
+    if (!played) {
+      const fallback = chess.moves({ verbose: true })[0];
+      if (!fallback) return;
+      played = chess.move(fallback.san);
+    }
+    if (!played) return;
+    const s = { ...scripted, uci: `${played.from}${played.to}${played.promotion ?? ""}`, san: played.san };
     const by = this.state.turn;
     this.state.clock[by] = this.state.clock[by] + this.state.tc.inc;
     const move: MoveFrame = {
@@ -254,6 +269,7 @@ export class DuelClient {
       clock: { ...this.state.clock },
     };
     this.state.moves = [...this.state.moves, move];
+    this.state.fen = chess.fen();
     this.state.turn = by === "w" ? "b" : "w";
     this.state.cp = s.cp;
     this.state.mind = {
