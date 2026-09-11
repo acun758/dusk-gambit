@@ -15,7 +15,7 @@ const SANCTUM = [
   { to: "/victory", label: "Execution 处决" },
   { to: "/analysis", label: "Council 定评" },
   { to: "/arsenal", label: "Relics 圣物" },
-  { to: "/forge/001", label: "Forge 铸造" },
+  { to: "/forge/$id", params: { id: "001" }, label: "Forge 铸造" },
   { to: "/finisher", label: "Finisher 绝杀" },
   { to: "/archive", label: "Chronicle 典藏" },
   { to: "/share", label: "Dispatch 传播" },
@@ -36,6 +36,7 @@ export function SovereignNav() {
             <Link
               key={item.label}
               to={item.to}
+              params={"params" in item ? item.params : undefined}
               className={`shrink-0 px-space-sm py-1 font-label-sm text-label-sm uppercase tracking-widest whitespace-nowrap transition-colors ${
                 active
                   ? "bg-primary-container text-on-surface"
