@@ -187,6 +187,27 @@
   display: none;
 }
 
+/* iPad landscape / desktop: content sits beside the fixed left rail */
+@media (min-width: 1024px) {
+  .app-shell {
+    padding-left: 14rem;
+  }
+
+  /* page-level fixed headers/footers must clear the rail */
+  .app-shell [class*="fixed"][class*="top-0"],
+  .app-shell [class*="fixed"][class*="bottom-0"] {
+    left: 14rem;
+    width: calc(100% - 14rem);
+  }
+
+  /* keep reading measure comfortable on wide tablets */
+  .app-shell main > div {
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-bottom: 3rem;
+  }
+}
+
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
