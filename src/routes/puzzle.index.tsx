@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/puzzle")({
+export const Route = createFileRoute("/puzzle/")({
   head: () => ({
     meta: [
       { title: "Endgame Puzzle \u2014 Mate in One" },
