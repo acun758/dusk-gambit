@@ -5,6 +5,9 @@ import { createDuelInvite, joinDuelInvite, loadFriends, requestFriend, respondFr
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+const HERO_PORTRAIT = "/__l5e/assets-v1/b46d2699-3ed1-4e73-9f50-dbd0a0e15bfa/hero-throne-portrait.jpg";
+const HERO_VIDEO = "/__l5e/assets-v1/40baeb23-6571-4126-9a46-60eed2c3debd/hero_bg_muted.mp4";
+const EMBLEM = "/__l5e/assets-v1/17f42ccd-32f8-4890-956c-98f906504b7a/logo-emblem.png";
 const HERO =
   "/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg";
 const RELIC_A =
