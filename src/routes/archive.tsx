@@ -1,3 +1,4 @@
+import posterThumb from "../assets/poster-thumb.jpg";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/archive")({
@@ -135,7 +136,7 @@ function ArchiveChronicle() {
 <div className={"relative w-full aspect-[9/14] overflow-hidden flex flex-col justify-between"}>
 
 <div className={"absolute inset-0 z-0"}>
-<img className={"w-full h-full object-cover object-center transform scale-105 filter brightness-95 contrast-125"} data-alt={"Cinematic macro shot of an ornate dark fantasy armored gauntlet brutally crushing a glowing crystalline chess king on a shattered obsidian and marble chessboard. Radiant crimson light and fiery shards burst outward with smoke, volumetric atmospheric rim lighting, dramatic high-contrast chiaroscuro, photorealistic dark fantasy haute couture aesthetic."} src={"https://lh3.googleusercontent.com/aida/AEtjO1WZMqBALiaakbfCPMaNPmvAGvxUzPvx9o7G3vQgqJf03d8T3tV1E9zyYST-gNPNKqN44rtkYbN5Ufzrweph3mdSyacZ1zKZG4T6fwMdNXk35_RMP4YxlCoPL5gszIO8b7F4Xnufpdznto8HEhaxken78AlEk25SdTfXdBpbHtdNfSrJaToEPd9FLQclMaHyplKDZ2HcpBuZPp5h2t1FoZBycXjZkewTzAB4KUFJ3M1aZaOyMqHMXiyUZw4"} />
+<img className={"w-full h-full object-cover object-center transform scale-105 filter brightness-95 contrast-125"} data-alt={"Cinematic macro shot of an ornate dark fantasy armored gauntlet brutally crushing a glowing crystalline chess king on a shattered obsidian and marble chessboard. Radiant crimson light and fiery shards burst outward with smoke, volumetric atmospheric rim lighting, dramatic high-contrast chiaroscuro, photorealistic dark fantasy haute couture aesthetic."} src={posterThumb} loading="lazy" width={512} height={768} />
 
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/40 to-surface-container-lowest/80"}></div>
 <div className={"absolute inset-0 bg-gradient-to-b from-surface-container-lowest/90 via-transparent to-surface-container-lowest/95"}></div>
@@ -362,7 +363,7 @@ function ArchiveChronicle() {
 <div className={"p-space-xs rounded bg-surface-container flex items-center gap-space-sm border border-outline-variant/40 shadow-md"}>
 
 <div className={"relative w-20 h-28 rounded overflow-hidden shrink-0 shadow-lg border border-secondary/30"}>
-<img alt={"Exported Poster Thumbnail"} className={"w-full h-full object-cover object-center contrast-125"} src={"https://lh3.googleusercontent.com/aida/AEtjO1WZMqBALiaakbfCPMaNPmvAGvxUzPvx9o7G3vQgqJf03d8T3tV1E9zyYST-gNPNKqN44rtkYbN5Ufzrweph3mdSyacZ1zKZG4T6fwMdNXk35_RMP4YxlCoPL5gszIO8b7F4Xnufpdznto8HEhaxken78AlEk25SdTfXdBpbHtdNfSrJaToEPd9FLQclMaHyplKDZ2HcpBuZPp5h2t1FoZBycXjZkewTzAB4KUFJ3M1aZaOyMqHMXiyUZw4"} />
+<img alt={"Exported Poster Thumbnail"} className={"w-full h-full object-cover object-center contrast-125"} src={posterThumb} loading="lazy" width={512} height={768} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-transparent to-surface-container-lowest/40"}></div>
 <div className={"absolute top-1 left-1 flex items-center gap-0.5"}>
 <span className={"font-headline-sm text-[9px] text-secondary font-bold leading-none"}>A</span>
