@@ -81,18 +81,18 @@ function Protocols() {
           国际棋联严苛公证机制。零属性外力侵染，纯粹算力与独立思维修养的绝对较量。实装天梯排位分加权与 Stockfish 16 全量作弊巡查。
         </p>
 
-<div className={"grid grid-cols-3 gap-space-xs pt-space-xs"}>
+<div className={"grid grid-cols-1 min-[360px]:grid-cols-3 gap-space-xs pt-space-xs"}>
 <div className={"tc-btn active bg-surface-container-highest hover:bg-surface-bright px-space-xs py-space-xs flex flex-col items-center justify-center cursor-pointer transition-colors"} data-tc={"blitz"}>
 <span className={"font-label-sm text-label-sm text-secondary uppercase tracking-wider"}>3 + 2</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Blitz 闪击</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant text-center leading-snug"}>Blitz 闪击</span>
 </div>
 <div className={"tc-btn bg-surface-container px-space-xs py-space-xs flex flex-col items-center justify-center cursor-pointer transition-colors hover:bg-surface-bright"} data-tc={"rapid"}>
 <span className={"font-label-sm text-label-sm text-on-surface uppercase tracking-wider"}>10 + 0</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Rapid 疾速</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant text-center leading-snug"}>Rapid 疾速</span>
 </div>
 <div className={"tc-btn bg-surface-container px-space-xs py-space-xs flex flex-col items-center justify-center cursor-pointer transition-colors hover:bg-surface-bright"} data-tc={"classical"}>
 <span className={"font-label-sm text-label-sm text-on-surface uppercase tracking-wider"}>30 + 15</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Classical 慢棋</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant text-center leading-snug"}>Classical 慢棋</span>
 </div>
 </div>
 <div className={"flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-space-xs"}>

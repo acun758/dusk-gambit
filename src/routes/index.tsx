@@ -189,7 +189,7 @@ function Index() {
               </Link>
             )}
 
-            <div className="grid grid-cols-3 gap-space-xs">
+            <div className="grid grid-cols-1 gap-space-xs min-[360px]:grid-cols-3">
               {[
                 { zh: "快棋", en: "Blitz", tc: "3 | 2", live: true },
                 { zh: "慢棋", en: "Rapid", tc: "10 | 0", live: false },
@@ -197,7 +197,7 @@ function Index() {
               ].map((m) => (
                 <div
                   key={m.en}
-                  className={`p-space-sm flex flex-col items-center gap-1 ${m.live ? "bg-surface-container-high" : "bg-surface-container"}`}
+                  className={`min-h-20 p-space-sm flex flex-col items-center justify-center gap-1 ${m.live ? "bg-surface-container-high" : "bg-surface-container"}`}
                 >
                   <span className={`font-label-sm text-label-sm tracking-widest ${m.live ? "text-primary" : "text-secondary"}`}>
                     {t(m.zh, m.en)}
