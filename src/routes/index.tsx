@@ -40,9 +40,9 @@ function Index() {
 </div>
 <div className={"flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest"}>
 <span className={"w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"}></span>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>The Sovereign's Decree</span>
+<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase whitespace-nowrap"}>The Sovereign's Decree</span>
 </div>
-<div className={"flex items-center gap-space-xs"}>
+<div className={"hidden sm:flex items-center gap-space-xs"}>
 <span className={"font-headline-md text-headline-md text-secondary leading-none"}>A</span>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>diamond</span>
 </div>
