@@ -15,7 +15,10 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as ArsenalRouteImport } from './routes/arsenal'
 import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CodexRouteImport } from './routes/codex'
+import { Route as CrucibleRouteImport } from './routes/crucible'
+import { Route as DynastyRouteImport } from './routes/dynasty'
 import { Route as FinisherRouteImport } from './routes/finisher'
+import { Route as MatchmakingRouteImport } from './routes/matchmaking'
 import { Route as ProtocolsRouteImport } from './routes/protocols'
 import { Route as ShareRouteImport } from './routes/share'
 import { Route as VictoryRouteImport } from './routes/victory'
@@ -53,9 +56,24 @@ const CodexRoute = CodexRouteImport.update({
   path: '/codex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CrucibleRoute = CrucibleRouteImport.update({
+  id: '/crucible',
+  path: '/crucible',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DynastyRoute = DynastyRouteImport.update({
+  id: '/dynasty',
+  path: '/dynasty',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FinisherRoute = FinisherRouteImport.update({
   id: '/finisher',
   path: '/finisher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatchmakingRoute = MatchmakingRouteImport.update({
+  id: '/matchmaking',
+  path: '/matchmaking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtocolsRoute = ProtocolsRouteImport.update({
@@ -96,7 +114,10 @@ export interface FileRoutesByFullPath {
   '/arsenal': typeof ArsenalRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
+  '/crucible': typeof CrucibleRoute
+  '/dynasty': typeof DynastyRoute
   '/finisher': typeof FinisherRoute
+  '/matchmaking': typeof MatchmakingRoute
   '/protocols': typeof ProtocolsRoute
   '/share': typeof ShareRoute
   '/victory': typeof VictoryRoute
@@ -111,7 +132,10 @@ export interface FileRoutesByTo {
   '/arsenal': typeof ArsenalRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
+  '/crucible': typeof CrucibleRoute
+  '/dynasty': typeof DynastyRoute
   '/finisher': typeof FinisherRoute
+  '/matchmaking': typeof MatchmakingRoute
   '/protocols': typeof ProtocolsRoute
   '/share': typeof ShareRoute
   '/victory': typeof VictoryRoute
@@ -127,7 +151,10 @@ export interface FileRoutesById {
   '/arsenal': typeof ArsenalRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
+  '/crucible': typeof CrucibleRoute
+  '/dynasty': typeof DynastyRoute
   '/finisher': typeof FinisherRoute
+  '/matchmaking': typeof MatchmakingRoute
   '/protocols': typeof ProtocolsRoute
   '/share': typeof ShareRoute
   '/victory': typeof VictoryRoute
@@ -144,7 +171,10 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/battle'
     | '/codex'
+    | '/crucible'
+    | '/dynasty'
     | '/finisher'
+    | '/matchmaking'
     | '/protocols'
     | '/share'
     | '/victory'
@@ -159,7 +189,10 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/battle'
     | '/codex'
+    | '/crucible'
+    | '/dynasty'
     | '/finisher'
+    | '/matchmaking'
     | '/protocols'
     | '/share'
     | '/victory'
@@ -174,7 +207,10 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/battle'
     | '/codex'
+    | '/crucible'
+    | '/dynasty'
     | '/finisher'
+    | '/matchmaking'
     | '/protocols'
     | '/share'
     | '/victory'
@@ -190,7 +226,10 @@ export interface RootRouteChildren {
   ArsenalRoute: typeof ArsenalRoute
   BattleRoute: typeof BattleRoute
   CodexRoute: typeof CodexRoute
+  CrucibleRoute: typeof CrucibleRoute
+  DynastyRoute: typeof DynastyRoute
   FinisherRoute: typeof FinisherRoute
+  MatchmakingRoute: typeof MatchmakingRoute
   ProtocolsRoute: typeof ProtocolsRoute
   ShareRoute: typeof ShareRoute
   VictoryRoute: typeof VictoryRoute
@@ -243,11 +282,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CodexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crucible': {
+      id: '/crucible'
+      path: '/crucible'
+      fullPath: '/crucible'
+      preLoaderRoute: typeof CrucibleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dynasty': {
+      id: '/dynasty'
+      path: '/dynasty'
+      fullPath: '/dynasty'
+      preLoaderRoute: typeof DynastyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/finisher': {
       id: '/finisher'
       path: '/finisher'
       fullPath: '/finisher'
       preLoaderRoute: typeof FinisherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/matchmaking': {
+      id: '/matchmaking'
+      path: '/matchmaking'
+      fullPath: '/matchmaking'
+      preLoaderRoute: typeof MatchmakingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protocols': {
@@ -302,7 +362,10 @@ const rootRouteChildren: RootRouteChildren = {
   ArsenalRoute: ArsenalRoute,
   BattleRoute: BattleRoute,
   CodexRoute: CodexRoute,
+  CrucibleRoute: CrucibleRoute,
+  DynastyRoute: DynastyRoute,
   FinisherRoute: FinisherRoute,
+  MatchmakingRoute: MatchmakingRoute,
   ProtocolsRoute: ProtocolsRoute,
   ShareRoute: ShareRoute,
   VictoryRoute: VictoryRoute,
