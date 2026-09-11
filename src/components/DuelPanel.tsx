@@ -48,7 +48,7 @@ const PHASE_LABEL: Record<string, string> = {
   offline: "断线重连",
 };
 
-function Clocks({ session }: { session?: DuelSession }) {
+function Clocks({ session }: { session?: DuelSession | undefined }) {
   const w = session ? fmtClock(session.clock.w) : "02:41";
   const b = session ? fmtClock(session.clock.b) : "01:07";
   const turn = session?.state.turn ?? "b";
@@ -79,7 +79,7 @@ function Clocks({ session }: { session?: DuelSession }) {
   );
 }
 
-function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession }) {
+function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | undefined }) {
   const logRef = useRef<HTMLDivElement>(null);
   const count = session?.moves.length ?? 0;
 
@@ -228,7 +228,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession }) {
   );
 }
 
-export function DuelPanel({ variant = "duel", session }: { variant?: PanelVariant; session?: DuelSession }) {
+export function DuelPanel({ variant = "duel", session }: { variant?: PanelVariant; session?: DuelSession | undefined }) {
   const tabs = variant === "review" ? TABS : TABS.filter((t) => t.key !== "review");
   const [tab, setTab] = useState<TabKey>("log");
   const [open, setOpen] = useState(false);
