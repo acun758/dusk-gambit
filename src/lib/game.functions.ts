@@ -204,18 +204,19 @@ export const submitMove = createServerFn({ method: "POST" })
     if (!move) return { code: "illegal" as const, match: m };
     const outcome = chess.isCheckmate() ? (you === "w" ? "white" : "black") : chess.isDraw() ? "draw" : null;
     const reason = chess.isCheckmate() ? "mate" : chess.isDraw() ? "draw" : null;
-    const { data: applied, error } = await supabaseAdmin.rpc("apply_ranked_move", {
+    const rpcArgs = {
       p_match_id: m.id,
       p_user_id: context.userId,
       p_expected_seq: m.seq,
       p_uci: data.uci,
       p_san: move.san,
-      p_zh: data.zh,
+      p_zh: data.zh ?? "",
       p_cp: data.cp ?? m.cp,
       p_fen: chess.fen(),
-      p_outcome: outcome ?? undefined,
-      p_reason: reason ?? undefined,
-    });
+      ...(outcome ? { p_outcome: outcome } : {}),
+      ...(reason ? { p_reason: reason } : {}),
+    };
+    const { data: applied, error } = await supabaseAdmin.rpc("apply_ranked_move", rpcArgs);
     if (error) throw new Error(error.message);
     const result = applied as { code: string; seq?: number; ply?: number; clock_w?: number; clock_b?: number };
     const fresh = await supabaseAdmin.from("matches").select("*").eq("id", m.id).single();
@@ -392,7 +393,8 @@ export const createDuelInvite = createServerFn({ method: "POST" }).middleware([r
   .inputValidator((input: { invitedId?: string }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", { p_user_id: context.userId, p_invited_id: data.invitedId });
+    const args = { p_user_id: context.userId, ...(data.invitedId ? { p_invited_id: data.invitedId } : {}) };
+    const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", args);
     if (error) throw new Error(error.message); return rows?.[0] ?? null;
   });
 
