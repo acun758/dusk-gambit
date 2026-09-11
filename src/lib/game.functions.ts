@@ -354,7 +354,12 @@ export const searchPlayers = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     if (data.query.length < 2) return [];
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin.rpc("search_player_profiles", { q: data.query });
+    const term = data.query.replaceAll("%", "\\%").replaceAll("_", "\\_");
+    const { data: rows, error } = await supabaseAdmin.from("profiles")
+      .select("id,handle,name,elo,diamonds,wins,losses,draws")
+      .neq("id", context.userId)
+      .or(`handle.ilike.${term}%,name.ilike.${term}%`)
+      .order("elo", { ascending: false }).limit(20);
     if (error) throw new Error(error.message);
     return rows ?? [];
   });

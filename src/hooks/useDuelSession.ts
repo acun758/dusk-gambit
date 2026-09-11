@@ -218,10 +218,11 @@ export function useDuelSession(): DuelSession {
     const onVisible = () => {
       if (document.visibilityState === "visible") void resync();
     };
-    window.addEventListener("online", () => void resync());
+    const onOnline = () => void resync();
+    window.addEventListener("online", onOnline);
     document.addEventListener("visibilitychange", onVisible);
     return () => {
-      window.removeEventListener("online", () => void resync());
+      window.removeEventListener("online", onOnline);
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, [cloud?.match.id]);
@@ -295,7 +296,7 @@ export function useDuelSession(): DuelSession {
 
   const playMove = useCallback((uci?: string) => {
     if (mode === "local") {
-      clientRef.current?.playMove();
+      clientRef.current?.playMove(uci);
       return;
     }
     const m = matchRef.current;

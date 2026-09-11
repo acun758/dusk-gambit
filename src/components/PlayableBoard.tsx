@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Chess } from "chess.js";
+import { Chess, type Square } from "chess.js";
 
 const GLYPH: Record<string, string> = {
   wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
@@ -10,19 +10,19 @@ export function PlayableBoard({ fen, disabled = false, onMove }: { fen: string; 
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const targets = useMemo(() => selected ? chess.moves({ square: selected as never, verbose: true }).map((m) => m.to) : [], [chess, selected]);
+  const [selected, setSelected] = useState<Square | null>(null);
+  const targets = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }).map((m) => m.to) : [], [chess, selected]);
 
-  const click = (square: string) => {
+  const click = (square: Square) => {
     if (disabled) return;
     if (selected && targets.includes(square)) {
-      const piece = chess.get(selected as never);
+      const piece = chess.get(selected);
       const promotion = piece?.type === "p" && (square.endsWith("8") || square.endsWith("1")) ? "q" : "";
       onMove(`${selected}${square}${promotion}`);
       setSelected(null);
       return;
     }
-    const piece = chess.get(square as never);
+    const piece = chess.get(square);
     setSelected(piece && piece.color === chess.turn() ? square : null);
   };
 
@@ -31,8 +31,8 @@ export function PlayableBoard({ fen, disabled = false, onMove }: { fen: string; 
       {Array.from({ length: 64 }, (_, i) => {
         const file = i % 8;
         const rank = 8 - Math.floor(i / 8);
-        const square = `${String.fromCharCode(97 + file)}${rank}`;
-        const piece = chess.get(square as never);
+        const square = `${String.fromCharCode(97 + file)}${rank}` as Square;
+        const piece = chess.get(square);
         const active = square === selected;
         const target = targets.includes(square);
         return (
