@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DuelPanel } from "@/components/DuelPanel";
+import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -15,7 +16,16 @@ export const Route = createFileRoute("/battle")({
   component: Battle,
 });
 
+const PHASE_ZH: Record<string, string> = {
+  idle: "待命",
+  connecting: "连接中",
+  live: "实时同步",
+  resyncing: "断线追帧中",
+  offline: "断线重连中",
+};
+
 function Battle() {
+  const session = useDuelSession();
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
 <header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-16 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><button aria-label={"Withdraw"} className={"w-11 h-11 flex items-center justify-center text-secondary hover:text-secondary-fixed transition-colors"}><span className={"material-symbols-outlined text-[24px]"}>arrow_back</span></button><div className={"flex flex-col"}><span className={"font-headline-sm text-headline-sm text-on-surface uppercase tracking-wider"}>Active Confrontation</span></div></div><div className={"flex items-center gap-space-xs"}><button aria-label={"Game Settings"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>tune</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-16 bg-surface min-h-screen"}><div className={"w-full lg:flex lg:items-start lg:gap-space-lg"}><div className={"flex flex-col w-full min-w-0 text-on-surface select-none pb-[8.5rem] lg:pb-space-lg pb-safe"}>
@@ -23,7 +33,7 @@ function Battle() {
 <div className={"w-full px-margin-mobile pt-space-xs pb-space-sm flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-full shadow-sm"}>
 <span className={"w-2 h-2 rounded-full bg-secondary animate-pulse"}></span>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>WeChat Mini 3D Engine · v3.4.1</span>
+<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase tabular-nums"}>3+2 Blitz · {PHASE_ZH[session.phase]} · {fmtClock(session.clock[session.state.you])}</span>
 </div>
 
 <div className={"flex items-center bg-surface-container-highest/80 backdrop-blur-md px-space-sm py-1 rounded-full shadow-md gap-space-sm"}>
@@ -277,7 +287,7 @@ function Battle() {
 </div>
 </div>
 </div>
-<DuelPanel />
+<DuelPanel session={session} />
 </div>
 </main>
     </div>
