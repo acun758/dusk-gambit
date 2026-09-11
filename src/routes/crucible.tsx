@@ -158,14 +158,18 @@ function Crucible() {
         </div>
       </header>
 
-      <main className="pt-20 px-margin-mobile flex flex-col gap-space-md lg:flex-row lg:items-start lg:gap-space-lg">
+      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 md:grid-cols-[240px_minmax(0,1fr)] md:items-start md:gap-space-lg md:px-space-lg lg:grid-cols-[260px_minmax(0,1fr)]">
         {/* 关卡列表 */}
-        <section className="flex flex-col gap-space-xs mt-space-md lg:w-72 lg:shrink-0">
+        <section className="flex min-w-0 flex-col gap-space-xs mt-space-md md:sticky md:top-24">
           <h2 className="font-headline-sm text-headline-sm">
             <Bi zh="六道实战试炼" en="Six Practical Trials" />
           </h2>
           {levelsQ.isLoading && (
-            <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("关卡载入中…", "Loading trials…")}</p>
+            <div className="grid gap-space-xs" aria-label={t("关卡载入中", "Loading trials")}>
+              {Array.from({ length: 6 }, (_, index) => (
+                <div key={index} className="h-14 bg-surface-container animate-pulse" />
+              ))}
+            </div>
           )}
           <div className="grid gap-space-xs">
             {levels.map((l) => {
@@ -198,7 +202,13 @@ function Crucible() {
         </section>
 
         {/* 当前关卡 */}
-        <section className="flex-1 min-w-0 flex flex-col gap-space-sm mt-space-md">
+        <section className="flex w-full min-w-0 flex-col gap-space-sm mt-space-md md:max-w-[620px]">
+          {levelsQ.isLoading && (
+            <div className="grid gap-space-sm" aria-hidden="true">
+              <div className="h-32 bg-surface-container-low animate-pulse" />
+              <div className="aspect-square w-full max-w-[520px] bg-surface-container-lowest animate-pulse" />
+            </div>
+          )}
           {active && (
             <>
               <div className="bg-surface-container-low p-space-md flex flex-col gap-space-xs">
@@ -228,7 +238,7 @@ function Crucible() {
                 <p className="cjk font-body-sm text-body-sm text-secondary mt-1">{t(`提示：${active.hint_zh}`, `Hint: ${active.hint_en}`)}</p>
               </div>
 
-              <div className="relative w-full max-w-[560px] aspect-square bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)]">
+              <div className="relative aspect-square w-full max-w-[520px] self-center bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)] md:self-start">
                 <div className="grid grid-cols-8 grid-rows-8 w-full h-full">
                   {board.flatMap((row, r) =>
                     row.map((cell, c) => (
