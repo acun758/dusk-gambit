@@ -200,6 +200,14 @@
     width: calc(100% - 14rem);
   }
 
+  /* keep tall hero/board media from eating a landscape screen */
+  .app-shell main img,
+  .app-shell main [class*="aspect-square"],
+  .app-shell main [class*="aspect-[4/5]"] {
+    max-height: 58vh;
+    object-fit: cover;
+  }
+
   /* keep reading measure comfortable on wide tablets */
   .app-shell main > div {
     max-width: 1120px;
