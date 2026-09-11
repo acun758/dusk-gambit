@@ -371,3 +371,25 @@ export const loadEndgameProgress = createServerFn({ method: "POST" })
       .eq("user_id", context.userId);
     return data ?? [];
   });
+
+/** 公开读取残局关卡（不含解法），未登录也能浏览。 */
+export const listEndgameLevels = createServerFn({ method: "GET" }).handler(async () => {
+  const { createClient } = await import("@supabase/supabase-js");
+  const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
+  const client = createClient(process.env['SUPABASE_URL']!, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input, { ...init, headers: h });
+      },
+    },
+  });
+  const { data } = await client
+    .from("endgame_levels")
+    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward")
+    .order("id");
+  return data ?? [];
+});
