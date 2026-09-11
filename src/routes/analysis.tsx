@@ -4,9 +4,9 @@ import { DuelPanel } from "@/components/DuelPanel";
 export const Route = createFileRoute("/analysis")({
   head: () => ({
     meta: [
-      { title: "Match Analysis \u2014 Tilt & Heartbeat Nexus" },
+      { title: "对局复盘 · 心智与心率 | Match Analysis" },
       { name: "description", content: "Ply-by-ply precision, advantage swing and heart-rate correlation from the decisive duel." },
-      { property: "og:title", content: "Match Analysis \u2014 Tilt & Heartbeat Nexus" },
+      { property: "og:title", content: "对局复盘 · 心智与心率 | Match Analysis" },
       { property: "og:description", content: "Ply-by-ply precision, advantage swing and heart-rate correlation from the decisive duel." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/analysis")({
 function Analysis() {
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"w-full lg:flex lg:items-start lg:gap-space-lg"}><div className={"flex flex-col w-full min-w-0 pb-[8.5rem] lg:pb-space-lg"}>
+<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>天梯 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>宗师</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider"}>对局复盘</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"w-full lg:flex lg:items-start lg:gap-space-lg"}><div className={"flex flex-col w-full min-w-0 pb-[8.5rem] lg:pb-space-lg"}>
 
 <div className={"px-margin-mobile pt-space-sm"}>
 <div className={"bg-surface-container-low rounded-xl p-space-md shadow-[0_16px_36px_rgba(0,0,0,0.85)] relative overflow-hidden"}>
@@ -28,11 +28,11 @@ function Analysis() {
 <div className={"flex items-center justify-between gap-space-sm mb-space-sm"}>
 <div className={"flex items-center gap-space-xs bg-surface-container px-space-sm py-0.5 rounded-full"}>
 <span className={"w-2 h-2 rounded-full bg-secondary animate-pulse"}></span>
-<span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Master Sanctum Series</span>
+<span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>宗师殿堂赛事</span>
 </div>
 <div className={"flex items-center gap-1 text-primary"}>
 <span className={"material-symbols-outlined text-[16px]"}>verified</span>
-<span className={"font-label-md text-label-md uppercase tracking-wider text-primary"}>Decisive Checkmate</span>
+<span className={"font-label-md text-label-md uppercase tracking-wider text-primary"}>决胜将杀</span>
 </div>
 </div>
 
@@ -45,11 +45,11 @@ function Analysis() {
 </div>
 <div className={"flex items-center gap-2 mt-0.5"}>
 <span className={"font-label-sm text-label-sm text-on-surface-variant"}>ELO 2504</span>
-<span className={"px-1.5 py-0.2 bg-primary-container/40 text-primary font-label-sm text-label-sm rounded"}>WHITE</span>
+<span className={"px-1.5 py-0.2 bg-primary-container/40 text-primary font-label-sm text-label-sm rounded"}>白方</span>
 </div>
 <div className={"mt-space-sm flex items-baseline gap-1"}>
 <span className={"font-headline-lg-mobile text-headline-lg-mobile text-secondary font-bold"}>98.6<span className={"text-xs font-normal text-on-surface-variant"}>%</span></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"}>Precision</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant tracking-wider"}>精准率</span>
 </div>
 </div>
 
@@ -59,12 +59,12 @@ function Analysis() {
 <span className={"material-symbols-outlined text-outline text-[18px]"}>shield</span>
 </div>
 <div className={"flex items-center gap-2 mt-0.5"}>
-<span className={"px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm rounded"}>BLACK</span>
+<span className={"px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm rounded"}>黑方</span>
 <span className={"font-label-sm text-label-sm text-on-surface-variant"}>ELO 2510</span>
 </div>
 <div className={"mt-space-sm flex items-baseline gap-1"}>
 <span className={"font-headline-lg-mobile text-headline-lg-mobile text-outline font-bold"}>79.4<span className={"text-xs font-normal text-outline-variant"}>%</span></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"}>Precision</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant tracking-wider"}>精准率</span>
 </div>
 </div>
 </div>
@@ -72,7 +72,7 @@ function Analysis() {
 <div className={"mt-space-sm pt-space-sm bg-surface-container-lowest/70 p-space-sm rounded-lg flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"material-symbols-outlined text-primary text-[20px]"}>skull</span>
-<span className={"font-label-md text-label-md uppercase tracking-wider text-on-surface"}>38. Rxf7# • Execution Protocol Concluded</span>
+<span className={"font-label-md text-label-md uppercase tracking-wider text-on-surface"}>第 38 手 Rxf7# · 处决完成</span>
 </div>
 <span className={"font-label-sm text-label-sm text-secondary uppercase tracking-widest font-semibold"}>+18.4 ELO</span>
 </div>
@@ -83,12 +83,12 @@ function Analysis() {
 <div className={"flex items-center justify-between mb-space-xs"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"material-symbols-outlined text-primary text-[20px]"}>monitor_heart</span>
-<h2 className={"font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider"}>Tilt &amp; Heartbeat Nexus</h2>
+<h2 className={"font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider"}>心智波动与心率图谱</h2>
 </div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>38 Plies Tracked</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>已追踪 38 手</span>
 </div>
 <p className={"font-body-sm text-body-sm text-on-surface-variant mb-space-sm"}>
-      Correlating heart-rate spikes, time spent under 30s clock, and strategic advantage swing across each ply.
+      逐手关联心率峰值、30 秒以内的读秒时长与局势优势摆动。
     </p>
 
 <div className={"bg-surface-container-low rounded-xl p-space-md relative overflow-hidden shadow-[0_12px_28px_rgba(0,0,0,0.8)]"}>
@@ -97,14 +97,14 @@ function Analysis() {
 <div className={"flex items-center gap-space-sm"}>
 <div className={"flex items-center gap-1"}>
 <span className={"w-2.5 h-0.5 bg-secondary"}></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Advantage (+M)</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant"}>优势 (+M)</span>
 </div>
 <div className={"flex items-center gap-1"}>
 <span className={"w-2.5 h-0.5 bg-primary"}></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>BPM Pulse (142 max)</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant"}>心率 BPM（峰值 142）</span>
 </div>
 </div>
-<span className={"font-label-sm text-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded"}>0 Blunders • 1 Inaccuracy</span>
+<span className={"font-label-sm text-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded"}>0 次漏着 · 1 次不精确</span>
 </div>
 
 <div className={"relative w-full h-48 my-space-xs"}>
