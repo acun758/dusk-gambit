@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { SovereignNav } from "../components/SovereignNav";
+import { LangProvider } from "../lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
