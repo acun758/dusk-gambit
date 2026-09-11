@@ -1,0 +1,1 @@
+ALTER VIEW public.endgame_levels_public SET (security_invoker = true);
