@@ -1,4 +1,5 @@
-import posterThumb from "../assets/poster-thumb.jpg";
+import tarotKingAsset from "@/assets/tarot-king.jpg.asset.json";
+const posterThumb = tarotKingAsset.url;
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/archive")({

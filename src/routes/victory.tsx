@@ -111,7 +111,7 @@ function Victory() {
 
 <div className={"relative z-20 mx-margin-mobile mt-space-md overflow-hidden bg-surface-container-lowest shadow-[0_20px_50px_rgba(0,0,0,0.95)]"}>
 
-<div className={"relative w-full h-[410px] bg-cover bg-center"} data-alt={"Cinematic high fantasy dark art photo of heavy gauntleted knight's black armor hands crushing a glowing crystalline chess king into red explosive rubies and crimson lightning sparks on a cracked marble obsidian chessboard, deep atmospheric occult shadows and glowing embers"} style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIGifp0Cjnc1i7Zi1wmwo-dFwKPvR8FnOcY8C2LF1qbiujShbkXiaTdItRa438wXqNzafVpcN-Q98io1tVQU6jqobVjVKbjTf7s8fEja-LPvLeXjOchJu2OV-WMd4C9cgyAf-Ojccrur37oARN5JtgaG7zzNNjpk9T-3UUsJ_4jMASLCJpTcJSNWbZb9RFire1tkWUql66WIFsG26vjIlv_OKym-qwLxyIr4abe-1531xvt7BNKjpzkw')" }}>
+<div className={"relative w-full h-[410px] bg-cover bg-center"} data-alt={"Cinematic high fantasy dark art photo of heavy gauntleted knight's black armor hands crushing a glowing crystalline chess king into red explosive rubies and crimson lightning sparks on a cracked marble obsidian chessboard, deep atmospheric occult shadows and glowing embers"} style={{ backgroundImage: "url('/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg')" }}>
 
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"}></div>
 <div className={"absolute inset-0 bg-gradient-to-b from-surface-container-lowest/70 via-transparent to-transparent"}></div>

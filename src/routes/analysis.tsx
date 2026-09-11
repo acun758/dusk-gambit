@@ -258,7 +258,7 @@ function Analysis() {
 <div className={"mt-space-sm bg-surface-container p-space-sm rounded-lg flex gap-space-sm"}>
 
 <div className={"w-16 h-16 rounded overflow-hidden shrink-0 bg-surface-container-highest relative"}>
-<img className={"w-full h-full object-cover"} data-alt={"Tactical chess diagram zoom on square c4 and d6 showing a black knight preparing an outpost jump, gothic dark wood carved pieces with subtle crimson highlights"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuBMcgLvrmS9V4rK-O9Xt2ON8aRL2vAxOnmcXO87zHjOpAiBU477c6WFxf-BcejRI_gLSZLW3FoGQKWl0BN_cEw0WDr-3T41pSw2MaM_QWQvKoBH13WCcFMRrkJURkHw3qDHntV3exE6OLRpgmrusfGNSSBf6h6iGzfX7_5vB59LsjI4WKvbp8UF3wfleLZcdrC9diDxA0xW6xbWURc7c20Gu7bNlVQEr9a3EfR9S-MbbHNEJE1ZGNeAIQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"Tactical chess diagram zoom on square c4 and d6 showing a black knight preparing an outpost jump, gothic dark wood carved pieces with subtle crimson highlights"} src={"/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg"} />
 <div className={"absolute inset-0 bg-primary/20 mix-blend-color-dodge"}></div>
 </div>
 <div className={"flex flex-col justify-center"}>
@@ -289,7 +289,7 @@ function Analysis() {
 </div>
 <div className={"mt-space-sm bg-surface-container p-space-sm rounded-lg flex gap-space-sm"}>
 <div className={"w-16 h-16 rounded overflow-hidden shrink-0 bg-surface-container-highest relative"}>
-<img className={"w-full h-full object-cover"} data-alt={"Grandmaster chess sacrifice position, illuminated black rook under divine golden spotlight, chessboard in dark obsidian court with glowing ember edges"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuADfJPe7Bkv73uBd9GLEjH36o9wKvo3U7k7jMIUkHO2AwJ8FzHjU-LEey48e08yasqIPJS0N9PtzAker55J_i1tqaxQQhlqWWMdy3PuPy6t5eVR4zJm_qpvfR453EwqhcQ-63xLM_JiCHy2SlsA9j8UDdupiqksoPtRlxUo11dYoa8OZ_TzBuFbsWDUmcnvNPDcPiqzL0ZFOVHCumWHIKM_vduw6Yn-7bIV913uWtYOx_SpH7f5Vj_OEQ"} />
+<img className={"w-full h-full object-cover"} data-alt={"Grandmaster chess sacrifice position, illuminated black rook under divine golden spotlight, chessboard in dark obsidian court with glowing ember edges"} src={"/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg"} />
 <div className={"absolute inset-0 bg-secondary/15 mix-blend-color-dodge"}></div>
 </div>
 <div className={"flex flex-col justify-center"}>

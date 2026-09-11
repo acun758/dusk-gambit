@@ -5,12 +5,15 @@ import { createDuelInvite, joinDuelInvite, loadFriends, requestFriend, respondFr
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+const HERO_PORTRAIT = "/__l5e/assets-v1/b46d2699-3ed1-4e73-9f50-dbd0a0e15bfa/hero-throne-portrait.jpg";
+const HERO_VIDEO = "/__l5e/assets-v1/40baeb23-6571-4126-9a46-60eed2c3debd/hero_bg_muted.mp4";
+const EMBLEM = "/__l5e/assets-v1/17f42ccd-32f8-4890-956c-98f906504b7a/logo-emblem.png";
 const HERO =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBnVOX-kXx8mV3PVsr8DCXDkuhKkPFg3FPwgzrEZR2jqS1iRBa--gRHsSpsOQX01tqxrUvzEUdYLuEqogs7_vxU3GDGPsKI0TlWMP4uXHALJWJc6Q9MJ1oytTy3GzpB3VP00MwJeXVjfDbX-hfBqJ-bBozBHDECtONNRt60wbUGhKLBTsca9P7nq-ln4dZ2VgNuudkZx0NpP4FHc2wdORwrLtHpziEl0Rj_MUZKPHIvn0x4Y9vssEL_Zg";
+  "/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg";
 const RELIC_A =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDQU7MHtc33yS0WtJWpQgNgNC3hha-aI2u0whiRxnontUz4evcu_6Gh75H0LEOiSMbR-UXvxcmi6U38vOk3jT-_zFIqoe7pAC0Uw3QEYmVu1I0mLKhct0-U2sJ_5DhcdQVu-kNJEzVWCLwl1cIwHVQUirW7oeXqBzbCVVaC-h6P43Zk1nXhxxLcuEx6pN0P3YYUMAlrpWVst1VXZdxalH5EX49PRK58mrlYc-H-Up29pBQ5b0bU62e3qg";
+  "/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg";
 const RELIC_B =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCve6cMlHBfp_auljVHd9gVv-q7yb41ic6jcyPC7TT5ibVxL4PZ-cAedeP820Ln57v9h11ru0YF-RdhC9BSuDtbhtVwFZUatMWGE3gcg_Mrr1nvyMZ2jpn3feSe_er162XiEOBECUIb4zlYXOjwklG9zc3ePzhjjCb49uhjUjrYfwIrzGwN5pFxN7sMZKkgq9igI-u1klpRvVqfS3I136DBnA2CvJuExmCWkwOCdu2dclnxKNYGCW18EA";
+  "/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,8 +52,8 @@ function Index() {
       <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-secondary text-[22px]">military_tech</span>
+            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
+              <img src={EMBLEM} alt={t("血誓王权徽章", "Blood Sovereign emblem")} className="w-full h-full object-contain" width={44} height={44} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -106,9 +109,19 @@ function Index() {
               <div className="relative z-10 flex flex-col items-center text-center mt-space-md mb-space-sm">
                 <div className="relative w-full h-56 lg:h-72 overflow-hidden bg-surface-container-lowest mb-space-md shadow-2xl">
                   <img
-                    className="w-full h-full object-cover object-center"
-                    src={HERO}
+                    className="w-full h-full object-cover object-center sm:hidden"
+                    src={HERO_PORTRAIT}
                     alt={t("黑曜石王棋矗立于风暴与碎裂棋格之上", "An obsidian king standing amid storm and shattered tiles")}
+                  />
+                  <video
+                    className="hidden sm:block w-full h-full object-cover object-center"
+                    src={HERO_VIDEO}
+                    poster={HERO}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-label={t("王座殿堂动态主视觉", "Throne court motion hero")}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-surface-container-low/40 pointer-events-none" />
                 </div>
