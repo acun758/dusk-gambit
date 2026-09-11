@@ -25,6 +25,7 @@ export type MatchRow = {
   turn: string;
   ply: number;
   seq: number;
+  fen: string;
   cp: number;
   status: string;
   outcome: string | null;
@@ -192,10 +193,11 @@ export const submitMove = createServerFn({ method: "POST" })
     if (m.status !== "live") return { code: "stale" as const, match: m };
     if (m.turn !== you) return { code: "not_your_turn" as const, match: m };
 
-    const chess = new Chess((m as MatchRow & { fen?: string }).fen);
+    const chess = new Chess(m.fen);
     let move;
     try {
-      move = chess.move({ from: data.uci.slice(0, 2), to: data.uci.slice(2, 4), promotion: data.uci[4] });
+      const promotion = data.uci[4];
+      move = chess.move({ from: data.uci.slice(0, 2), to: data.uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
     } catch {
       return { code: "illegal" as const, match: m };
     }
@@ -208,11 +210,11 @@ export const submitMove = createServerFn({ method: "POST" })
       p_expected_seq: m.seq,
       p_uci: data.uci,
       p_san: move.san,
-      p_zh: data.zh ?? null,
+      p_zh: data.zh,
       p_cp: data.cp ?? m.cp,
       p_fen: chess.fen(),
-      p_outcome: outcome,
-      p_reason: reason,
+      p_outcome: outcome ?? undefined,
+      p_reason: reason ?? undefined,
     });
     if (error) throw new Error(error.message);
     const result = applied as { code: string; seq?: number; ply?: number; clock_w?: number; clock_b?: number };
@@ -283,7 +285,10 @@ export const submitEndgame = createServerFn({ method: "POST" })
       if (line.length !== given.length || !line.every((m, i) => m === given[i])) return false;
       try {
         const chess = new Chess(level.fen);
-        for (const uci of line) chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] });
+        for (const uci of line) {
+          const promotion = uci[4];
+          chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
+        }
         return true;
       } catch { return false; }
     });
@@ -387,7 +392,7 @@ export const createDuelInvite = createServerFn({ method: "POST" }).middleware([r
   .inputValidator((input: { invitedId?: string }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", { p_user_id: context.userId, p_invited_id: data.invitedId ?? null });
+    const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", { p_user_id: context.userId, p_invited_id: data.invitedId });
     if (error) throw new Error(error.message); return rows?.[0] ?? null;
   });
 
