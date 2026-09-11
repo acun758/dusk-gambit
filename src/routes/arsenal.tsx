@@ -385,7 +385,7 @@ function Arsenal() {
 </button>
 <div className={"flex flex-col flex-1 min-w-0"}>
 <div className={"flex items-center justify-between"}>
-<span className={"font-headline-sm text-[14px] text-on-surface uppercase truncate"}>深邃大理石撞击 · Hollow Heavy Marble</span>
+<span className={"font-headline-sm text-[14px] text-on-surface uppercase leading-snug min-w-0 line-clamp-2 sm:truncate"}>深邃大理石撞击 · Hollow Heavy Marble</span>
 <span className={"font-label-sm text-label-sm text-secondary"}>0:04</span>
 </div>
 

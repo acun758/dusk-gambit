@@ -449,7 +449,7 @@ function ArchiveChronicle() {
 <span className={"material-symbols-outlined text-[18px]"}>shield</span>
 </div>
 <div className={"flex flex-col min-w-0 leading-tight"}>
-<span className={"font-label-sm text-[11px] text-on-surface font-semibold truncate group-hover:text-secondary"}>血誓公会殿堂</span>
+<span className={"cjk font-label-sm text-[11px] text-on-surface font-semibold whitespace-nowrap group-hover:text-secondary"}>血誓公会殿堂</span>
 <span className={"font-label-sm text-[9px] text-outline font-mono"}>142 在线大师</span>
 </div>
 </button>

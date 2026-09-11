@@ -249,14 +249,15 @@ function Battle() {
 </button>
 
 <div className={"grid grid-cols-2 gap-space-sm"}>
-<button className={"py-2.5 px-3 bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center gap-space-xs shadow-md transition-colors active:scale-95"}>
-<span className={"material-symbols-outlined text-[18px] text-secondary"}>share</span>
-<span className={"font-label-md text-label-md font-medium"}>分享至微信群/好友</span>
+<button className={"py-2.5 px-2 min-w-0 bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center gap-space-xs shadow-md transition-colors active:scale-95"}>
+<span className={"material-symbols-outlined text-[18px] text-secondary shrink-0"}>share</span>
+<span className={"cjk font-label-md text-label-md font-medium min-w-0 leading-snug text-center"}>分享至微信群/好友</span>
 </button>
-<button className={"py-2.5 px-3 bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center gap-space-xs shadow-md transition-colors active:scale-95"}>
-<span className={"material-symbols-outlined text-[18px] text-secondary"}>download_for_offline</span>
-<span className={"font-label-md text-label-md font-medium"}>保存复盘GIF/高清片段</span>
+<button className={"py-2.5 px-2 min-w-0 bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center gap-space-xs shadow-md transition-colors active:scale-95"}>
+<span className={"material-symbols-outlined text-[18px] text-secondary shrink-0"}>download_for_offline</span>
+<span className={"cjk font-label-md text-label-md font-medium min-w-0 leading-snug text-center"}>保存复盘 GIF / 高清片段</span>
 </button>
+
 </div>
 
 <div className={"mt-space-xs p-3 bg-surface-container-lowest flex items-center justify-between shadow-md"}>
