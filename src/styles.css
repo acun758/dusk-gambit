@@ -129,6 +129,10 @@
   --color-antiqueGold: #e5b869;
   --color-goldSubtle: #9d7c3d;
   --color-voidAsh: #8c8c9e;
+  --color-board-light: #9b7750;
+  --color-board-dark: #3a1718;
+  --color-board-white: #f3dfb8;
+  --color-board-black: #17100f;
   --font-serifTitle: "Cinzel", "Playfair Display", Didot, STSong, SimSun, serif;
   --font-sansUI: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }

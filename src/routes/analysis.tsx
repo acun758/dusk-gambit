@@ -141,29 +141,29 @@ function Analysis() {
 
 <div className={"absolute left-6 top-6 bg-surface-container-highest/95 p-space-xs rounded shadow-lg max-w-[140px] pointer-events-none"}>
 <span className={"font-label-sm text-label-sm text-primary flex items-center gap-1 font-bold"}>
-<span className={"material-symbols-outlined text-[12px]"}>warning</span> Ply 18 • Tilt
+<span className={"material-symbols-outlined text-[12px]"}>warning</span> 第 18 手 • 心态波动
           </span>
-<p className={"font-body-sm text-[11px] text-on-surface-variant leading-tight mt-0.5"}>BPM 138 • 3m 42s hesitation</p>
+<p className={"font-body-sm text-[11px] text-on-surface-variant leading-tight mt-0.5"}>心率 138 • 犹豫 3分42秒</p>
 </div>
 <div className={"absolute right-4 bottom-8 bg-surface-container-highest/95 p-space-xs rounded shadow-lg max-w-[150px] pointer-events-none text-right"}>
 <span className={"font-label-sm text-label-sm text-secondary flex items-center justify-end gap-1 font-bold"}>
-            Ply 34 • !! Brilliant <span className={"material-symbols-outlined text-[12px]"}>auto_awesome</span>
+            第 34 手 • !! 妙着 <span className={"material-symbols-outlined text-[12px]"}>auto_awesome</span>
 </span>
-<p className={"font-body-sm text-[11px] text-on-surface leading-tight mt-0.5"}>34...Nh3+ sacrificial breach</p>
+<p className={"font-body-sm text-[11px] text-on-surface leading-tight mt-0.5"}>34...Nh3+ 弃子破阵</p>
 </div>
 </div>
 
 <div className={"grid grid-cols-3 gap-space-xs mt-space-sm pt-space-xs bg-surface-container p-space-xs rounded-lg"}>
 <button className={"flex flex-col p-1.5 bg-surface-container-high hover:bg-surface-bright rounded text-left transition-all"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>PLY 18 TILT</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant"}>第18手 · 波动</span>
 <span className={"font-headline-sm text-[14px] text-primary font-semibold"}>18...exd4?</span>
 </button>
 <button className={"flex flex-col p-1.5 bg-surface-container-high hover:bg-surface-bright rounded text-left transition-all"}>
-<span className={"font-label-sm text-label-sm text-secondary"}>PLY 34 TURNING</span>
+<span className={"font-label-sm text-label-sm text-secondary"}>第34手 · 转折</span>
 <span className={"font-headline-sm text-[14px] text-secondary font-semibold"}>34. Nh3!!</span>
 </button>
 <button className={"flex flex-col p-1.5 bg-surface-container-high hover:bg-surface-bright rounded text-left transition-all"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>PLY 38 MATE</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant"}>第38手 · 将杀</span>
 <span className={"font-headline-sm text-[14px] text-primary-fixed font-semibold"}>38. Rxf7#</span>
 </button>
 </div>
@@ -174,9 +174,9 @@ function Analysis() {
 <div className={"flex items-center justify-between mb-space-xs"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"material-symbols-outlined text-secondary text-[20px]"}>psychology</span>
-<h2 className={"font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider"}>GM Mind Archetype</h2>
+<h2 className={"font-headline-sm text-headline-sm text-on-surface"}>宗师心智原型</h2>
 </div>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>Class: S+</span>
+<span className={"font-label-sm text-label-sm text-secondary"}>评级：S+</span>
 </div>
 
 <div className={"bg-surface-container-low rounded-xl p-space-md shadow-[0_12px_28px_rgba(0,0,0,0.8)] relative"}>
@@ -186,9 +186,9 @@ function Analysis() {
 <span className={"material-symbols-outlined text-primary text-[22px]"}>colorize</span>
 </div>
 <div className={"flex flex-col"}>
-<span className={"font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold"}>Diagnosed Archetype</span>
-<h3 className={"font-headline-sm text-headline-sm text-on-surface"}>Cold-Blooded Executioner</h3>
-<p className={"font-body-sm text-body-sm text-on-surface-variant"}>Extreme conversion instinct once material imbalance surfaces. Zero mercy.</p>
+<span className={"font-label-sm text-label-sm text-primary font-bold"}>心智诊断</span>
+<h3 className={"font-headline-sm text-headline-sm text-on-surface"}>冷血终结者</h3>
+<p className={"font-body-sm text-body-sm text-on-surface-variant"}>一旦形成子力优势，转化胜势的本能极强，几乎不给对手喘息机会。</p>
 </div>
 </div>
 
@@ -242,18 +242,18 @@ function Analysis() {
 <div className={"flex items-center justify-between mb-space-xs"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"material-symbols-outlined text-primary text-[20px]"}>draw</span>
-<h2 className={"font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider"}>Grandmaster Red-Ink</h2>
+<h2 className={"font-headline-sm text-headline-sm text-on-surface"}>宗师红笔批注</h2>
 </div>
-<span className={"font-label-sm text-label-sm text-primary tracking-widest uppercase"}>Deep Tutoring</span>
+<span className={"font-label-sm text-label-sm text-primary"}>深度辅导</span>
 </div>
 
 <div className={"bg-surface-container-low rounded-xl p-space-md mb-space-sm shadow-[0_12px_28px_rgba(0,0,0,0.8)] relative"}>
 <div className={"flex items-start justify-between gap-space-sm"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"w-6 h-6 rounded bg-primary-container/60 text-primary flex items-center justify-center font-label-sm font-bold"}>28</span>
-<span className={"font-label-md text-label-md text-on-surface uppercase font-bold tracking-wider"}>Cognitive Lapse &amp; Blind Spot</span>
+<span className={"font-label-md text-label-md text-on-surface font-bold"}>认知疏漏与盲点</span>
 </div>
-<span className={"font-label-sm text-label-sm text-primary bg-primary-container/30 px-2 py-0.5 rounded"}>Time Sink: 4m 12s</span>
+<span className={"font-label-sm text-label-sm text-primary bg-primary-container/30 px-2 py-0.5 rounded"}>耗时：4分12秒</span>
 </div>
 <div className={"mt-space-sm bg-surface-container p-space-sm rounded-lg flex gap-space-sm"}>
 
@@ -262,19 +262,19 @@ function Analysis() {
 <div className={"absolute inset-0 bg-primary/20 mix-blend-color-dodge"}></div>
 </div>
 <div className={"flex flex-col justify-center"}>
-<span className={"font-label-sm text-label-sm text-secondary font-semibold uppercase"}>Missed Threat Vector</span>
+<span className={"font-label-sm text-label-sm text-secondary font-semibold"}>漏算的威胁方向</span>
 <p className={"font-body-sm text-body-sm text-on-surface-variant line-clamp-2"}>
-            28...Qc7 allowed Black's knight to establish a central outpost on d5 without contest.
+            28...Qc7 让黑马未经争夺就在 d5 建立了中央前哨。
           </p>
 </div>
 </div>
 <div className={"mt-space-sm pl-space-sm bg-surface-container-lowest/80 p-space-sm rounded border-l-0"}>
 <div className={"flex items-center gap-1 text-primary-fixed mb-1"}>
 <span className={"material-symbols-outlined text-[16px]"}>psychology_alt</span>
-<span className={"font-label-sm text-label-sm uppercase tracking-wider font-bold"}>Mental Coach Assessment:</span>
+<span className={"font-label-sm text-label-sm font-bold"}>心智教练评估：</span>
 </div>
 <p className={"font-body-sm text-body-sm text-on-surface leading-relaxed"}>
-          “At Move 28 your time consumption spiked while your gaze stagnated on the kingside file. You entered tactical tunneling, disregarding Black's d5 knight pivot. In fast-paced classical play, this hesitation invites counter-punches.”
+          “第 28 手你的耗时骤增，注意力停留在王翼，进入战术隧道视野，忽略了黑马向 d5 的枢纽。快节奏对局中，这类犹豫会给对手反击窗口。”
         </p>
 </div>
 </div>
@@ -283,9 +283,9 @@ function Analysis() {
 <div className={"flex items-start justify-between gap-space-sm"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"w-6 h-6 rounded bg-secondary-container/60 text-secondary flex items-center justify-center font-label-sm font-bold"}>34</span>
-<span className={"font-label-md text-label-md text-on-surface uppercase font-bold tracking-wider"}>The Cold-Blooded Strike</span>
+<span className={"font-label-md text-label-md text-on-surface font-bold"}>冷血一击</span>
 </div>
-<span className={"font-label-sm text-label-sm text-secondary bg-secondary-container/20 px-2 py-0.5 rounded"}>Engine Val: +M5</span>
+<span className={"font-label-sm text-label-sm text-secondary bg-secondary-container/20 px-2 py-0.5 rounded"}>引擎评估：+M5</span>
 </div>
 <div className={"mt-space-sm bg-surface-container p-space-sm rounded-lg flex gap-space-sm"}>
 <div className={"w-16 h-16 rounded overflow-hidden shrink-0 bg-surface-container-highest relative"}>
@@ -293,19 +293,19 @@ function Analysis() {
 <div className={"absolute inset-0 bg-secondary/15 mix-blend-color-dodge"}></div>
 </div>
 <div className={"flex flex-col justify-center"}>
-<span className={"font-label-sm text-label-sm text-secondary font-semibold uppercase"}>34. Nh3!! Masterclass</span>
+<span className={"font-label-sm text-label-sm text-secondary font-semibold"}>34. Nh3!! 宗师示范</span>
 <p className={"font-body-sm text-body-sm text-on-surface-variant line-clamp-2"}>
-            A quiet clearance sacrifice shattering Black's fortress while clock dropped under 45s.
+            在剩余不足 45 秒时，以安静的腾挪弃子击碎黑方堡垒。
           </p>
 </div>
 </div>
 <div className={"mt-space-sm pl-space-sm bg-surface-container-lowest/80 p-space-sm rounded"}>
 <div className={"flex items-center gap-1 text-secondary-fixed mb-1"}>
 <span className={"material-symbols-outlined text-[16px]"}>military_tech</span>
-<span className={"font-label-sm text-label-sm uppercase tracking-wider font-bold"}>Psychological Triumph:</span>
+<span className={"font-label-sm text-label-sm font-bold"}>心理胜利：</span>
 </div>
 <p className={"font-body-sm text-body-sm text-on-surface leading-relaxed"}>
-          “Exemplary threshold courage. Despite acute time decay, your heart rate normalized from 138 to 92 BPM right before executing the breakthrough. You weaponized opponent complacency.”
+          “临界压力下的勇气堪称典范。虽然时间急剧减少，你在突破前将心率从 138 降至 92，并把对手的松懈转化成了武器。”
         </p>
 </div>
 </div>
@@ -313,14 +313,14 @@ function Analysis() {
 
 <div className={"px-margin-mobile mt-space-lg mb-space-md"}>
 <span className={"font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold block mb-space-xs"}>
-      Progression &amp; Re-Engagement
+      进阶与再训练
     </span>
 <div className={"flex flex-col gap-space-sm"}>
 
 <button className={"w-full bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-label-lg text-label-lg uppercase tracking-widest py-space-md px-space-md rounded-lg flex items-center justify-between shadow-[0_8px_24px_rgba(139,30,30,0.6)] active:scale-[0.98] transition-all"}>
 <div className={"flex items-center gap-space-sm"}>
 <span className={"material-symbols-outlined text-[22px]"}>replay</span>
-<span className={"font-bold tracking-widest"}>Rewind &amp; Try Different Move (Ply 28)</span>
+<span className={"font-bold"}>回到第 28 手尝试其他走法</span>
 </div>
 <span className={"material-symbols-outlined text-[20px]"}>chevron_right</span>
 </button>
@@ -328,19 +328,19 @@ function Analysis() {
 <button className={"w-full bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-lg text-label-lg uppercase tracking-wider py-space-md px-space-md rounded-lg flex items-center justify-between shadow-md active:scale-[0.98] transition-all"}>
 <div className={"flex items-center gap-space-sm"}>
 <span className={"material-symbols-outlined text-secondary text-[22px]"}>bookmark_add</span>
-<span>Add To Personal Weakness Deck</span>
+<span>加入个人弱点牌组</span>
 </div>
-<span className={"font-label-sm text-label-sm bg-secondary/15 text-secondary px-2 py-0.5 rounded font-bold"}>+1 CARD</span>
+<span className={"font-label-sm text-label-sm bg-secondary/15 text-secondary px-2 py-0.5 rounded font-bold"}>+1 张</span>
 </button>
 
 <div className={"grid grid-cols-2 gap-space-sm"}>
 <button className={"bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md uppercase tracking-wider py-space-sm px-space-sm rounded-lg flex items-center justify-center gap-space-xs transition-all"}>
 <span className={"material-symbols-outlined text-[18px]"}>terminal</span>
-<span>Export PGN</span>
+<span>导出棋谱</span>
 </button>
 <button className={"bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md uppercase tracking-wider py-space-sm px-space-sm rounded-lg flex items-center justify-center gap-space-xs transition-all"}>
 <span className={"material-symbols-outlined text-[18px]"}>picture_as_pdf</span>
-<span>Dossier PDF</span>
+<span>复盘 PDF</span>
 </button>
 </div>
 </div>

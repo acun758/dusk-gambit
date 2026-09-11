@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
+import { createDuelInvite, joinDuelInvite, loadFriends, requestFriend, respondFriend, searchPlayers } from "@/lib/game.functions";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const HERO =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBnVOX-kXx8mV3PVsr8DCXDkuhKkPFg3FPwgzrEZR2jqS1iRBa--gRHsSpsOQX01tqxrUvzEUdYLuEqogs7_vxU3GDGPsKI0TlWMP4uXHALJWJc6Q9MJ1oytTy3GzpB3VP00MwJeXVjfDbX-hfBqJ-bBozBHDECtONNRt60wbUGhKLBTsca9P7nq-ln4dZ2VgNuudkZx0NpP4FHc2wdORwrLtHpziEl0Rj_MUZKPHIvn0x4Y9vssEL_Zg";
@@ -34,6 +37,12 @@ function Index() {
   const nextTier = profile.elo >= 2500 ? 2600 : profile.elo >= 2400 ? 2500 : 2400;
   const floor = nextTier - 100;
   const progress = Math.max(4, Math.min(100, ((profile.elo - floor) / (nextTier - floor)) * 100));
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<Array<{ id: string; name: string; handle: string; elo: number }>>([]);
+  const [inviteCode, setInviteCode] = useState("");
+  const [createdCode, setCreatedCode] = useState("");
+  const [notice, setNotice] = useState("");
+  const friendsQ = useQuery({ queryKey: ["friends", signedIn], queryFn: () => signedIn ? loadFriends() : Promise.resolve([]) });
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
@@ -210,6 +219,26 @@ function Index() {
                 <Bi zh="进入 3+2 天梯对弈" en="Enter 3+2 Ranked Duel" />
               </span>
             </Link>
+          </section>
+
+          <section className="mt-space-lg flex flex-col gap-space-sm">
+            <div className="flex items-center justify-between"><h2 className="font-headline-sm text-headline-sm"><Bi zh="好友与点名对战" en="Friends & Challenges" /></h2><span className="font-label-sm text-label-sm text-secondary">3+2</span></div>
+            {!signedIn ? (
+              <Link to="/auth" className="h-12 bg-surface-container-high text-secondary flex items-center justify-center cjk font-label-md text-label-md">登录后搜索好友并创建对战码</Link>
+            ) : (
+              <div className="grid lg:grid-cols-2 gap-space-sm">
+                <div className="bg-surface-container-low p-space-sm flex flex-col gap-space-xs">
+                  <div className="flex gap-space-xs"><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="输入玩家名或账号" className="h-11 min-w-0 flex-1 bg-surface-container-highest px-3 outline-none focus:ring-1 focus:ring-secondary"/><button onClick={() => void searchPlayers({ data: { query } }).then((r) => setResults(r as typeof results)).catch(() => setNotice("没有找到该玩家"))} className="h-11 px-4 bg-secondary text-on-secondary cjk font-label-sm text-label-sm">搜索</button></div>
+                  {results.map((r) => <div key={r.id} className="min-h-12 px-2 bg-surface-container flex items-center justify-between gap-2"><span className="min-w-0"><strong className="block truncate">{r.name}</strong><small className="text-on-surface-variant">@{r.handle} · {r.elo} ELO</small></span><button onClick={() => void requestFriend({ data: { userId: r.id } }).then(() => { setNotice("好友请求已发送"); void friendsQ.refetch(); })} className="h-10 px-3 text-secondary">加好友</button></div>)}
+                </div>
+                <div className="bg-surface-container-low p-space-sm flex flex-col gap-space-xs">
+                  <div className="grid grid-cols-2 gap-space-xs"><button onClick={() => void createDuelInvite({ data: {} }).then((r) => setCreatedCode(r?.code ?? ""))} className="h-11 bg-primary-container text-on-primary-container cjk font-label-sm text-label-sm">创建对战码</button><div className="flex"><input value={inviteCode} onChange={(e) => setInviteCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="h-11 min-w-0 flex-1 bg-surface-container-highest px-2 uppercase"/><button onClick={() => void joinDuelInvite({ data: { code: inviteCode } }).then(() => { setNotice("已加入对局"); window.location.assign("/battle"); }).catch(() => setNotice("对战码无效或已过期"))} className="h-11 px-3 bg-secondary text-on-secondary">加入</button></div></div>
+                  {createdCode && <p className="cjk font-body-sm text-body-sm text-secondary">对战码：<strong className="tracking-widest">{createdCode}</strong> · 10 分钟内有效</p>}
+                  {(friendsQ.data ?? []).map((f) => <div key={f.friendshipId} className="min-h-12 px-2 bg-surface-container flex items-center justify-between gap-2"><span className="min-w-0"><strong className="block truncate">{f.name}</strong><small className="text-on-surface-variant">{f.elo} ELO · ♦ {f.diamonds} · {f.wins}胜</small></span>{f.friendshipStatus === "pending" && f.incoming ? <button onClick={() => void respondFriend({ data: { friendshipId: f.friendshipId, accept: true } }).then(() => friendsQ.refetch())} className="h-10 px-3 text-secondary">接受</button> : f.friendshipStatus === "accepted" ? <button onClick={() => void createDuelInvite({ data: { invitedId: f.id } }).then((r) => setCreatedCode(r?.code ?? ""))} className="h-10 px-3 text-primary">挑战</button> : <span className="text-on-surface-variant text-xs">待回应</span>}</div>)}
+                  {notice && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{notice}</p>}
+                </div>
+              </div>
+            )}
           </section>
 
           {/* 残局试炼 */}

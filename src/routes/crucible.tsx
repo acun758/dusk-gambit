@@ -36,6 +36,11 @@ interface LevelRow {
   elo_required: number;
   elo_reward: number;
   diamond_reward: number;
+  depth: number;
+  theme_zh: string;
+  theme_en: string;
+  hint_zh: string;
+  hint_en: string;
 }
 
 interface ProgressRow {
@@ -69,7 +74,7 @@ function Crucible() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [entry, setEntry] = useState("");
   const [startedAt, setStartedAt] = useState(() => Date.now());
-  const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number } | null>(null);
+  const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number; explanation?: { zh: string; en: string } } | null>(null);
   const [busy, setBusy] = useState(false);
   const [blind, setBlind] = useState(true);
   const [promo, setPromo] = useState<{ tier: string; tierZh: string } | null>(null);
@@ -113,7 +118,7 @@ function Crucible() {
     try {
       const res = (await submitEndgame({
         data: { levelId: active.id, moves, ms: Date.now() - startedAt },
-      })) as { correct: boolean; firstSolve: boolean; expectedLength: number };
+      })) as { correct: boolean; firstSolve: boolean; expectedLength: number; explanation?: { zh: string; en: string } };
       setResult(res);
       if (res.correct) {
         if (res.firstSolve) {
@@ -157,7 +162,7 @@ function Crucible() {
         {/* 关卡列表 */}
         <section className="flex flex-col gap-space-xs mt-space-md lg:w-72 lg:shrink-0">
           <h2 className="font-headline-sm text-headline-sm">
-            <Bi zh="六道试炼" en="Six Trials" />
+            <Bi zh="六道实战试炼" en="Six Practical Trials" />
           </h2>
           {levelsQ.isLoading && (
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("关卡载入中…", "Loading trials…")}</p>
@@ -180,7 +185,7 @@ function Crucible() {
                       {t(l.name_zh, l.name_en)}
                     </span>
                     <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
-                      {t(`${l.moves_to_mate} 步杀`, `Mate in ${l.moves_to_mate}`)} · +{l.elo_reward} ELO
+                      {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} ELO
                     </span>
                   </span>
                   <span className="material-symbols-outlined text-[18px] shrink-0 text-secondary">
@@ -205,6 +210,9 @@ function Crucible() {
                   {t(active.brief_zh, active.brief_en)}
                 </p>
                 <div className="flex flex-wrap items-center gap-space-xs mt-space-xs">
+                  <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-primary tracking-widest">
+                    {t(`计算深度 ${active.depth}`, `Depth ${active.depth}`)}
+                  </span>
                   <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
                     +{active.elo_reward} ELO
                   </span>
@@ -217,6 +225,7 @@ function Crucible() {
                     </span>
                   )}
                 </div>
+                <p className="cjk font-body-sm text-body-sm text-secondary mt-1">{t(`提示：${active.hint_zh}`, `Hint: ${active.hint_en}`)}</p>
               </div>
 
               <div className="relative w-full max-w-[560px] aspect-square bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)]">
@@ -294,6 +303,11 @@ function Crucible() {
                           : t("解法正确，此关此前已通过。", "Correct — this trial was already solved.")
                         : t("解法不成立，再算一遍。", "That line does not hold. Calculate again.")}
                     </p>
+                    {result.correct && result.explanation && (
+                      <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                        {t(result.explanation.zh, result.explanation.en)}
+                      </p>
+                    )}
                   </div>
                 )}
                 {promo && (

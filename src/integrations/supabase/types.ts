@@ -128,6 +128,13 @@ export type Database = {
             referencedRelation: "endgame_levels"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "endgame_progress_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: false
+            referencedRelation: "endgame_levels_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       endgame_solutions: {
@@ -152,6 +159,13 @@ export type Database = {
             columns: ["level_id"]
             isOneToOne: true
             referencedRelation: "endgame_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endgame_solutions_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: true
+            referencedRelation: "endgame_levels_public"
             referencedColumns: ["id"]
           },
         ]
@@ -416,7 +430,72 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      endgame_levels_public: {
+        Row: {
+          brief_en: string | null
+          brief_zh: string | null
+          code: string | null
+          depth: number | null
+          diamond_reward: number | null
+          elo_required: number | null
+          elo_reward: number | null
+          fen: string | null
+          hint_en: string | null
+          hint_zh: string | null
+          id: number | null
+          moves_to_mate: number | null
+          name_en: string | null
+          name_zh: string | null
+          objective_en: string | null
+          objective_zh: string | null
+          solution_length: number | null
+          theme_en: string | null
+          theme_zh: string | null
+        }
+        Insert: {
+          brief_en?: string | null
+          brief_zh?: string | null
+          code?: string | null
+          depth?: number | null
+          diamond_reward?: number | null
+          elo_required?: number | null
+          elo_reward?: number | null
+          fen?: string | null
+          hint_en?: string | null
+          hint_zh?: string | null
+          id?: number | null
+          moves_to_mate?: number | null
+          name_en?: string | null
+          name_zh?: string | null
+          objective_en?: string | null
+          objective_zh?: string | null
+          solution_length?: never
+          theme_en?: string | null
+          theme_zh?: string | null
+        }
+        Update: {
+          brief_en?: string | null
+          brief_zh?: string | null
+          code?: string | null
+          depth?: number | null
+          diamond_reward?: number | null
+          elo_required?: number | null
+          elo_reward?: number | null
+          fen?: string | null
+          hint_en?: string | null
+          hint_zh?: string | null
+          id?: number | null
+          moves_to_mate?: number | null
+          name_en?: string | null
+          name_zh?: string | null
+          objective_en?: string | null
+          objective_zh?: string | null
+          solution_length?: never
+          theme_en?: string | null
+          theme_zh?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       apply_ranked_move: {

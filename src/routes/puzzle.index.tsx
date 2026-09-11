@@ -7,7 +7,7 @@ export const Route = createFileRoute("/puzzle/")({
   component: Puzzle,
 });
 
-const FEN = "6rk/5ppp/8/7Q/4B3/8/8/6K1 w - - 0 1";
+const FEN = "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4";
 
 function Puzzle() {
   const [result, setResult] = useState<"idle" | "win" | "miss">("idle");
@@ -23,7 +23,7 @@ function Puzzle() {
       </header>
       <main className="pt-16 px-margin-mobile min-h-[calc(100vh-7rem)] flex flex-col lg:flex-row lg:items-center lg:justify-center gap-space-md">
         <section className="flex-1 min-w-0 flex flex-col items-center gap-space-sm pt-space-sm">
-          <div className="w-full game-board h-auto p-space-sm bg-surface-container-low">
+          <div className="w-full max-w-[520px] p-space-sm bg-surface-container-low">
             <p className="font-label-sm text-label-sm text-primary tracking-widest">宗师残局 · 白方走棋</p>
             <h2 className="font-headline-md text-headline-md mt-1">复现绝杀 · 虚空断罪</h2>
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-1">目标：一步将杀。点击白后，再点击目标格完成落子。</p>
