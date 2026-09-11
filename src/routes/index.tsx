@@ -49,8 +49,8 @@ function Index() {
       <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-secondary text-[22px]">military_tech</span>
+            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
+              <img src={EMBLEM} alt={t("血誓王权徽章", "Blood Sovereign emblem")} className="w-full h-full object-contain" width={44} height={44} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -106,9 +106,19 @@ function Index() {
               <div className="relative z-10 flex flex-col items-center text-center mt-space-md mb-space-sm">
                 <div className="relative w-full h-56 lg:h-72 overflow-hidden bg-surface-container-lowest mb-space-md shadow-2xl">
                   <img
-                    className="w-full h-full object-cover object-center"
-                    src={HERO}
+                    className="w-full h-full object-cover object-center sm:hidden"
+                    src={HERO_PORTRAIT}
                     alt={t("黑曜石王棋矗立于风暴与碎裂棋格之上", "An obsidian king standing amid storm and shattered tiles")}
+                  />
+                  <video
+                    className="hidden sm:block w-full h-full object-cover object-center"
+                    src={HERO_VIDEO}
+                    poster={HERO}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-label={t("王座殿堂动态主视觉", "Throne court motion hero")}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-surface-container-low/40 pointer-events-none" />
                 </div>
