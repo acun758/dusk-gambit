@@ -70,6 +70,7 @@ export function SovereignNav() {
       {/* Compact: bottom bar (iPhone / iPad portrait) */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <div className="flex gap-space-xs overflow-x-auto px-gutter-mobile py-1.5 border-b border-outline-variant/30">
+          <LangToggle />
           {SANCTUM.map((item) => {
             const active = pathname === item.to;
             return (
