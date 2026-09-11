@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { Chess } from "chess.js";
 
 /**
  * 服务端权威逻辑：玩家档案、3+2 天梯对局仲裁（时钟与胜负）、残局关卡校验。
@@ -34,6 +35,7 @@ export type MatchRow = {
 
 export interface ProfileRow {
   id: string;
+  handle: string;
   name: string;
   diamonds: number;
   elo: number;
@@ -41,6 +43,12 @@ export interface ProfileRow {
   losses: number;
   draws: number;
   streak: number;
+}
+
+export interface FriendProfile extends ProfileRow {
+  friendshipId: string;
+  friendshipStatus: "pending" | "accepted" | "blocked";
+  incoming: boolean;
 }
 
 function eloDelta(mine: number, theirs: number, score: number): number {
@@ -161,37 +169,14 @@ async function settle(
   outcome: "white" | "black" | "draw",
   reason: string,
 ) {
-  const scoreW = outcome === "white" ? 1 : outcome === "draw" ? 0.5 : 0;
-  const delta = eloDelta(match.white_elo, match.black_elo, scoreW);
-  await admin
-    .from("matches")
-    .update({ status: "over", outcome, reason, rating_delta: delta })
-    .eq("id", match.id)
-    .eq("status", "live");
-
-  for (const side of ["w", "b"] as const) {
-    const uid = side === "w" ? match.white_id : match.black_id;
-    if (!uid) continue;
-    const { data: p } = await admin.from("profiles").select("*").eq("id", uid).maybeSingle();
-    if (!p) continue;
-    const prof = p as ProfileRow;
-    const won = (side === "w" && outcome === "white") || (side === "b" && outcome === "black");
-    const drew = outcome === "draw";
-    const d = side === "w" ? delta : -delta;
-    await admin
-      .from("profiles")
-      .update({
-        elo: Math.max(100, prof.elo + d),
-        wins: prof.wins + (won ? 1 : 0),
-        losses: prof.losses + (!won && !drew ? 1 : 0),
-        draws: prof.draws + (drew ? 1 : 0),
-        streak: won ? prof.streak + 1 : 0,
-        diamonds: prof.diamonds + (won ? 25 : drew ? 10 : 5),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", uid);
-  }
-  return delta;
+  const { data, error } = await admin.rpc("settle_ranked_match", {
+    p_match_id: match.id,
+    p_outcome: outcome,
+    p_reason: reason,
+  });
+  if (error) throw new Error(error.message);
+  const result = data as { settled?: boolean; rating_delta?: number } | null;
+  return result?.settled ? (result.rating_delta ?? 0) : 0;
 }
 
 export const submitMove = createServerFn({ method: "POST" })
@@ -207,51 +192,32 @@ export const submitMove = createServerFn({ method: "POST" })
     if (m.status !== "live") return { code: "stale" as const, match: m };
     if (m.turn !== you) return { code: "not_your_turn" as const, match: m };
 
-    const elapsed = Date.now() - new Date(m.last_move_at).getTime();
-    const before = you === "w" ? m.clock_w : m.clock_b;
-    const remaining = before - elapsed;
-    if (remaining <= 0) {
-      const outcome = you === "w" ? "black" : "white";
-      const delta = await settle(supabaseAdmin, { ...m, clock_w: you === "w" ? 0 : m.clock_w, clock_b: you === "b" ? 0 : m.clock_b }, outcome, "timeout");
-      return { code: "timeout" as const, outcome, ratingDelta: delta };
+    const chess = new Chess((m as MatchRow & { fen?: string }).fen);
+    let move;
+    try {
+      move = chess.move({ from: data.uci.slice(0, 2), to: data.uci.slice(2, 4), promotion: data.uci[4] });
+    } catch {
+      return { code: "illegal" as const, match: m };
     }
-
-    const after = remaining + m.tc_inc;
-    const clock_w = you === "w" ? after : m.clock_w;
-    const clock_b = you === "b" ? after : m.clock_b;
-    const seq = m.seq + 1;
-    const ply = m.ply + 1;
-    const now = new Date().toISOString();
-
-    await supabaseAdmin.from("match_moves").insert({
-      match_id: m.id,
-      seq,
-      ply,
-      uci: data.uci,
-      san: data.san,
-      by: you,
-      zh: data.zh ?? null,
-      cp: data.cp ?? null,
-      clock_w,
-      clock_b,
+    if (!move) return { code: "illegal" as const, match: m };
+    const outcome = chess.isCheckmate() ? (you === "w" ? "white" : "black") : chess.isDraw() ? "draw" : null;
+    const reason = chess.isCheckmate() ? "mate" : chess.isDraw() ? "draw" : null;
+    const { data: applied, error } = await supabaseAdmin.rpc("apply_ranked_move", {
+      p_match_id: m.id,
+      p_user_id: context.userId,
+      p_expected_seq: m.seq,
+      p_uci: data.uci,
+      p_san: move.san,
+      p_zh: data.zh ?? null,
+      p_cp: data.cp ?? m.cp,
+      p_fen: chess.fen(),
+      p_outcome: outcome,
+      p_reason: reason,
     });
-
-    const { data: updated } = await supabaseAdmin
-      .from("matches")
-      .update({
-        clock_w,
-        clock_b,
-        turn: you === "w" ? "b" : "w",
-        ply,
-        seq,
-        cp: data.cp ?? m.cp,
-        last_move_at: now,
-      })
-      .eq("id", m.id)
-      .select("*")
-      .single();
-
-    return { code: "ok" as const, match: updated as MatchRow, seq, ply, clock: { w: clock_w, b: clock_b } };
+    if (error) throw new Error(error.message);
+    const result = applied as { code: string; seq?: number; ply?: number; clock_w?: number; clock_b?: number };
+    const fresh = await supabaseAdmin.from("matches").select("*").eq("id", m.id).single();
+    return { ...result, match: fresh.data as MatchRow, clock: { w: result.clock_w ?? m.clock_w, b: result.clock_b ?? m.clock_b } };
   });
 
 export const resignMatch = createServerFn({ method: "POST" })
@@ -297,68 +263,47 @@ export const submitEndgame = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: sol } = await supabaseAdmin
       .from("endgame_solutions")
-      .select("solution")
+      .select("solution, alternate_solutions")
       .eq("level_id", data.levelId)
       .maybeSingle();
     if (!sol) throw new Error("level not found");
 
-    const expected = (sol.solution as string[]).filter((_, i) => i % 2 === 0);
+    const expected = sol.solution as string[];
     const given = data.moves.filter(Boolean);
-    const correct = expected.length === given.length && expected.every((m, i) => m === given[i]);
+    const candidates = [expected, ...((sol.alternate_solutions as string[][] | null) ?? [])];
 
     const { data: level } = await supabaseAdmin
       .from("endgame_levels")
-      .select("elo_reward, diamond_reward, elo_required")
+      .select("fen, elo_reward, diamond_reward, elo_required, explanation_zh, explanation_en, move_annotations")
       .eq("id", data.levelId)
       .maybeSingle();
 
-    const { data: prev } = await supabaseAdmin
-      .from("endgame_progress")
-      .select("*")
-      .eq("user_id", context.userId)
-      .eq("level_id", data.levelId)
-      .maybeSingle();
-
-    const attempts = (prev?.attempts ?? 0) + 1;
-    const firstSolve = correct && !prev?.solved;
-    await supabaseAdmin.from("endgame_progress").upsert(
-      {
-        user_id: context.userId,
-        level_id: data.levelId,
-        attempts,
-        solved: correct || Boolean(prev?.solved),
-        best_ms: correct ? Math.min(prev?.best_ms ?? data.ms, data.ms) : (prev?.best_ms ?? null),
-        solved_at: correct ? new Date().toISOString() : (prev?.solved_at ?? null),
-      },
-      { onConflict: "user_id,level_id" },
-    );
-
-    let profile: ProfileRow | null = null;
-    if (firstSolve && level) {
-      const { data: p } = await supabaseAdmin.from("profiles").select("*").eq("id", context.userId).maybeSingle();
-      if (p) {
-        const prof = p as ProfileRow;
-        const { data: up } = await supabaseAdmin
-          .from("profiles")
-          .update({
-            elo: prof.elo + level.elo_reward,
-            diamonds: prof.diamonds + level.diamond_reward,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", context.userId)
-          .select("*")
-          .single();
-        profile = (up as ProfileRow) ?? null;
-      }
-    }
+    if (!level) throw new Error("level not found");
+    const legal = candidates.some((line) => {
+      if (line.length !== given.length || !line.every((m, i) => m === given[i])) return false;
+      try {
+        const chess = new Chess(level.fen);
+        for (const uci of line) chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] });
+        return true;
+      } catch { return false; }
+    });
+    const correct = legal;
+    const { data: recorded, error: recordError } = await supabaseAdmin.rpc("record_endgame_result", {
+      p_user_id: context.userId, p_level_id: data.levelId, p_correct: correct, p_ms: Math.max(0, data.ms),
+    });
+    if (recordError) throw new Error(recordError.message);
+    const record = recorded as { first_solve?: boolean; attempts?: number } | null;
+    const firstSolve = Boolean(record?.first_solve);
+    const { data: profile } = await supabaseAdmin.from("profiles").select("*").eq("id", context.userId).maybeSingle();
 
     return {
       correct,
       firstSolve,
-      attempts,
+      attempts: record?.attempts ?? 1,
       expectedLength: expected.length,
       reward: firstSolve ? { elo: level?.elo_reward ?? 0, diamonds: level?.diamond_reward ?? 0 } : null,
-      profile,
+      profile: profile as ProfileRow | null,
+      explanation: { zh: level.explanation_zh, en: level.explanation_en, annotations: level.move_annotations },
     };
   });
 
@@ -390,7 +335,66 @@ export const listEndgameLevels = createServerFn({ method: "GET" }).handler(async
   });
   const { data } = await client
     .from("endgame_levels")
-    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward")
+    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward, depth, theme_zh, theme_en, hint_zh, hint_en")
     .order("id");
   return data ?? [];
 });
+
+/* -------------------------------- friends -------------------------------- */
+
+export const searchPlayers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { query: string }) => ({ query: input.query.trim().slice(0, 24) }))
+  .handler(async ({ data }) => {
+    if (data.query.length < 2) return [];
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin.rpc("search_player_profiles", { q: data.query });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const loadFriends = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: links } = await supabaseAdmin.from("friendships").select("*").or(`requester_id.eq.${context.userId},addressee_id.eq.${context.userId}`);
+    const ids = (links ?? []).map((f) => f.requester_id === context.userId ? f.addressee_id : f.requester_id);
+    if (!ids.length) return [];
+    const { data: profiles } = await supabaseAdmin.from("profiles").select("*").in("id", ids);
+    return (links ?? []).map((f) => {
+      const p = (profiles ?? []).find((x) => x.id === (f.requester_id === context.userId ? f.addressee_id : f.requester_id));
+      return p ? { ...p, friendshipId: f.id, friendshipStatus: f.status, incoming: f.addressee_id === context.userId } : null;
+    }).filter(Boolean) as FriendProfile[];
+  });
+
+export const requestFriend = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.rpc("send_friend_request", { p_user_id: context.userId, p_target_id: data.userId });
+    if (error) throw new Error(error.message); return { ok: true };
+  });
+
+export const respondFriend = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: { friendshipId: string; accept: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: ok, error } = await supabaseAdmin.rpc("respond_friend_request", { p_user_id: context.userId, p_friendship_id: data.friendshipId, p_accept: data.accept });
+    if (error) throw new Error(error.message); return { ok: Boolean(ok) };
+  });
+
+export const createDuelInvite = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: { invitedId?: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", { p_user_id: context.userId, p_invited_id: data.invitedId ?? null });
+    if (error) throw new Error(error.message); return rows?.[0] ?? null;
+  });
+
+export const joinDuelInvite = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator((input: { code: string }) => ({ code: input.code.trim().toUpperCase().slice(0, 8) }))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: matchId, error } = await supabaseAdmin.rpc("join_match_invite", { p_user_id: context.userId, p_code: data.code });
+    if (error) throw new Error(error.message); return { matchId };
+  });
