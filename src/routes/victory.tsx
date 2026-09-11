@@ -281,7 +281,7 @@ function Victory() {
 <button className={"w-full h-14 bg-gradient-to-r from-primary-container via-inverse-primary to-primary-container text-on-surface flex items-center justify-center gap-space-sm shadow-[0_12px_28px_rgba(139,30,30,0.6)] active:scale-[0.99] transition-transform relative overflow-hidden group"} id={"nextBattleBtn"}>
 <div className={"absolute inset-0 bg-secondary/15 opacity-0 group-hover:opacity-100 transition-opacity"}></div>
 <span className={"material-symbols-outlined text-secondary text-[24px]"}>swords</span>
-<span className={"font-label-lg text-label-lg uppercase tracking-[0.16em] text-on-primary-fixed"}>
+<span className={"font-label-lg text-label-lg uppercase tracking-[0.16em] text-on-primary-container"}>
         NEXT CONQUEST · 登临下一场天梯
       </span>
 <span className={"material-symbols-outlined text-secondary text-[20px]"}>arrow_forward</span>
