@@ -10,33 +10,193 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalysisRouteImport } from './routes/analysis'
+import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as ArsenalRouteImport } from './routes/arsenal'
+import { Route as BattleRouteImport } from './routes/battle'
+import { Route as CodexRouteImport } from './routes/codex'
+import { Route as FinisherRouteImport } from './routes/finisher'
+import { Route as ProtocolsRouteImport } from './routes/protocols'
+import { Route as ShareRouteImport } from './routes/share'
+import { Route as VictoryRouteImport } from './routes/victory'
+import { Route as ForgeIdRouteImport } from './routes/forge.$id'
+import { Route as PuzzleIndexRouteImport } from './routes/puzzle.index'
+import { Route as PuzzleSolvedRouteImport } from './routes/puzzle.solved'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalysisRoute = AnalysisRouteImport.update({
+  id: '/analysis',
+  path: '/analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchiveRoute = ArchiveRouteImport.update({
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArsenalRoute = ArsenalRouteImport.update({
+  id: '/arsenal',
+  path: '/arsenal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BattleRoute = BattleRouteImport.update({
+  id: '/battle',
+  path: '/battle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CodexRoute = CodexRouteImport.update({
+  id: '/codex',
+  path: '/codex',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinisherRoute = FinisherRouteImport.update({
+  id: '/finisher',
+  path: '/finisher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtocolsRoute = ProtocolsRouteImport.update({
+  id: '/protocols',
+  path: '/protocols',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VictoryRoute = VictoryRouteImport.update({
+  id: '/victory',
+  path: '/victory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgeIdRoute = ForgeIdRouteImport.update({
+  id: '/forge/$id',
+  path: '/forge/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PuzzleIndexRoute = PuzzleIndexRouteImport.update({
+  id: '/puzzle/',
+  path: '/puzzle/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PuzzleSolvedRoute = PuzzleSolvedRouteImport.update({
+  id: '/puzzle/solved',
+  path: '/puzzle/solved',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/archive': typeof ArchiveRoute
+  '/arsenal': typeof ArsenalRoute
+  '/battle': typeof BattleRoute
+  '/codex': typeof CodexRoute
+  '/finisher': typeof FinisherRoute
+  '/protocols': typeof ProtocolsRoute
+  '/share': typeof ShareRoute
+  '/victory': typeof VictoryRoute
+  '/forge/$id': typeof ForgeIdRoute
+  '/puzzle/solved': typeof PuzzleSolvedRoute
+  '/puzzle/': typeof PuzzleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/archive': typeof ArchiveRoute
+  '/arsenal': typeof ArsenalRoute
+  '/battle': typeof BattleRoute
+  '/codex': typeof CodexRoute
+  '/finisher': typeof FinisherRoute
+  '/protocols': typeof ProtocolsRoute
+  '/share': typeof ShareRoute
+  '/victory': typeof VictoryRoute
+  '/forge/$id': typeof ForgeIdRoute
+  '/puzzle/solved': typeof PuzzleSolvedRoute
+  '/puzzle': typeof PuzzleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analysis': typeof AnalysisRoute
+  '/archive': typeof ArchiveRoute
+  '/arsenal': typeof ArsenalRoute
+  '/battle': typeof BattleRoute
+  '/codex': typeof CodexRoute
+  '/finisher': typeof FinisherRoute
+  '/protocols': typeof ProtocolsRoute
+  '/share': typeof ShareRoute
+  '/victory': typeof VictoryRoute
+  '/forge/$id': typeof ForgeIdRoute
+  '/puzzle/solved': typeof PuzzleSolvedRoute
+  '/puzzle/': typeof PuzzleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/analysis'
+    | '/archive'
+    | '/arsenal'
+    | '/battle'
+    | '/codex'
+    | '/finisher'
+    | '/protocols'
+    | '/share'
+    | '/victory'
+    | '/forge/$id'
+    | '/puzzle/solved'
+    | '/puzzle/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/analysis'
+    | '/archive'
+    | '/arsenal'
+    | '/battle'
+    | '/codex'
+    | '/finisher'
+    | '/protocols'
+    | '/share'
+    | '/victory'
+    | '/forge/$id'
+    | '/puzzle/solved'
+    | '/puzzle'
+  id:
+    | '__root__'
+    | '/'
+    | '/analysis'
+    | '/archive'
+    | '/arsenal'
+    | '/battle'
+    | '/codex'
+    | '/finisher'
+    | '/protocols'
+    | '/share'
+    | '/victory'
+    | '/forge/$id'
+    | '/puzzle/solved'
+    | '/puzzle/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalysisRoute: typeof AnalysisRoute
+  ArchiveRoute: typeof ArchiveRoute
+  ArsenalRoute: typeof ArsenalRoute
+  BattleRoute: typeof BattleRoute
+  CodexRoute: typeof CodexRoute
+  FinisherRoute: typeof FinisherRoute
+  ProtocolsRoute: typeof ProtocolsRoute
+  ShareRoute: typeof ShareRoute
+  VictoryRoute: typeof VictoryRoute
+  ForgeIdRoute: typeof ForgeIdRoute
+  PuzzleSolvedRoute: typeof PuzzleSolvedRoute
+  PuzzleIndexRoute: typeof PuzzleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +208,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analysis': {
+      id: '/analysis'
+      path: '/analysis'
+      fullPath: '/analysis'
+      preLoaderRoute: typeof AnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/archive': {
+      id: '/archive'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arsenal': {
+      id: '/arsenal'
+      path: '/arsenal'
+      fullPath: '/arsenal'
+      preLoaderRoute: typeof ArsenalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/battle': {
+      id: '/battle'
+      path: '/battle'
+      fullPath: '/battle'
+      preLoaderRoute: typeof BattleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/codex': {
+      id: '/codex'
+      path: '/codex'
+      fullPath: '/codex'
+      preLoaderRoute: typeof CodexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finisher': {
+      id: '/finisher'
+      path: '/finisher'
+      fullPath: '/finisher'
+      preLoaderRoute: typeof FinisherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/protocols': {
+      id: '/protocols'
+      path: '/protocols'
+      fullPath: '/protocols'
+      preLoaderRoute: typeof ProtocolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/victory': {
+      id: '/victory'
+      path: '/victory'
+      fullPath: '/victory'
+      preLoaderRoute: typeof VictoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forge/$id': {
+      id: '/forge/$id'
+      path: '/forge/$id'
+      fullPath: '/forge/$id'
+      preLoaderRoute: typeof ForgeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/puzzle/': {
+      id: '/puzzle/'
+      path: '/puzzle'
+      fullPath: '/puzzle/'
+      preLoaderRoute: typeof PuzzleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/puzzle/solved': {
+      id: '/puzzle/solved'
+      path: '/puzzle/solved'
+      fullPath: '/puzzle/solved'
+      preLoaderRoute: typeof PuzzleSolvedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalysisRoute: AnalysisRoute,
+  ArchiveRoute: ArchiveRoute,
+  ArsenalRoute: ArsenalRoute,
+  BattleRoute: BattleRoute,
+  CodexRoute: CodexRoute,
+  FinisherRoute: FinisherRoute,
+  ProtocolsRoute: ProtocolsRoute,
+  ShareRoute: ShareRoute,
+  VictoryRoute: VictoryRoute,
+  ForgeIdRoute: ForgeIdRoute,
+  PuzzleSolvedRoute: PuzzleSolvedRoute,
+  PuzzleIndexRoute: PuzzleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
