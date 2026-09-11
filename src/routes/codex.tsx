@@ -243,10 +243,10 @@ function Codex() {
 
 <path d={"M 31.25 93.75 L 81.25 43.75"} filter={"drop-shadow(0 0 4px #af8d11)"} stroke={"#e9c349"} strokeLinecap={"round"} strokeWidth={"1.8"}></path>
 <polygon fill={"#e9c349"} points={"81.25,43.75 74.5,46.5 78.5,50.5"}></polygon>
-<circle cx={"81.25"} cy={"43.75"} fill={"#e9c349"} fill-opacity={"0.25"} r={"4.5"} stroke={"#e9c349"} strokeWidth={"1"}></circle>
+<circle cx={"81.25"} cy={"43.75"} fill={"#e9c349"} fillOpacity={"0.25"} r={"4.5"} stroke={"#e9c349"} strokeWidth={"1"}></circle>
 
 <path d={"M 31.25 93.75 L 56.25 68.75"} stroke={"#ffb3ad"} strokeDasharray={"2 2"} strokeLinecap={"round"} strokeWidth={"1.6"}></path>
-<circle cx={"56.25"} cy={"68.75"} fill={"#ffb3ad"} fill-opacity={"0.3"} r={"3.5"} stroke={"#ffb3ad"} strokeWidth={"1"}></circle>
+<circle cx={"56.25"} cy={"68.75"} fill={"#ffb3ad"} fillOpacity={"0.3"} r={"3.5"} stroke={"#ffb3ad"} strokeWidth={"1"}></circle>
 
 <circle className={"animate-ping"} cx={"6.25"} cy={"31.25"} fill={"none"} r={"4"} stroke={"#ffb3ad"} strokeWidth={"1.2"} style={{ transformOrigin: "6.25px 31.25px" }}></circle>
 </svg>

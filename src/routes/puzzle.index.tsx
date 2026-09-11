@@ -189,7 +189,7 @@ function Puzzle() {
 </marker>
 </defs>
 
-<path d={"M 262 122 L 196 56"} marker-end={"url(#arrowGold)"} stroke={"#e5b869"} strokeDasharray={"4 3"} strokeWidth={"2.5"}></path>
+<path d={"M 262 122 L 196 56"} markerEnd={"url(#arrowGold)"} stroke={"#e5b869"} strokeDasharray={"4 3"} strokeWidth={"2.5"}></path>
 </svg>
 </div>
 
