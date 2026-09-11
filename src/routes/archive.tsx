@@ -442,7 +442,7 @@ function ArchiveChronicle() {
 <span className={"font-label-sm text-[11px] text-secondary uppercase tracking-[0.16em] font-semibold"}>战术工坊与公会 // CLAN &amp; ESPORTS</span>
 <span className={"font-label-sm text-[9px] text-outline uppercase font-mono"}>GM NETWORK</span>
 </div>
-<div className={"grid grid-cols-3 gap-space-xs"}>
+<div className={"grid grid-cols-2 sm:grid-cols-3 gap-space-xs"}>
 
 <button className={"flex items-center gap-2 p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-left"}>
 <div className={"w-8 h-8 rounded bg-primary-container flex items-center justify-center text-secondary shrink-0 shadow-sm"}>
