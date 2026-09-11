@@ -434,6 +434,18 @@ export type Database = {
         }
         Returns: Json
       }
+      create_match_invite: {
+        Args: { p_invited_id?: string; p_user_id: string }
+        Returns: {
+          code: string
+          expires_at: string
+          match_id: string
+        }[]
+      }
+      join_match_invite: {
+        Args: { p_code: string; p_user_id: string }
+        Returns: string
+      }
       record_endgame_result: {
         Args: {
           p_correct: boolean
@@ -442,6 +454,14 @@ export type Database = {
           p_user_id: string
         }
         Returns: Json
+      }
+      remove_friendship: {
+        Args: { p_friendship_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      respond_friend_request: {
+        Args: { p_accept: boolean; p_friendship_id: string; p_user_id: string }
+        Returns: boolean
       }
       search_player_profiles: {
         Args: { q: string }
@@ -455,6 +475,10 @@ export type Database = {
           name: string
           wins: number
         }[]
+      }
+      send_friend_request: {
+        Args: { p_target_id: string; p_user_id: string }
+        Returns: string
       }
       settle_ranked_match: {
         Args: { p_match_id: string; p_outcome: string; p_reason: string }
