@@ -240,7 +240,6 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
 
   const onPointerDown = (e: React.PointerEvent) => {
     startY.current = e.clientY;
-    sheetRef.current?.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (startY.current === null) return;
@@ -284,10 +283,6 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
       <div className="lg:hidden fixed inset-x-0 bottom-[6.25rem] z-40 px-margin-mobile">
         <div
           ref={sheetRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
           style={{
             transform: `translate3d(0, ${drag}px, 0)`,
             transition: startY.current === null ? "transform 220ms cubic-bezier(0.22,1,0.36,1)" : "none",
@@ -298,6 +293,10 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
         >
           <button
             onClick={() => setOpen((v) => !v)}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
             aria-expanded={open}
             className="w-full h-12 px-space-sm flex items-center justify-between"
           >
@@ -326,7 +325,13 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
               <PanelBody tab={tab} session={session} />
             </div>
           </div>
-          <div className="pb-1 flex justify-center">
+          <div
+            className="pb-1 pt-1 flex justify-center"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+          >
             <span className="w-10 h-1 rounded-full bg-outline-variant/50" />
           </div>
         </div>
