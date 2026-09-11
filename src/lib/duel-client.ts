@@ -249,11 +249,10 @@ export class DuelClient {
       uci: s.uci,
       san: s.san,
       by,
-      san_zh: undefined,
       zh: s.zh,
       cp: s.cp,
       clock: { ...this.state.clock },
-    } as MoveFrame;
+    };
     this.state.moves = [...this.state.moves, move];
     this.state.turn = by === "w" ? "b" : "w";
     this.state.cp = s.cp;
