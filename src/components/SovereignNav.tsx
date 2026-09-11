@@ -123,12 +123,21 @@ export function SovereignNav() {
 
       {/* Wide: left rail (iPad landscape / desktop) */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
-        <div className="px-space-md py-space-lg border-b border-outline-variant/40">
+        <div className="px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="font-headline-sm text-headline-sm tracking-widest uppercase text-secondary">
             Blood Sovereign
           </div>
-          <div className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mt-1">
-            猩红王权 · Rank 2480
+          <div className="cjk font-label-sm text-label-sm tracking-widest text-on-surface-variant">
+            猩红王权 · 王座殿堂
+          </div>
+          <div className="flex items-center gap-space-xs mt-1">
+            <LangToggle />
+            <Link
+              to="/auth"
+              className="shrink-0 h-8 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center"
+            >
+              <BiLabel en="Account" zh="账号" />
+            </Link>
           </div>
         </div>
 
@@ -150,7 +159,7 @@ export function SovereignNav() {
                   {item.icon}
                 </span>
                 <span className="font-label-lg text-label-lg uppercase tracking-widest">
-                  {item.label}
+                  <PrimaryLabel en={item.label} zh={item.zh} />
                 </span>
               </Link>
             );
