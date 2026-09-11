@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,9 +16,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { profile, winRate, recordResult } = useProfile();
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-24"}>
+<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank {profile.elo}</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>{profile.tier}</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-24"}>
 
 <div className={"relative w-full overflow-hidden px-margin-mobile pt-space-md"}>
 
@@ -33,13 +35,14 @@ function Index() {
 <div className={"flex items-center gap-space-xs"}>
 <span className={"font-headline-md text-headline-md text-secondary leading-none"}>A</span>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>diamond</span>
-<span className={"font-label-md text-label-md text-on-surface uppercase tracking-widest"}>Adiamond</span>
+<span className={"font-label-md text-label-md text-on-surface uppercase tracking-widest"}>{profile.name}</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant tabular-nums"}>{profile.diamonds.toLocaleString()}</span>
 </div>
 <div className={"flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest"}>
 <span className={"w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"}></span>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>The Sovereign's Decree</span>
+<span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase whitespace-nowrap"}>The Sovereign's Decree</span>
 </div>
-<div className={"flex items-center gap-space-xs"}>
+<div className={"hidden sm:flex items-center gap-space-xs"}>
 <span className={"font-headline-md text-headline-md text-secondary leading-none"}>A</span>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>diamond</span>
 </div>
@@ -91,7 +94,7 @@ function Index() {
 </div>
 <div className={"flex items-center gap-1 bg-surface-container-high px-space-xs py-0.5"}>
 <span className={"material-symbols-outlined text-secondary text-[14px]"}>military_tech</span>
-<span className={"font-label-sm text-label-sm text-secondary uppercase font-semibold"}>2480 ELO</span>
+<span className={"font-label-sm text-label-sm text-secondary uppercase font-semibold"}>{profile.elo} ELO</span>
 </div>
 </div>
 
@@ -105,8 +108,31 @@ function Index() {
 </div>
 <div className={"flex justify-between items-center mt-1.5 text-on-surface-variant"}>
 <span className={"font-label-sm text-label-sm uppercase"}>2400 (Master)</span>
-<span className={"font-label-sm text-label-sm text-secondary font-semibold uppercase"}>Win Streak: 5x</span>
+<span className={"font-label-sm text-label-sm text-secondary font-semibold uppercase"}>Win Streak: {profile.streak}x</span>
 <span className={"font-label-sm text-label-sm uppercase text-secondary"}>2500 (Apex)</span>
+</div>
+</div>
+
+<div className={"grid grid-cols-4 gap-space-xs mt-space-xs"}>
+{[
+  { zh: "段位", en: profile.tier, v: profile.tierZh },
+  { zh: "胜场", en: "Wins", v: String(profile.wins) },
+  { zh: "胜率", en: "Win Rate", v: `${winRate}%` },
+  { zh: "钻石", en: "Diamonds", v: profile.diamonds.toLocaleString() },
+].map((s) => (
+<div key={s.en} className={"bg-surface-container-low p-space-sm flex flex-col gap-0.5 gold-hairline"}>
+<span className={"cjk font-label-sm text-label-sm text-on-surface-variant"}>{s.zh}</span>
+<span className={"font-headline-sm text-headline-sm text-secondary tabular-nums truncate"}>{s.v}</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest truncate"}>{s.en}</span>
+</div>
+))}
+</div>
+<div className={"flex items-center justify-between gap-space-xs mt-space-xs"}>
+<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Last Match Settlement</span>
+<div className={"flex items-center gap-space-xs"}>
+<button onClick={() => recordResult("win")} className={"h-9 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"}>胜</button>
+<button onClick={() => recordResult("draw")} className={"h-9 px-3 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"}>和</button>
+<button onClick={() => recordResult("loss")} className={"h-9 px-3 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"}>负</button>
 </div>
 </div>
 
