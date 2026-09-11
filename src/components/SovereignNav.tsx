@@ -36,7 +36,7 @@ export function SovereignNav() {
             <Link
               key={item.label}
               to={item.to}
-              params={"params" in item ? item.params : undefined}
+              {...("params" in item ? { params: item.params } : {})}
               className={`shrink-0 px-space-sm py-1 font-label-sm text-label-sm uppercase tracking-widest whitespace-nowrap transition-colors ${
                 active
                   ? "bg-primary-container text-on-surface"
