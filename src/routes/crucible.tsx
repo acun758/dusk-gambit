@@ -17,7 +17,7 @@ export const Route = createFileRoute("/crucible")({
 function Crucible() {
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-28">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button ariaLabel="Haptics &amp; Audio" className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-28"}>
+<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label="Haptics &amp; Audio" className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-28"}>
 <section className={"px-margin-mobile pt-space-sm pb-space-xs flex flex-col gap-space-xs bg-surface-container-lowest"}>
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
@@ -214,19 +214,19 @@ function Crucible() {
 </button>
 </div>
 <div className={"grid grid-cols-4 gap-1.5"} id="move-selector">
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"} onclick="selectMove(this)">
+<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
 <span className={"font-headline-sm text-headline-sm text-on-surface"}>17. Kxh2</span>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>King Takes</span>
 </button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"} onclick="selectMove(this)">
+<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
 <span className={"font-headline-sm text-headline-sm text-on-surface"}>17. Kh1</span>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>Retreat</span>
 </button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"} onclick="selectMove(this)">
+<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
 <span className={"font-headline-sm text-headline-sm text-on-surface"}>17. g3</span>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>Shield</span>
 </button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors active-chip bg-primary-container text-on-primary-container"} onclick="selectMove(this)">
+<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors active-chip bg-primary-container text-on-primary-container"}>
 <span className={"font-headline-sm text-headline-sm text-primary"}>17. Ng5!</span>
 <span className={"font-label-sm text-label-sm text-primary-fixed uppercase mt-0.5"}>Counter</span>
 </button>
@@ -252,7 +252,7 @@ function Crucible() {
 </div>
 </section>
 </div>
-</main><nav className={"fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)]"} dataActiveClasses="text-secondary bg-surface-container-high/60"><div className={"h-16 px-gutter-mobile flex items-center justify-around"}><a ariaCurrent="page" className={"flex flex-col items-center justify-center w-full h-11 transition-colors gap-0.5 text-secondary bg-surface-container-high/60"} dataPath="battle" href="#"><span className={"material-symbols-outlined text-[20px]"}>swords</span><span className={"font-label-sm text-label-sm tracking-widest uppercase"}>Battle</span></a><a className={"flex flex-col items-center justify-center w-full h-11 text-on-surface-variant hover:text-secondary transition-colors gap-0.5"} dataPath="tactics" href="#"><span className={"material-symbols-outlined text-[20px]"}>chess_knight</span><span className={"font-label-sm text-label-sm tracking-widest uppercase"}>Tactics</span></a><a className={"flex flex-col items-center justify-center w-full h-11 text-on-surface-variant hover:text-secondary transition-colors gap-0.5"} dataPath="the-vault" href="#"><span className={"material-symbols-outlined text-[20px]"}>auto_stories</span><span className={"font-label-sm text-label-sm tracking-widest uppercase"}>Vault</span></a><a className={"flex flex-col items-center justify-center w-full h-11 text-on-surface-variant hover:text-secondary transition-colors gap-0.5"} dataPath="dynasty" href="#"><span className={"material-symbols-outlined text-[20px]"}>shield</span><span className={"font-label-sm text-label-sm tracking-widest uppercase"}>Dynasty</span></a></div></nav>
+</main>
     </div>
   );
 }
