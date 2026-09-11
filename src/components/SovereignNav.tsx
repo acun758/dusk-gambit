@@ -1,11 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useLang } from "@/lib/i18n";
 
 const PRIMARY = [
-  { to: "/", icon: "crown", label: "Court" },
-  { to: "/battle", icon: "swords", label: "Battle" },
-  { to: "/puzzle", icon: "chess_knight", label: "Tactics" },
-  { to: "/arsenal", icon: "auto_stories", label: "Vault" },
-  { to: "/analysis", icon: "shield", label: "Dynasty" },
+  { to: "/", icon: "crown", label: "Court", zh: "王座" },
+  { to: "/battle", icon: "swords", label: "Battle", zh: "对弈" },
+  { to: "/puzzle", icon: "chess_knight", label: "Tactics", zh: "战术" },
+  { to: "/arsenal", icon: "auto_stories", label: "Vault", zh: "军械" },
+  { to: "/analysis", icon: "shield", label: "Dynasty", zh: "天梯" },
 ] as const;
 
 const SANCTUM = [
