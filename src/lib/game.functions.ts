@@ -58,9 +58,10 @@ export const loadProfile = createServerFn({ method: "POST" })
     if (data) return data as ProfileRow;
     const claims = context.claims as { email?: string } | undefined;
     const fallback = claims?.email?.split("@")[0] ?? "Sovereign";
+    const handle = `player-${context.userId.replaceAll("-", "").slice(0, 8)}`;
     const { data: created, error } = await supabaseAdmin
       .from("profiles")
-      .insert({ id: context.userId, name: fallback })
+      .insert({ id: context.userId, name: fallback, handle })
       .select("*")
       .single();
     if (error) throw new Error(error.message);
