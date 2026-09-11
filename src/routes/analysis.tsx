@@ -316,7 +316,7 @@ function Analysis() {
     </span>
 <div className={"flex flex-col gap-space-sm"}>
 
-<button className={"w-full bg-primary-container hover:bg-primary-container/90 text-on-primary font-label-lg text-label-lg uppercase tracking-widest py-space-md px-space-md rounded-lg flex items-center justify-between shadow-[0_8px_24px_rgba(139,30,30,0.6)] active:scale-[0.98] transition-all"}>
+<button className={"w-full bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-label-lg text-label-lg uppercase tracking-widest py-space-md px-space-md rounded-lg flex items-center justify-between shadow-[0_8px_24px_rgba(139,30,30,0.6)] active:scale-[0.98] transition-all"}>
 <div className={"flex items-center gap-space-sm"}>
 <span className={"material-symbols-outlined text-[22px]"}>replay</span>
 <span className={"font-bold tracking-widest"}>Rewind &amp; Try Different Move (Ply 28)</span>
