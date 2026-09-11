@@ -14,10 +14,322 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      endgame_levels: {
+        Row: {
+          brief_en: string
+          brief_zh: string
+          code: string
+          diamond_reward: number
+          elo_required: number
+          elo_reward: number
+          fen: string
+          id: number
+          moves_to_mate: number
+          name_en: string
+          name_zh: string
+          objective_en: string
+          objective_zh: string
+          solution: string[]
+        }
+        Insert: {
+          brief_en: string
+          brief_zh: string
+          code: string
+          diamond_reward?: number
+          elo_required?: number
+          elo_reward?: number
+          fen: string
+          id: number
+          moves_to_mate?: number
+          name_en: string
+          name_zh: string
+          objective_en: string
+          objective_zh: string
+          solution: string[]
+        }
+        Update: {
+          brief_en?: string
+          brief_zh?: string
+          code?: string
+          diamond_reward?: number
+          elo_required?: number
+          elo_reward?: number
+          fen?: string
+          id?: number
+          moves_to_mate?: number
+          name_en?: string
+          name_zh?: string
+          objective_en?: string
+          objective_zh?: string
+          solution?: string[]
+        }
+        Relationships: []
+      }
+      endgame_progress: {
+        Row: {
+          attempts: number
+          best_ms: number | null
+          id: string
+          level_id: number
+          solved: boolean
+          solved_at: string | null
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          best_ms?: number | null
+          id?: string
+          level_id: number
+          solved?: boolean
+          solved_at?: string | null
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          best_ms?: number | null
+          id?: string
+          level_id?: number
+          solved?: boolean
+          solved_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "endgame_progress_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: false
+            referencedRelation: "endgame_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "endgame_progress_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: false
+            referencedRelation: "endgame_levels_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_moves: {
+        Row: {
+          by: string
+          clock_b: number
+          clock_w: number
+          cp: number | null
+          created_at: string
+          id: number
+          match_id: string
+          ply: number
+          san: string
+          seq: number
+          uci: string
+          zh: string | null
+        }
+        Insert: {
+          by: string
+          clock_b: number
+          clock_w: number
+          cp?: number | null
+          created_at?: string
+          id?: number
+          match_id: string
+          ply: number
+          san: string
+          seq: number
+          uci: string
+          zh?: string | null
+        }
+        Update: {
+          by?: string
+          clock_b?: number
+          clock_w?: number
+          cp?: number | null
+          created_at?: string
+          id?: number
+          match_id?: string
+          ply?: number
+          san?: string
+          seq?: number
+          uci?: string
+          zh?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_moves_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matches: {
+        Row: {
+          black_elo: number
+          black_id: string | null
+          black_name: string
+          clock_b: number
+          clock_w: number
+          cp: number
+          created_at: string
+          fen: string
+          id: string
+          last_move_at: string
+          outcome: string | null
+          ply: number
+          rating_delta: number | null
+          reason: string | null
+          seq: number
+          status: string
+          tc_base: number
+          tc_inc: number
+          turn: string
+          white_elo: number
+          white_id: string | null
+          white_name: string
+        }
+        Insert: {
+          black_elo?: number
+          black_id?: string | null
+          black_name?: string
+          clock_b?: number
+          clock_w?: number
+          cp?: number
+          created_at?: string
+          fen?: string
+          id?: string
+          last_move_at?: string
+          outcome?: string | null
+          ply?: number
+          rating_delta?: number | null
+          reason?: string | null
+          seq?: number
+          status?: string
+          tc_base?: number
+          tc_inc?: number
+          turn?: string
+          white_elo?: number
+          white_id?: string | null
+          white_name?: string
+        }
+        Update: {
+          black_elo?: number
+          black_id?: string | null
+          black_name?: string
+          clock_b?: number
+          clock_w?: number
+          cp?: number
+          created_at?: string
+          fen?: string
+          id?: string
+          last_move_at?: string
+          outcome?: string | null
+          ply?: number
+          rating_delta?: number | null
+          reason?: string | null
+          seq?: number
+          status?: string
+          tc_base?: number
+          tc_inc?: number
+          turn?: string
+          white_elo?: number
+          white_id?: string | null
+          white_name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          diamonds: number
+          draws: number
+          elo: number
+          id: string
+          losses: number
+          name: string
+          streak: number
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          created_at?: string
+          diamonds?: number
+          draws?: number
+          elo?: number
+          id: string
+          losses?: number
+          name?: string
+          streak?: number
+          updated_at?: string
+          wins?: number
+        }
+        Update: {
+          created_at?: string
+          diamonds?: number
+          draws?: number
+          elo?: number
+          id?: string
+          losses?: number
+          name?: string
+          streak?: number
+          updated_at?: string
+          wins?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      endgame_levels_public: {
+        Row: {
+          brief_en: string | null
+          brief_zh: string | null
+          code: string | null
+          diamond_reward: number | null
+          elo_required: number | null
+          elo_reward: number | null
+          fen: string | null
+          id: number | null
+          moves_to_mate: number | null
+          name_en: string | null
+          name_zh: string | null
+          objective_en: string | null
+          objective_zh: string | null
+          solution_length: number | null
+        }
+        Insert: {
+          brief_en?: string | null
+          brief_zh?: string | null
+          code?: string | null
+          diamond_reward?: number | null
+          elo_required?: number | null
+          elo_reward?: number | null
+          fen?: string | null
+          id?: number | null
+          moves_to_mate?: number | null
+          name_en?: string | null
+          name_zh?: string | null
+          objective_en?: string | null
+          objective_zh?: string | null
+          solution_length?: never
+        }
+        Update: {
+          brief_en?: string | null
+          brief_zh?: string | null
+          code?: string | null
+          diamond_reward?: number | null
+          elo_required?: number | null
+          elo_reward?: number | null
+          fen?: string | null
+          id?: number | null
+          moves_to_mate?: number | null
+          name_en?: string | null
+          name_zh?: string | null
+          objective_en?: string | null
+          objective_zh?: string | null
+          solution_length?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
