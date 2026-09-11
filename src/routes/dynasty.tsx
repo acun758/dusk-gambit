@@ -1,12 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { listEndgameLevels, loadEndgameProgress } from "@/lib/game.functions";
+import { useProfile } from "@/lib/profile";
+import { Bi, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
     meta: [
-      { title: 'Dynasty Sanctum — Ranked Ladder & Titles' },
-      { name: "description", content: 'Season ladder, tier progression and the hall of titles in the Dynasty Sanctum.' },
-      { property: "og:title", content: 'Dynasty Sanctum — Ranked Ladder & Titles' },
-      { property: "og:description", content: 'Season ladder, tier progression and the hall of titles in the Dynasty Sanctum.' },
+      { title: "天梯段位殿堂 · 血誓王权 | Dynasty Sanctum" },
+      {
+        name: "description",
+        content: "天梯段位殿堂：段位进度、胜率战绩、赛季奖赏，与残局试炼解锁联动。",
+      },
+      { property: "og:title", content: "天梯段位殿堂 · 血誓王权 | Dynasty Sanctum" },
+      { property: "og:description", content: "段位进度、胜率战绩与残局试炼解锁联动。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -14,272 +22,247 @@ export const Route = createFileRoute("/dynasty")({
   component: Dynasty,
 });
 
+interface LevelRow {
+  id: number;
+  name_zh: string;
+  name_en: string;
+  elo_required: number;
+  elo_reward: number;
+}
+
+interface ProgressRow {
+  level_id: number;
+  solved: boolean;
+}
+
+const TIERS = [
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords" },
+];
+
 function Dynasty() {
+  const t = useT();
+  const { profile, winRate, signedIn } = useProfile();
+
+  const levelsQ = useQuery({
+    queryKey: ["endgame-levels"],
+    queryFn: () => listEndgameLevels() as Promise<LevelRow[]>,
+  });
+  const progressQ = useQuery({
+    queryKey: ["endgame-progress", signedIn],
+    queryFn: () => (signedIn ? (loadEndgameProgress() as Promise<ProgressRow[]>) : Promise.resolve([])),
+  });
+
+  const levels = levelsQ.data ?? [];
+  const solvedIds = useMemo(
+    () => new Set((progressQ.data ?? []).filter((p) => p.solved).map((p) => p.level_id)),
+    [progressQ.data],
+  );
+  const solvedCount = levels.filter((l) => solvedIds.has(l.id)).length;
+  const trialElo = levels.filter((l) => solvedIds.has(l.id)).reduce((s, l) => s + l.elo_reward, 0);
+
+  const current = TIERS.find((x) => profile.elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+  const nextTier = TIERS[TIERS.indexOf(current) - 1] ?? null;
+  const pct = Math.max(4, Math.min(100, ((profile.elo - current.floor) / (current.ceil - current.floor)) * 100));
+  const total = profile.wins + profile.losses + profile.draws;
+
   return (
-    <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-28">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label="Haptics &amp; Audio" className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-24 space-y-4 px-margin-mobile"}>
+    <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
+      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
+        <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
+          <div className="flex items-center gap-space-sm min-w-0">
+            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-secondary text-[22px]">military_tech</span>
+            </div>
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-space-xs">
+                <span className="font-label-sm text-label-sm text-secondary tracking-widest tabular-nums">
+                  {profile.elo} ELO
+                </span>
+                <span className="w-1 h-1 rounded-full bg-primary" />
+                <span className="cjk font-label-sm text-label-sm text-primary-fixed truncate">
+                  {t(current.zh, current.en)}
+                </span>
+              </div>
+              <span className="font-headline-sm text-headline-sm tracking-wider truncate">
+                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-space-xs shrink-0">
+            <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
+              <span className="material-symbols-outlined text-secondary text-[16px] mr-space-xs">diamond</span>
+              <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
+                {profile.diamonds.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
 
-<section className={"flex flex-col w-full bg-surface-container-lowest p-space-md shadow-xl relative overflow-hidden"}>
-<div className={"absolute -right-8 -top-8 w-32 h-32 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"}></div>
-<div className={"flex items-center justify-between z-10"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"w-1.5 h-1.5 bg-primary rotate-45 inline-block"}></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Sanctum Archive // IX</span>
-</div>
-<div className={"flex items-center gap-1 bg-surface-container-high px-space-xs py-0.5"}>
-<span className={"material-symbols-outlined text-secondary text-[14px]"}>hourglass_top</span>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest"}>18D REMAINING</span>
-</div>
-</div>
-<div className={"mt-space-xs z-10"}>
-<h1 className={"font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-wider"}>DYNASTY SANCTUM</h1>
-<p className={"font-label-md text-label-md text-primary tracking-widest uppercase mt-0.5"}>SEASON IV: AGE OF CRIMSON QUEENS // 猩红女帝纪元</p>
-</div>
-</section>
+      <main className="pt-20 px-margin-mobile flex flex-col gap-space-md lg:flex-row lg:items-start lg:gap-space-lg">
+        <div className="flex flex-col gap-space-md mt-space-md flex-1 min-w-0">
+          {/* 当前段位 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <div className="flex items-start justify-between gap-space-sm">
+              <div className="flex items-center gap-space-md min-w-0">
+                <div className="w-16 h-16 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
+                  <span className="material-symbols-outlined text-primary text-[34px]">{current.icon}</span>
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                    {t(current.en, current.zh)}
+                  </span>
+                  <span className="cjk font-label-sm text-label-sm text-secondary mt-1 truncate">
+                    {profile.name} · {t("连胜", "Streak")} {profile.streak}
+                  </span>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="cjk font-label-sm text-label-sm text-on-surface-variant block tracking-widest">
+                  {t("下一段位", "Next tier")}
+                </span>
+                <span className="cjk font-label-md text-label-md text-primary font-bold">
+                  {nextTier
+                    ? t(`还差 ${Math.max(0, current.ceil - profile.elo)} 分 → ${nextTier.zh}`, `${Math.max(0, current.ceil - profile.elo)} to ${nextTier.en}`)
+                    : t("已达巅峰", "Peak reached")}
+                </span>
+              </div>
+            </div>
 
-<section className={"flex flex-col w-full bg-surface-container p-space-md shadow-xl relative"}>
-<div className={"flex items-start justify-between"}>
-<div className={"flex items-center gap-space-md"}>
-<div className={"relative w-16 h-16 bg-surface-container-lowest flex items-center justify-center shadow-lg"}>
-<div className={"absolute inset-0 bg-gradient-to-br from-primary-container/30 to-transparent"}></div>
-<span className={"material-symbols-outlined text-primary text-[36px] drop-shadow-[0_0_12px_rgba(255,179,173,0.6)]"}>workspace_premium</span>
-<div className={"absolute -bottom-1 bg-primary-container text-on-primary-container px-1 py-0.2"}>
-<span className={"font-label-sm text-label-sm tracking-widest"}>#38</span>
-</div>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"cjk font-headline-sm text-headline-sm text-on-surface tracking-wide whitespace-nowrap"}>神圣大宗师</span>
-<span className={"material-symbols-outlined text-secondary text-[16px]"}>verified</span>
-</div>
-<span className={"font-label-md text-label-md text-on-surface-variant uppercase tracking-widest"}>Grandmaster Titan</span>
-<div className={"flex items-center gap-space-sm mt-1"}>
-<span className={"font-label-md text-label-md text-secondary"}>ELO 2,480</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Top 0.05% Server</span>
-</div>
-</div>
-</div>
-<div className={"text-right"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-widest"}>Next Realm</span>
-<span className={"font-label-md text-label-md text-primary font-bold"}>20 ELO to Rank X</span>
-</div>
-</div>
+            <div className="bg-surface-container-lowest p-space-sm shadow-inner">
+              <div className="flex justify-between items-center mb-1">
+                <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
+                  {t(current.zh, current.en)}
+                </span>
+                <span className="font-label-sm text-label-sm text-primary tabular-nums">
+                  {profile.elo} / {current.ceil}
+                </span>
+              </div>
+              <div className="w-full h-2 bg-surface-container-high overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-primary-container via-primary to-secondary shadow-[0_0_10px_rgba(233,195,73,0.5)]"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
 
-<div className={"w-full mt-space-md bg-surface-container-lowest p-space-xs shadow-inner"}>
-<div className={"flex justify-between items-center mb-1"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Tier IX: Grandmaster Titan</span>
-<span className={"font-label-sm text-label-sm text-primary"}>2480 / 2500</span>
-</div>
-<div className={"w-full h-2 bg-surface-container-high overflow-hidden relative"}>
-<div className={"h-full bg-gradient-to-r from-primary-container via-primary to-secondary w-[90%] shadow-[0_0_10px_rgba(233,195,73,0.5)]"}></div>
-</div>
-<div className={"flex justify-between items-center mt-1"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>2400 ELO (Base)</span>
-<span className={"font-label-sm text-label-sm text-secondary uppercase font-semibold"}>永夜棋圣 (Sovereign)</span>
-</div>
-</div>
-</section>
+            {!signedIn && (
+              <Link to="/auth" className="cjk font-body-sm text-body-sm text-secondary">
+                {t("当前为本地演示数据，登录后段位与钻石由服务端结算 →", "Demo data — sign in for server-settled rating →")}
+              </Link>
+            )}
+          </section>
 
-<section className={"flex flex-col w-full bg-surface-container p-space-md shadow-xl"}>
-<div className={"flex items-center justify-between mb-space-sm"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-secondary text-[18px]"}>account_tree</span>
-<h2 className={"font-headline-sm text-headline-sm text-on-surface tracking-wider"}>天梯九重王座</h2>
-</div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Dynasty Ladder</span>
-</div>
+          {/* 战绩 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <h2 className="font-headline-sm text-headline-sm tracking-wider">
+              <Bi zh="赛季战绩" en="Season Record" />
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-space-xs">
+              {[
+                { zh: "胜场", en: "Wins", v: String(profile.wins) },
+                { zh: "负场", en: "Losses", v: String(profile.losses) },
+                { zh: "和棋", en: "Draws", v: String(profile.draws) },
+                { zh: "胜率", en: "Win rate", v: `${winRate}%` },
+              ].map((s) => (
+                <div key={s.en} className="bg-surface-container-lowest p-space-sm flex flex-col">
+                  <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{s.v}</span>
+                  <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                    {t(s.zh, s.en)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+              {t(`本赛季共 ${total} 局天梯对局。`, `${total} ranked games this season.`)}
+            </p>
+            <Link
+              to="/battle"
+              className="w-full py-space-md bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
+            >
+              <span className="material-symbols-outlined text-secondary text-[20px]">swords</span>
+              <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
+                <Bi zh="进入 3+2 天梯对局" en="Enter 3+2 Ranked" />
+              </span>
+            </Link>
+          </section>
+        </div>
 
-<div className={"flex flex-col space-y-space-xs relative"}>
+        {/* 九重王座 + 试炼联动 */}
+        <div className="flex flex-col gap-space-md mt-space-md lg:w-80 lg:shrink-0">
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-xs">
+            <div className="flex items-center justify-between mb-space-xs">
+              <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="天梯王座" en="Ladder" />
+              </h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                {t("按等级分解锁", "By rating")}
+              </span>
+            </div>
+            {TIERS.map((tier) => {
+              const active = tier === current;
+              const unlocked = profile.elo >= tier.floor;
+              return (
+                <div
+                  key={tier.en}
+                  className={`p-space-sm flex items-center justify-between gap-space-sm ${
+                    active ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                  }`}
+                >
+                  <div className="flex items-center gap-space-sm min-w-0">
+                    <span className="material-symbols-outlined text-[20px] shrink-0 text-secondary">
+                      {unlocked ? tier.icon : "lock"}
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
+                      <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                        {tier.floor}+ ELO
+                      </span>
+                    </div>
+                  </div>
+                  <span className="cjk font-label-sm text-label-sm text-secondary shrink-0">
+                    {active ? t("当前", "Active") : unlocked ? t("已达成", "Cleared") : t("未解锁", "Locked")}
+                  </span>
+                </div>
+              );
+            })}
+          </section>
 
-<div className={"p-space-sm bg-surface-container-lowest opacity-75 hover:opacity-100 transition-opacity flex items-center justify-between"}>
-<div className={"flex items-center gap-space-sm min-w-0"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-on-surface-variant text-[20px]"}>lock</span>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>永夜棋圣</span>
-<span className={"font-label-sm text-label-sm bg-primary-container text-on-primary-container px-1"}>TIER X</span>
-</div>
-<span className={"font-body-sm text-body-sm text-on-surface-variant truncate"}>Sovereign Immortal · 2500+ ELO</span>
-</div>
-</div>
-<span className={"material-symbols-outlined text-on-surface-variant text-[18px]"}>crown</span>
-</div>
-
-<div className={"p-space-sm bg-surface-container-high relative shadow-lg"}>
-<div className={"absolute left-0 top-0 bottom-0 w-1 bg-secondary"}></div>
-<div className={"flex items-center justify-between"}>
-<div className={"flex items-center gap-space-sm min-w-0"}>
-<div className={"w-10 h-10 bg-primary-container flex items-center justify-center shrink-0 shadow-md"}>
-<span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"cjk font-headline-sm text-headline-sm text-on-surface whitespace-nowrap"}>神圣大宗师</span>
-<span className={"font-label-sm text-label-sm bg-secondary text-on-secondary px-1 font-semibold"}>ACTIVE</span>
-</div>
-<span className={"font-body-sm text-body-sm text-primary truncate"}>Grandmaster Titan · 2400-2499 ELO</span>
-</div>
-</div>
-<div className={"flex flex-col items-end shrink-0"}>
-<span className={"font-label-sm text-label-sm text-secondary uppercase tracking-widest"}>Unlocked</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>虚空审判 (Void Finisher)</span>
-</div>
-</div>
-</div>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-center justify-between"}>
-<div className={"flex items-center gap-space-sm min-w-0"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>check_circle</span>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>战争行刑官</span>
-<span className={"font-body-sm text-body-sm text-on-surface-variant truncate"}>War Executioner · 2200-2399 ELO</span>
-</div>
-</div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Mastered</span>
-</div>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-center justify-between"}>
-<div className={"flex items-center gap-space-sm min-w-0"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>check_circle</span>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>曜石先锋</span>
-<span className={"font-body-sm text-body-sm text-on-surface-variant truncate"}>Obsidian Vanguard · 2000-2199 ELO</span>
-</div>
-</div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Mastered</span>
-</div>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-center justify-between"}>
-<div className={"flex items-center gap-space-sm min-w-0"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>check_circle</span>
-</div>
-<div className={"flex flex-col min-w-0"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>见习执子者</span>
-<span className={"font-body-sm text-body-sm text-on-surface-variant truncate"}>Neophyte Arbiters · 1200-1999 ELO</span>
-</div>
-</div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Mastered</span>
-</div>
-</div>
-</section>
-
-<section className={"flex flex-col w-full bg-surface-container p-space-md shadow-xl"}>
-<div className={"flex items-center justify-between mb-space-sm"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-primary text-[18px]"}>psychology</span>
-<h2 className={"font-headline-sm text-headline-sm text-on-surface tracking-wider"}>心智勋章殿堂</h2>
-</div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Tactical Codex</span>
-</div>
-<div className={"grid grid-cols-1 gap-space-xs"}>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-start gap-space-sm"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>gavel</span>
-</div>
-<div className={"flex flex-col min-w-0 flex-1"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>冷血残局行刑者</span>
-<span className={"font-label-sm text-label-sm text-secondary bg-surface-container-high px-1 py-0.2 uppercase font-bold"}>Grade S+</span>
-</div>
-<span className={"font-body-sm text-body-sm text-on-surface-variant mt-0.5"}>Cold-Blooded Endgame Hunter</span>
-<div className={"flex items-center gap-space-xs mt-1"}>
-<span className={"w-1.5 h-1.5 rounded-full bg-primary"}></span>
-<span className={"font-label-sm text-label-sm text-primary"}>100% Winrate when remaining pieces ≤ 5</span>
-</div>
-</div>
-</div>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-start gap-space-sm"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-primary text-[20px]"}>electric_bolt</span>
-</div>
-<div className={"flex flex-col min-w-0 flex-1"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>战术潜伏毒蛇</span>
-<span className={"font-label-sm text-label-sm text-secondary bg-surface-container-high px-1 py-0.2 uppercase font-bold"}>Grade S</span>
-</div>
-<span className={"font-body-sm text-body-sm text-on-surface-variant mt-0.5"}>Tactical Viper</span>
-<div className={"flex items-center gap-space-xs mt-1"}>
-<span className={"w-1.5 h-1.5 rounded-full bg-secondary"}></span>
-<span className={"font-label-sm text-label-sm text-secondary"}>Sacrifice Breakthrough Specialist (42 Clears)</span>
-</div>
-</div>
-</div>
-
-<div className={"p-space-sm bg-surface-container-lowest flex items-start gap-space-sm"}>
-<div className={"w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-on-surface-variant text-[20px]"}>monitor_heart</span>
-</div>
-<div className={"flex flex-col min-w-0 flex-1"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>钢铁心智抗压者</span>
-<span className={"font-label-sm text-label-sm text-secondary bg-surface-container-high px-1 py-0.2 uppercase font-bold"}>Grade SS</span>
-</div>
-<span className={"font-body-sm text-body-sm text-on-surface-variant mt-0.5"}>Iron Will Resilient</span>
-<div className={"flex items-center gap-space-xs mt-1"}>
-<span className={"w-1.5 h-1.5 rounded-full bg-primary"}></span>
-<span className={"font-label-sm text-label-sm text-primary"}>0 Blunders under high pressure (BPM &gt; 140)</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-<section className={"flex flex-col w-full bg-surface-container p-space-md shadow-xl"}>
-<div className={"flex items-center justify-between mb-space-sm"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-secondary text-[18px]"}>redeem</span>
-<h2 className={"font-headline-sm text-headline-sm text-on-surface tracking-wider"}>赛季专属赏金</h2>
-</div>
-<span className={"font-label-sm text-label-sm text-primary uppercase tracking-widest"}>Exclusive Vault</span>
-</div>
-<div className={"flex flex-col bg-surface-container-lowest p-space-sm"}>
-<div className={"relative w-full h-44 bg-surface-container-high overflow-hidden flex items-center justify-center"}>
-<img className={"object-cover w-full h-full opacity-80"} alt="Intricate dark gothic chess Queen figurine crafted from glossy black obsidian stone and sharp red ruby ornaments, illuminated with atmospheric crimson embers and dramatic rim lighting, dark regal court backdrop, photorealistic 8k render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9xNXLxPo5a2K5xy9c8_xCBZx0jnRlQrRpFFz1OCI7Wrp9LiZls4-qkCnX945ptusIVgS9wkXygcOGCuDOtmZkTwIlgLCim8rQZg9e9MwOQhHBWVLzPOvz_kk11S4WRvMdTRgKh92oJK_WTt7CMgqKegsjPoX36rv5aHWKEHekBSy8McTF5yN7eIefbxjhCIdoQqyit0T0KYXt2f3QmCC5sKKn9HUahgVWQCUht1UG4O6e42W-8KCl6Q"/>
-<div className={"absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"}></div>
-<div className={"absolute bottom-2 left-2 flex flex-col"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider"}>黑曜女帝 · 永夜王冠</span>
-<span className={"font-label-sm text-label-sm text-secondary uppercase tracking-widest"}>Season Exclusive Piece Skin</span>
-</div>
-<div className={"absolute top-2 right-2 bg-primary-container px-2 py-0.5 shadow-md"}>
-<span className={"font-label-sm text-label-sm text-on-primary-container uppercase tracking-widest font-semibold"}>Tier IX Reward</span>
-</div>
-</div>
-<div className={"grid grid-cols-2 gap-space-xs mt-space-xs"}>
-<div className={"bg-surface-container p-space-xs flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-secondary text-[18px]"}>flare</span>
-<div className={"flex flex-col min-w-0"}>
-<span className={"font-label-md text-label-md text-on-surface truncate"}>终结技: 裂地雷罚</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Finisher FX</span>
-</div>
-</div>
-<div className={"bg-surface-container p-space-xs flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-primary text-[18px]"}>shield</span>
-<div className={"flex flex-col min-w-0"}>
-<span className={"font-label-md text-label-md text-on-surface truncate"}>血契纹章头像框</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Grandmaster Frame</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-<section className={"flex flex-col w-full pt-space-xs pb-space-sm"}>
-<button className={"w-full h-12 bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm shadow-2xl active:scale-[0.98] transition-all duration-150"} id="enterDynastyBtn">
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>swords</span>
-<span className={"font-label-lg text-label-lg uppercase tracking-widest font-semibold"}>进入天梯征战 (ENTER DYNASTY BATTLE)</span>
-</button>
-</section>
-</div>
-</main>
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <h2 className="font-headline-sm text-headline-sm tracking-wider">
+              <Bi zh="残局试炼联动" en="Crucible Link" />
+            </h2>
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              {t(
+                `已通关 ${solvedCount} / ${levels.length} 道残局，累计为段位贡献 +${trialElo} 分。`,
+                `${solvedCount} / ${levels.length} trials solved, contributing +${trialElo} rating.`,
+              )}
+            </p>
+            <div className="grid gap-space-xs">
+              {levels.map((l) => (
+                <div key={l.id} className="flex items-center justify-between gap-space-sm bg-surface-container-lowest p-space-sm">
+                  <span className="cjk font-label-sm text-label-sm truncate">{t(l.name_zh, l.name_en)}</span>
+                  <span className="font-label-sm text-label-sm text-secondary shrink-0 tabular-nums">
+                    {solvedIds.has(l.id) ? t("已通关", "Solved") : `${l.elo_required}+`}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <Link
+              to="/crucible"
+              className="w-full py-space-sm bg-surface-container-high text-on-surface flex items-center justify-center gap-space-xs"
+            >
+              <span className="material-symbols-outlined text-secondary text-[18px]">psychology</span>
+              <span className="cjk font-label-md text-label-md">{t("前往盲棋试炼", "Go to trials")}</span>
+            </Link>
+          </section>
+        </div>
+      </main>
     </div>
   );
 }

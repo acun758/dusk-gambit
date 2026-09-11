@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierFor } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/crucible")({
@@ -72,6 +72,7 @@ function Crucible() {
   const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [blind, setBlind] = useState(true);
+  const [promo, setPromo] = useState<{ tier: string; tierZh: string } | null>(null);
 
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
@@ -115,6 +116,11 @@ function Crucible() {
       })) as { correct: boolean; firstSolve: boolean; expectedLength: number };
       setResult(res);
       if (res.correct) {
+        if (res.firstSolve) {
+          const before = tierFor(profile.elo);
+          const after = tierFor(profile.elo + active.elo_reward);
+          setPromo(after.tier === before.tier ? null : after);
+        }
         await refresh();
         await progressQ.refetch();
       }
@@ -123,7 +129,7 @@ function Crucible() {
     } finally {
       setBusy(false);
     }
-  }, [active, locked, busy, entry, startedAt, refresh, progressQ]);
+  }, [active, locked, busy, entry, startedAt, refresh, progressQ, profile.elo]);
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
@@ -288,6 +294,21 @@ function Crucible() {
                           : t("解法正确，此关此前已通过。", "Correct — this trial was already solved.")
                         : t("解法不成立，再算一遍。", "That line does not hold. Calculate again.")}
                     </p>
+                  </div>
+                )}
+                {promo && (
+                  <div className="p-space-sm bg-primary-container/30 flex flex-col gap-space-xs">
+                    <p className="cjk font-label-md text-label-md text-secondary">
+                      {t(`晋级「${promo.tierZh}」，对应天梯已开启。`, `Promoted to ${promo.tier} — the matching ladder is open.`)}
+                    </p>
+                    <div className="flex gap-space-xs">
+                      <Link to="/battle" className="flex-1 py-space-sm bg-primary-container text-on-primary-container text-center cjk font-label-md text-label-md">
+                        {t("立即进入天梯对局", "Enter ranked now")}
+                      </Link>
+                      <Link to="/dynasty" className="py-space-sm px-space-md bg-surface-container-high text-on-surface text-center cjk font-label-md text-label-md">
+                        {t("查看段位", "Sanctum")}
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>

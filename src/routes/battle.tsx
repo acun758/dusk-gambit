@@ -5,9 +5,9 @@ import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
 export const Route = createFileRoute("/battle")({
   head: () => ({
     meta: [
-      { title: "Active Confrontation \u2014 Blood Sovereign" },
+      { title: "实时对峙 · 血誓王权 | Active Confrontation" },
       { name: "description", content: "Live grandmaster duel with engine evaluation, brilliant move callouts and slow-motion execution." },
-      { property: "og:title", content: "Active Confrontation \u2014 Blood Sovereign" },
+      { property: "og:title", content: "实时对峙 · 血誓王权 | Active Confrontation" },
       { property: "og:description", content: "Live grandmaster duel with engine evaluation, brilliant move callouts and slow-motion execution." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -28,7 +28,7 @@ function Battle() {
   const session = useDuelSession();
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-16 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><button aria-label={"Withdraw"} className={"w-11 h-11 flex items-center justify-center text-secondary hover:text-secondary-fixed transition-colors"}><span className={"material-symbols-outlined text-[24px]"}>arrow_back</span></button><div className={"flex flex-col"}><span className={"font-headline-sm text-headline-sm text-on-surface uppercase tracking-wider"}>Active Confrontation</span></div></div><div className={"flex items-center gap-space-xs"}><button aria-label={"Game Settings"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>tune</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-16 bg-surface min-h-screen"}><div className={"w-full lg:flex lg:items-start lg:gap-space-lg"}><div className={"flex flex-col w-full min-w-0 text-on-surface select-none pb-[8.5rem] lg:pb-space-lg pb-safe"}>
+<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-16 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><button aria-label={"Withdraw"} className={"w-11 h-11 flex items-center justify-center text-secondary hover:text-secondary-fixed transition-colors"}><span className={"material-symbols-outlined text-[24px]"}>arrow_back</span></button><div className={"flex flex-col"}><span className={"font-headline-sm text-headline-sm text-on-surface uppercase tracking-wider"}>实时对峙</span></div></div><div className={"flex items-center gap-space-xs"}><button aria-label={"Game Settings"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>tune</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-16 bg-surface min-h-screen"}><div className={"w-full lg:flex lg:items-start lg:gap-space-lg"}><div className={"flex flex-col w-full min-w-0 text-on-surface select-none pb-[8.5rem] lg:pb-space-lg pb-safe"}>
 
 <div className={"w-full px-margin-mobile pt-space-xs pb-space-sm flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-full shadow-sm"}>
@@ -54,7 +54,7 @@ function Battle() {
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
 <span className={"bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2 py-0.5 rounded-none font-bold uppercase tracking-wider"}>
-            MATE IN 1
+            一步绝杀 · MATE IN 1
           </span>
 <span className={"bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-none"}>
             天梯宗师决死战 · 第38步
@@ -62,7 +62,7 @@ function Battle() {
 </div>
 <div className={"flex items-center gap-1 text-secondary font-label-sm text-label-sm"}>
 <span className={"material-symbols-outlined text-[14px]"}>bolt</span>
-<span>BRILLIANT MOVE (!!)</span>
+<span>妙手 !!</span>
 </div>
 </div>
 
@@ -97,8 +97,8 @@ function Battle() {
 <div className={"h-full bg-primary-container"} style={{ width: "2%" }}></div>
 </div>
 <div className={"flex justify-between font-label-sm text-label-sm text-on-surface-variant"}>
-<span className={"text-secondary font-semibold"}>Stockfish 16 Advantage: +100.0</span>
-<span>Depth: 32 / Absolute Execution</span>
+<span className={"text-secondary font-semibold"}>引擎优势 +100.0</span>
+<span>搜索深度 32 · 绝对执行</span>
 </div>
 </div>
 </div>
@@ -119,7 +119,7 @@ function Battle() {
 </div>
 <div className={"bg-surface-container-lowest/90 backdrop-blur-md px-2 py-1 flex items-center gap-1 shadow-md"}>
 <span className={"font-headline-sm text-headline-sm text-secondary leading-none"}>♛</span>
-<span className={"font-label-sm text-label-sm text-on-surface font-semibold"}>Qf7# Checkmate</span>
+<span className={"font-label-sm text-label-sm text-on-surface font-semibold"}>Qf7# 将杀</span>
 </div>
 </div>
 
@@ -127,8 +127,8 @@ function Battle() {
 <div className={"flex items-center gap-2"}>
 <span className={"w-1.5 h-6 bg-primary"}></span>
 <div className={"flex flex-col"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>Fatal Coordinate</span>
-<span className={"font-headline-md text-headline-md text-primary tracking-tight font-serif"}>SQUARE f7</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest"}>致命坐标</span>
+<span className={"font-headline-md text-headline-md text-primary tracking-tight font-serif"}>f7 格</span>
 </div>
 </div>
 </div>
@@ -172,7 +172,7 @@ function Battle() {
 <span className={"w-0.5 h-2 bg-secondary"}></span>
 </div>
 <p className={"font-body-sm text-body-sm text-on-surface truncate italic"}>
-            “She doesn't follow the board. She owns it.”
+            “她不追随棋盘，她主宰棋盘。”
           </p>
 </div>
 <span className={"font-label-sm text-label-sm text-secondary font-semibold shrink-0"}>0:04</span>
@@ -184,10 +184,10 @@ function Battle() {
 <div className={"flex items-center gap-space-xs"}>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>history_edu</span>
 <span className={"font-label-md text-label-md text-on-surface font-semibold uppercase tracking-wider"}>
-            步法轴与局势推演 (Climax Scrub)
+            步法轴与局势推演
           </span>
 </div>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>Step 38 / 38</span>
+<span className={"font-label-sm text-label-sm text-on-surface-variant"}>第 38 / 38 步</span>
 </div>
 
 <div className={"grid grid-cols-4 gap-space-xs pt-1"}>
@@ -213,7 +213,7 @@ function Battle() {
 <button className={"flex flex-col p-2 bg-primary-container text-left shadow-md focus:outline-none relative"}>
 <span className={"font-label-sm text-label-sm text-on-primary-container font-bold"}>#38 虚空斩首</span>
 <span className={"font-label-md text-label-md text-on-primary font-bold pt-0.5"}>♛ Qf7#</span>
-<span className={"font-label-sm text-label-sm text-on-primary-container mt-1 font-bold"}>MATE</span>
+<span className={"font-label-sm text-label-sm text-on-primary-container mt-1 font-bold"}>将杀</span>
 </button>
 </div>
 
@@ -236,14 +236,14 @@ function Battle() {
 <div className={"relative bg-surface-container-lowest overflow-hidden shadow-md flex flex-col"}>
 <img className={"w-full h-24 object-cover"} data-alt={"Macro close-up shot of an ornate blood-stained crystal Queen chess piece hovering above a cracked obsidian board, emitting soft gold and crimson aura, high dynamic range chiaroscuro lighting, dramatic macro photography"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuBuf4GYfnGE7pamaju5DWKlZDXBIwwANgYfNs5F00Osxy4C8y3VLGG8S0TlHKmjZzaCSEBMfVf9aBim3yzd_vNTkIIFX_DQBqeNiLf19ElNkNQRUIw9vY2hojLLlq4mbc1VEVWg6bBxKgdrGYphUf0He5pDLM8RxvWIvOqAa2NtXMKmst6zY40FL4FvkBaJSmqV6HFCuG8o1h73A8bKZYev3LMeF2a-1pLDJkYdr1dAySk1edXAyf_Mqg"} />
 <div className={"p-2 flex flex-col bg-surface-container-low"}>
-<span className={"font-label-sm text-label-sm text-secondary uppercase font-semibold"}>Decapitating Relic</span>
+<span className={"font-label-sm text-label-sm text-secondary uppercase font-semibold"}>斩首圣物</span>
 <span className={"font-body-sm text-body-sm text-on-surface truncate"}>猩红王后 · 虚空锋芒</span>
 </div>
 </div>
 <div className={"relative bg-surface-container-lowest overflow-hidden shadow-md flex flex-col"}>
 <img className={"w-full h-24 object-cover"} data-alt={"Two dark robed cosmic monarchs gazing across an abyss over an illuminated gold and obsidian chessboard suspended in deep space nebula, dramatic divine lighting beams, majestic occult ritual aesthetic"} src={"https://lh3.googleusercontent.com/aida-public/AB6AXuCJAhK7FpGtdlHCSHM2xBBU9AbY-2bFJkxuO9Cy21nqBXTIQwo91OQpyI09JO5NgSSMyJmnIViGAryWm16WAJ5FgU3XZ1NUBY4NjdamHZOqzMSJBkK5k5iyHi3UNOI8cC9XTAeRJEq4U6ucTudXeXSXXv5jykV09rXUiWH9CDHRwaMSj9fjmxHD3taDfI95OsrMwiN_SV2JaCktkYE-tjILmDGITi_Ve_9BtPBKG_GMQQDLXJsRtalKJA"} />
 <div className={"p-2 flex flex-col bg-surface-container-low"}>
-<span className={"font-label-sm text-label-sm text-primary uppercase font-semibold"}>Grandmaster Vision</span>
+<span className={"font-label-sm text-label-sm text-primary uppercase font-semibold"}>宗师视野</span>
 <span className={"font-body-sm text-body-sm text-on-surface truncate"}>神域棋局 · 意念交锋</span>
 </div>
 </div>
@@ -254,7 +254,7 @@ function Battle() {
 <button className={"w-full py-3 px-4 bg-primary-container hover:bg-tertiary-container text-on-primary-container flex items-center justify-center gap-space-sm shadow-xl transition-all active:scale-[0.99]"}>
 <span className={"material-symbols-outlined text-[20px]"}>swords</span>
 <span className={"font-label-lg text-label-lg tracking-wider uppercase font-bold"}>
-          发起相同残局挑战 (Fork &amp; Play Puzzle)
+          发起相同残局挑战
         </span>
 </button>
 
