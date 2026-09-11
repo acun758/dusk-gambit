@@ -30,17 +30,18 @@ function Index() {
 <div className={"absolute inset-0 bg-gradient-to-b from-primary-container/20 via-surface-container-lowest/60 to-surface-container-lowest pointer-events-none"}></div>
 
 <div className={"flex items-center justify-between relative z-10"}>
-<div className={"flex flex-col items-center"}>
+<div className={"flex items-center gap-space-xs"}>
 <span className={"font-headline-md text-headline-md text-secondary leading-none"}>A</span>
-<span className={"material-symbols-outlined text-secondary text-[16px] mt-0.5"}>diamond</span>
+<span className={"material-symbols-outlined text-secondary text-[16px]"}>diamond</span>
+<span className={"font-label-md text-label-md text-on-surface uppercase tracking-widest"}>Adiamond</span>
 </div>
 <div className={"flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest"}>
 <span className={"w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"}></span>
 <span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>The Sovereign's Decree</span>
 </div>
-<div className={"flex flex-col items-center"}>
+<div className={"flex items-center gap-space-xs"}>
 <span className={"font-headline-md text-headline-md text-secondary leading-none"}>A</span>
-<span className={"material-symbols-outlined text-secondary text-[16px] mt-0.5"}>diamond</span>
+<span className={"material-symbols-outlined text-secondary text-[16px]"}>diamond</span>
 </div>
 </div>
 
@@ -56,12 +57,13 @@ function Index() {
 </div>
 
 <span className={"font-label-md text-label-md uppercase tracking-[0.25em] text-on-surface-variant mb-1"}>Covenant of the Grandmaster</span>
-<h2 className={"font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase tracking-wider mb-2 drop-shadow-md"}>
+<h2 className={"font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase tracking-wider mb-1 drop-shadow-md"}>
               The Board Never Lies.
             </h2>
+<p className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-2"}>Plan in silence. Execute in blood.</p>
 <div className={"flex items-center gap-space-sm my-1"}>
 <span className={"w-8 h-px bg-secondary/40"}></span>
-<span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Plan in silence. Execute in blood.</span>
+<span className={"material-symbols-outlined text-secondary text-[14px]"}>diamond</span>
 <span className={"w-8 h-px bg-secondary/40"}></span>
 </div>
 <p className={"font-body-sm text-body-sm text-on-surface-variant max-w-xs mt-2 italic"}>
