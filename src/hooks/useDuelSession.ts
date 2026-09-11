@@ -110,8 +110,8 @@ function stateFrom(match: MatchRowLite, you: Color, moves: MoveRowLite[]): DuelS
     },
     status: match.status === "over" ? "over" : match.status === "waiting" ? "waiting" : "live",
   };
-  if (match.outcome) state.outcome = match.outcome as DuelState["outcome"];
-  if (match.reason) state.reason = match.reason as DuelState["reason"];
+  if (match.outcome) state.outcome = match.outcome as NonNullable<DuelState["outcome"]>;
+  if (match.reason) state.reason = match.reason as NonNullable<DuelState["reason"]>;
   return state;
 }
 
