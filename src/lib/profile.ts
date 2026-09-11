@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { loadProfile, renameProfile } from "@/lib/game.functions";
 
 export interface PlayerProfile {
   name: string;
@@ -58,27 +60,66 @@ function write(p: PlayerProfile) {
   }
 }
 
+interface CloudRow {
+  name: string;
+  diamonds: number;
+  elo: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  streak: number;
+}
+
+function fromCloud(row: CloudRow): PlayerProfile {
+  return { ...row, ...tierFor(row.elo) };
+}
+
 /**
- * Local-first profile store. When the account service is online, swap `read`/`write`
- * for the `/api/public/profile` contract documented in docs/duel-integration.md —
- * the component API stays identical.
+ * 玩家档案：登录后由服务端（Lovable Cloud）作为唯一真源，
+ * 未登录时退回本地演示数据，保证页面永远可看。
  */
 export function useProfile() {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
+  const [signedIn, setSignedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const refresh = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      setSignedIn(false);
+      setProfile(read());
+      setLoading(false);
+      return;
+    }
+    setSignedIn(true);
+    try {
+      const row = (await loadProfile()) as CloudRow;
+      setProfile(fromCloud(row));
+    } catch {
+      setProfile(read());
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    setProfile(read());
+    void refresh();
     const sync = (e: Event) => setProfile((e as CustomEvent<PlayerProfile>).detail);
     window.addEventListener("bs:profile", sync);
-    return () => window.removeEventListener("bs:profile", sync);
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") void refresh();
+    });
+    return () => {
+      window.removeEventListener("bs:profile", sync);
+      sub.subscription.unsubscribe();
+    };
+  }, [refresh]);
+
+  const rename = useCallback(async (name: string) => {
+    const row = (await renameProfile({ data: { name } })) as CloudRow;
+    setProfile(fromCloud(row));
   }, []);
 
-  const update = useCallback((patch: Partial<PlayerProfile>) => {
-    const next = { ...read(), ...patch };
-    write(next);
-    setProfile(next);
-  }, []);
-
+  /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
   const recordResult = useCallback((outcome: "win" | "loss" | "draw", eloDelta = 8) => {
     const cur = read();
     const elo = cur.elo + (outcome === "win" ? eloDelta : outcome === "loss" ? -eloDelta : 0);
@@ -97,10 +138,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  const reset = useCallback(() => {
-    write(DEFAULT_PROFILE);
-    setProfile(DEFAULT_PROFILE);
-  }, []);
-
-  return { profile, update, recordResult, reset, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, recordResult, winRate: winRate(profile) };
 }
