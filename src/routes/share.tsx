@@ -123,7 +123,7 @@ function ShareCanvas() {
 
 <div className={"flex items-center gap-2 p-1.5 bg-surface-container-high"}>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>graphic_eq</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant truncate italic"}>
+<span className={"font-label-sm text-label-sm text-on-surface-variant italic leading-snug min-w-0 line-clamp-2 sm:truncate"}>
                     敕令配音: "The Queen doesn't follow the board. She owns it."
                   </span>
 </div>

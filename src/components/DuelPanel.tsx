@@ -175,15 +175,16 @@ export function DuelPanel({ variant = "duel" }: { variant?: PanelVariant }) {
             setOpen(true);
           }}
           aria-pressed={tab === t.key}
-          className={`h-11 flex items-center justify-center gap-1.5 transition-colors ${
+          className={`h-11 min-w-0 flex items-center justify-center gap-1.5 px-1 transition-colors ${
             tab === t.key
               ? "bg-primary-container text-on-surface"
               : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
           }`}
         >
-          <span className="material-symbols-outlined text-[16px]">{t.icon}</span>
-          <span className="font-label-sm text-label-sm uppercase tracking-widest">{t.zh}</span>
+          <span className="material-symbols-outlined text-[16px] shrink-0">{t.icon}</span>
+          <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{t.zh}</span>
         </button>
+
       ))}
     </div>
   );
@@ -221,7 +222,7 @@ export function DuelPanel({ variant = "duel" }: { variant?: PanelVariant }) {
       </div>
 
       {/* Wide: right column (iPad landscape / desktop) */}
-      <aside className="hidden lg:flex flex-col gap-space-sm w-[340px] shrink-0 self-start sticky top-20">
+      <aside className="hidden lg:flex flex-col gap-space-sm w-[290px] xl:w-[340px] shrink-0 self-start sticky top-20">
         <div className="bg-surface-container-lowest p-space-md flex flex-col gap-space-sm gold-hairline shadow-xl">
           <div className="flex items-baseline justify-between">
             <span className="font-headline-sm text-headline-sm text-secondary">+1.84</span>

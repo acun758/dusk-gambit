@@ -49,7 +49,7 @@ function Dynasty() {
 </div>
 <div className={"flex flex-col min-w-0"}>
 <div className={"flex items-center gap-space-xs"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface tracking-wide truncate"}>神圣大宗师</span>
+<span className={"cjk font-headline-sm text-headline-sm text-on-surface tracking-wide whitespace-nowrap"}>神圣大宗师</span>
 <span className={"material-symbols-outlined text-secondary text-[16px]"}>verified</span>
 </div>
 <span className={"font-label-md text-label-md text-on-surface-variant uppercase tracking-widest"}>Grandmaster Titan</span>
@@ -116,7 +116,7 @@ function Dynasty() {
 </div>
 <div className={"flex flex-col min-w-0"}>
 <div className={"flex items-center gap-space-xs"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface truncate"}>神圣大宗师</span>
+<span className={"cjk font-headline-sm text-headline-sm text-on-surface whitespace-nowrap"}>神圣大宗师</span>
 <span className={"font-label-sm text-label-sm bg-secondary text-on-secondary px-1 font-semibold"}>ACTIVE</span>
 </div>
 <span className={"font-body-sm text-body-sm text-primary truncate"}>Grandmaster Titan · 2400-2499 ELO</span>
