@@ -82,22 +82,25 @@ function mindFor(ply: number): Record<string, number> {
 }
 
 function stateFrom(match: MatchRowLite, you: Color, moves: MoveRowLite[]): DuelState {
-  return {
+  const state: DuelState = {
     matchId: match.id,
     you,
     turn: match.turn as Color,
     fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     tc: { base: match.tc_base, inc: match.tc_inc, label: `${Math.round(match.tc_base / 60000)} | ${match.tc_inc / 1000}` },
     clock: { w: match.clock_w, b: match.clock_b },
-    moves: moves.map((m) => ({
-      ply: m.ply,
-      uci: m.uci,
-      san: m.san,
-      by: m.by as Color,
-      ...(m.zh ? { zh: m.zh } : {}),
-      ...(m.cp === null ? {} : { cp: m.cp }),
-      clock: { w: m.clock_w, b: m.clock_b },
-    })),
+    moves: moves.map((m) => {
+      const frame: MoveFrame = {
+        ply: m.ply,
+        uci: m.uci,
+        san: m.san,
+        by: m.by as Color,
+        clock: { w: m.clock_w, b: m.clock_b },
+      };
+      if (m.zh) frame.zh = m.zh;
+      if (m.cp !== null) frame.cp = m.cp;
+      return frame;
+    }),
     cp: match.cp,
     depth: 6,
     mind: mindFor(match.ply),
@@ -106,9 +109,10 @@ function stateFrom(match: MatchRowLite, you: Color, moves: MoveRowLite[]): DuelS
       b: { name: match.black_name, elo: match.black_elo, title: "GM" },
     },
     status: match.status === "over" ? "over" : match.status === "waiting" ? "waiting" : "live",
-    ...(match.outcome ? { outcome: match.outcome as DuelState["outcome"] } : {}),
-    ...(match.reason ? { reason: match.reason as DuelState["reason"] } : {}),
   };
+  if (match.outcome) state.outcome = match.outcome as DuelState["outcome"];
+  if (match.reason) state.reason = match.reason as DuelState["reason"];
+  return state;
 }
 
 /**
