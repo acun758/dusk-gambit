@@ -22,14 +22,14 @@ function Victory() {
 <div className={"absolute inset-0 pointer-events-none z-10 opacity-60"}>
 <svg className={"w-full h-full"} xmlns={"http://www.w3.org/2000/svg"}>
 <defs>
-<radialgradient cx={"50%"} cy={"35%"} id={"occultVignette"} r={"65%"}>
+<radialGradient cx={"50%"} cy={"35%"} id={"occultVignette"} r={"65%"}>
 <stop offset={"0%"} stopColor={"#95001d"} stopOpacity={"0.18"}></stop>
 <stop offset={"60%"} stopColor={"#131315"} stopOpacity={"0.4"}></stop>
 <stop offset={"100%"} stopColor={"#0e0e10"} stopOpacity={"0.95"}></stop>
-</radialgradient>
+</radialGradient>
 <filter id={"crimsonGlow"}>
-<fegaussianblur result={"glow"} stddeviation={"3"}></fegaussianblur>
-<fecomposite in={"SourceGraphic"} in2={"glow"} operator={"over"}></fecomposite>
+<feGaussianBlur result={"glow"} stdDeviation={"3"}></feGaussianBlur>
+<feComposite in={"SourceGraphic"} in2={"glow"} operator={"over"}></feComposite>
 </filter>
 </defs>
 <rect fill={"url(#occultVignette)"} height={"100%"} width={"100%"}></rect>

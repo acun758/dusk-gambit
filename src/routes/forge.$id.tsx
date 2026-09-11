@@ -54,10 +54,10 @@ function ForgeStudio() {
 
 <svg className={"absolute inset-0 w-full h-full pointer-events-none opacity-30"} xmlns={"http://www.w3.org/2000/svg"}>
 <defs>
-<radialgradient cx={"50%"} cy={"50%"} id={"forgeGlow"} r={"50%"}>
+<radialGradient cx={"50%"} cy={"50%"} id={"forgeGlow"} r={"50%"}>
 <stop offset={"0%"} stopColor={"#ffb3ad"} stopOpacity={"0.25"}></stop>
 <stop offset={"100%"} stopColor={"#131315"} stopOpacity={"0"}></stop>
-</radialgradient>
+</radialGradient>
 </defs>
 <circle className={"animate-[spin_40s_linear_infinite] origin-center opacity-60"} cx={"50%"} cy={"54%"} fill={"none"} r={"130"} stroke={"#e9c349"} strokeDasharray={"4 8"} strokeWidth={"0.75"}></circle>
 <circle className={"animate-[spin_30s_linear_infinite_reverse] origin-center opacity-70"} cx={"50%"} cy={"54%"} fill={"none"} r={"148"} stroke={"#8b1e1e"} strokeDasharray={"16 12 4 12"} strokeWidth={"1"}></circle>

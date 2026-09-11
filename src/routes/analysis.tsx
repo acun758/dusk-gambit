@@ -109,14 +109,14 @@ function Analysis() {
 <div className={"relative w-full h-48 my-space-xs"}>
 <svg className={"w-full h-full overflow-visible"} preserveAspectRatio={"none"} viewBox={"0 0 340 180"}>
 <defs>
-<lineargradient id={"bloodGlow"} x1={"0"} x2={"0"} y1={"0"} y2={"1"}>
+<linearGradient id={"bloodGlow"} x1={"0"} x2={"0"} y1={"0"} y2={"1"}>
 <stop offset={"0%"} stopColor={"#ffb3ad"} stopOpacity={"0.35"}></stop>
 <stop offset={"100%"} stopColor={"#8b1e1e"} stopOpacity={"0"}></stop>
-</lineargradient>
-<lineargradient id={"goldGlow"} x1={"0"} x2={"0"} y1={"0"} y2={"1"}>
+</linearGradient>
+<linearGradient id={"goldGlow"} x1={"0"} x2={"0"} y1={"0"} y2={"1"}>
 <stop offset={"0%"} stopColor={"#e9c349"} stopOpacity={"0.3"}></stop>
 <stop offset={"100%"} stopColor={"#af8d11"} stopOpacity={"0"}></stop>
-</lineargradient>
+</linearGradient>
 </defs>
 
 <line stroke={"#353437"} strokeDasharray={"3 3"} strokeWidth={"1"} x1={"0"} x2={"340"} y1={"90"} y2={"90"}></line>

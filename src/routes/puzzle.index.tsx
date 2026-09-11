@@ -184,7 +184,7 @@ function Puzzle() {
 
 <svg className={"absolute inset-0 w-full h-full pointer-events-none z-10"} viewBox={"0 0 280 280"}>
 <defs>
-<marker id={"arrowGold"} markerheight={"6"} markerwidth={"6"} orient={"auto"} refx={"4"} refy={"3"}>
+<marker id={"arrowGold"} markerHeight={"6"} markerWidth={"6"} orient={"auto"} refX={"4"} refY={"3"}>
 <path d={"M0,0 L0,6 L6,3 z"} fill={"#e5b869"}></path>
 </marker>
 </defs>
