@@ -108,7 +108,7 @@ export function SovereignNav() {
                   {item.icon}
                 </span>
                 <span className="font-label-sm text-label-sm tracking-widest uppercase">
-                  {item.label}
+                  <PrimaryLabel en={item.label} zh={item.zh} />
                 </span>
               </Link>
             );
