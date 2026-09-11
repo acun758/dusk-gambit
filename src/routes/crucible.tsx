@@ -203,7 +203,7 @@ function Crucible() {
                     +{active.elo_reward} ELO
                   </span>
                   <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
-                    +{active.diamond_reward} 💎
+                    +{active.diamond_reward} {t("钻石","Gems")}
                   </span>
                   {active.elo_required > 0 && (
                     <span className="cjk px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">
