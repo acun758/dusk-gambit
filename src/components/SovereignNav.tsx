@@ -50,17 +50,18 @@ export function SovereignNav() {
             const active = pathname === item.to;
             return (
               <Link
-                key={item.label}
+                key={item.en}
                 to={item.to}
                 {...("params" in item ? { params: item.params } : {})}
-                className={`shrink-0 px-space-sm py-1 font-label-sm text-label-sm uppercase tracking-widest whitespace-nowrap transition-colors ${
+                className={`shrink-0 px-space-sm py-1 font-label-sm text-label-sm transition-colors ${
                   active
                     ? "bg-primary-container text-on-surface"
                     : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
                 }`}
               >
-                {item.label}
+                <BiLabel en={item.en} zh={item.zh} />
               </Link>
+
             );
           })}
         </div>
@@ -131,17 +132,18 @@ export function SovereignNav() {
             const active = pathname === item.to;
             return (
               <Link
-                key={item.label}
+                key={item.en}
                 to={item.to}
                 {...("params" in item ? { params: item.params } : {})}
-                className={`px-space-sm py-2 font-label-sm text-label-sm uppercase tracking-widest transition-colors ${
+                className={`px-space-sm py-2 font-label-sm text-label-sm transition-colors ${
                   active
                     ? "bg-primary-container text-on-surface"
                     : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
                 }`}
               >
-                {item.label}
+                <BiLabel en={item.en} zh={item.zh} />
               </Link>
+
             );
           })}
         </div>
