@@ -9,23 +9,34 @@ const PRIMARY = [
 ] as const;
 
 const SANCTUM = [
-  { to: "/", label: "Decree 敕令" },
-  { to: "/protocols", label: "Arbiters 法则" },
-  { to: "/matchmaking", label: "Matchup 匹配" },
-  { to: "/battle", label: "Duel 死斗" },
-  { to: "/victory", label: "Execution 处决" },
-  { to: "/crucible", label: "Blindfold 盲棋" },
-  { to: "/dynasty", label: "Dynasty 天梯" },
-  { to: "/analysis", label: "Council 定评" },
-  { to: "/arsenal", label: "Relics 圣物" },
-  { to: "/forge/$id", params: { id: "001" }, label: "Forge 铸造" },
-  { to: "/finisher", label: "Finisher 绝杀" },
-  { to: "/archive", label: "Chronicle 典藏" },
-  { to: "/share", label: "Dispatch 传播" },
-  { to: "/puzzle", label: "Puzzle 残局" },
-  { to: "/puzzle/solved", label: "Spoils 战利" },
-  { to: "/codex", label: "Codex 法典" },
+  { to: "/", en: "Decree", zh: "敕令" },
+  { to: "/protocols", en: "Arbiters", zh: "法则" },
+  { to: "/matchmaking", en: "Matchup", zh: "匹配" },
+  { to: "/battle", en: "Duel", zh: "死斗" },
+  { to: "/victory", en: "Execution", zh: "处决" },
+  { to: "/crucible", en: "Blindfold", zh: "盲棋" },
+  { to: "/dynasty", en: "Dynasty", zh: "天梯" },
+  { to: "/analysis", en: "Council", zh: "定评" },
+  { to: "/arsenal", en: "Relics", zh: "圣物" },
+  { to: "/forge/$id", params: { id: "001" }, en: "Forge", zh: "铸造" },
+  { to: "/finisher", en: "Finisher", zh: "绝杀" },
+  { to: "/archive", en: "Chronicle", zh: "典藏" },
+  { to: "/share", en: "Dispatch", zh: "传播" },
+  { to: "/puzzle", en: "Puzzle", zh: "残局" },
+  { to: "/puzzle/solved", en: "Spoils", zh: "战利" },
+  { to: "/codex", en: "Codex", zh: "法典" },
 ] as const;
+
+/** Bilingual label: Latin keeps ceremonial tracking, CJK gets optical spacing. */
+function BiLabel({ en, zh }: { en: string; zh: string }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
+      <span className="uppercase tracking-widest">{en}</span>
+      <span className="cjk tracking-[0.06em] opacity-80">{zh}</span>
+    </span>
+  );
+}
+
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
