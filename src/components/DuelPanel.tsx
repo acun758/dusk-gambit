@@ -343,7 +343,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
           <div className="flex items-baseline justify-between">
             <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{evalText}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-              {session ? `${PHASE_LABEL[session.phase]} · ${session.transport === "server" ? "WS" : "Local"}` : "Depth 32"}
+              {session ? `${PHASE_LABEL[session.phase]} · ${session.transport === "cloud" ? "云端" : "本地"}` : "云端深算 32 层"}
             </span>
           </div>
           <Clocks session={session} />
