@@ -1,0 +1,1 @@
+GRANT SELECT (id,code,name_zh,name_en,brief_zh,brief_en,fen,objective_zh,objective_en,moves_to_mate,elo_required,elo_reward,diamond_reward,depth,theme_zh,theme_en,hint_zh,hint_en,explanation_zh,explanation_en,move_annotations) ON public.endgame_levels TO anon, authenticated;
