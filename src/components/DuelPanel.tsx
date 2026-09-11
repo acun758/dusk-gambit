@@ -54,7 +54,9 @@ function PanelBody({ tab }: { tab: TabKey }) {
   if (tab === "log") {
     return (
       <div className="flex flex-col gap-space-xs">
-        <Clocks />
+        <div className="lg:hidden">
+          <Clocks />
+        </div>
         <div className="max-h-[38vh] lg:max-h-[46vh] overflow-y-auto flex flex-col gap-1 pr-0.5">
           {MOVES.map((m) => (
             <div
