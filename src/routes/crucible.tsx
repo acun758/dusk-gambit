@@ -1,12 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
+import { useProfile } from "@/lib/profile";
+import { Bi, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/crucible")({
   head: () => ({
     meta: [
-      { title: 'Blindfold Crucible — Tactics & Mental Calculation' },
-      { name: "description", content: 'Train blindfold visualization and mate-finding under pressure in the Tactics Crucible.' },
-      { property: "og:title", content: 'Blindfold Crucible — Tactics & Mental Calculation' },
-      { property: "og:description", content: 'Train blindfold visualization and mate-finding under pressure in the Tactics Crucible.' },
+      { title: "盲棋心算 · 残局试炼 | Blindfold Endgame Crucible" },
+      {
+        name: "description",
+        content: "六道残局关卡：给出目标解法，服务端校验后结算积分与钻石，并解锁更高段位试炼。",
+      },
+      { property: "og:title", content: "盲棋心算 · 残局试炼 | Blindfold Endgame Crucible" },
+      { property: "og:description", content: "六道残局关卡，服务端校验解法并结算段位奖励。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -14,245 +22,279 @@ export const Route = createFileRoute("/crucible")({
   component: Crucible,
 });
 
+interface LevelRow {
+  id: number;
+  code: string;
+  name_zh: string;
+  name_en: string;
+  brief_zh: string;
+  brief_en: string;
+  fen: string;
+  objective_zh: string;
+  objective_en: string;
+  moves_to_mate: number;
+  elo_required: number;
+  elo_reward: number;
+  diamond_reward: number;
+}
+
+interface ProgressRow {
+  level_id: number;
+  solved: boolean;
+  attempts: number;
+  best_ms: number | null;
+}
+
+const GLYPH: Record<string, string> = {
+  k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
+  K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
+};
+
+function boardFromFen(fen: string): (string | null)[][] {
+  const rows = fen.split(" ")[0]?.split("/") ?? [];
+  return Array.from({ length: 8 }, (_, r) => {
+    const out: (string | null)[] = [];
+    for (const ch of rows[r] ?? "8") {
+      if (/\d/.test(ch)) for (let i = 0; i < Number(ch); i++) out.push(null);
+      else out.push(ch);
+    }
+    while (out.length < 8) out.push(null);
+    return out.slice(0, 8);
+  });
+}
+
 function Crucible() {
+  const t = useT();
+  const { profile, signedIn, refresh } = useProfile();
+  const [activeId, setActiveId] = useState<number | null>(null);
+  const [entry, setEntry] = useState("");
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [blind, setBlind] = useState(true);
+
+  const levelsQ = useQuery({
+    queryKey: ["endgame-levels"],
+    queryFn: () => listEndgameLevels() as Promise<LevelRow[]>,
+  });
+  const progressQ = useQuery({
+    queryKey: ["endgame-progress", signedIn],
+    queryFn: () => (signedIn ? (loadEndgameProgress() as Promise<ProgressRow[]>) : Promise.resolve([])),
+  });
+
+  const levels = levelsQ.data ?? [];
+  const progress = useMemo(() => {
+    const map = new Map<number, ProgressRow>();
+    for (const p of progressQ.data ?? []) map.set(p.level_id, p);
+    return map;
+  }, [progressQ.data]);
+
+  useEffect(() => {
+    if (activeId === null && levels.length) setActiveId(levels[0]!.id);
+  }, [levels, activeId]);
+
+  const active = levels.find((l) => l.id === activeId) ?? null;
+  const locked = active ? profile.elo < active.elo_required : false;
+  const board = useMemo(() => (active ? boardFromFen(active.fen) : boardFromFen("8/8/8/8/8/8/8/8")), [active]);
+
+  const select = useCallback((id: number) => {
+    setActiveId(id);
+    setEntry("");
+    setResult(null);
+    setStartedAt(Date.now());
+  }, []);
+
+  const submit = useCallback(async () => {
+    if (!active || locked || busy) return;
+    const moves = entry.trim().split(/[\s,]+/).filter(Boolean);
+    if (!moves.length) return;
+    setBusy(true);
+    try {
+      const res = (await submitEndgame({
+        data: { levelId: active.id, moves, ms: Date.now() - startedAt },
+      })) as { correct: boolean; firstSolve: boolean; expectedLength: number };
+      setResult(res);
+      if (res.correct) {
+        await refresh();
+        await progressQ.refetch();
+      }
+    } catch {
+      setResult({ correct: false, firstSolve: false, expectedLength: 0 });
+    } finally {
+      setBusy(false);
+    }
+  }, [active, locked, busy, entry, startedAt, refresh, progressQ]);
+
   return (
-    <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-28">
-<header className={"fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label="Haptics &amp; Audio" className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"flex flex-col w-full pb-28"}>
-<section className={"px-margin-mobile pt-space-sm pb-space-xs flex flex-col gap-space-xs bg-surface-container-lowest"}>
-<div className={"flex items-center justify-between"}>
-<div className={"flex items-center gap-space-xs"}>
-<span className={"w-1.5 h-1.5 bg-primary rotate-45"}></span>
-<span className={"font-label-sm text-label-sm uppercase tracking-widest text-primary-fixed"}>Tactics Crucible // 战术心智试炼</span>
-</div>
-<div className={"flex items-center gap-1.5 px-space-xs py-0.5 bg-surface-container-high"}>
-<span className={"material-symbols-outlined text-primary text-[14px] animate-pulse"}>psychology</span>
-<span className={"font-label-sm text-label-sm text-on-surface tracking-wider"}>Depth VII · 6-Ply</span>
-</div>
-</div>
-<div className={"flex gap-1 overflow-x-auto py-1"}>
-<button className={"px-space-md py-1.5 bg-primary-container text-on-primary-container font-label-md text-label-md uppercase tracking-wider flex items-center gap-1 shrink-0 shadow-[0_0_12px_rgba(139,30,30,0.6)]"}>
-<span className={"material-symbols-outlined text-[14px]"}>visibility_off</span>
-<span>盲棋心算 Blindfold</span>
-</button>
-<button className={"px-space-md py-1.5 bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md uppercase tracking-wider shrink-0 transition-colors"}>
-        极限死斗 Endgame
-      </button>
-<button className={"px-space-md py-1.5 bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md uppercase tracking-wider shrink-0 transition-colors"}>
-        残局解谜 Puzzles
-      </button>
-</div>
-<div className={"grid grid-cols-3 gap-1 pt-1"}>
-<div className={"flex flex-col bg-surface-container-low p-2"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase"}>Streak</span>
-<div className={"flex items-baseline gap-1 mt-0.5"}>
-<span className={"font-headline-sm text-headline-sm text-secondary"}>14</span>
-<span className={"font-label-sm text-label-sm text-secondary tracking-widest"}>VICTORIES</span>
-</div>
-</div>
-<div className={"flex flex-col bg-surface-container-low p-2"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase"}>Mental Fatigue</span>
-<div className={"flex items-baseline gap-1 mt-0.5"}>
-<span className={"font-headline-sm text-headline-sm text-primary"}>28%</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>OPTIMAL</span>
-</div>
-</div>
-<div className={"flex flex-col bg-surface-container-low p-2"}>
-<span className={"font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase"}>Target Eval</span>
-<div className={"flex items-baseline gap-1 mt-0.5"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface"}>+4.2</span>
-<span className={"font-label-sm text-label-sm text-primary-fixed"}>CRITICAL</span>
-</div>
-</div>
-</div>
-</section>
-<div className={"px-margin-mobile py-2 bg-surface-container-lowest"}>
-<div className={"bg-surface-container-high p-1 grid grid-cols-3 gap-1"}>
-<button className={"py-1 text-center font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"}>
-        全暗脑内模拟
-      </button>
-<button className={"py-1 text-center font-label-md text-label-md uppercase tracking-wider bg-secondary text-on-secondary shadow-[0_0_10px_rgba(233,195,73,0.3)]"}>
-        幽光残影 Glimmer
-      </button>
-<button className={"py-1 text-center font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"}>
-        记谱速记 Notation
-      </button>
-</div>
-</div>
-<section className={"px-margin-mobile py-2"}>
-<div className={"relative w-full aspect-square bg-surface-container-lowest p-2 shadow-[inset_0_0_40px_rgba(0,0,0,0.95)] flex flex-col justify-between overflow-hidden"}>
-<div className={"absolute inset-0 bg-[radial-gradient(#201f21_1px,transparent_1px)] [background-size:16px_16px] opacity-40"}></div>
-<div className={"absolute -inset-10 bg-primary/5 blur-3xl pointer-events-none"}></div>
-<div className={"relative z-10 grid grid-cols-8 grid-rows-8 w-full h-full"}>
-<div className={"col-start-1 row-start-1 flex items-center justify-center bg-surface-container-low/40"}>
-<span className={"text-on-surface-variant/40 font-label-sm text-label-sm"}>♜</span>
-</div>
-<div className={"col-start-2 row-start-1 flex items-center justify-center bg-surface-container/30"}></div>
-<div className={"col-start-3 row-start-1 flex items-center justify-center bg-surface-container-low/40"}>
-<span className={"text-on-surface-variant/40 font-label-sm text-label-sm"}>♝</span>
-</div>
-<div className={"col-start-4 row-start-1 flex items-center justify-center bg-surface-container/30"}></div>
-<div className={"col-start-5 row-start-1 flex items-center justify-center bg-surface-container-low/40"}>
-<span className={"text-on-surface-variant/70 font-label-sm text-label-sm"}>♚</span>
-</div>
-<div className={"col-start-6 row-start-1 flex items-center justify-center bg-surface-container/30"}></div>
-<div className={"col-start-7 row-start-1 flex items-center justify-center bg-surface-container-low/40"}></div>
-<div className={"col-start-8 row-start-1 flex items-center justify-center bg-surface-container/30"}>
-<span className={"text-on-surface-variant/40 font-label-sm text-label-sm"}>♜</span>
-</div>
-<div className={"col-start-1 row-start-2 col-span-8 grid grid-cols-8"}>
-<div className={"flex items-center justify-center"}><span className={"text-on-surface-variant/30 font-label-sm text-label-sm"}>♟</span></div>
-<div className={"flex items-center justify-center"}></div>
-<div className={"flex items-center justify-center"}><span className={"text-on-surface-variant/30 font-label-sm text-label-sm"}>♟</span></div>
-<div className={"flex items-center justify-center"}></div>
-<div className={"flex items-center justify-center"}></div>
-<div className={"flex items-center justify-center"}><span className={"text-on-surface-variant/30 font-label-sm text-label-sm"}>♟</span></div>
-<div className={"flex items-center justify-center"}><span className={"text-on-surface-variant/30 font-label-sm text-label-sm"}>♟</span></div>
-<div className={"flex items-center justify-center"}></div>
-</div>
-<div className={"col-start-4 row-start-4 flex items-center justify-center bg-primary-container/20"}>
-<span className={"material-symbols-outlined text-primary text-[18px] opacity-80 animate-pulse"}>adjust</span>
-</div>
-<div className={"col-start-6 row-start-4 flex items-center justify-center bg-secondary-container/20"}>
-<span className={"text-secondary font-label-md text-label-md"}>♞ d5</span>
-</div>
-<div className={"col-start-6 row-start-5 flex items-center justify-center"}>
-<div className={"w-2 h-2 rounded-full bg-secondary/60"}></div>
-</div>
-<div className={"col-start-7 row-start-5 flex items-center justify-center"}>
-<span className={"text-primary-fixed/50 font-label-sm text-label-sm"}>♙ f3</span>
-</div>
-<div className={"col-start-8 row-start-7 relative flex items-center justify-center bg-error-container/40 shadow-[0_0_18px_rgba(147,0,10,0.8)]"}>
-<div className={"absolute inset-0 bg-primary/20 animate-ping"}></div>
-<div className={"relative flex flex-col items-center"}>
-<span className={"text-primary font-headline-sm text-headline-sm font-bold"}>♞</span>
-<span className={"font-label-sm text-label-sm text-primary uppercase"}>h2!!</span>
-</div>
-</div>
-<div className={"col-start-7 row-start-8 flex items-center justify-center bg-surface-container-highest"}>
-<div className={"flex flex-col items-center"}>
-<span className={"text-secondary font-headline-sm text-headline-sm"}>♔</span>
-<span className={"font-label-sm text-label-sm text-secondary"}>g1 [CHECK]</span>
-</div>
-</div>
-<div className={"col-start-8 row-start-8 flex items-center justify-center bg-surface-container-low/40"}>
-<span className={"text-on-surface-variant/30 font-label-sm text-label-sm"}>♖ h1</span>
-</div>
-</div>
-<svg className={"absolute inset-0 w-full h-full pointer-events-none z-20"} viewBox="0 0 320 320">
-<defs>
-<linearGradient id="bloodGlow" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stopColor="#e9c349" stopOpacity="0.8" />
-<stop offset="100%" stopColor="#ffb3ad" stopOpacity="0.9" />
-</linearGradient>
-<marker id="arrow" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="5" refY="5" viewBox="0 0 10 10">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb3ad" />
-</marker>
-</defs>
-<line markerEnd="url(#arrow)" stroke="url(#bloodGlow)" strokeDasharray="4 3" strokeWidth="2.5" x1="220" x2="300" y1="140" y2="250" />
-<circle cx="220" cy="140" fill="#e9c349" r="4" />
-</svg>
-<div className={"relative z-30 bg-surface-container-lowest/90 backdrop-blur-md p-2 flex flex-col gap-1 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-label-sm text-label-sm text-primary tracking-widest uppercase flex items-center gap-1"}>
-<span className={"material-symbols-outlined text-[13px]"}>warning</span>
-            King Under Siege // 王翼死线突围
-          </span>
-<span className={"font-label-sm text-label-sm text-secondary"}>16... Nxh2!!</span>
-</div>
-<p className={"font-body-sm text-body-sm text-on-surface leading-snug"}>
-          黑方强袭 h2 孤注一掷！心算白方在 3 步（6半步）内唯一反制胜负手，击溃对手弃子陷阱。
-        </p>
-</div>
-</div>
-</section>
-<section className={"px-margin-mobile py-1"}>
-<div className={"bg-surface-container-low p-2.5 flex items-center gap-space-sm shadow-[0_8px_20px_rgba(0,0,0,0.6)]"}>
-<div className={"w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0"}>
-<span className={"material-symbols-outlined text-secondary text-[20px] animate-pulse"}>graphic_eq</span>
-</div>
-<div className={"flex flex-col min-w-0 flex-1"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-label-sm text-label-sm text-secondary uppercase tracking-wider"}>Grandmaster Voice Audio</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant"}>00:03 / 00:06</span>
-</div>
-<p className={"font-body-sm text-body-sm text-on-surface truncate mt-0.5"}>
-          「Knight takes h2, check. Reconstruct your sanctuary in deep silence.」
-        </p>
-</div>
-<div className={"flex items-center gap-0.5 h-5 shrink-0 px-1"}>
-<div className={"w-1 bg-secondary animate-pulse h-3"}></div>
-<div className={"w-1 bg-primary animate-pulse h-5"}></div>
-<div className={"w-1 bg-secondary animate-pulse h-2"}></div>
-<div className={"w-1 bg-primary-fixed animate-pulse h-4"}></div>
-<div className={"w-1 bg-secondary animate-pulse h-1"}></div>
-</div>
-</div>
-</section>
-<section className={"px-margin-mobile py-1 flex flex-col gap-space-xs"}>
-<div className={"flex items-center justify-between bg-surface-container-lowest p-2"}>
-<div className={"flex items-center gap-space-sm"}>
-<div className={"flex items-center gap-1"}>
-<span className={"material-symbols-outlined text-primary text-[18px] animate-pulse"}>favorite</span>
-<span className={"font-label-md text-label-md text-primary"}>118 BPM</span>
-</div>
-<span className={"w-1 h-1 rounded-full bg-surface-container-highest"}></span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"}>Cortisol Under Check</span>
-</div>
-<div className={"flex items-center gap-1.5 px-2 py-0.5 bg-error-container/30"}>
-<span className={"material-symbols-outlined text-error text-[14px]"}>timer</span>
-<span className={"font-headline-sm text-headline-sm text-error font-semibold tracking-wider"}>00:43</span>
-</div>
-</div>
-<div className={"bg-surface-container-low p-2.5 flex flex-col gap-2"}>
-<div className={"flex items-center justify-between"}>
-<span className={"font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant"}>
-          Mental Path Selector // 脑内推演分支
-        </span>
-<button className={"flex items-center gap-1 text-secondary hover:text-secondary-fixed text-label-sm font-label-sm uppercase tracking-wider"}>
-<span className={"material-symbols-outlined text-[14px]"}>account_tree</span>
-<span>Scratchpad (0/3)</span>
-</button>
-</div>
-<div className={"grid grid-cols-4 gap-1.5"} id="move-selector">
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface"}>17. Kxh2</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>King Takes</span>
-</button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface"}>17. Kh1</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>Retreat</span>
-</button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors"}>
-<span className={"font-headline-sm text-headline-sm text-on-surface"}>17. g3</span>
-<span className={"font-label-sm text-label-sm text-on-surface-variant uppercase mt-0.5"}>Shield</span>
-</button>
-<button className={"move-option py-2 px-1 bg-surface-container flex flex-col items-center justify-center transition-colors active-chip bg-primary-container text-on-primary-container"}>
-<span className={"font-headline-sm text-headline-sm text-primary"}>17. Ng5!</span>
-<span className={"font-label-sm text-label-sm text-primary-fixed uppercase mt-0.5"}>Counter</span>
-</button>
-</div>
-</div>
-</section>
-<section className={"px-margin-mobile pt-2 flex flex-col gap-2"}>
-<button className={"w-full py-3 bg-gradient-to-r from-primary-container via-error-container to-secondary-container text-on-surface flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(139,30,30,0.85)] active:scale-[0.99] transition-transform"}>
-<span className={"material-symbols-outlined text-secondary text-[22px]"}>swords</span>
-<span className={"font-label-lg text-label-lg uppercase tracking-widest text-on-surface font-bold"}>
-        确认心算落子 // Execute Mental Move
-      </span>
-</button>
-<div className={"flex items-center justify-between px-1"}>
-<button className={"flex items-center gap-1.5 py-1.5 text-on-surface-variant hover:text-secondary transition-colors"}>
-<span className={"material-symbols-outlined text-[18px]"}>psychology_alt</span>
-<span className={"font-label-md text-label-md uppercase tracking-wider"}>放弃并查看思维投影 (Reveal Mind Phantom)</span>
-</button>
-<div className={"flex items-center gap-1 text-on-surface-variant"}>
-<span className={"material-symbols-outlined text-[16px]"}>help</span>
-<span className={"font-label-sm text-label-sm"}>Blindfold Depth: +15 Elo</span>
-</div>
-</div>
-</section>
-</div>
-</main>
+    <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
+      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
+        <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
+          <div className="flex flex-col min-w-0">
+            <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
+              {profile.elo} ELO · {t(profile.tierZh, profile.tier)}
+            </span>
+            <span className="font-headline-sm text-headline-sm tracking-wider truncate">
+              <Bi zh="盲棋心算" en="Blindfold Crucible" />
+            </span>
+          </div>
+          <button
+            onClick={() => setBlind((b) => !b)}
+            className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
+          >
+            <span className="material-symbols-outlined text-[18px]">{blind ? "visibility_off" : "visibility"}</span>
+            <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
+          </button>
+        </div>
+      </header>
+
+      <main className="pt-20 px-margin-mobile flex flex-col gap-space-md lg:flex-row lg:items-start lg:gap-space-lg">
+        {/* 关卡列表 */}
+        <section className="flex flex-col gap-space-xs mt-space-md lg:w-72 lg:shrink-0">
+          <h2 className="font-headline-sm text-headline-sm">
+            <Bi zh="六道试炼" en="Six Trials" />
+          </h2>
+          {levelsQ.isLoading && (
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("关卡载入中…", "Loading trials…")}</p>
+          )}
+          <div className="grid gap-space-xs">
+            {levels.map((l) => {
+              const p = progress.get(l.id);
+              const lock = profile.elo < l.elo_required;
+              const on = l.id === activeId;
+              return (
+                <button
+                  key={l.id}
+                  onClick={() => select(l.id)}
+                  className={`text-left p-space-sm flex items-start justify-between gap-space-sm transition-colors ${
+                    on ? "bg-surface-container-high gold-hairline" : "bg-surface-container hover:bg-surface-container-high"
+                  }`}
+                >
+                  <span className="flex flex-col min-w-0 gap-0.5">
+                    <span className="font-label-md text-label-md text-on-surface truncate">
+                      {t(l.name_zh, l.name_en)}
+                    </span>
+                    <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
+                      {t(`${l.moves_to_mate} 步杀`, `Mate in ${l.moves_to_mate}`)} · +{l.elo_reward} ELO
+                    </span>
+                  </span>
+                  <span className="material-symbols-outlined text-[18px] shrink-0 text-secondary">
+                    {p?.solved ? "verified" : lock ? "lock" : "chevron_right"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 当前关卡 */}
+        <section className="flex-1 min-w-0 flex flex-col gap-space-sm mt-space-md">
+          {active && (
+            <>
+              <div className="bg-surface-container-low p-space-md flex flex-col gap-space-xs">
+                <span className="cjk font-label-sm text-label-sm text-primary tracking-widest">
+                  {t(active.objective_zh, active.objective_en)}
+                </span>
+                <h3 className="font-headline-md text-headline-md">{t(active.name_zh, active.name_en)}</h3>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                  {t(active.brief_zh, active.brief_en)}
+                </p>
+                <div className="flex flex-wrap items-center gap-space-xs mt-space-xs">
+                  <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
+                    +{active.elo_reward} ELO
+                  </span>
+                  <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
+                    +{active.diamond_reward} {t("钻石","Gems")}
+                  </span>
+                  {active.elo_required > 0 && (
+                    <span className="cjk px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">
+                      {t(`需 ${active.elo_required} 分`, `Requires ${active.elo_required}`)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative w-full max-w-[560px] aspect-square bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)]">
+                <div className="grid grid-cols-8 grid-rows-8 w-full h-full">
+                  {board.flatMap((row, r) =>
+                    row.map((cell, c) => (
+                      <div
+                        key={`${r}-${c}`}
+                        className={`flex items-center justify-center ${
+                          (r + c) % 2 === 0 ? "bg-surface-container-low/50" : "bg-surface-container/30"
+                        }`}
+                      >
+                        {cell && (
+                          <span
+                            className={`text-[clamp(14px,4vw,30px)] leading-none ${
+                              blind ? "opacity-0" : cell === cell.toUpperCase() ? "text-secondary" : "text-on-surface"
+                            }`}
+                          >
+                            {GLYPH[cell]}
+                          </span>
+                        )}
+                      </div>
+                    )),
+                  )}
+                </div>
+                {blind && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-[0.3em]">
+                      {t("盲视模式 · 全凭心算", "Blindfold · calculate in the mind")}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-surface-container-low p-space-md flex flex-col gap-space-sm">
+                <label className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                  {t("输入你方着法（UCI，如 e2e4 g1f3），以空格分隔", "Enter your moves in UCI (e.g. e2e4 g1f3), space separated")}
+                </label>
+                <input
+                  value={entry}
+                  onChange={(e) => setEntry(e.target.value)}
+                  placeholder="e1e2 h5h8"
+                  spellCheck={false}
+                  className="h-12 px-space-sm bg-surface-container-highest text-on-surface font-label-lg text-label-lg tracking-widest outline-none focus:ring-1 focus:ring-secondary"
+                />
+                <button
+                  disabled={!signedIn || locked || busy}
+                  onClick={() => void submit()}
+                  className="w-full py-space-md bg-primary-container text-on-primary-container disabled:opacity-40 flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
+                >
+                  <span className="material-symbols-outlined text-secondary text-[20px]">bolt</span>
+                  <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
+                    <Bi zh="提交心算解法" en="Submit Mental Line" />
+                  </span>
+                </button>
+
+                {!signedIn && (
+                  <Link to="/auth" className="cjk font-body-sm text-body-sm text-secondary">
+                    {t("登录后才能由服务端校验并结算段位奖励 →", "Sign in so the server can verify and award rating →")}
+                  </Link>
+                )}
+                {locked && (
+                  <p className="cjk font-body-sm text-body-sm text-primary">
+                    {t(`需要 ${active.elo_required} 分才能开启此试炼。`, `Reach ${active.elo_required} rating to unlock this trial.`)}
+                  </p>
+                )}
+                {result && (
+                  <div
+                    className={`p-space-sm ${result.correct ? "bg-secondary-container/30" : "bg-error-container/30"}`}
+                  >
+                    <p className="cjk font-body-sm text-body-sm">
+                      {result.correct
+                        ? result.firstSolve
+                          ? t("解法正确，段位与钻石已结算。", "Correct — rating and diamonds settled.")
+                          : t("解法正确，此关此前已通过。", "Correct — this trial was already solved.")
+                        : t("解法不成立，再算一遍。", "That line does not hold. Calculate again.")}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+      </main>
     </div>
   );
 }

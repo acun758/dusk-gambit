@@ -29,7 +29,6 @@ export type Database = {
           name_zh: string
           objective_en: string
           objective_zh: string
-          solution: string[]
         }
         Insert: {
           brief_en: string
@@ -45,7 +44,6 @@ export type Database = {
           name_zh: string
           objective_en: string
           objective_zh: string
-          solution: string[]
         }
         Update: {
           brief_en?: string
@@ -61,7 +59,6 @@ export type Database = {
           name_zh?: string
           objective_en?: string
           objective_zh?: string
-          solution?: string[]
         }
         Relationships: []
       }
@@ -101,11 +98,27 @@ export type Database = {
             referencedRelation: "endgame_levels"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      endgame_solutions: {
+        Row: {
+          level_id: number
+          solution: string[]
+        }
+        Insert: {
+          level_id: number
+          solution: string[]
+        }
+        Update: {
+          level_id?: number
+          solution?: string[]
+        }
+        Relationships: [
           {
-            foreignKeyName: "endgame_progress_level_id_fkey"
+            foreignKeyName: "endgame_solutions_level_id_fkey"
             columns: ["level_id"]
-            isOneToOne: false
-            referencedRelation: "endgame_levels_public"
+            isOneToOne: true
+            referencedRelation: "endgame_levels"
             referencedColumns: ["id"]
           },
         ]
@@ -279,57 +292,7 @@ export type Database = {
       }
     }
     Views: {
-      endgame_levels_public: {
-        Row: {
-          brief_en: string | null
-          brief_zh: string | null
-          code: string | null
-          diamond_reward: number | null
-          elo_required: number | null
-          elo_reward: number | null
-          fen: string | null
-          id: number | null
-          moves_to_mate: number | null
-          name_en: string | null
-          name_zh: string | null
-          objective_en: string | null
-          objective_zh: string | null
-          solution_length: number | null
-        }
-        Insert: {
-          brief_en?: string | null
-          brief_zh?: string | null
-          code?: string | null
-          diamond_reward?: number | null
-          elo_required?: number | null
-          elo_reward?: number | null
-          fen?: string | null
-          id?: number | null
-          moves_to_mate?: number | null
-          name_en?: string | null
-          name_zh?: string | null
-          objective_en?: string | null
-          objective_zh?: string | null
-          solution_length?: never
-        }
-        Update: {
-          brief_en?: string | null
-          brief_zh?: string | null
-          code?: string | null
-          diamond_reward?: number | null
-          elo_required?: number | null
-          elo_reward?: number | null
-          fen?: string | null
-          id?: number | null
-          moves_to_mate?: number | null
-          name_en?: string | null
-          name_zh?: string | null
-          objective_en?: string | null
-          objective_zh?: string | null
-          solution_length?: never
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never

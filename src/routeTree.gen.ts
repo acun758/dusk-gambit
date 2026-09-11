@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as ArsenalRouteImport } from './routes/arsenal'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CodexRouteImport } from './routes/codex'
 import { Route as CrucibleRouteImport } from './routes/crucible'
@@ -44,6 +45,11 @@ const ArchiveRoute = ArchiveRouteImport.update({
 const ArsenalRoute = ArsenalRouteImport.update({
   id: '/arsenal',
   path: '/arsenal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BattleRoute = BattleRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
   '/arsenal': typeof ArsenalRoute
+  '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
   '/arsenal': typeof ArsenalRoute
+  '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
   '/arsenal': typeof ArsenalRoute
+  '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
   '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/analysis'
     | '/archive'
     | '/arsenal'
+    | '/auth'
     | '/battle'
     | '/codex'
     | '/crucible'
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/analysis'
     | '/archive'
     | '/arsenal'
+    | '/auth'
     | '/battle'
     | '/codex'
     | '/crucible'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/analysis'
     | '/archive'
     | '/arsenal'
+    | '/auth'
     | '/battle'
     | '/codex'
     | '/crucible'
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   AnalysisRoute: typeof AnalysisRoute
   ArchiveRoute: typeof ArchiveRoute
   ArsenalRoute: typeof ArsenalRoute
+  AuthRoute: typeof AuthRoute
   BattleRoute: typeof BattleRoute
   CodexRoute: typeof CodexRoute
   CrucibleRoute: typeof CrucibleRoute
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/arsenal'
       fullPath: '/arsenal'
       preLoaderRoute: typeof ArsenalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/battle': {
@@ -360,6 +380,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnalysisRoute: AnalysisRoute,
   ArchiveRoute: ArchiveRoute,
   ArsenalRoute: ArsenalRoute,
+  AuthRoute: AuthRoute,
   BattleRoute: BattleRoute,
   CodexRoute: CodexRoute,
   CrucibleRoute: CrucibleRoute,

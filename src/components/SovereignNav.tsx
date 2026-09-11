@@ -1,11 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useLang } from "@/lib/i18n";
 
 const PRIMARY = [
-  { to: "/", icon: "crown", label: "Court" },
-  { to: "/battle", icon: "swords", label: "Battle" },
-  { to: "/puzzle", icon: "chess_knight", label: "Tactics" },
-  { to: "/arsenal", icon: "auto_stories", label: "Vault" },
-  { to: "/analysis", icon: "shield", label: "Dynasty" },
+  { to: "/", icon: "crown", label: "Court", zh: "王座" },
+  { to: "/battle", icon: "swords", label: "Battle", zh: "对弈" },
+  { to: "/puzzle", icon: "chess_knight", label: "Tactics", zh: "战术" },
+  { to: "/arsenal", icon: "auto_stories", label: "Vault", zh: "军械" },
+  { to: "/analysis", icon: "shield", label: "Dynasty", zh: "天梯" },
 ] as const;
 
 const SANCTUM = [
@@ -27,25 +28,54 @@ const SANCTUM = [
   { to: "/codex", en: "Codex", zh: "法典" },
 ] as const;
 
-/** Bilingual label: Latin keeps ceremonial tracking, CJK gets optical spacing. */
+/** Bilingual label: primary language first, the other language as a quiet echo. */
 function BiLabel({ en, zh }: { en: string; zh: string }) {
+  const { lang } = useLang();
   return (
     <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
-      <span className="uppercase tracking-widest">{en}</span>
-      <span className="cjk tracking-[0.06em] opacity-80">{zh}</span>
+      {lang === "zh" ? (
+        <>
+          <span className="cjk tracking-[0.06em]">{zh}</span>
+          <span className="uppercase tracking-widest opacity-60 text-[0.8em]">{en}</span>
+        </>
+      ) : (
+        <>
+          <span className="uppercase tracking-widest">{en}</span>
+          <span className="cjk tracking-[0.06em] opacity-60 text-[0.85em]">{zh}</span>
+        </>
+      )}
     </span>
   );
 }
 
+function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
+  const { lang } = useLang();
+  return <span className={lang === "zh" ? "cjk tracking-[0.08em]" : ""}>{lang === "zh" ? zh : en}</span>;
+}
+
+function LangToggle({ className = "" }: { className?: string }) {
+  const { lang, setLang } = useLang();
+  return (
+    <button
+      onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+      aria-label="切换语言 / Switch language"
+      className={`shrink-0 h-8 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
+    >
+      {lang === "zh" ? "中 / EN" : "EN / 中"}
+    </button>
+  );
+}
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 
   return (
     <>
       {/* Compact: bottom bar (iPhone / iPad portrait) */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <div className="flex gap-space-xs overflow-x-auto px-gutter-mobile py-1.5 border-b border-outline-variant/30">
+          <LangToggle />
           {SANCTUM.map((item) => {
             const active = pathname === item.to;
             return (
@@ -83,7 +113,7 @@ export function SovereignNav() {
                   {item.icon}
                 </span>
                 <span className="font-label-sm text-label-sm tracking-widest uppercase">
-                  {item.label}
+                  <PrimaryLabel en={item.label} zh={item.zh} />
                 </span>
               </Link>
             );
@@ -93,12 +123,21 @@ export function SovereignNav() {
 
       {/* Wide: left rail (iPad landscape / desktop) */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
-        <div className="px-space-md py-space-lg border-b border-outline-variant/40">
+        <div className="px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="font-headline-sm text-headline-sm tracking-widest uppercase text-secondary">
             Blood Sovereign
           </div>
-          <div className="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mt-1">
-            猩红王权 · Rank 2480
+          <div className="cjk font-label-sm text-label-sm tracking-widest text-on-surface-variant">
+            猩红王权 · 王座殿堂
+          </div>
+          <div className="flex items-center gap-space-xs mt-1">
+            <LangToggle />
+            <Link
+              to="/auth"
+              className="shrink-0 h-8 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center"
+            >
+              <BiLabel en="Account" zh="账号" />
+            </Link>
           </div>
         </div>
 
@@ -120,7 +159,7 @@ export function SovereignNav() {
                   {item.icon}
                 </span>
                 <span className="font-label-lg text-label-lg uppercase tracking-widest">
-                  {item.label}
+                  <PrimaryLabel en={item.label} zh={item.zh} />
                 </span>
               </Link>
             );

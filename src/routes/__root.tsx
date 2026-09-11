@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { SovereignNav } from "../components/SovereignNav";
+import { LangProvider } from "../lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -122,7 +123,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html className="dark" lang="en">
+    <html className="dark" lang="zh-CN">
       <head>
         <HeadContent />
       </head>
@@ -139,11 +140,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <div className="app-shell">
-        <Outlet />
-      </div>
-      <SovereignNav />
+      <LangProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <div className="app-shell">
+          <Outlet />
+        </div>
+        <SovereignNav />
+      </LangProvider>
     </QueryClientProvider>
   );
 }
