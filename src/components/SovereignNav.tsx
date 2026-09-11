@@ -28,19 +28,42 @@ const SANCTUM = [
   { to: "/codex", en: "Codex", zh: "法典" },
 ] as const;
 
-/** Bilingual label: Latin keeps ceremonial tracking, CJK gets optical spacing. */
+/** Bilingual label: primary language first, the other language as a quiet echo. */
 function BiLabel({ en, zh }: { en: string; zh: string }) {
+  const { lang } = useLang();
   return (
     <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
-      <span className="uppercase tracking-widest">{en}</span>
-      <span className="cjk tracking-[0.06em] opacity-80">{zh}</span>
+      {lang === "zh" ? (
+        <>
+          <span className="cjk tracking-[0.06em]">{zh}</span>
+          <span className="uppercase tracking-widest opacity-60 text-[0.8em]">{en}</span>
+        </>
+      ) : (
+        <>
+          <span className="uppercase tracking-widest">{en}</span>
+          <span className="cjk tracking-[0.06em] opacity-60 text-[0.85em]">{zh}</span>
+        </>
+      )}
     </span>
   );
 }
 
+function LangToggle({ className = "" }: { className?: string }) {
+  const { lang, setLang } = useLang();
+  return (
+    <button
+      onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+      aria-label="切换语言 / Switch language"
+      className={`shrink-0 h-8 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
+    >
+      {lang === "zh" ? "中 / EN" : "EN / 中"}
+    </button>
+  );
+}
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
 
   return (
     <>
