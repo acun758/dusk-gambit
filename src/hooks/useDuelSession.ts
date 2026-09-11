@@ -13,7 +13,7 @@ export interface DuelSession {
   clock: { w: number; b: number };
   cp: number;
   mind: Record<string, number>;
-  playMove: () => void;
+  playMove: (uci?: string) => void;
   resign: () => void;
   simulateDrop: () => void;
 }
@@ -54,6 +54,7 @@ interface MatchRowLite {
   ply: number;
   seq: number;
   cp: number;
+  fen: string;
   status: string;
   outcome: string | null;
   reason: string | null;
@@ -86,7 +87,7 @@ function stateFrom(match: MatchRowLite, you: Color, moves: MoveRowLite[]): DuelS
     matchId: match.id,
     you,
     turn: match.turn as Color,
-    fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    fen: match.fen,
     tc: { base: match.tc_base, inc: match.tc_inc, label: `${Math.round(match.tc_base / 60000)} | ${match.tc_inc / 1000}` },
     clock: { w: match.clock_w, b: match.clock_b },
     moves: moves.map((m) => {
@@ -292,14 +293,14 @@ export function useDuelSession(): DuelSession {
 
   /* --------------------------------- actions --------------------------------- */
 
-  const playMove = useCallback(() => {
+  const playMove = useCallback((uci?: string) => {
     if (mode === "local") {
       clientRef.current?.playMove();
       return;
     }
     const m = matchRef.current;
     if (!m || m.status !== "live") return;
-    const s = SCRIPT[m.ply % SCRIPT.length]!;
+    const s = uci ? { uci, san: uci, zh: "实战落子", cp: m.cp } : SCRIPT[m.ply % SCRIPT.length]!;
     void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } });
   }, [mode]);
 

@@ -132,7 +132,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
         {session && (
           <div className="grid grid-cols-3 gap-1 pt-1">
             <button
-              onClick={session.playMove}
+              onClick={() => session.playMove()}
               className="h-11 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
             >
               落子
@@ -280,7 +280,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
   return (
     <>
       {/* Compact: swipeable bottom drawer (iPhone / iPad portrait) */}
-      <div className="lg:hidden fixed inset-x-0 bottom-[6.25rem] z-40 px-margin-mobile">
+      <div className="lg:hidden fixed inset-x-0 bottom-[4.5rem] z-40 px-margin-mobile">
         <div
           ref={sheetRef}
           style={{

@@ -4,9 +4,9 @@ import { useLang } from "@/lib/i18n";
 const PRIMARY = [
   { to: "/", icon: "crown", label: "Court", zh: "王座" },
   { to: "/battle", icon: "swords", label: "Battle", zh: "对弈" },
-  { to: "/puzzle", icon: "chess_knight", label: "Tactics", zh: "战术" },
+  { to: "/crucible", icon: "chess_knight", label: "Trials", zh: "残局" },
+  { to: "/dynasty", icon: "shield", label: "Dynasty", zh: "天梯" },
   { to: "/arsenal", icon: "auto_stories", label: "Vault", zh: "军械" },
-  { to: "/analysis", icon: "shield", label: "Dynasty", zh: "天梯" },
 ] as const;
 
 const SANCTUM = [
@@ -72,30 +72,9 @@ export function SovereignNav() {
 
   return (
     <>
-      {/* Compact: bottom bar (iPhone / iPad portrait) */}
+      {/* Compact: one bottom bar only (iPhone / iPad portrait) */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
-        <div className="flex gap-space-xs overflow-x-auto px-gutter-mobile py-1.5 border-b border-outline-variant/30">
-          <LangToggle />
-          {SANCTUM.map((item) => {
-            const active = pathname === item.to;
-            return (
-              <Link
-                key={item.en}
-                to={item.to}
-                {...("params" in item ? { params: item.params } : {})}
-                className={`shrink-0 px-space-sm py-1 font-label-sm text-label-sm transition-colors ${
-                  active
-                    ? "bg-primary-container text-on-surface"
-                    : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
-                }`}
-              >
-                <BiLabel en={item.en} zh={item.zh} />
-              </Link>
-
-            );
-          })}
-        </div>
-        <nav className="h-16 px-gutter-mobile flex items-center justify-around">
+        <nav className="h-[4.5rem] px-gutter-mobile grid grid-cols-5 items-center">
           {PRIMARY.map((item) => {
             const active =
               item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
@@ -103,7 +82,7 @@ export function SovereignNav() {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex flex-col items-center justify-center w-full h-11 gap-0.5 transition-colors ${
+                className={`flex flex-col items-center justify-center w-full h-14 gap-0.5 transition-colors ${
                   active
                     ? "text-secondary bg-surface-container-high/60"
                     : "text-on-surface-variant hover:text-secondary"
