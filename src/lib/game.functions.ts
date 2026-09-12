@@ -504,3 +504,52 @@ export const getActiveMatch = createServerFn({ method: "POST" })
       .order("seq", { ascending: true });
     return { match, moves: moves ?? [], you: match.white_id === context.userId ? ("w" as const) : ("b" as const) };
   });
+
+/* ------------------------------ duel lobby -------------------------------- */
+
+export interface LobbyInvite {
+  code: string;
+  hostId: string;
+  hostName: string;
+  hostHandle: string;
+  hostElo: number;
+  targeted: boolean;
+  expiresAt: string;
+}
+
+/** 对弈大厅：我收到的点名邀请 + 其他玩家公开的对战码，10 秒轮询即可看到有人在约战。 */
+export const listDuelInvites = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ incoming: LobbyInvite[]; open: LobbyInvite[]; mine: LobbyInvite | null }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const nowIso = new Date().toISOString();
+    const { data: rows } = await supabaseAdmin
+      .from("match_invites")
+      .select("code,host_id,invited_id,status,expires_at")
+      .eq("status", "open")
+      .gt("expires_at", nowIso)
+      .order("expires_at", { ascending: true })
+      .limit(60);
+    const invites = rows ?? [];
+    const hostIds = [...new Set(invites.map((r) => r.host_id))];
+    const { data: hosts } = hostIds.length
+      ? await supabaseAdmin.from("profiles").select("id,name,handle,elo").in("id", hostIds)
+      : { data: [] as { id: string; name: string; handle: string; elo: number }[] };
+    const shape = (r: (typeof invites)[number]): LobbyInvite => {
+      const h = (hosts ?? []).find((p) => p.id === r.host_id);
+      return {
+        code: r.code,
+        hostId: r.host_id,
+        hostName: h?.name ?? "无名挑战者",
+        hostHandle: h?.handle ?? "",
+        hostElo: h?.elo ?? 0,
+        targeted: Boolean(r.invited_id),
+        expiresAt: r.expires_at,
+      };
+    };
+    return {
+      incoming: invites.filter((r) => r.invited_id === context.userId).map(shape),
+      open: invites.filter((r) => r.host_id !== context.userId && !r.invited_id).map(shape),
+      mine: invites.filter((r) => r.host_id === context.userId).map(shape)[0] ?? null,
+    };
+  });
