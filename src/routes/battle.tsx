@@ -44,11 +44,11 @@ function Battle() {
       </header>
 
       <main className="pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg lg:px-space-lg">
-        <section className="w-full lg:max-w-[min(62vw,620px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
+        <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
           <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
-          <div className="w-full flex items-stretch justify-center gap-2">
-            <div className="hidden sm:flex w-3 rounded-sm overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end relative" title="实时评估">
+          <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
+            <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title="实时评估">
               <div className="absolute left-0 right-0 top-1/2 h-px bg-outline-variant/60" />
               <div className="bg-secondary/70 transition-[height] duration-500" style={{ height: `${Math.max(8, Math.min(92, 50 + session.cp / 20))}%` }} />
             </div>
@@ -126,7 +126,7 @@ function Battle() {
 
 function PlayerBar({ name, elo, clock, active, dark = false }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean }) {
   return (
-    <div className={`w-full max-w-[520px] min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${dark ? "bg-surface-container-lowest" : "bg-surface-container"} ${active ? "gold-hairline" : ""}`}>
+    <div className={`battle-core-width min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${dark ? "bg-surface-container-lowest" : "bg-surface-container"} ${active ? "gold-hairline" : ""}`}>
       <div className="flex items-center gap-2 min-w-0"><span className={`text-2xl ${dark ? "text-primary" : "text-secondary"}`}>{dark ? "♚" : "♔"}</span><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
       <span className={`font-headline-md text-headline-md tabular-nums ${active ? "text-secondary" : "text-on-surface-variant"}`}>{clock}</span>
     </div>
