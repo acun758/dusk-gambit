@@ -5,6 +5,7 @@ import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
 import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
 import { getCoachInsight } from "@/lib/chess-coach";
+import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -31,7 +32,8 @@ function Battle() {
   const ranked = session.transport === "cloud";
   const coach = getCoachInsight(session.state.fen, session.moves, ranked);
   return (
-    <div className="min-h-screen bg-surface text-on-surface pb-32 lg:pb-space-lg">
+    <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
+      <ThemeBackdrop theme="gothic" />
       <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><span className="material-symbols-outlined">arrow_back</span></Link>

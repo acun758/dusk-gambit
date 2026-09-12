@@ -221,6 +221,87 @@
   display: none;
 }
 
+/* Responsive artwork supplied as one composition for each device family.
+   It is intentionally subdued so boards, controls and bilingual text remain primary. */
+.themed-page {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-surface);
+}
+
+.themed-page > :not(.theme-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.theme-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-surface-container-lowest);
+}
+
+.theme-backdrop picture,
+.theme-backdrop img,
+.theme-backdrop-shade,
+.theme-backdrop-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.theme-backdrop img {
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.58) brightness(0.5) contrast(1.08);
+  transform: scale(1.01);
+}
+
+.theme-backdrop-shade {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 66%, transparent) 0%, color-mix(in oklab, var(--color-surface) 36%, transparent) 34%, color-mix(in oklab, var(--color-surface) 82%, transparent) 100%),
+    radial-gradient(circle at 50% 45%, transparent 20%, color-mix(in oklab, var(--color-surface) 66%, transparent) 100%);
+}
+
+.theme-backdrop-grid {
+  opacity: 0.12;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--color-secondary) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--color-secondary) 16%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent 4%, black 34%, black 82%, transparent 100%);
+}
+
+.themed-page main.bg-surface {
+  background-color: color-mix(in oklab, var(--color-surface) 58%, transparent);
+}
+
+@media (min-width: 1024px) {
+  .theme-backdrop img {
+    object-position: center right;
+  }
+
+  .theme-backdrop-shade {
+    background:
+      linear-gradient(90deg, color-mix(in oklab, var(--color-surface) 88%, transparent) 0%, color-mix(in oklab, var(--color-surface) 58%, transparent) 38%, color-mix(in oklab, var(--color-surface) 34%, transparent) 100%),
+      linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 58%, transparent), color-mix(in oklab, var(--color-surface) 82%, transparent));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .theme-backdrop img {
+    animation: themeBreath 18s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes themeBreath {
+  from { transform: scale(1.01); }
+  to { transform: scale(1.035); }
+}
+
 /* Desktop / iPad landscape and up: content sits beside the fixed left rail.
    iPad portrait stays with the bottom bar so content uses the full width. */
 @media (min-width: 1024px) {
