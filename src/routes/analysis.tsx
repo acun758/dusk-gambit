@@ -200,7 +200,7 @@ function Analysis() {
             </div>
           </section>
 
-          <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,660px)_minmax(320px,1fr)] xl:items-start">
+          <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,640px)_minmax(320px,1fr)] xl:items-start">
             <div className="review-playback grid gap-space-sm min-w-0">
               <div className="review-board flex justify-center">
                 <PlayableBoard fen={fen} lastMove={undefined} disabled onMove={() => {}} />
