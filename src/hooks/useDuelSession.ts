@@ -526,6 +526,8 @@ export function useDuelSession(): DuelSession {
       notice,
       movePending,
       aiLevelId: levelId,
+      ratings: null,
+      resumed: false,
       setAiLevel,
       startRanked,
       playMove,
