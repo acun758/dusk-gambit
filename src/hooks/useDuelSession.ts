@@ -2,7 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
-import { cancelWaitingMatch, claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
+import {
+  cancelWaitingMatch,
+  claimTimeout,
+  findMatch,
+  getActiveMatch,
+  getMatch,
+  getMatchRatings,
+  resignMatch,
+  submitMove,
+} from "@/lib/game.functions";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/lib/local-engine";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
