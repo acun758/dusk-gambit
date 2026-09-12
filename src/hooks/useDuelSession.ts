@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Chess } from "chess.js";
 import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelWaitingMatch, claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
@@ -266,8 +267,30 @@ export function useDuelSession(): DuelSession {
             const { t: _t, seq: _seq, ...snap } = msg;
             return snap;
           }
-          case "move":
-            return { ...prev, moves: [...prev.moves, msg.move], clock: msg.move.clock, turn: msg.turn, cp: msg.move.cp ?? prev.cp };
+          case "move": {
+            if (prev.moves.some((m) => m.ply === msg.move.ply)) return prev;
+            let fen = prev.fen;
+            try {
+              const board = new Chess(prev.fen);
+              const promotion = msg.move.uci[4];
+              board.move({
+                from: msg.move.uci.slice(0, 2),
+                to: msg.move.uci.slice(2, 4),
+                ...(promotion ? { promotion } : {}),
+              });
+              fen = board.fen();
+            } catch {
+              /* 保留权威局面 */
+            }
+            return {
+              ...prev,
+              fen,
+              moves: [...prev.moves, msg.move],
+              clock: msg.move.clock,
+              turn: msg.turn,
+              cp: msg.move.cp ?? prev.cp,
+            };
+          }
           case "clock":
             return { ...prev, clock: { w: msg.w, b: msg.b }, turn: msg.turn };
           case "eval":
