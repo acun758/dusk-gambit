@@ -3,6 +3,7 @@ import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
 import { claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
+import { aiLevel, type AiLevelId } from "@/lib/local-engine";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
 
 export interface DuelSession {
@@ -15,6 +16,8 @@ export interface DuelSession {
   mind: Record<string, number>;
   notice: string | null;
   movePending: boolean;
+  aiLevelId: AiLevelId;
+  setAiLevel: (id: AiLevelId) => void;
   playMove: (uci?: string) => void;
   resign: () => void;
   simulateDrop: () => void;
@@ -130,6 +133,7 @@ export function useDuelSession(): DuelSession {
   const [mode, setMode] = useState<"unknown" | "cloud" | "local" | "error">("unknown");
   const [notice, setNotice] = useState<string | null>(null);
   const [movePending, setMovePending] = useState(false);
+  const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
@@ -263,7 +267,7 @@ export function useDuelSession(): DuelSession {
 
   useEffect(() => {
     if (mode !== "local") return;
-    if (!clientRef.current) clientRef.current = new DuelClient("blitz-3-2-demo", "w");
+    if (!clientRef.current) clientRef.current = new DuelClient("blitz-3-2-demo", "w", levelId);
     const client = clientRef.current;
     setLocalState(client.snapshot);
     const apply = (msg: ServerMessage) => {
@@ -300,6 +304,12 @@ export function useDuelSession(): DuelSession {
       client.disconnect();
     };
   }, [mode]);
+
+  const setAiLevel = useCallback((id: AiLevelId) => {
+    setLevelId(id);
+    clientRef.current?.setLevel(id);
+    setMode("local");
+  }, []);
 
   /* --------------------------------- actions --------------------------------- */
 
@@ -386,6 +396,8 @@ export function useDuelSession(): DuelSession {
         mind: state.mind,
         notice,
         movePending,
+        aiLevelId: levelId,
+        setAiLevel,
         playMove,
         resign,
         simulateDrop,
@@ -404,7 +416,7 @@ export function useDuelSession(): DuelSession {
       cp: 18,
       depth: 6,
       mind: mindFor(0),
-      players: { w: { name: "Adiamond", elo: 2480 }, b: { name: "Lord Cinders", elo: 2510 } },
+      players: { w: { name: "你", elo: 2480 }, b: { name: `AI · ${aiLevel(levelId).zh}`, elo: aiLevel(levelId).elo } },
       status: mode === "error" ? "waiting" : "live",
     };
     return {
@@ -417,11 +429,13 @@ export function useDuelSession(): DuelSession {
       mind: fallback.mind,
       notice,
       movePending,
+      aiLevelId: levelId,
+      setAiLevel,
       playMove,
       resign,
       simulateDrop,
       useLocalPractice,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, tick]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, levelId, tick]);
 }
