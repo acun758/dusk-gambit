@@ -12,6 +12,7 @@ export interface PlayerProfile {
   losses: number;
   draws: number;
   streak: number;
+  trainingPoints: number;
 }
 
 export const DEFAULT_PROFILE: PlayerProfile = {
@@ -24,6 +25,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   losses: 62,
   draws: 19,
   streak: 5,
+  trainingPoints: 0,
 };
 
 const KEY = "bs.profile.v1";
@@ -68,10 +70,12 @@ interface CloudRow {
   losses: number;
   draws: number;
   streak: number;
+  training_points: number;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  return { ...row, ...tierFor(row.elo) };
+  const { training_points, ...profile } = row;
+  return { ...profile, trainingPoints: training_points, ...tierFor(row.elo) };
 }
 
 /**
@@ -108,9 +112,15 @@ export function useProfile() {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") void refresh();
     });
+    const channel = supabase.channel("my-profile-live").on(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "profiles" },
+      () => void refresh(),
+    ).subscribe();
     return () => {
       window.removeEventListener("bs:profile", sync);
       sub.subscription.unsubscribe();
+      void supabase.removeChannel(channel);
     };
   }, [refresh]);
 

@@ -62,7 +62,6 @@ function Dynasty() {
     [progressQ.data],
   );
   const solvedCount = levels.filter((l) => solvedIds.has(l.id)).length;
-  const trialElo = levels.filter((l) => solvedIds.has(l.id)).reduce((s, l) => s + l.elo_reward, 0);
 
   const current = TIERS.find((x) => profile.elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
   const nextTier = TIERS[TIERS.indexOf(current) - 1] ?? null;
@@ -239,8 +238,8 @@ function Dynasty() {
             </h2>
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
               {t(
-                `已通关 ${solvedCount} / ${levels.length} 道残局，累计为段位贡献 +${trialElo} 分。`,
-                `${solvedCount} / ${levels.length} trials solved, contributing +${trialElo} rating.`,
+                `已通关 ${solvedCount} / ${levels.length} 道残局，当前训练积分 ${profile.trainingPoints}。训练不会改变真人天梯段位。`,
+                `${solvedCount} / ${levels.length} trials solved with ${profile.trainingPoints} training points. Training does not change ranked rating.`,
               )}
             </p>
             <div className="grid gap-space-xs">

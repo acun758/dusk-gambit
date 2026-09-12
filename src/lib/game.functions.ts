@@ -44,6 +44,7 @@ export interface ProfileRow {
   losses: number;
   draws: number;
   streak: number;
+  training_points: number;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -98,52 +99,26 @@ export const findMatch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: me } = await supabaseAdmin.from("profiles").select("*").eq("id", context.userId).maybeSingle();
-    const profile = (me as ProfileRow | null) ?? { name: "Sovereign", elo: 2480 };
+    const { data: rows, error } = await supabaseAdmin.rpc("find_or_create_ranked_match", { p_user_id: context.userId });
+    if (error) throw new Error(error.message);
+    const picked = rows?.[0];
+    if (!picked) throw new Error("match unavailable");
+    const { data: match, error: matchError } = await supabaseAdmin.from("matches").select("*").eq("id", picked.match_id).single();
+    if (matchError) throw new Error(matchError.message);
+    return { match: match as MatchRow, you: picked.side as "w" | "b" };
+  });
 
-    const { data: open } = await supabaseAdmin
-      .from("matches")
-      .select("*")
-      .eq("status", "waiting")
-      .is("black_id", null)
-      .neq("white_id", context.userId)
-      .order("created_at", { ascending: true })
-      .limit(1);
-
-    const waiting = (open?.[0] ?? null) as MatchRow | null;
-    if (waiting) {
-      const { data: joined, error } = await supabaseAdmin
-        .from("matches")
-        .update({
-          black_id: context.userId,
-          black_name: profile.name,
-          black_elo: profile.elo,
-          status: "live",
-          last_move_at: new Date().toISOString(),
-        })
-        .eq("id", waiting.id)
-        .eq("status", "waiting")
-        .select("*")
-        .single();
-      if (!error && joined) return { match: joined as MatchRow, you: "b" as const };
-    }
-
-    const { data: created, error: createErr } = await supabaseAdmin
-      .from("matches")
-      .insert({
-        white_id: context.userId,
-        white_name: profile.name,
-        white_elo: profile.elo,
-        tc_base: BASE,
-        tc_inc: INC,
-        clock_w: BASE,
-        clock_b: BASE,
-        status: "waiting",
-      })
-      .select("*")
-      .single();
-    if (createErr) throw new Error(createErr.message);
-    return { match: created as MatchRow, you: "w" as const };
+export const cancelWaitingMatch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: cancelled, error } = await supabaseAdmin.rpc("cancel_waiting_match", {
+      p_user_id: context.userId,
+      p_match_id: data.matchId,
+    });
+    if (error) throw new Error(error.message);
+    return { cancelled: Boolean(cancelled) };
   });
 
 export const getMatch = createServerFn({ method: "POST" })
@@ -307,7 +282,7 @@ export const submitEndgame = createServerFn({ method: "POST" })
       firstSolve,
       attempts: record?.attempts ?? 1,
       expectedLength: expected.length,
-      reward: firstSolve ? { elo: level?.elo_reward ?? 0, diamonds: level?.diamond_reward ?? 0 } : null,
+      reward: firstSolve ? { trainingPoints: level?.elo_reward ?? 0, diamonds: level?.diamond_reward ?? 0 } : null,
       profile: profile as ProfileRow | null,
       explanation: { zh: level.explanation_zh, en: level.explanation_en, annotations: level.move_annotations },
     };
@@ -449,7 +424,7 @@ export const listMyMatches = createServerFn({ method: "POST" })
         outcome: m.outcome,
         reason: m.reason,
         ply: m.ply,
-        ratingDelta: m.rating_delta,
+        ratingDelta: m.rating_delta === null ? null : you === "w" ? m.rating_delta : -m.rating_delta,
         playedAt: m.last_move_at,
       };
     });

@@ -4,16 +4,14 @@ import { Bi, useT } from "@/lib/i18n";
 import { createDuelInvite, joinDuelInvite, loadFriends, requestFriend, respondFriend, searchPlayers } from "@/lib/game.functions";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { GAME_ART } from "@/lib/game-art-assets";
 
-const HERO_PORTRAIT = "/__l5e/assets-v1/b46d2699-3ed1-4e73-9f50-dbd0a0e15bfa/hero-throne-portrait.jpg";
-const HERO_VIDEO = "/__l5e/assets-v1/40baeb23-6571-4126-9a46-60eed2c3debd/hero_bg_muted.mp4";
-const EMBLEM = "/__l5e/assets-v1/17f42ccd-32f8-4890-956c-98f906504b7a/logo-emblem.png";
-const HERO =
-  "/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg";
-const RELIC_A =
-  "/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg";
-const RELIC_B =
-  "/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg";
+const HERO_PORTRAIT = GAME_ART.heroPortrait;
+const HERO_VIDEO = GAME_ART.heroVideo;
+const EMBLEM = GAME_ART.emblem;
+const HERO = GAME_ART.hero;
+const RELIC_A = GAME_ART.matchArena;
+const RELIC_B = GAME_ART.reviewBoard;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -178,7 +176,7 @@ function Index() {
                 { zh: "段位", en: "Tier", v: t(profile.tierZh, profile.tier) },
                 { zh: "胜场", en: "Wins", v: String(profile.wins) },
                 { zh: "胜率", en: "Win rate", v: `${winRate}%` },
-                { zh: "钻石", en: "Diamonds", v: profile.diamonds.toLocaleString() },
+                { zh: "训练分", en: "Training", v: profile.trainingPoints.toLocaleString() },
               ].map((s) => (
                 <div key={s.en} className="bg-surface-container-low p-space-sm flex flex-col gap-0.5 gold-hairline min-w-0">
                   <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t(s.zh, s.en)}</span>
@@ -229,7 +227,7 @@ function Index() {
             >
               <span className="material-symbols-outlined text-[20px] text-secondary">swords</span>
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
-                <Bi zh="进入 3+2 天梯对弈" en="Enter 3+2 Ranked Duel" />
+                <Bi zh="开始 AI 分级陪练" en="Start AI Training" />
               </span>
             </Link>
           </section>
@@ -268,7 +266,7 @@ function Index() {
                   {t("盲棋心算 · 六道关卡", "Blindfold ladder · six trials")}
                 </span>
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  {t("每关给出目标解法，解对即由服务端结算积分与钻石，并解锁下一段位关卡。", "Each trial states its target line; the server verifies it, awards rating and unlocks the next tier.")}
+                  {t("每关给出目标解法，解对即由服务端结算训练积分与钻石；不影响真人天梯段位。", "Each line is verified for training points and diamonds without changing ranked rating.")}
                 </p>
               </div>
               <span className="material-symbols-outlined text-secondary text-[22px] shrink-0">psychology</span>
