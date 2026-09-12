@@ -5,7 +5,9 @@ import {
   createDuelInvite,
   joinDuelInvite,
   listDuelInvites,
+  loadProfile,
   loadFriends,
+  saveRealName,
   searchPlayers,
 } from "@/lib/game.functions";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,10 +26,22 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const [code, setCode] = useState("");
   const [myCode, setMyCode] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
+  const [realName, setRealName] = useState("");
+  const [realNameSaved, setRealNameSaved] = useState<string>("");
 
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)));
   }, []);
+
+  const profileQ = useQuery({
+    queryKey: ["profile-realname", signedIn],
+    queryFn: () => (signedIn ? loadProfile() : Promise.resolve(null)),
+    enabled: signedIn === true,
+  });
+  useEffect(() => {
+    const saved = profileQ.data?.real_name ?? "";
+    if (saved) setRealNameSaved(saved);
+  }, [profileQ.data?.real_name]);
 
   const invitesQ = useQuery({
     queryKey: ["duel-invites", signedIn],
@@ -45,7 +59,14 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
+  const verified = realNameSaved.length >= 2;
+  const requireName = () => {
+    setNotice("请先完成实名填写，再发起或接受约战。");
+    setTab("invite");
+  };
+
   const accept = (inviteCode: string) => {
+    if (!verified) return requireName();
     setNotice(null);
     void joinDuelInvite({ data: { code: inviteCode } })
       .then(() => {
@@ -56,6 +77,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   };
 
   const makeInvite = (invitedId?: string) => {
+    if (!verified) return requireName();
     setNotice(null);
     void createDuelInvite({ data: invitedId ? { invitedId } : {} })
       .then((r) => {
@@ -117,7 +139,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
         {tab === "auto" && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              {ranked && waiting ? "正在排队，匹配到同段位对手后自动开局，保持页面开启。" : "系统按 ELO 就近匹配真人 3+2，胜负结算段位与钻石。"}
+              {ranked && waiting ? "正在排队，匹配到同段位对手后自动开局，保持页面开启。" : "系统按段位就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
             </p>
             <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
               <span className="material-symbols-outlined text-secondary">swords</span>
@@ -128,6 +150,26 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
         {tab === "invite" && (
           <div className="space-y-space-sm">
+            <div className="p-3 bg-surface-container gold-hairline">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">实名填写{verified && <span className="text-secondary"> · 已完成</span>}</p>
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">约战与天梯对局需先填写真实姓名，仅本人与系统可见。</p>
+              <div className="flex gap-2 mt-2">
+                <input
+                  value={realName || realNameSaved}
+                  onChange={(e) => setRealName(e.target.value)}
+                  placeholder="真实姓名"
+                  className="cjk h-11 min-w-0 flex-1 bg-surface-container-highest px-3 outline-none focus:ring-1 focus:ring-secondary"
+                />
+                <button
+                  onClick={() => void saveRealName({ data: { realName: realName || realNameSaved } })
+                    .then((r) => { setRealNameSaved(r.real_name ?? ""); setNotice("实名已保存"); })
+                    .catch(() => setNotice("实名保存失败，请填写 2 个字以上的真实姓名"))}
+                  className="cjk h-11 px-4 bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0"
+                >
+                  保存
+                </button>
+              </div>
+            </div>
             <div className="flex gap-2">
               <input
                 value={query}
