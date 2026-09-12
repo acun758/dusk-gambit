@@ -196,7 +196,7 @@ function Crucible() {
         </section>
 
         {/* 当前关卡 */}
-        <section className="flex w-full min-w-0 flex-col gap-space-sm mt-space-md lg:max-w-[620px]">
+        <section className="crucible-column flex w-full min-w-0 flex-col items-center gap-space-sm mt-space-md">
           {levelsQ.isLoading && (
             <div className="grid gap-space-sm" aria-hidden="true">
               <div className="h-32 bg-surface-container-low animate-pulse" />
@@ -205,7 +205,7 @@ function Crucible() {
           )}
           {active && (
             <>
-              <div className="bg-surface-container-low p-space-md flex flex-col gap-space-xs">
+              <div className="crucible-core-width bg-surface-container-low p-space-md flex flex-col gap-space-xs">
                 <span className="cjk font-label-sm text-label-sm text-primary tracking-widest">
                   {t(active.objective_zh, active.objective_en)}
                 </span>
@@ -232,14 +232,14 @@ function Crucible() {
                 <p className="cjk font-body-sm text-body-sm text-secondary mt-1">{t(`提示：${active.hint_zh}`, `Hint: ${active.hint_en}`)}</p>
               </div>
 
-              <div className="relative aspect-square w-full max-w-[520px] self-center bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)] lg:self-start">
+              <div className="crucible-core-width crucible-board relative aspect-square bg-surface-container-lowest p-space-xs">
                 <div className="grid grid-cols-8 grid-rows-8 w-full h-full">
                   {board.flatMap((row, r) =>
                     row.map((cell, c) => (
                       <div
                         key={`${r}-${c}`}
                         className={`flex items-center justify-center ${
-                          (r + c) % 2 === 0 ? "bg-surface-container-low/50" : "bg-surface-container/30"
+                          (r + c) % 2 === 0 ? "crucible-square-light" : "crucible-square-dark"
                         }`}
                       >
                         {cell && (
@@ -264,7 +264,7 @@ function Crucible() {
                 )}
               </div>
 
-              <div className="bg-surface-container-low p-space-md flex flex-col gap-space-sm">
+              <div className="crucible-core-width bg-surface-container-low p-space-md flex flex-col gap-space-sm">
                 <label className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
                   {t("输入你方着法（UCI，如 e2e4 g1f3），以空格分隔", "Enter your moves in UCI (e.g. e2e4 g1f3), space separated")}
                 </label>

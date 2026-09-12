@@ -286,15 +286,50 @@
   width: var(--battle-core-width);
 }
 
+/* Blindfold training follows the same visual width as live play so the board,
+   brief and answer panel share one deliberate edge on every device. */
+.crucible-column {
+  --crucible-core-width: min(100%, 520px);
+}
+
+.crucible-core-width {
+  width: var(--crucible-core-width);
+}
+
+.crucible-board {
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 42%, transparent);
+  box-shadow:
+    inset 0 0 0 2px var(--color-surface-container-lowest),
+    0 18px 42px color-mix(in oklab, var(--color-surface-dim) 88%, transparent);
+}
+
+.crucible-square-light {
+  background: color-mix(in oklab, var(--color-board-light) 62%, var(--color-surface-container-low));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-secondary) 7%, transparent);
+}
+
+.crucible-square-dark {
+  background: color-mix(in oklab, var(--color-board-dark) 72%, var(--color-surface-container-lowest));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-on-surface) 4%, transparent);
+}
+
 @media (min-width: 768px) {
   .battle-column {
     --battle-core-width: min(100%, 600px);
+  }
+
+  .crucible-column {
+    --crucible-core-width: min(100%, 600px);
   }
 }
 
 @media (min-width: 1280px) {
   .battle-column {
     --battle-core-width: min(100%, 640px);
+  }
+
+  .crucible-column {
+    --crucible-core-width: min(100%, 640px);
   }
 }
 
