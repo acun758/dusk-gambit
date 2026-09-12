@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
+import { InvitePoster } from "@/components/InvitePoster";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
@@ -118,6 +119,7 @@ function Dynasty() {
 
       <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:pt-20">
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0">
+          <InvitePoster compact />
           {/* 当前段位 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <div className="flex items-start justify-between gap-space-sm">
