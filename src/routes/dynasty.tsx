@@ -204,7 +204,61 @@ function Dynasty() {
               </span>
             </Link>
           </section>
+
+          {/* 段位榜 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="段位榜" en="Leaderboard" />
+              </h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest shrink-0">
+                {myRank > 0 ? t(`我的名次 #${myRank}`, `Rank #${myRank}`) : t("按积分排序", "By rating")}
+              </span>
+            </div>
+            {ladderQ.isLoading && (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("正在读取天梯排名…", "Loading ladder…")}</p>
+            )}
+            {!ladderQ.isLoading && ladder.length === 0 && (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                {t("还没有天梯战绩，完成一局真人对局即可上榜。", "No ranked results yet.")}
+              </p>
+            )}
+            <ol className="grid gap-space-xs">
+              {ladder.slice(0, 20).map((row, i) => {
+                const tier = tierOf(row.elo);
+                const mine = myRank === i + 1;
+                return (
+                  <li
+                    key={row.id}
+                    className={`grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
+                      mine ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                    }`}
+                  >
+                    <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
+                    <div className="flex items-center gap-space-sm min-w-0">
+                      <span
+                        className={`w-9 h-9 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
+                        aria-hidden="true"
+                      >
+                        <span className="material-symbols-outlined text-secondary text-[18px]">{tier.icon}</span>
+                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="cjk font-label-md text-label-md truncate">{row.name}</span>
+                        <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
+                          {t(tier.zh, tier.en)} · {row.wins}
+                          {t("胜", "W")} {row.losses}
+                          {t("负", "L")}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="font-label-md text-label-md tabular-nums text-primary shrink-0">{row.elo}</span>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
         </div>
+
 
         {/* 九重王座 + 试炼联动 */}
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0 lg:sticky lg:top-24">
