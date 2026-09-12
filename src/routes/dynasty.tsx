@@ -282,8 +282,15 @@ function Dynasty() {
                   }`}
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
-                    <span className="material-symbols-outlined text-[20px] shrink-0 text-secondary">
-                      {unlocked ? tier.icon : "lock"}
+                    <span
+                      className={`w-10 h-10 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent} ${
+                        active ? "gold-hairline" : ""
+                      } ${unlocked ? "" : "opacity-50"}`}
+                      aria-hidden="true"
+                    >
+                      <span className="material-symbols-outlined text-[20px] text-secondary">
+                        {unlocked ? tier.icon : "lock"}
+                      </span>
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
