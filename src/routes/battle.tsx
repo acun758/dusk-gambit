@@ -76,7 +76,7 @@ function Battle() {
             </div>
           )}
 
-          <section aria-label="棋局教练" className="w-full bg-surface-container p-space-sm gold-hairline flex items-start gap-space-sm">
+          <section aria-label="棋局教练" className="battle-core-width bg-surface-container p-space-sm gold-hairline flex items-start gap-space-sm">
             <span className="material-symbols-outlined text-secondary text-[22px] mt-0.5" aria-hidden="true">{coach.icon}</span>
             <div className="min-w-0">
               <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
@@ -86,7 +86,7 @@ function Battle() {
             </div>
           </section>
 
-          <section aria-label="AI 陪练段位" className="w-full bg-surface-container-low p-space-sm gold-hairline">
+          <section aria-label="AI 陪练段位" className="battle-core-width bg-surface-container-low p-space-sm gold-hairline">
             <div className="flex items-baseline justify-between gap-2 mb-2">
               <h2 className="cjk font-label-md text-label-md text-on-surface">AI 分级陪练</h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant">

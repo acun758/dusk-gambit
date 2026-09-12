@@ -272,12 +272,12 @@
 }
 
 .game-board {
-  width: min(100%, 520px);
+  width: 100%;
   aspect-ratio: 1;
 }
 
 .battle-column {
-  --battle-core-width: min(100%, 520px);
+  --battle-core-width: min(100%, 640px);
 }
 
 .battle-core-width,
@@ -289,7 +289,7 @@
 /* Blindfold training follows the same visual width as live play so the board,
    brief and answer panel share one deliberate edge on every device. */
 .crucible-column {
-  --crucible-core-width: min(100%, 520px);
+  --crucible-core-width: min(100%, 640px);
 }
 
 .crucible-core-width {
@@ -313,23 +313,58 @@
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-on-surface) 4%, transparent);
 }
 
-@media (min-width: 768px) {
-  .battle-column {
-    --battle-core-width: min(100%, 600px);
-  }
+/* The three chess experiences share one stage rhythm. Their surrounding bars
+   inherit the same variable, so no panel can become wider than its board. */
+.review-playback,
+.review-history {
+  --review-core-width: min(100%, 640px);
+  width: var(--review-core-width);
+}
 
-  .crucible-column {
-    --crucible-core-width: min(100%, 600px);
+.review-board,
+.review-controls,
+.review-board .game-board {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .battle-column,
+  .crucible-column,
+  .review-playback,
+  .review-history {
+    --battle-core-width: 100%;
+    --crucible-core-width: 100%;
+    --review-core-width: 100%;
   }
 }
 
-@media (min-width: 1280px) {
-  .battle-column {
+@media (min-width: 768px) and (max-width: 1023px) {
+  .battle-column,
+  .crucible-column {
     --battle-core-width: min(100%, 640px);
+    --crucible-core-width: min(100%, 640px);
   }
 
-  .crucible-column {
-    --crucible-core-width: min(100%, 640px);
+  .review-playback,
+  .review-history {
+    --review-core-width: min(100%, 640px);
+  }
+
+  .crucible-levels {
+    width: min(100%, 640px);
+    margin-inline: auto;
+  }
+
+  .crucible-level-list {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(180px, 44%);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+  }
+
+  .crucible-level-list > * {
+    scroll-snap-align: start;
   }
 }
 
@@ -342,20 +377,28 @@
   }
 }
 
-/* Review gives the board visual priority without changing the live-board cap. */
-.review-board .game-board {
-  width: min(100%, 620px);
+/* Review gives the board visual priority while keeping every control aligned. */
+.review-playback,
+.review-history {
+  margin-inline: auto;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .review-board .ipad-board {
-    width: min(600px, calc(100vw - 5rem));
+@media (min-width: 1280px) {
+  .review-playback,
+  .review-history {
+    margin-inline: 0;
   }
 }
 
 @media (orientation: landscape) and (max-height: 600px) and (max-width: 1023px) {
+  .battle-column,
+  .crucible-column {
+    --battle-core-width: min(100%, calc(100dvh - 5.5rem));
+    --crucible-core-width: min(100%, calc(100dvh - 5.5rem));
+  }
+
   .review-layout {
-    grid-template-columns: minmax(280px, calc(100dvh - 6.5rem)) minmax(280px, 1fr);
+    grid-template-columns: minmax(280px, calc(100dvh - 5.5rem)) minmax(280px, 1fr);
     align-items: start;
   }
 
@@ -364,8 +407,13 @@
     top: 4.5rem;
   }
 
-  .review-board .game-board {
-    width: min(100%, calc(100dvh - 7.5rem));
+  .review-playback,
+  .review-history {
+    --review-core-width: min(100%, calc(100dvh - 5.5rem));
+  }
+
+  .review-history {
+    margin-inline: 0;
   }
 
   .review-controls .grid-cols-2 {
