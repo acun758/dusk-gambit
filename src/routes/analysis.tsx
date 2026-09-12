@@ -124,6 +124,20 @@ function Analysis() {
   const fen = current?.fen ?? new Chess().fen();
   const worst = useMemo(() => [...steps].sort((a, b) => a.swing - b.swing).slice(0, 3).filter((s) => s.swing < -40), [steps]);
 
+  const narrative = useMutation({
+    mutationFn: () =>
+      explainMatch({
+        data: {
+          moves: steps.map((s) => ({ ply: s.ply, san: s.san, by: s.by, cp: s.cp, swing: s.swing })),
+          you: (detailQ.data?.you ?? "w") as "w" | "b",
+          outcome: activeMatch?.outcome ?? null,
+        },
+      }),
+  });
+
+  useEffect(() => narrative.reset(), [activeId]);
+
+
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
       <ThemeBackdrop theme="fallen" />
