@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
 import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
+import { OpponentPanel } from "@/components/OpponentPanel";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -114,14 +115,10 @@ function Battle() {
               })}
             </div>
             <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{aiLevel(session.aiLevelId).desc}</p>
-            <div className="mt-space-sm pt-space-sm border-t border-outline-variant/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">准备好后再进入真人 3+2；胜负会改变 ELO、段位和赛季战绩。</p>
-              <Button onClick={session.startRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
-                <span className="material-symbols-outlined text-secondary">swords</span>
-                {ranked ? "正在真人匹配" : "进入真人天梯"}
-              </Button>
-            </div>
+            <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">准备好后在下方「找对手」进入真人 3+2；胜负会改变 ELO、段位和赛季战绩。</p>
           </section>
+
+          <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
         </section>
         <DuelPanel session={session} />
       </main>
