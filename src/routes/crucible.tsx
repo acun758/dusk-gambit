@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
+import { GameIcon } from "@/components/GameIcon";
 
 export const Route = createFileRoute("/crucible")({
   head: () => ({
@@ -282,7 +283,7 @@ function Crucible() {
                   onClick={() => void submit()}
                   className="w-full py-space-md bg-primary-container text-on-primary-container disabled:opacity-40 flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
                 >
-                  <span className="material-symbols-outlined text-secondary text-[20px]">bolt</span>
+                  <GameIcon name="trial-fire" className="h-7 w-7" />
                   <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
                     <Bi zh="提交心算解法" en="Submit Mental Line" />
                   </span>
