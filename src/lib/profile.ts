@@ -13,6 +13,7 @@ export interface PlayerProfile {
   draws: number;
   streak: number;
   trainingPoints: number;
+  realName: string;
 }
 
 export const DEFAULT_PROFILE: PlayerProfile = {
@@ -26,6 +27,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   draws: 19,
   streak: 5,
   trainingPoints: 0,
+  realName: "",
 };
 
 const KEY = "bs.profile.v1";
@@ -71,11 +73,12 @@ interface CloudRow {
   draws: number;
   streak: number;
   training_points: number;
+  real_name?: string;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, ...profile } = row;
-  return { ...profile, trainingPoints: training_points, ...tierFor(row.elo) };
+  const { training_points, real_name, ...profile } = row;
+  return { ...profile, trainingPoints: training_points, realName: real_name ?? "", ...tierFor(row.elo) };
 }
 
 /**

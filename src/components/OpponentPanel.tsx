@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   createDuelInvite,
+  getLobbyStats,
   joinDuelInvite,
   listDuelInvites,
   loadProfile,
@@ -11,6 +12,12 @@ import {
   searchPlayers,
 } from "@/lib/game.functions";
 import { supabase } from "@/integrations/supabase/client";
+import lobbyBanner from "@/assets/lobby-banner.jpg";
+
+function mmss(sec: number) {
+  const s = Math.max(0, Math.floor(sec));
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
 
 type Tab = "auto" | "invite" | "lobby";
 
@@ -54,6 +61,19 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     queryFn: () => (signedIn ? loadFriends() : Promise.resolve([])),
     enabled: signedIn === true,
   });
+  const statsQ = useQuery({
+    queryKey: ["lobby-stats"],
+    queryFn: () => getLobbyStats(),
+    refetchInterval: 15_000,
+  });
+
+  // 排队计时：进入匹配等待后开始累计，匹配成功或退出即归零
+  const [queueSec, setQueueSec] = useState(0);
+  useEffect(() => {
+    if (!(ranked && waiting)) { setQueueSec(0); return; }
+    const t = setInterval(() => setQueueSec((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [ranked, waiting]);
 
   const incoming = invitesQ.data?.incoming ?? [];
   const open = invitesQ.data?.open ?? [];
@@ -137,14 +157,32 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
       <div className="mt-space-sm">
         {tab === "auto" && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="space-y-space-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                {ranked && waiting
+                  ? "正在按积分就近排队，段位相近者优先，匹配成功自动开局，无需手动点名。"
+                  : "系统按积分就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
+              </p>
+              <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
+                <span className="material-symbols-outlined text-secondary">swords</span>
+                {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
+              </Button>
+            </div>
+            {ranked && waiting && (
+              <div role="status" className="px-3 py-2 bg-surface-container gold-hairline flex items-center justify-between gap-3">
+                <span className="flex items-center gap-2 min-w-0">
+                  <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0" />
+                  <span className="cjk font-label-sm text-label-sm text-on-surface truncate">
+                    {queueSec < 30 ? "正在寻找同段位对手…" : queueSec < 90 ? "同段位偏少，正在放宽积分区间…" : "正在全服范围内匹配，稍候即可开局"}
+                  </span>
+                </span>
+                <span className="font-label-md text-label-md text-secondary tabular-nums shrink-0">{mmss(queueSec)}</span>
+              </div>
+            )}
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              {ranked && waiting ? "正在排队，匹配到同段位对手后自动开局，保持页面开启。" : "系统按段位就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
+              当前 {statsQ.data?.queueing ?? 0} 人排队 · {statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.openInvites ?? 0} 条公开约战
             </p>
-            <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
-              <span className="material-symbols-outlined text-secondary">swords</span>
-              {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
-            </Button>
           </div>
         )}
 
@@ -212,14 +250,55 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
         )}
 
         {tab === "lobby" && (
-          <div className="space-y-2">
-            {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。</p>}
-            {open.map((i) => (
-              <div key={i.code} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
-                <span className="min-w-0"><strong className="block truncate">{i.hostName}</strong><small className="text-on-surface-variant">{i.hostElo} ELO · {i.code}</small></span>
-                <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">应战</button>
+          <div className="space-y-space-sm">
+            <div className="relative overflow-hidden gold-hairline">
+              <img src={lobbyBanner} alt="约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章" loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent" />
+              <div className="absolute inset-0 p-3 flex flex-col justify-center">
+                <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">约 战 大 厅</span>
+                <span className="cjk font-label-md text-label-md text-on-surface">{statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.queueing ?? 0} 人排队</span>
               </div>
-            ))}
+            </div>
+
+            <div className="p-3 bg-surface-container gold-hairline">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">段位分布</p>
+              <ul className="mt-2 space-y-1.5">
+                {(statsQ.data?.tiers ?? []).map((t) => {
+                  const total = Math.max(1, (statsQ.data?.tiers ?? []).reduce((s, x) => s + x.count, 0));
+                  return (
+                    <li key={t.tier} className="flex items-center gap-2">
+                      <span className="cjk font-label-sm text-label-sm text-on-surface-variant w-24 shrink-0 truncate">{t.tierZh}</span>
+                      <span className="h-2 flex-1 bg-surface-container-highest overflow-hidden">
+                        <span className="block h-full bg-secondary/70" style={{ width: `${(t.count / total) * 100}%` }} />
+                      </span>
+                      <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums w-8 text-right">{t.count}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">公开约战</p>
+              {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。</p>}
+              {open.map((i) => (
+                <div key={i.code} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
+                  <span className="min-w-0"><strong className="block truncate">{i.hostName}</strong><small className="text-on-surface-variant">{i.hostElo} ELO · {i.code}</small></span>
+                  <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">应战</button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-1">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">最近战报</p>
+              {(statsQ.data?.recent ?? []).length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有已结算的对局。</p>}
+              {(statsQ.data?.recent ?? []).map((m) => (
+                <p key={m.id} className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                  {m.white} vs {m.black} · {m.outcome === "1-0" ? "白胜" : m.outcome === "0-1" ? "黑胜" : "和棋"}
+                  {m.ratingDelta !== null && <span className="text-secondary tabular-nums"> · ±{Math.abs(m.ratingDelta)} 分</span>}
+                </p>
+              ))}
+            </div>
           </div>
         )}
       </div>
