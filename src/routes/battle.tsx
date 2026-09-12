@@ -5,7 +5,16 @@ import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/battle")({
-  head: () => ({ meta: [{ title: "3+2 实时对弈 · 血誓王权" }, { name: "description", content: "服务端仲裁时钟、合法落子与断线追帧的实时天梯对弈。" }] }),
+  head: () => ({
+    meta: [
+      { title: "3+2 实时对弈 · 血誓王权" },
+      { name: "description", content: "服务端仲裁时钟、合法落子与断线追帧的实时天梯对弈。" },
+      { property: "og:title", content: "3+2 实时对弈 · 血誓王权" },
+      { property: "og:description", content: "服务端仲裁时钟、合法落子与断线追帧的实时天梯对弈。" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Battle,
 });
 
