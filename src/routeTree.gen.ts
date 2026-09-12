@@ -15,17 +15,8 @@ import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as ArsenalRouteImport } from './routes/arsenal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
-import { Route as CodexRouteImport } from './routes/codex'
 import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
-import { Route as FinisherRouteImport } from './routes/finisher'
-import { Route as MatchmakingRouteImport } from './routes/matchmaking'
-import { Route as ProtocolsRouteImport } from './routes/protocols'
-import { Route as ShareRouteImport } from './routes/share'
-import { Route as VictoryRouteImport } from './routes/victory'
-import { Route as ForgeIdRouteImport } from './routes/forge.$id'
-import { Route as PuzzleIndexRouteImport } from './routes/puzzle.index'
-import { Route as PuzzleSolvedRouteImport } from './routes/puzzle.solved'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,11 +48,6 @@ const BattleRoute = BattleRouteImport.update({
   path: '/battle',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CodexRoute = CodexRouteImport.update({
-  id: '/codex',
-  path: '/codex',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CrucibleRoute = CrucibleRouteImport.update({
   id: '/crucible',
   path: '/crucible',
@@ -72,46 +58,6 @@ const DynastyRoute = DynastyRouteImport.update({
   path: '/dynasty',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FinisherRoute = FinisherRouteImport.update({
-  id: '/finisher',
-  path: '/finisher',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MatchmakingRoute = MatchmakingRouteImport.update({
-  id: '/matchmaking',
-  path: '/matchmaking',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProtocolsRoute = ProtocolsRouteImport.update({
-  id: '/protocols',
-  path: '/protocols',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShareRoute = ShareRouteImport.update({
-  id: '/share',
-  path: '/share',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VictoryRoute = VictoryRouteImport.update({
-  id: '/victory',
-  path: '/victory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgeIdRoute = ForgeIdRouteImport.update({
-  id: '/forge/$id',
-  path: '/forge/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PuzzleIndexRoute = PuzzleIndexRouteImport.update({
-  id: '/puzzle/',
-  path: '/puzzle/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PuzzleSolvedRoute = PuzzleSolvedRouteImport.update({
-  id: '/puzzle/solved',
-  path: '/puzzle/solved',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,17 +66,8 @@ export interface FileRoutesByFullPath {
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
-  '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
-  '/finisher': typeof FinisherRoute
-  '/matchmaking': typeof MatchmakingRoute
-  '/protocols': typeof ProtocolsRoute
-  '/share': typeof ShareRoute
-  '/victory': typeof VictoryRoute
-  '/forge/$id': typeof ForgeIdRoute
-  '/puzzle/solved': typeof PuzzleSolvedRoute
-  '/puzzle/': typeof PuzzleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -139,17 +76,8 @@ export interface FileRoutesByTo {
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
-  '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
-  '/finisher': typeof FinisherRoute
-  '/matchmaking': typeof MatchmakingRoute
-  '/protocols': typeof ProtocolsRoute
-  '/share': typeof ShareRoute
-  '/victory': typeof VictoryRoute
-  '/forge/$id': typeof ForgeIdRoute
-  '/puzzle/solved': typeof PuzzleSolvedRoute
-  '/puzzle': typeof PuzzleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -159,17 +87,8 @@ export interface FileRoutesById {
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
-  '/codex': typeof CodexRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
-  '/finisher': typeof FinisherRoute
-  '/matchmaking': typeof MatchmakingRoute
-  '/protocols': typeof ProtocolsRoute
-  '/share': typeof ShareRoute
-  '/victory': typeof VictoryRoute
-  '/forge/$id': typeof ForgeIdRoute
-  '/puzzle/solved': typeof PuzzleSolvedRoute
-  '/puzzle/': typeof PuzzleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,17 +99,8 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/auth'
     | '/battle'
-    | '/codex'
     | '/crucible'
     | '/dynasty'
-    | '/finisher'
-    | '/matchmaking'
-    | '/protocols'
-    | '/share'
-    | '/victory'
-    | '/forge/$id'
-    | '/puzzle/solved'
-    | '/puzzle/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,17 +109,8 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/auth'
     | '/battle'
-    | '/codex'
     | '/crucible'
     | '/dynasty'
-    | '/finisher'
-    | '/matchmaking'
-    | '/protocols'
-    | '/share'
-    | '/victory'
-    | '/forge/$id'
-    | '/puzzle/solved'
-    | '/puzzle'
   id:
     | '__root__'
     | '/'
@@ -218,17 +119,8 @@ export interface FileRouteTypes {
     | '/arsenal'
     | '/auth'
     | '/battle'
-    | '/codex'
     | '/crucible'
     | '/dynasty'
-    | '/finisher'
-    | '/matchmaking'
-    | '/protocols'
-    | '/share'
-    | '/victory'
-    | '/forge/$id'
-    | '/puzzle/solved'
-    | '/puzzle/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -238,17 +130,8 @@ export interface RootRouteChildren {
   ArsenalRoute: typeof ArsenalRoute
   AuthRoute: typeof AuthRoute
   BattleRoute: typeof BattleRoute
-  CodexRoute: typeof CodexRoute
   CrucibleRoute: typeof CrucibleRoute
   DynastyRoute: typeof DynastyRoute
-  FinisherRoute: typeof FinisherRoute
-  MatchmakingRoute: typeof MatchmakingRoute
-  ProtocolsRoute: typeof ProtocolsRoute
-  ShareRoute: typeof ShareRoute
-  VictoryRoute: typeof VictoryRoute
-  ForgeIdRoute: typeof ForgeIdRoute
-  PuzzleSolvedRoute: typeof PuzzleSolvedRoute
-  PuzzleIndexRoute: typeof PuzzleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -295,13 +178,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BattleRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/codex': {
-      id: '/codex'
-      path: '/codex'
-      fullPath: '/codex'
-      preLoaderRoute: typeof CodexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/crucible': {
       id: '/crucible'
       path: '/crucible'
@@ -316,62 +192,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DynastyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/finisher': {
-      id: '/finisher'
-      path: '/finisher'
-      fullPath: '/finisher'
-      preLoaderRoute: typeof FinisherRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/matchmaking': {
-      id: '/matchmaking'
-      path: '/matchmaking'
-      fullPath: '/matchmaking'
-      preLoaderRoute: typeof MatchmakingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/protocols': {
-      id: '/protocols'
-      path: '/protocols'
-      fullPath: '/protocols'
-      preLoaderRoute: typeof ProtocolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/share': {
-      id: '/share'
-      path: '/share'
-      fullPath: '/share'
-      preLoaderRoute: typeof ShareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/victory': {
-      id: '/victory'
-      path: '/victory'
-      fullPath: '/victory'
-      preLoaderRoute: typeof VictoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forge/$id': {
-      id: '/forge/$id'
-      path: '/forge/$id'
-      fullPath: '/forge/$id'
-      preLoaderRoute: typeof ForgeIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/puzzle/': {
-      id: '/puzzle/'
-      path: '/puzzle'
-      fullPath: '/puzzle/'
-      preLoaderRoute: typeof PuzzleIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/puzzle/solved': {
-      id: '/puzzle/solved'
-      path: '/puzzle/solved'
-      fullPath: '/puzzle/solved'
-      preLoaderRoute: typeof PuzzleSolvedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -382,17 +202,8 @@ const rootRouteChildren: RootRouteChildren = {
   ArsenalRoute: ArsenalRoute,
   AuthRoute: AuthRoute,
   BattleRoute: BattleRoute,
-  CodexRoute: CodexRoute,
   CrucibleRoute: CrucibleRoute,
   DynastyRoute: DynastyRoute,
-  FinisherRoute: FinisherRoute,
-  MatchmakingRoute: MatchmakingRoute,
-  ProtocolsRoute: ProtocolsRoute,
-  ShareRoute: ShareRoute,
-  VictoryRoute: VictoryRoute,
-  ForgeIdRoute: ForgeIdRoute,
-  PuzzleSolvedRoute: PuzzleSolvedRoute,
-  PuzzleIndexRoute: PuzzleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

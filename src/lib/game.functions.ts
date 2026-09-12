@@ -410,3 +410,47 @@ export const joinDuelInvite = createServerFn({ method: "POST" }).middleware([req
     const { data: matchId, error } = await supabaseAdmin.rpc("join_match_invite", { p_user_id: context.userId, p_code: data.code });
     if (error) throw new Error(error.message); return { matchId };
   });
+
+/* -------------------------------- review ---------------------------------- */
+
+export interface MatchSummary {
+  id: string;
+  you: "w" | "b";
+  opponent: string;
+  opponentElo: number;
+  status: string;
+  outcome: string | null;
+  reason: string | null;
+  ply: number;
+  ratingDelta: number | null;
+  playedAt: string;
+}
+
+/** 我的对局历史，供复盘页选择。 */
+export const listMyMatches = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("matches")
+      .select("*")
+      .or(`white_id.eq.${context.userId},black_id.eq.${context.userId}`)
+      .order("last_move_at", { ascending: false })
+      .limit(20);
+    const rows = (data ?? []) as MatchRow[];
+    return rows.map<MatchSummary>((m) => {
+      const you = m.white_id === context.userId ? ("w" as const) : ("b" as const);
+      return {
+        id: m.id,
+        you,
+        opponent: you === "w" ? m.black_name : m.white_name,
+        opponentElo: you === "w" ? m.black_elo : m.white_elo,
+        status: m.status,
+        outcome: m.outcome,
+        reason: m.reason,
+        ply: m.ply,
+        ratingDelta: m.rating_delta,
+        playedAt: m.last_move_at,
+      };
+    });
+  });

@@ -8,6 +8,7 @@ import {
   type ServerMessage,
 } from "./duel-protocol";
 import { Chess } from "chess.js";
+import { AI_LEVELS, aiLevel, chooseMove, evaluate, type AiLevelId } from "./local-engine";
 
 /**
  * Transport-agnostic duel client.
@@ -23,20 +24,8 @@ export interface DuelListener {
   (msg: ServerMessage, phase: ConnectionPhase): void;
 }
 
-const SCRIPT: { uci: string; san: string; by: Color; zh: string; cp: number }[] = [
-  { uci: "e2e4", san: "e4", by: "w", zh: "王前兵开局", cp: 24 },
-  { uci: "c7c5", san: "c5", by: "b", zh: "西西里防御", cp: 18 },
-  { uci: "g1f3", san: "Nf3", by: "w", zh: "出马控中", cp: 31 },
-  { uci: "d7d6", san: "d6", by: "b", zh: "稳固中心", cp: 27 },
-  { uci: "d2d4", san: "d4", by: "w", zh: "中心突破", cp: 44 },
-  { uci: "c5d4", san: "cxd4", by: "b", zh: "兑子换线", cp: 36 },
-  { uci: "f3d4", san: "Nxd4", by: "w", zh: "马占要津", cp: 52 },
-  { uci: "g8f6", san: "Nf6", by: "b", zh: "反压中心", cp: 41 },
-  { uci: "b1c3", san: "Nc3", by: "w", zh: "双马联防", cp: 58 },
-  { uci: "a7a6", san: "a6", by: "b", zh: "纳道尔夫", cp: 47 },
-];
-
-function baseState(matchId: string, you: Color): DuelState {
+function baseState(matchId: string, you: Color, levelId: AiLevelId): DuelState {
+  const level = aiLevel(levelId);
   return {
     matchId,
     you,
@@ -45,12 +34,12 @@ function baseState(matchId: string, you: Color): DuelState {
     tc: BLITZ_3_2,
     clock: { w: BLITZ_3_2.base, b: BLITZ_3_2.base },
     moves: [],
-    cp: 18,
-    depth: 6,
+    cp: 0,
+    depth: level.depth,
     mind: { load: 46, anxiety: 22, structure: 71, instinct: 58 },
     players: {
-      w: { name: "Adiamond", elo: 2480, title: "GM" },
-      b: { name: "Lord Cinders", elo: 2510, title: "GM" },
+      w: { name: "你", elo: 2480 },
+      b: { name: `AI · ${level.zh}`, elo: level.elo },
     },
     status: "live",
   };
@@ -71,9 +60,23 @@ export class DuelClient {
   constructor(
     private matchId: string,
     private you: Color = "w",
+    private levelId: AiLevelId = "club",
   ) {
-    this.state = baseState(matchId, you);
+    this.state = baseState(matchId, you, levelId);
     this.url = (import.meta.env["VITE_DUEL_WS_URL"] as string | undefined) || undefined;
+  }
+
+  /** 切换 AI 陪练段位（立即生效于下一手）。 */
+  setLevel(levelId: AiLevelId) {
+    this.levelId = levelId;
+    const level = aiLevel(levelId);
+    this.state.players = { ...this.state.players, b: { name: `AI · ${level.zh}`, elo: level.elo } };
+    this.state.depth = level.depth;
+    this.emit({ t: "state", seq: ++this.seq, ...this.state }, this.phase === "idle" ? "live" : this.phase);
+  }
+
+  get levels() {
+    return AI_LEVELS;
   }
 
   get snapshot(): DuelState {
@@ -243,8 +246,9 @@ export class DuelClient {
   private applyMove(requested?: string) {
     const idx = this.state.moves.length;
     const chess = new Chess(this.state.fen);
-    const scripted = SCRIPT[idx % SCRIPT.length]!;
-    const uci = requested || scripted.uci;
+    const level = aiLevel(this.levelId);
+    const engine = requested ? null : chooseMove(this.state.fen, level);
+    const uci = requested || engine?.uci || "";
     let played;
     try {
       const promotion = uci[4];
@@ -256,7 +260,13 @@ export class DuelClient {
       played = chess.move(fallback.san);
     }
     if (!played) return;
-    const s = { ...scripted, uci: `${played.from}${played.to}${played.promotion ?? ""}`, san: played.san };
+    const evaluated = engine?.cp ?? evaluate(chess);
+    const s = {
+      uci: `${played.from}${played.to}${played.promotion ?? ""}`,
+      san: played.san,
+      zh: requested ? "实战落子" : `${level.zh}应手`,
+      cp: Math.max(-2000, Math.min(2000, Math.round(evaluated))),
+    };
     const by = this.state.turn;
     this.state.clock[by] = this.state.clock[by] + this.state.tc.inc;
     const move: MoveFrame = {

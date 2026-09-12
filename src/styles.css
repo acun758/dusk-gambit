@@ -221,13 +221,25 @@
   display: none;
 }
 
-/* iPad landscape / desktop: content sits beside the fixed left rail */
+/* iPad portrait and up: content sits beside the fixed left rail */
+@media (min-width: 768px) {
+  .app-shell {
+    padding-left: 12rem;
+  }
+
+  /* page-level fixed headers/footers must clear the rail */
+  .app-shell [class*="fixed"][class*="top-0"],
+  .app-shell [class*="fixed"][class*="bottom-0"] {
+    left: 12rem;
+    width: calc(100% - 12rem);
+  }
+}
+
 @media (min-width: 1024px) {
   .app-shell {
     padding-left: 14rem;
   }
 
-  /* page-level fixed headers/footers must clear the rail */
   .app-shell [class*="fixed"][class*="top-0"],
   .app-shell [class*="fixed"][class*="bottom-0"] {
     left: 14rem;
@@ -252,14 +264,14 @@
 }
 
 /* iPad portrait: use the canvas instead of displaying an iPhone-width column. */
-@media (min-width: 700px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .app-shell main > div,
   .app-shell main > section {
-    max-width: 820px;
+    max-width: 760px;
     margin-inline: auto;
   }
   .ipad-board {
-    width: min(520px, calc(100vw - 4rem));
+    width: min(520px, calc(100vw - 16rem));
   }
 }
 
