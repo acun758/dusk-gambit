@@ -397,6 +397,7 @@ export type Database = {
           losses: number
           name: string
           streak: number
+          training_points: number
           updated_at: string
           wins: number
         }
@@ -410,6 +411,7 @@ export type Database = {
           losses?: number
           name?: string
           streak?: number
+          training_points?: number
           updated_at?: string
           wins?: number
         }
@@ -423,6 +425,7 @@ export type Database = {
           losses?: number
           name?: string
           streak?: number
+          training_points?: number
           updated_at?: string
           wins?: number
         }
@@ -513,12 +516,23 @@ export type Database = {
         }
         Returns: Json
       }
+      cancel_waiting_match: {
+        Args: { p_match_id: string; p_user_id: string }
+        Returns: boolean
+      }
       create_match_invite: {
         Args: { p_invited_id?: string; p_user_id: string }
         Returns: {
           code: string
           expires_at: string
           match_id: string
+        }[]
+      }
+      find_or_create_ranked_match: {
+        Args: { p_user_id: string }
+        Returns: {
+          match_id: string
+          side: string
         }[]
       }
       join_match_invite: {
