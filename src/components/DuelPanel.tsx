@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import type { DuelSession } from "@/hooks/useDuelSession";
 import { fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
+import { GameIcon, type GameIconName } from "@/components/GameIcon";
 
 type TabKey = "log" | "mind" | "spoils" | "review";
 export type PanelVariant = "duel" | "review";
 
-const TABS: { key: TabKey; label: string; zh: string; icon: string }[] = [
-  { key: "log", label: "Log", zh: "棋谱", icon: "history_edu" },
-  { key: "mind", label: "Mind", zh: "心智", icon: "psychology" },
-  { key: "spoils", label: "Spoils", zh: "战利", icon: "military_tech" },
-  { key: "review", label: "Review", zh: "分析", icon: "insights" },
+const TABS: { key: TabKey; label: string; zh: string; icon: GameIconName }[] = [
+  { key: "log", label: "Log", zh: "棋谱", icon: "review" },
+  { key: "mind", label: "Mind", zh: "心智", icon: "mind" },
+  { key: "spoils", label: "Spoils", zh: "战利", icon: "rank-apex" },
+  { key: "review", label: "Review", zh: "分析", icon: "match" },
 ];
 
 const MISTAKES = [
@@ -267,7 +268,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
               : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
           }`}
         >
-          <span className="material-symbols-outlined text-[16px] shrink-0">{t.icon}</span>
+          <GameIcon name={t.icon} className="h-5 w-5" />
           <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{t.zh}</span>
         </button>
       ))}
