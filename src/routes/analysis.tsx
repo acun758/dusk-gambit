@@ -101,8 +101,10 @@ function Analysis() {
   });
 
   const matches = listQ.data ?? [];
-  const activeId = matchId ?? matches[0]?.id ?? null;
-  const activeMatch = matches.find((match) => match.id === activeId) ?? matches[0];
+  // 默认选中最近一局“有着法”的对局，空局（0 手）不会让复盘区看起来是空的
+  const firstPlayed = matches.find((m) => (m.ply ?? 0) > 0) ?? matches[0];
+  const activeId = matchId ?? firstPlayed?.id ?? null;
+  const activeMatch = matches.find((match) => match.id === activeId) ?? firstPlayed;
 
   const detailQ = useQuery({
     queryKey: ["match-review", activeId],
@@ -251,7 +253,11 @@ function Analysis() {
               <div className="bg-surface-container-low p-space-sm gold-hairline">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
-                  {steps.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">选择一局对局后显示棋谱。</p>}
+                  {steps.length === 0 && (
+                    <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                      {activeMatch ? "这局没有着法记录，换一局或先去对弈一局。" : "选择一局对局后显示棋谱。"}
+                    </p>
+                  )}
                   {steps.map((s) => (
                     <button
                       key={s.ply}
@@ -295,7 +301,7 @@ function Analysis() {
                   </Button>
                 </div>
                 {steps.length === 0 && (
-                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">选择一局有着法的对局后可生成开局、中局、残局讲解。</p>
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">这局还没有着法，下一局结束后即可生成开局、中局、残局讲解。</p>
                 )}
                 {narrative.isError && (
                   <p className="cjk font-body-sm text-body-sm text-primary">{(narrative.error as Error).message}</p>
