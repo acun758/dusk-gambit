@@ -1,27 +1,27 @@
-import platinumPawn from "@/assets/chess/platinum-p.webp.asset.json";
-import platinumKnight from "@/assets/chess/platinum-n.webp.asset.json";
-import platinumBishop from "@/assets/chess/platinum-b.webp.asset.json";
-import platinumRook from "@/assets/chess/platinum-r.webp.asset.json";
-import platinumQueen from "@/assets/chess/platinum-q.webp.asset.json";
-import platinumKing from "@/assets/chess/platinum-k.webp.asset.json";
-import obsidianPawn from "@/assets/chess/obsidian-p.webp.asset.json";
-import obsidianKnight from "@/assets/chess/obsidian-n.webp.asset.json";
-import obsidianBishop from "@/assets/chess/obsidian-b.webp.asset.json";
-import obsidianRook from "@/assets/chess/obsidian-r.webp.asset.json";
-import obsidianQueen from "@/assets/chess/obsidian-q.webp.asset.json";
-import obsidianKing from "@/assets/chess/obsidian-k.webp.asset.json";
+import platinumPawn from "@/assets/chess-next/optimized/platinum-p.webp";
+import platinumKnight from "@/assets/chess-next/optimized/platinum-n.webp";
+import platinumBishop from "@/assets/chess-next/optimized/platinum-b.webp";
+import platinumRook from "@/assets/chess-next/optimized/platinum-r.webp";
+import platinumQueen from "@/assets/chess-next/optimized/platinum-q.webp";
+import platinumKing from "@/assets/chess-next/optimized/platinum-k.webp";
+import obsidianPawn from "@/assets/chess-next/optimized/obsidian-p.webp";
+import obsidianKnight from "@/assets/chess-next/optimized/obsidian-n.webp";
+import obsidianBishop from "@/assets/chess-next/optimized/obsidian-b.webp";
+import obsidianRook from "@/assets/chess-next/optimized/obsidian-r.webp";
+import obsidianQueen from "@/assets/chess-next/optimized/obsidian-q.webp";
+import obsidianKing from "@/assets/chess-next/optimized/obsidian-k.webp";
 
 export const CHESS_PIECE_ASSETS: Record<string, string> = {
-  wp: platinumPawn.url,
-  wn: platinumKnight.url,
-  wb: platinumBishop.url,
-  wr: platinumRook.url,
-  wq: platinumQueen.url,
-  wk: platinumKing.url,
-  bp: obsidianPawn.url,
-  bn: obsidianKnight.url,
-  bb: obsidianBishop.url,
-  br: obsidianRook.url,
-  bq: obsidianQueen.url,
-  bk: obsidianKing.url,
+  wp: platinumPawn,
+  wn: platinumKnight,
+  wb: platinumBishop,
+  wr: platinumRook,
+  wq: platinumQueen,
+  wk: platinumKing,
+  bp: obsidianPawn,
+  bn: obsidianKnight,
+  bb: obsidianBishop,
+  br: obsidianRook,
+  bq: obsidianQueen,
+  bk: obsidianKing,
 };
