@@ -16,6 +16,20 @@ import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from
 import { aiLevel, type AiLevelId } from "@/lib/local-engine";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
 
+export interface LiveRating {
+  elo: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  streak: number;
+}
+
+export interface DuelRatings {
+  w: LiveRating | null;
+  b: LiveRating | null;
+  ratingDelta: number | null;
+}
+
 export interface DuelSession {
   state: DuelState;
   phase: ConnectionPhase;
@@ -27,6 +41,9 @@ export interface DuelSession {
   notice: string | null;
   movePending: boolean;
   aiLevelId: AiLevelId;
+  /** 真人对局中双方的实时积分，每一步与重连后都会刷新 */
+  ratings: DuelRatings | null;
+  resumed: boolean;
   setAiLevel: (id: AiLevelId) => void;
   startRanked: () => void;
   playMove: (uci?: string) => void;
