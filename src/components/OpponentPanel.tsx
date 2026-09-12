@@ -61,6 +61,19 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     queryFn: () => (signedIn ? loadFriends() : Promise.resolve([])),
     enabled: signedIn === true,
   });
+  const statsQ = useQuery({
+    queryKey: ["lobby-stats"],
+    queryFn: () => getLobbyStats(),
+    refetchInterval: 15_000,
+  });
+
+  // 排队计时：进入匹配等待后开始累计，匹配成功或退出即归零
+  const [queueSec, setQueueSec] = useState(0);
+  useEffect(() => {
+    if (!(ranked && waiting)) { setQueueSec(0); return; }
+    const t = setInterval(() => setQueueSec((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [ranked, waiting]);
 
   const incoming = invitesQ.data?.incoming ?? [];
   const open = invitesQ.data?.open ?? [];
