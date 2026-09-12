@@ -243,8 +243,9 @@ export class DuelClient {
   private applyMove(requested?: string) {
     const idx = this.state.moves.length;
     const chess = new Chess(this.state.fen);
-    const scripted = SCRIPT[idx % SCRIPT.length]!;
-    const uci = requested || scripted.uci;
+    const level = aiLevel(this.levelId);
+    const engine = requested ? null : chooseMove(this.state.fen, level);
+    const uci = requested || engine?.uci || "";
     let played;
     try {
       const promotion = uci[4];
@@ -256,7 +257,13 @@ export class DuelClient {
       played = chess.move(fallback.san);
     }
     if (!played) return;
-    const s = { ...scripted, uci: `${played.from}${played.to}${played.promotion ?? ""}`, san: played.san };
+    const evaluated = engine?.cp ?? evaluate(chess);
+    const s = {
+      uci: `${played.from}${played.to}${played.promotion ?? ""}`,
+      san: played.san,
+      zh: requested ? "实战落子" : `${level.zh}应手`,
+      cp: Math.max(-2000, Math.min(2000, Math.round(evaluated))),
+    };
     const by = this.state.turn;
     this.state.clock[by] = this.state.clock[by] + this.state.tc.inc;
     const move: MoveFrame = {
