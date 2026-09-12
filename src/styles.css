@@ -412,6 +412,10 @@
     --review-core-width: min(100%, calc(100dvh - 5.5rem));
   }
 
+  .review-history {
+    margin-inline: 0;
+  }
+
   .review-controls .grid-cols-2 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
