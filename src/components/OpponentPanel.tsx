@@ -157,14 +157,32 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
       <div className="mt-space-sm">
         {tab === "auto" && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="space-y-space-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                {ranked && waiting
+                  ? "正在按积分就近排队，段位相近者优先，匹配成功自动开局，无需手动点名。"
+                  : "系统按积分就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
+              </p>
+              <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
+                <span className="material-symbols-outlined text-secondary">swords</span>
+                {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
+              </Button>
+            </div>
+            {ranked && waiting && (
+              <div role="status" className="px-3 py-2 bg-surface-container gold-hairline flex items-center justify-between gap-3">
+                <span className="flex items-center gap-2 min-w-0">
+                  <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0" />
+                  <span className="cjk font-label-sm text-label-sm text-on-surface truncate">
+                    {queueSec < 30 ? "正在寻找同段位对手…" : queueSec < 90 ? "同段位偏少，正在放宽积分区间…" : "正在全服范围内匹配，稍候即可开局"}
+                  </span>
+                </span>
+                <span className="font-label-md text-label-md text-secondary tabular-nums shrink-0">{mmss(queueSec)}</span>
+              </div>
+            )}
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              {ranked && waiting ? "正在排队，匹配到同段位对手后自动开局，保持页面开启。" : "系统按段位就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
+              当前 {statsQ.data?.queueing ?? 0} 人排队 · {statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.openInvites ?? 0} 条公开约战
             </p>
-            <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
-              <span className="material-symbols-outlined text-secondary">swords</span>
-              {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
-            </Button>
           </div>
         )}
 
