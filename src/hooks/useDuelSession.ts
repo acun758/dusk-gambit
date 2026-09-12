@@ -405,12 +405,12 @@ export function useDuelSession(): DuelSession {
       depth: 6,
       mind: mindFor(0),
       players: { w: { name: "Adiamond", elo: 2480 }, b: { name: "Lord Cinders", elo: 2510 } },
-      status: "live",
+      status: mode === "error" ? "waiting" : "live",
     };
     return {
       state: fallback,
       phase,
-      transport: "local",
+      transport: mode === "error" ? "cloud" : "local",
       moves: fallback.moves,
       clock: fallback.clock,
       cp: fallback.cp,
