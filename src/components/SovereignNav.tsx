@@ -1,12 +1,17 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
+import throneIcon from "@/assets/nav/throne.webp";
+import duelIcon from "@/assets/nav/duel.webp";
+import trialsIcon from "@/assets/nav/trials.webp";
+import reviewIcon from "@/assets/nav/review.webp";
+import ladderIcon from "@/assets/nav/ladder.webp";
 
 const PRIMARY = [
-  { to: "/", icon: "crown", label: "Court", zh: "王座" },
-  { to: "/battle", icon: "swords", label: "Duel", zh: "对弈" },
-  { to: "/crucible", icon: "chess_knight", label: "Trials", zh: "残局" },
-  { to: "/analysis", icon: "insights", label: "Review", zh: "复盘" },
-  { to: "/dynasty", icon: "shield", label: "Ladder", zh: "天梯" },
+  { to: "/", icon: "crown", image: throneIcon, label: "Court", zh: "王座" },
+  { to: "/battle", icon: "swords", image: duelIcon, label: "Duel", zh: "对弈" },
+  { to: "/crucible", icon: "chess_knight", image: trialsIcon, label: "Trials", zh: "残局" },
+  { to: "/analysis", icon: "insights", image: reviewIcon, label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "shield", image: ladderIcon, label: "Ladder", zh: "天梯" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -46,7 +51,19 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary"
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
+                <img
+                  src={item.image}
+                  alt=""
+                  width={256}
+                  height={256}
+                  className={`h-full w-full object-contain transition-[opacity,filter] duration-200 ${
+                    isActive(item.to)
+                      ? "opacity-100 drop-shadow-[0_0_5px_color-mix(in_oklab,var(--secondary)_55%,transparent)]"
+                      : "opacity-55 grayscale-[35%]"
+                  }`}
+                />
+              </span>
               <span className="font-label-sm text-label-sm tracking-widest uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
