@@ -1,17 +1,40 @@
 import { useMemo, useState } from "react";
 import { Chess, type Square } from "chess.js";
+import { Button } from "@/components/ui/button";
 
 const GLYPH: Record<string, string> = {
   wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
   bk: "♚", bq: "♛", br: "♜", bb: "♝", bn: "♞", bp: "♟",
 };
 
-export function PlayableBoard({ fen, disabled = false, onMove }: { fen: string; disabled?: boolean; onMove: (uci: string) => void }) {
+export function PlayableBoard({
+  fen,
+  disabled = false,
+  lastMove,
+  onMove,
+}: {
+  fen: string;
+  disabled?: boolean;
+  lastMove?: string | undefined;
+  onMove: (uci: string) => void;
+}) {
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
   const [selected, setSelected] = useState<Square | null>(null);
-  const targets = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }).map((m) => m.to) : [], [chess, selected]);
+  const legalMoves = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }) : [], [chess, selected]);
+  const targets = useMemo(() => legalMoves.map((m) => m.to), [legalMoves]);
+  const checkedKing = useMemo(() => {
+    if (!chess.inCheck()) return null;
+    for (const rank of "12345678") {
+      for (const file of "abcdefgh") {
+        const square = `${file}${rank}` as Square;
+        const piece = chess.get(square);
+        if (piece?.type === "k" && piece.color === chess.turn()) return square;
+      }
+    }
+    return null;
+  }, [chess]);
 
   const click = (square: Square) => {
     if (disabled) return;
@@ -27,29 +50,47 @@ export function PlayableBoard({ fen, disabled = false, onMove }: { fen: string; 
   };
 
   return (
-    <div className="game-board ipad-board grid grid-cols-8 grid-rows-8 bg-surface-container-lowest p-1 gold-hairline shadow-2xl" aria-label="国际象棋棋盘">
-      {Array.from({ length: 64 }, (_, i) => {
-        const file = i % 8;
-        const rank = 8 - Math.floor(i / 8);
-        const square = `${String.fromCharCode(97 + file)}${rank}` as Square;
-        const piece = chess.get(square);
-        const active = square === selected;
-        const target = targets.includes(square);
-        return (
-          <button
-            key={square}
-            type="button"
-            onClick={() => click(square)}
-            aria-label={square}
-            className={`relative flex items-center justify-center text-[clamp(26px,6vw,48px)] leading-none transition-colors ${
-              (file + rank) % 2 ? "bg-board-light" : "bg-board-dark"
-            } ${active ? "ring-2 ring-inset ring-secondary" : ""}`}
-          >
-            {target && <span className="absolute w-3 h-3 rounded-full bg-secondary/70" />}
-            {piece && <span className={`relative z-10 drop-shadow-lg ${piece.color === "w" ? "text-board-white" : "text-board-black"}`}>{GLYPH[`${piece.color}${piece.type}`]}</span>}
-          </button>
-        );
-      })}
+    <div className="board-stage game-board ipad-board" aria-label="国际象棋棋盘">
+      <div className="board-grid grid grid-cols-8 grid-rows-8">
+        {Array.from({ length: 64 }, (_, i) => {
+          const file = i % 8;
+          const rank = 8 - Math.floor(i / 8);
+          const square = `${String.fromCharCode(97 + file)}${rank}` as Square;
+          const piece = chess.get(square);
+          const active = square === selected;
+          const targetMove = legalMoves.find((m) => m.to === square);
+          const target = targets.includes(square);
+          const isLastMove = lastMove?.slice(0, 2) === square || lastMove?.slice(2, 4) === square;
+          const isChecked = checkedKing === square;
+          return (
+            <Button
+              key={square}
+              type="button"
+              variant="ghost"
+              onClick={() => click(square)}
+              aria-label={`${square}${piece ? ` ${piece.color === "w" ? "白方" : "黑方"}${GLYPH[`${piece.color}${piece.type}`]}` : " 空格"}`}
+              className={`board-square group relative h-auto min-h-0 w-auto rounded-none p-0 text-[clamp(29px,7.2vw,54px)] leading-none focus-visible:z-30 focus-visible:ring-2 focus-visible:ring-secondary ${
+                (file + rank) % 2 ? "board-square-light" : "board-square-dark"
+              } ${active ? "is-selected" : ""} ${isLastMove ? "is-last-move" : ""} ${isChecked ? "is-check" : ""}`}
+            >
+              {file === 0 && <span className="board-rank" aria-hidden="true">{rank}</span>}
+              {rank === 1 && <span className="board-file" aria-hidden="true">{String.fromCharCode(97 + file)}</span>}
+              {target && (
+                <span className={targetMove?.captured ? "board-capture" : "board-target"} aria-hidden="true" />
+              )}
+              {piece && (
+                <span
+                  className="board-piece relative z-10"
+                  data-color={piece.color}
+                  data-glyph={GLYPH[`${piece.color}${piece.type}`]}
+                >
+                  {GLYPH[`${piece.color}${piece.type}`]}
+                </span>
+              )}
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 }

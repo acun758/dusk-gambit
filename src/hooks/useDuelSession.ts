@@ -13,9 +13,12 @@ export interface DuelSession {
   clock: { w: number; b: number };
   cp: number;
   mind: Record<string, number>;
+  notice: string | null;
+  movePending: boolean;
   playMove: (uci?: string) => void;
   resign: () => void;
   simulateDrop: () => void;
+  useLocalPractice: () => void;
 }
 
 export function fmtClock(ms: number): string {
@@ -124,7 +127,9 @@ export function useDuelSession(): DuelSession {
   const [cloud, setCloud] = useState<{ match: MatchRowLite; you: Color } | null>(null);
   const [moves, setMoves] = useState<MoveRowLite[]>([]);
   const [phase, setPhase] = useState<ConnectionPhase>("idle");
-  const [mode, setMode] = useState<"unknown" | "cloud" | "local">("unknown");
+  const [mode, setMode] = useState<"unknown" | "cloud" | "local" | "error">("unknown");
+  const [notice, setNotice] = useState<string | null>(null);
+  const [movePending, setMovePending] = useState(false);
   const [tick, setTick] = useState(0);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
@@ -151,9 +156,13 @@ export function useDuelSession(): DuelSession {
         const full = await getMatch({ data: { matchId: res.match.id, lastSeq: 0 } });
         if (cancelled) return;
         setMoves(full.moves as unknown as MoveRowLite[]);
-        setPhase("live");
+        setPhase(res.match.status === "waiting" ? "connecting" : "live");
       } catch {
-        if (!cancelled) setMode("local");
+        if (!cancelled) {
+          setMode("error");
+          setPhase("offline");
+          setNotice("真人对局暂时连接失败，可切换到本地陪练。已登录数据不会受影响。");
+        }
       }
     })();
     return () => {
@@ -174,7 +183,7 @@ export function useDuelSession(): DuelSession {
           const row = payload.new as MatchRowLite;
           matchRef.current = row;
           setCloud((prev) => (prev ? { ...prev, match: row } : prev));
-          setPhase("live");
+          setPhase(row.status === "waiting" ? "connecting" : "live");
         },
       )
       .on(
@@ -210,7 +219,7 @@ export function useDuelSession(): DuelSession {
             return [...prev, ...frames.filter((f) => !seen.has(f.ply))].sort((a, b) => a.ply - b.ply);
           });
         }
-        setPhase("live");
+        setPhase(res.match.status === "waiting" ? "connecting" : "live");
       } catch {
         setPhase("offline");
       }
@@ -300,10 +309,33 @@ export function useDuelSession(): DuelSession {
       return;
     }
     const m = matchRef.current;
-    if (!m || m.status !== "live") return;
+    if (!m || m.status !== "live" || movePending) return;
     const s = uci ? { uci, san: uci, zh: "实战落子", cp: m.cp } : SCRIPT[m.ply % SCRIPT.length]!;
-    void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } });
-  }, [mode]);
+    setMovePending(true);
+    setNotice(null);
+    void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
+      .then(async (result) => {
+        if (result.code === "ok") return;
+        const messages = {
+          illegal: "这一步不符合规则，请重新选择。",
+          not_your_turn: "对手刚刚完成落子，棋局正在同步。",
+          stale: "棋局状态已经更新，正在恢复到最新局面。",
+        } as const;
+        setNotice(messages[result.code as keyof typeof messages] ?? "落子未被接受，棋局正在同步。");
+        const fresh = await getMatch({ data: { matchId: m.id, lastSeq: 0 } });
+        matchRef.current = fresh.match as unknown as MatchRowLite;
+        setCloud((prev) => (prev ? { ...prev, match: fresh.match as unknown as MatchRowLite } : prev));
+        setMoves(fresh.moves as unknown as MoveRowLite[]);
+      })
+      .catch(() => setNotice("落子发送失败，请检查网络后重试。"))
+      .finally(() => setMovePending(false));
+  }, [mode, movePending]);
+
+  const useLocalPractice = useCallback(() => {
+    setNotice(null);
+    setMode("local");
+    setPhase("connecting");
+  }, []);
 
   const resign = useCallback(() => {
     if (mode === "local") {
@@ -352,9 +384,12 @@ export function useDuelSession(): DuelSession {
         clock,
         cp: state.cp,
         mind: state.mind,
+        notice,
+        movePending,
         playMove,
         resign,
         simulateDrop,
+        useLocalPractice,
       };
     }
 
@@ -370,20 +405,23 @@ export function useDuelSession(): DuelSession {
       depth: 6,
       mind: mindFor(0),
       players: { w: { name: "Adiamond", elo: 2480 }, b: { name: "Lord Cinders", elo: 2510 } },
-      status: "live",
+      status: mode === "error" ? "waiting" : "live",
     };
     return {
       state: fallback,
       phase,
-      transport: "local",
+      transport: mode === "error" ? "cloud" : "local",
       moves: fallback.moves,
       clock: fallback.clock,
       cp: fallback.cp,
       mind: fallback.mind,
+      notice,
+      movePending,
       playMove,
       resign,
       simulateDrop,
+      useLocalPractice,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, playMove, resign, simulateDrop, tick]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, tick]);
 }
