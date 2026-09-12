@@ -727,19 +727,22 @@
   place-items: center;
   font-family: "Times New Roman", "Noto Serif Symbols 2", serif;
   font-size: 0.9em;
+  opacity: 0.22;
+  transition: opacity 150ms ease;
 }
 
 .board-piece[data-color="w"] .board-piece-fallback {
   color: var(--color-board-white);
-  -webkit-text-stroke: 0.6px var(--color-board-frame);
-  text-shadow: 0 1px 0 var(--color-on-surface), 0 3px 0 var(--color-goldSubtle);
+  -webkit-text-stroke: 0.4px color-mix(in oklab, var(--color-board-frame) 70%, transparent);
 }
 
 .board-piece[data-color="b"] .board-piece-fallback {
   color: var(--color-board-black);
-  -webkit-text-stroke: 0.7px var(--color-antiqueGold);
-  text-shadow: 0 1px 0 var(--color-outline), 0 3px 0 var(--color-surface-container-lowest);
+  -webkit-text-stroke: 0.5px color-mix(in oklab, var(--color-antiqueGold) 70%, transparent);
 }
+
+/* 3D 棋子图加载失败时恢复为清晰的平面棋子 */
+.board-square:not(:has(.board-piece img:not([hidden]))) .board-piece-fallback { opacity: 1; }
 
 .board-square:hover .board-piece,
 .board-square.is-selected .board-piece { transform: translateY(-7%) scale(1.06); }
