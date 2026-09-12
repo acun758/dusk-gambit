@@ -74,10 +74,12 @@ function Dynasty() {
   );
   const solvedCount = levels.filter((l) => solvedIds.has(l.id)).length;
 
-  const current = TIERS.find((x) => profile.elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+  const current = tierOf(profile.elo);
   const nextTier = TIERS[TIERS.indexOf(current) - 1] ?? null;
   const pct = Math.max(4, Math.min(100, ((profile.elo - current.floor) / (current.ceil - current.floor)) * 100));
   const total = profile.wins + profile.losses + profile.draws;
+  const ladder = ladderQ.data ?? [];
+  const myRank = ladder.findIndex((row) => row.name === profile.name && row.elo === profile.elo) + 1;
 
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
