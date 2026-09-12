@@ -31,6 +31,9 @@ function Battle() {
   const me = session.state.players[session.state.you];
   const ranked = session.transport === "cloud";
   const coach = getCoachInsight(session.state.fen, session.moves, ranked);
+  const oppSide = session.state.you === "w" ? "b" : "w";
+  const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
+  const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
@@ -47,7 +50,7 @@ function Battle() {
 
       <main className="desktop-page-container pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg">
         <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
-          <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
+          <PlayerBar name={opponent.name} elo={oppElo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
           <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
             <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title="实时评估">
@@ -63,7 +66,7 @@ function Battle() {
             />
           </div>
 
-          <PlayerBar name={me.name} elo={me.elo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
+          <PlayerBar name={me.name} elo={myElo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
           <div className="battle-core-width bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
             <div className="min-w-0">
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>

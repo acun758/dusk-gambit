@@ -2,10 +2,33 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
-import { cancelWaitingMatch, claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
+import {
+  cancelWaitingMatch,
+  claimTimeout,
+  findMatch,
+  getActiveMatch,
+  getMatch,
+  getMatchRatings,
+  resignMatch,
+  submitMove,
+} from "@/lib/game.functions";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/lib/local-engine";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
+
+export interface LiveRating {
+  elo: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  streak: number;
+}
+
+export interface DuelRatings {
+  w: LiveRating | null;
+  b: LiveRating | null;
+  ratingDelta: number | null;
+}
 
 export interface DuelSession {
   state: DuelState;
@@ -18,6 +41,9 @@ export interface DuelSession {
   notice: string | null;
   movePending: boolean;
   aiLevelId: AiLevelId;
+  /** 真人对局中双方的实时积分，每一步与重连后都会刷新 */
+  ratings: DuelRatings | null;
+  resumed: boolean;
   setAiLevel: (id: AiLevelId) => void;
   startRanked: () => void;
   playMove: (uci?: string) => void;
@@ -124,6 +150,8 @@ export function useDuelSession(): DuelSession {
   const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
   const [matchmakingKey, setMatchmakingKey] = useState(0);
+  const [ratings, setRatings] = useState<DuelRatings | null>(null);
+  const [resumed, setResumed] = useState(false);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
 
@@ -134,12 +162,35 @@ export function useDuelSession(): DuelSession {
     void (async () => {
       const { data } = await supabase.auth.getSession();
       if (cancelled) return;
-      if (!data.session || matchmakingKey === 0) {
+      if (!data.session) {
         setMode("local");
+        return;
+      }
+      // 重连恢复：先看有没有未结束的真人对局，有就直接回到原局面，积分不丢失
+      if (matchmakingKey === 0) {
+        try {
+          const active = await getActiveMatch();
+          if (cancelled) return;
+          if (!active) {
+            setMode("local");
+            return;
+          }
+          matchRef.current = active.match as unknown as MatchRowLite;
+          setCloud({ match: active.match as unknown as MatchRowLite, you: active.you });
+          setMoves(active.moves as unknown as MoveRowLite[]);
+          lastSeq.current = active.match.seq;
+          setResumed(true);
+          setMode("cloud");
+          setPhase(active.match.status === "waiting" ? "connecting" : "live");
+          setNotice("已恢复上一局未结束的天梯对局，时钟与积分沿用服务端记录。");
+        } catch {
+          if (!cancelled) setMode("local");
+        }
         return;
       }
       setMode("cloud");
       setPhase("connecting");
+      setResumed(false);
       try {
         const res = await findMatch();
         if (cancelled) return;
@@ -162,6 +213,22 @@ export function useDuelSession(): DuelSession {
       cancelled = true;
     };
   }, [matchmakingKey]);
+
+  // 每一步、每次状态变化都同步双方实时积分
+  useEffect(() => {
+    const matchId = cloud?.match.id;
+    if (!matchId || mode !== "cloud") return;
+    let cancelled = false;
+    void getMatchRatings({ data: { matchId } })
+      .then((r) => {
+        if (!cancelled) setRatings(r as DuelRatings);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode]);
+
 
   // realtime：对手落子与对局状态
   useEffect(() => {
@@ -423,6 +490,8 @@ export function useDuelSession(): DuelSession {
         notice,
         movePending,
         aiLevelId: levelId,
+        ratings,
+        resumed,
         setAiLevel,
         startRanked,
         playMove,
@@ -457,6 +526,8 @@ export function useDuelSession(): DuelSession {
       notice,
       movePending,
       aiLevelId: levelId,
+      ratings: null,
+      resumed: false,
       setAiLevel,
       startRanked,
       playMove,
@@ -465,5 +536,5 @@ export function useDuelSession(): DuelSession {
       useLocalPractice,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed]);
 }

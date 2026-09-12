@@ -429,3 +429,78 @@ export const listMyMatches = createServerFn({ method: "POST" })
       };
     });
   });
+
+/* ------------------------------ ladder & live ------------------------------ */
+
+export interface LadderRow {
+  id: string;
+  handle: string;
+  name: string;
+  elo: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  streak: number;
+}
+
+/** 天梯榜：按等级分排序的前 50 名，仅返回公开战绩字段。 */
+export const listLadder = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("profiles")
+    .select("id,handle,name,elo,wins,losses,draws,streak")
+    .order("elo", { ascending: false })
+    .limit(50);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as LadderRow[];
+});
+
+/** 对局双方的实时积分与战绩，用于每一步同步显示。 */
+export const getMatchRatings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("matches")
+      .select("white_id,black_id,rating_delta,status,outcome")
+      .eq("id", data.matchId)
+      .maybeSingle();
+    if (!row) throw new Error("match not found");
+    if (row.white_id !== context.userId && row.black_id !== context.userId) throw new Error("forbidden");
+    const ids = [row.white_id, row.black_id].filter(Boolean) as string[];
+    const { data: profiles } = await supabaseAdmin
+      .from("profiles")
+      .select("id,elo,wins,losses,draws,streak,diamonds")
+      .in("id", ids);
+    const pick = (id: string | null) => (profiles ?? []).find((p) => p.id === id) ?? null;
+    return {
+      w: pick(row.white_id),
+      b: pick(row.black_id),
+      ratingDelta: row.rating_delta,
+      status: row.status,
+      outcome: row.outcome,
+    };
+  });
+
+/** 重连恢复：返回我当前未结束的天梯对局（含全部着法），积分不会因断线丢失。 */
+export const getActiveMatch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("matches")
+      .select("*")
+      .or(`white_id.eq.${context.userId},black_id.eq.${context.userId}`)
+      .in("status", ["waiting", "live"])
+      .order("last_move_at", { ascending: false })
+      .limit(1);
+    const match = (data ?? [])[0] as MatchRow | undefined;
+    if (!match) return null;
+    const { data: moves } = await supabaseAdmin
+      .from("match_moves")
+      .select("*")
+      .eq("match_id", match.id)
+      .order("seq", { ascending: true });
+    return { match, moves: moves ?? [], you: match.white_id === context.userId ? ("w" as const) : ("b" as const) };
+  });

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { listEndgameLevels, loadEndgameProgress } from "@/lib/game.functions";
+import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
 
@@ -37,12 +37,16 @@ interface ProgressRow {
 }
 
 const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords" },
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown", accent: "from-primary/70 via-primary/20 to-transparent" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium", accent: "from-secondary/60 via-secondary/15 to-transparent" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech", accent: "from-secondary/45 via-secondary/10 to-transparent" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield", accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords", accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
 ];
+
+function tierOf(elo: number) {
+  return TIERS.find((x) => elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+}
 
 function Dynasty() {
   const t = useT();
@@ -56,6 +60,12 @@ function Dynasty() {
     queryKey: ["endgame-progress", signedIn],
     queryFn: () => (signedIn ? (loadEndgameProgress() as Promise<ProgressRow[]>) : Promise.resolve([])),
   });
+  const ladderQ = useQuery({
+    queryKey: ["ladder-board"],
+    queryFn: () => listLadder() as Promise<LadderRow[]>,
+    refetchInterval: 30_000,
+  });
+
 
   const levels = levelsQ.data ?? [];
   const solvedIds = useMemo(
@@ -64,10 +74,12 @@ function Dynasty() {
   );
   const solvedCount = levels.filter((l) => solvedIds.has(l.id)).length;
 
-  const current = TIERS.find((x) => profile.elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+  const current = tierOf(profile.elo);
   const nextTier = TIERS[TIERS.indexOf(current) - 1] ?? null;
   const pct = Math.max(4, Math.min(100, ((profile.elo - current.floor) / (current.ceil - current.floor)) * 100));
   const total = profile.wins + profile.losses + profile.draws;
+  const ladder = ladderQ.data ?? [];
+  const myRank = ladder.findIndex((row) => row.name === profile.name && row.elo === profile.elo) + 1;
 
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
@@ -192,7 +204,61 @@ function Dynasty() {
               </span>
             </Link>
           </section>
+
+          {/* 段位榜 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="段位榜" en="Leaderboard" />
+              </h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest shrink-0">
+                {myRank > 0 ? t(`我的名次 #${myRank}`, `Rank #${myRank}`) : t("按积分排序", "By rating")}
+              </span>
+            </div>
+            {ladderQ.isLoading && (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("正在读取天梯排名…", "Loading ladder…")}</p>
+            )}
+            {!ladderQ.isLoading && ladder.length === 0 && (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                {t("还没有天梯战绩，完成一局真人对局即可上榜。", "No ranked results yet.")}
+              </p>
+            )}
+            <ol className="grid gap-space-xs">
+              {ladder.slice(0, 20).map((row, i) => {
+                const tier = tierOf(row.elo);
+                const mine = myRank === i + 1;
+                return (
+                  <li
+                    key={row.id}
+                    className={`grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
+                      mine ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                    }`}
+                  >
+                    <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
+                    <div className="flex items-center gap-space-sm min-w-0">
+                      <span
+                        className={`w-9 h-9 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
+                        aria-hidden="true"
+                      >
+                        <span className="material-symbols-outlined text-secondary text-[18px]">{tier.icon}</span>
+                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="cjk font-label-md text-label-md truncate">{row.name}</span>
+                        <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
+                          {t(tier.zh, tier.en)} · {row.wins}
+                          {t("胜", "W")} {row.losses}
+                          {t("负", "L")}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="font-label-md text-label-md tabular-nums text-primary shrink-0">{row.elo}</span>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
         </div>
+
 
         {/* 九重王座 + 试炼联动 */}
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0 lg:sticky lg:top-24">
@@ -216,8 +282,15 @@ function Dynasty() {
                   }`}
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
-                    <span className="material-symbols-outlined text-[20px] shrink-0 text-secondary">
-                      {unlocked ? tier.icon : "lock"}
+                    <span
+                      className={`w-10 h-10 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent} ${
+                        active ? "gold-hairline" : ""
+                      } ${unlocked ? "" : "opacity-50"}`}
+                      aria-hidden="true"
+                    >
+                      <span className="material-symbols-outlined text-[20px] text-secondary">
+                        {unlocked ? tier.icon : "lock"}
+                      </span>
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
