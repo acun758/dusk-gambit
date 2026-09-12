@@ -8,6 +8,7 @@ import {
   type ServerMessage,
 } from "./duel-protocol";
 import { Chess } from "chess.js";
+import { AI_LEVELS, aiLevel, chooseMove, evaluate, type AiLevelId } from "./local-engine";
 
 /**
  * Transport-agnostic duel client.
