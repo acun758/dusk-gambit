@@ -122,7 +122,7 @@ function Analysis() {
 
   return (
     <div className="min-h-screen bg-surface text-on-surface pb-32 md:pb-space-lg">
-      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <div className="min-w-0">
             <h1 className="font-headline-sm text-headline-sm truncate">对局复盘</h1>
@@ -134,8 +134,8 @@ function Analysis() {
         </div>
       </header>
 
-      <main className="pt-16 px-margin-mobile lg:px-space-lg">
-        <div className="w-full max-w-[1280px] mx-auto py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
+      <main className="pt-16 px-margin-mobile lg:px-0">
+        <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
           <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-space-sm">
               <div className="min-w-0">

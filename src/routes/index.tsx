@@ -47,7 +47,7 @@ function Index() {
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen">
-      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
+      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
@@ -86,7 +86,7 @@ function Index() {
       </header>
 
       <main className="flex flex-col relative w-full pt-20 bg-surface min-h-screen">
-        <div className="flex flex-col w-full pb-32 px-margin-mobile">
+        <div className="desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
           {/* 誓约横幅 */}
           <section className="relative w-full mt-space-md bg-surface-container-lowest p-space-xs shadow-[0_20px_48px_rgba(0,0,0,0.95)]">
             <div className="relative w-full bg-surface-container-low p-space-md overflow-hidden">

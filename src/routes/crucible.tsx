@@ -132,7 +132,7 @@ function Crucible() {
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
-      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
+      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
@@ -152,7 +152,7 @@ function Crucible() {
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[240px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:grid-cols-[260px_minmax(0,1fr)]">
+      <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
         {/* 关卡列表 */}
         <section className="crucible-levels flex min-w-0 flex-col gap-space-xs mt-space-md lg:sticky lg:top-24">
           <h2 className="font-headline-sm text-headline-sm">
