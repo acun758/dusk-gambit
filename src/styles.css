@@ -276,6 +276,37 @@
   aspect-ratio: 1;
 }
 
+.battle-column {
+  --battle-core-width: min(100%, 520px);
+}
+
+.battle-core-width,
+.battle-board-wrap,
+.battle-board-wrap .game-board {
+  width: var(--battle-core-width);
+}
+
+@media (min-width: 768px) {
+  .battle-column {
+    --battle-core-width: min(100%, 600px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .battle-column {
+    --battle-core-width: min(100%, 640px);
+  }
+}
+
+@media (max-width: 767px) {
+  .battle-eval {
+    left: 0;
+    z-index: 20;
+    width: 6px;
+    border-left: 0;
+  }
+}
+
 /* Review gives the board visual priority without changing the live-board cap. */
 .review-board .game-board {
   width: min(100%, 620px);
