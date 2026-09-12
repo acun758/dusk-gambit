@@ -70,6 +70,31 @@ function Battle() {
               {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="h-11 rounded-none bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
             </div>
           )}
+
+          <section aria-label="AI 陪练段位" className="w-full bg-surface-container-low p-space-sm gold-hairline">
+            <div className="flex items-baseline justify-between gap-2 mb-2">
+              <h2 className="cjk font-label-md text-label-md text-on-surface">AI 分级陪练</h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
+                {session.transport === "cloud" ? "当前为真人天梯，选择段位即切换陪练" : `对手：${aiLevel(session.aiLevelId).zh} · ${aiLevel(session.aiLevelId).elo}`}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {AI_LEVELS.map((lv) => {
+                const active = session.transport !== "cloud" && session.aiLevelId === lv.id;
+                return (
+                  <button
+                    key={lv.id}
+                    onClick={() => session.setAiLevel(lv.id)}
+                    className={`min-h-14 px-2 py-2 text-left transition-colors ${active ? "bg-primary-container text-on-primary-container gold-hairline" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
+                  >
+                    <span className="cjk block font-label-md text-label-md">{lv.zh}</span>
+                    <span className="block font-label-sm text-label-sm tabular-nums">{lv.elo}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{aiLevel(session.aiLevelId).desc}</p>
+          </section>
         </section>
         <DuelPanel session={session} />
       </main>
