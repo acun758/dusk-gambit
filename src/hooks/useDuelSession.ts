@@ -150,6 +150,8 @@ export function useDuelSession(): DuelSession {
   const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
   const [matchmakingKey, setMatchmakingKey] = useState(0);
+  const [ratings, setRatings] = useState<DuelRatings | null>(null);
+  const [resumed, setResumed] = useState(false);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
 
@@ -160,12 +162,35 @@ export function useDuelSession(): DuelSession {
     void (async () => {
       const { data } = await supabase.auth.getSession();
       if (cancelled) return;
-      if (!data.session || matchmakingKey === 0) {
+      if (!data.session) {
         setMode("local");
+        return;
+      }
+      // 重连恢复：先看有没有未结束的真人对局，有就直接回到原局面，积分不丢失
+      if (matchmakingKey === 0) {
+        try {
+          const active = await getActiveMatch();
+          if (cancelled) return;
+          if (!active) {
+            setMode("local");
+            return;
+          }
+          matchRef.current = active.match as unknown as MatchRowLite;
+          setCloud({ match: active.match as unknown as MatchRowLite, you: active.you });
+          setMoves(active.moves as unknown as MoveRowLite[]);
+          lastSeq.current = active.match.seq;
+          setResumed(true);
+          setMode("cloud");
+          setPhase(active.match.status === "waiting" ? "connecting" : "live");
+          setNotice("已恢复上一局未结束的天梯对局，时钟与积分沿用服务端记录。");
+        } catch {
+          if (!cancelled) setMode("local");
+        }
         return;
       }
       setMode("cloud");
       setPhase("connecting");
+      setResumed(false);
       try {
         const res = await findMatch();
         if (cancelled) return;
@@ -188,6 +213,22 @@ export function useDuelSession(): DuelSession {
       cancelled = true;
     };
   }, [matchmakingKey]);
+
+  // 每一步、每次状态变化都同步双方实时积分
+  useEffect(() => {
+    const matchId = cloud?.match.id;
+    if (!matchId || mode !== "cloud") return;
+    let cancelled = false;
+    void getMatchRatings({ data: { matchId } })
+      .then((r) => {
+        if (!cancelled) setRatings(r as DuelRatings);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode]);
+
 
   // realtime：对手落子与对局状态
   useEffect(() => {
