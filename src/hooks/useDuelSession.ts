@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Chess } from "chess.js";
 import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelWaitingMatch, claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
