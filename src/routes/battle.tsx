@@ -31,6 +31,9 @@ function Battle() {
   const me = session.state.players[session.state.you];
   const ranked = session.transport === "cloud";
   const coach = getCoachInsight(session.state.fen, session.moves, ranked);
+  const oppSide = session.state.you === "w" ? "b" : "w";
+  const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
+  const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
