@@ -5,6 +5,7 @@ import duelIcon from "@/assets/nav/duel.webp";
 import trialsIcon from "@/assets/nav/trials.webp";
 import reviewIcon from "@/assets/nav/review.webp";
 import ladderIcon from "@/assets/nav/ladder.webp";
+import { GameIcon } from "@/components/GameIcon";
 
 const PRIMARY = [
   { to: "/", icon: "crown", image: throneIcon, label: "Court", zh: "王座" },
@@ -103,7 +104,12 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <img
+                src={item.image}
+                alt=""
+                aria-hidden="true"
+                className={`h-8 w-8 object-contain transition-[opacity,filter] ${isActive(item.to) ? "opacity-100" : "opacity-60 grayscale-[35%]"}`}
+              />
               <span className="font-label-lg text-label-lg uppercase tracking-widest">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
@@ -120,7 +126,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <span className="material-symbols-outlined text-[18px]">auto_stories</span>军械典藏
+            <GameIcon name="arsenal" className="h-7 w-7" />军械典藏
           </Link>
         </div>
       </aside>

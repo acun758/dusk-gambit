@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
+import { GameIcon, type GameIconName } from "@/components/GameIcon";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
@@ -38,11 +39,11 @@ interface ProgressRow {
 }
 
 const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown", accent: "from-primary/70 via-primary/20 to-transparent" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium", accent: "from-secondary/60 via-secondary/15 to-transparent" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech", accent: "from-secondary/45 via-secondary/10 to-transparent" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield", accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords", accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "rank-sovereign" as GameIconName, accent: "from-primary/70 via-primary/20 to-transparent" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "rank-apex" as GameIconName, accent: "from-secondary/60 via-secondary/15 to-transparent" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "rank-grandmaster" as GameIconName, accent: "from-secondary/45 via-secondary/10 to-transparent" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "rank-master" as GameIconName, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "rank-knight" as GameIconName, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
 ];
 
 function tierOf(elo: number) {
@@ -89,7 +90,7 @@ function Dynasty() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-secondary text-[22px]">military_tech</span>
+              <GameIcon name="rank-grandmaster" className="h-8 w-8" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -125,7 +126,7 @@ function Dynasty() {
             <div className="flex items-start justify-between gap-space-sm">
               <div className="flex items-center gap-space-md min-w-0">
                 <div className="w-16 h-16 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
-                  <span className="material-symbols-outlined text-primary text-[34px]">{current.icon}</span>
+                  <GameIcon name={current.icon} className="h-12 w-12" />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>
@@ -242,7 +243,7 @@ function Dynasty() {
                         className={`w-9 h-9 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
-                        <span className="material-symbols-outlined text-secondary text-[18px]">{tier.icon}</span>
+                        <GameIcon name={tier.icon} className="h-7 w-7" />
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-md text-label-md truncate">{row.name}</span>
@@ -290,9 +291,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      <span className="material-symbols-outlined text-[20px] text-secondary">
-                        {unlocked ? tier.icon : "lock"}
-                      </span>
+                      {unlocked ? <GameIcon name={tier.icon} className="h-8 w-8" /> : <span className="material-symbols-outlined text-[20px] text-secondary">lock</span>}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>

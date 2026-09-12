@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { GameIcon } from "@/components/GameIcon";
 import {
   createDuelInvite,
   getLobbyStats,
@@ -165,7 +166,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                   : "系统按积分就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
               </p>
               <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
-                <span className="material-symbols-outlined text-secondary">swords</span>
+                <GameIcon name="match" className="h-7 w-7" />
                 {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
               </Button>
             </div>

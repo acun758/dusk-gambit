@@ -221,6 +221,13 @@
   display: none;
 }
 
+.game-icon {
+  display: block;
+  flex: none;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px color-mix(in oklab, var(--color-surface) 72%, transparent));
+}
+
 /* Responsive artwork supplied as one composition for each device family.
    It is intentionally subdued so boards, controls and bilingual text remain primary. */
 .themed-page {
