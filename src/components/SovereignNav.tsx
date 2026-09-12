@@ -33,8 +33,8 @@ export function SovereignNav() {
 
   return (
     <>
-      {/* Phones: single bottom bar */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
+      {/* Phones & iPad portrait: single bottom bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <nav className="h-[4.5rem] px-gutter-mobile grid grid-cols-5 items-center">
           {PRIMARY.map((item) => (
             <Link
