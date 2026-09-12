@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   createDuelInvite,
+  getLobbyStats,
   joinDuelInvite,
   listDuelInvites,
   loadProfile,
@@ -11,6 +12,12 @@ import {
   searchPlayers,
 } from "@/lib/game.functions";
 import { supabase } from "@/integrations/supabase/client";
+import lobbyBanner from "@/assets/lobby-banner.jpg";
+
+function mmss(sec: number) {
+  const s = Math.max(0, Math.floor(sec));
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
 
 type Tab = "auto" | "invite" | "lobby";
 
