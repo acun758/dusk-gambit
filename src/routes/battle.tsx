@@ -63,7 +63,7 @@ function Battle() {
             />
           </div>
 
-          <PlayerBar name={me.name} elo={me.elo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
+          <PlayerBar name={me.name} elo={myElo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
           <div className="battle-core-width bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
             <div className="min-w-0">
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
