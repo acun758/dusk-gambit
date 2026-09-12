@@ -3,50 +3,11 @@ import { useLang } from "@/lib/i18n";
 
 const PRIMARY = [
   { to: "/", icon: "crown", label: "Court", zh: "王座" },
-  { to: "/battle", icon: "swords", label: "Battle", zh: "对弈" },
+  { to: "/battle", icon: "swords", label: "Duel", zh: "对弈" },
   { to: "/crucible", icon: "chess_knight", label: "Trials", zh: "残局" },
-  { to: "/dynasty", icon: "shield", label: "Dynasty", zh: "天梯" },
-  { to: "/arsenal", icon: "auto_stories", label: "Vault", zh: "军械" },
+  { to: "/analysis", icon: "insights", label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "shield", label: "Ladder", zh: "天梯" },
 ] as const;
-
-const SANCTUM = [
-  { to: "/", en: "Decree", zh: "敕令" },
-  { to: "/protocols", en: "Arbiters", zh: "法则" },
-  { to: "/matchmaking", en: "Matchup", zh: "匹配" },
-  { to: "/battle", en: "Duel", zh: "死斗" },
-  { to: "/victory", en: "Execution", zh: "处决" },
-  { to: "/crucible", en: "Blindfold", zh: "盲棋" },
-  { to: "/dynasty", en: "Dynasty", zh: "天梯" },
-  { to: "/analysis", en: "Council", zh: "定评" },
-  { to: "/arsenal", en: "Relics", zh: "圣物" },
-  { to: "/forge/$id", params: { id: "001" }, en: "Forge", zh: "铸造" },
-  { to: "/finisher", en: "Finisher", zh: "绝杀" },
-  { to: "/archive", en: "Chronicle", zh: "典藏" },
-  { to: "/share", en: "Dispatch", zh: "传播" },
-  { to: "/puzzle", en: "Puzzle", zh: "残局" },
-  { to: "/puzzle/solved", en: "Spoils", zh: "战利" },
-  { to: "/codex", en: "Codex", zh: "法典" },
-] as const;
-
-/** Bilingual label: primary language first, the other language as a quiet echo. */
-function BiLabel({ en, zh }: { en: string; zh: string }) {
-  const { lang } = useLang();
-  return (
-    <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
-      {lang === "zh" ? (
-        <>
-          <span className="cjk tracking-[0.06em]">{zh}</span>
-          <span className="uppercase tracking-widest opacity-60 text-[0.8em]">{en}</span>
-        </>
-      ) : (
-        <>
-          <span className="uppercase tracking-widest">{en}</span>
-          <span className="cjk tracking-[0.06em] opacity-60 text-[0.85em]">{zh}</span>
-        </>
-      )}
-    </span>
-  );
-}
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
   const { lang } = useLang();
@@ -59,7 +20,7 @@ function LangToggle({ className = "" }: { className?: string }) {
     <button
       onClick={() => setLang(lang === "zh" ? "en" : "zh")}
       aria-label="切换语言 / Switch language"
-      className={`shrink-0 h-8 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
+      className={`shrink-0 h-9 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
     >
       {lang === "zh" ? "中 / EN" : "EN / 中"}
     </button>
@@ -68,40 +29,34 @@ function LangToggle({ className = "" }: { className?: string }) {
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-
+  const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
   return (
     <>
-      {/* Compact: one bottom bar only (iPhone / iPad portrait) */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
+      {/* Phones: single bottom bar */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <nav className="h-[4.5rem] px-gutter-mobile grid grid-cols-5 items-center">
-          {PRIMARY.map((item) => {
-            const active =
-              item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex flex-col items-center justify-center w-full h-14 gap-0.5 transition-colors ${
-                  active
-                    ? "text-secondary bg-surface-container-high/60"
-                    : "text-on-surface-variant hover:text-secondary"
-                }`}
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  {item.icon}
-                </span>
-                <span className="font-label-sm text-label-sm tracking-widest uppercase">
-                  <PrimaryLabel en={item.label} zh={item.zh} />
-                </span>
-              </Link>
-            );
-          })}
+          {PRIMARY.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex flex-col items-center justify-center w-full h-14 gap-0.5 transition-colors ${
+                isActive(item.to)
+                  ? "text-secondary bg-surface-container-high/60"
+                  : "text-on-surface-variant hover:text-secondary"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <span className="font-label-sm text-label-sm tracking-widest uppercase">
+                <PrimaryLabel en={item.label} zh={item.zh} />
+              </span>
+            </Link>
+          ))}
         </nav>
       </div>
 
-      {/* Wide: left rail (iPad landscape / desktop) */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
+      {/* iPad portrait and up: left rail */}
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 z-50 w-48 lg:w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
         <div className="px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="font-headline-sm text-headline-sm tracking-widest uppercase text-secondary">
             Blood Sovereign
@@ -109,61 +64,47 @@ export function SovereignNav() {
           <div className="cjk font-label-sm text-label-sm tracking-widest text-on-surface-variant">
             猩红王权 · 王座殿堂
           </div>
-          <div className="flex items-center gap-space-xs mt-1">
+          <div className="flex flex-wrap items-center gap-space-xs mt-1">
             <LangToggle />
             <Link
               to="/auth"
-              className="shrink-0 h-8 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center"
+              className="shrink-0 h-9 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center cjk"
             >
-              <BiLabel en="Account" zh="账号" />
+              账号
             </Link>
           </div>
         </div>
 
-        <nav className="px-space-sm py-space-sm grid gap-1 border-b border-outline-variant/30">
-          {PRIMARY.map((item) => {
-            const active =
-              item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex items-center gap-space-sm h-11 px-space-sm transition-colors ${
-                  active
-                    ? "bg-surface-container-high text-secondary gold-hairline"
-                    : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
-                }`}
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  {item.icon}
-                </span>
-                <span className="font-label-lg text-label-lg uppercase tracking-widest">
-                  <PrimaryLabel en={item.label} zh={item.zh} />
-                </span>
-              </Link>
-            );
-          })}
+        <nav className="px-space-sm py-space-sm grid gap-1">
+          {PRIMARY.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex items-center gap-space-sm h-12 px-space-sm transition-colors ${
+                isActive(item.to)
+                  ? "bg-surface-container-high text-secondary gold-hairline"
+                  : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <span className="font-label-lg text-label-lg uppercase tracking-widest">
+                <PrimaryLabel en={item.label} zh={item.zh} />
+              </span>
+            </Link>
+          ))}
         </nav>
 
-        <div className="flex-1 overflow-y-auto px-space-sm py-space-sm grid content-start gap-0.5">
-          {SANCTUM.map((item) => {
-            const active = pathname === item.to;
-            return (
-              <Link
-                key={item.en}
-                to={item.to}
-                {...("params" in item ? { params: item.params } : {})}
-                className={`px-space-sm py-2 font-label-sm text-label-sm transition-colors ${
-                  active
-                    ? "bg-primary-container text-on-surface"
-                    : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
-                }`}
-              >
-                <BiLabel en={item.en} zh={item.zh} />
-              </Link>
-
-            );
-          })}
+        <div className="mt-auto px-space-sm pb-space-lg grid gap-1">
+          <Link
+            to="/arsenal"
+            className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
+              isActive("/arsenal")
+                ? "text-secondary bg-surface-container/60"
+                : "text-on-surface-variant hover:text-secondary"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px]">auto_stories</span>军械典藏
+          </Link>
         </div>
       </aside>
     </>
