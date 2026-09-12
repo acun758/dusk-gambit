@@ -62,7 +62,7 @@ function Battle() {
           </div>
 
           <PlayerBar name={me.name} elo={me.elo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
-          <div className="w-full bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
+          <div className="battle-core-width bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
             <div className="min-w-0">
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{waiting ? "保持页面开启，匹配成功后自动开局" : `点击棋子，再点击高亮目标格 · 评估 ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`}</p>
@@ -70,7 +70,7 @@ function Battle() {
             {!waiting && <Button onClick={session.resign} variant="ghost" className="h-11 rounded-none bg-surface-container-high px-4 text-primary cjk font-label-sm text-label-sm shrink-0">认输</Button>}
           </div>
           {session.notice && (
-            <div role="status" className="w-full bg-primary-container/30 px-space-sm py-3 flex items-center justify-between gap-3 gold-hairline">
+            <div role="status" className="battle-core-width bg-primary-container/30 px-space-sm py-3 flex items-center justify-between gap-3 gold-hairline">
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>
               {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="h-11 rounded-none bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
             </div>
