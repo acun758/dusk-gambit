@@ -47,7 +47,13 @@ function Battle() {
             <div className="hidden sm:flex w-8 bg-surface-container-lowest gold-hairline flex-col justify-end" title="实时评估">
               <div className="bg-secondary-fixed transition-[height] duration-500" style={{ height: `${Math.max(8, Math.min(92, 50 + session.cp / 20))}%` }} />
             </div>
-            <PlayableBoard fen={session.state.fen} lastMove={session.moves.at(-1)?.uci} disabled={!myTurn} onMove={session.playMove} />
+            <PlayableBoard
+              fen={session.state.fen}
+              lastMove={session.moves.at(-1)?.uci}
+              lastMoveWasCapture={session.moves.at(-1)?.san.includes("x") ?? false}
+              disabled={!myTurn}
+              onMove={session.playMove}
+            />
           </div>
 
           <PlayerBar name={me.name} elo={me.elo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />

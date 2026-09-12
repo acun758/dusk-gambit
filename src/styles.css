@@ -281,6 +281,16 @@
     0 18px 40px color-mix(in oklab, var(--color-surface-dim) 86%, transparent);
 }
 
+.board-stage::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(110deg, transparent 18%, color-mix(in oklab, var(--color-secondary) 38%, transparent) 48%, transparent 72%);
+  background-size: 220% 100%;
+  pointer-events: none;
+  animation: boardFrameGleam 7s ease-in-out infinite;
+}
+
 .board-stage::after {
   content: "";
   position: absolute;
@@ -289,13 +299,69 @@
   pointer-events: none;
 }
 
+.board-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.board-ambient i {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  box-shadow: 0 0 8px var(--color-secondary);
+  opacity: 0;
+  animation: boardMote 6s linear infinite;
+}
+.board-ambient i:nth-child(1) { left: 8%; animation-delay: -1s; }
+.board-ambient i:nth-child(2) { left: 27%; animation-delay: -4s; }
+.board-ambient i:nth-child(3) { left: 46%; animation-delay: -2.5s; }
+.board-ambient i:nth-child(4) { left: 63%; animation-delay: -5s; }
+.board-ambient i:nth-child(5) { left: 79%; animation-delay: -3.2s; }
+.board-ambient i:nth-child(6) { left: 92%; animation-delay: -0.3s; }
+
 .board-grid {
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border: 1px solid var(--color-surface-container-lowest);
   box-shadow: inset 0 0 18px color-mix(in oklab, var(--color-surface-dim) 68%, transparent);
 }
+
+.board-move-trail {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  color: var(--color-secondary);
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.board-move-trail line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.34;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  animation: moveTrailDraw 780ms ease-out both;
+}
+
+.board-move-trail circle {
+  fill: currentColor;
+  opacity: 0;
+  animation: moveTrailPoint 720ms ease-out both;
+}
+
+.board-move-trail.is-capture { color: var(--color-primary); }
 
 .board-square {
   isolation: isolate;
@@ -324,6 +390,24 @@
   box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--color-secondary) 18%, transparent);
 }
 
+.board-square.is-last-destination::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  z-index: 8;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 76%, transparent);
+  box-shadow: 0 0 14px color-mix(in oklab, var(--color-secondary) 52%, transparent);
+  pointer-events: none;
+  animation: moveArrival 520ms ease-out both;
+}
+
+.board-square.is-capture-impact::after {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--color-primary) 76%, transparent);
+  animation: captureImpact 620ms ease-out both;
+}
+
 .board-square.is-selected {
   z-index: 12;
   box-shadow: inset 0 0 0 3px var(--color-secondary), inset 0 0 18px color-mix(in oklab, var(--color-secondary) 46%, transparent);
@@ -335,29 +419,39 @@
 
 .board-piece {
   display: block;
-  transform: translateY(-2%);
-  font-family: "Times New Roman", "Noto Serif Symbols 2", serif;
+  width: 94%;
+  height: 94%;
+  transform: translateY(-1%);
   transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 150ms ease;
-  filter: drop-shadow(0 5px 2px color-mix(in oklab, var(--color-surface-dim) 62%, transparent));
+  filter: drop-shadow(0 5px 3px color-mix(in oklab, var(--color-surface-dim) 76%, transparent));
 }
 
-.board-piece::before {
-  content: attr(data-glyph);
+.board-piece img {
   position: absolute;
   inset: 0;
-  transform: translate(-1px, -1px);
-  z-index: -1;
-  color: color-mix(in oklab, var(--color-on-surface) 62%, transparent);
-  filter: blur(0.2px);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
 }
 
-.board-piece[data-color="w"] {
+.board-piece-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: "Times New Roman", "Noto Serif Symbols 2", serif;
+  font-size: 0.9em;
+}
+
+.board-piece[data-color="w"] .board-piece-fallback {
   color: var(--color-board-white);
   -webkit-text-stroke: 0.6px var(--color-board-frame);
   text-shadow: 0 1px 0 var(--color-on-surface), 0 3px 0 var(--color-goldSubtle);
 }
 
-.board-piece[data-color="b"] {
+.board-piece[data-color="b"] .board-piece-fallback {
   color: var(--color-board-black);
   -webkit-text-stroke: 0.7px var(--color-antiqueGold);
   text-shadow: 0 1px 0 var(--color-outline), 0 3px 0 var(--color-surface-container-lowest);
@@ -365,6 +459,10 @@
 
 .board-square:hover .board-piece,
 .board-square.is-selected .board-piece { transform: translateY(-7%) scale(1.06); }
+
+.board-square.is-last-destination .board-piece {
+  animation: pieceLand 420ms cubic-bezier(0.18, 0.82, 0.3, 1.22) both;
+}
 
 .board-target,
 .board-capture {
@@ -406,10 +504,66 @@
   50% { box-shadow: inset 0 0 24px color-mix(in oklab, var(--color-primary) 78%, transparent); }
 }
 
+@keyframes boardFrameGleam {
+  0%, 72%, 100% { background-position: 130% 0; opacity: 0; }
+  80% { opacity: 0.65; }
+  92% { background-position: -80% 0; opacity: 0; }
+}
+
+@keyframes boardMote {
+  0% { transform: translateY(8px) scale(0.7); opacity: 0; }
+  18% { opacity: 0.48; }
+  82% { opacity: 0.18; }
+  100% { transform: translateY(-460px) scale(1.15); opacity: 0; }
+}
+
+@keyframes moveTrailDraw {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  22% { opacity: 0.7; }
+  100% { stroke-dashoffset: 0; opacity: 0.12; }
+}
+
+@keyframes moveTrailPoint {
+  0% { opacity: 0; transform: scale(0.3); transform-origin: center; }
+  30% { opacity: 0.72; }
+  100% { opacity: 0.08; transform: scale(1.8); transform-origin: center; }
+}
+
+@keyframes pieceLand {
+  0% { transform: translateY(-18%) scale(1.12); filter: brightness(1.45) drop-shadow(0 10px 6px color-mix(in oklab, var(--color-surface-dim) 70%, transparent)); }
+  68% { transform: translateY(2%) scale(0.96); }
+  100% { transform: translateY(-1%) scale(1); }
+}
+
+@keyframes moveArrival {
+  0% { transform: scale(0.35); opacity: 0.9; }
+  100% { transform: scale(1.42); opacity: 0; }
+}
+
+@keyframes captureImpact {
+  0% { transform: scale(0.2) rotate(0deg); opacity: 1; }
+  65% { opacity: 0.78; }
+  100% { transform: scale(1.55) rotate(18deg); opacity: 0; }
+}
+
+@media (max-width: 520px) {
+  .board-ambient i:nth-child(even) { display: none; }
+  .board-piece { filter: drop-shadow(0 3px 2px color-mix(in oklab, var(--color-surface-dim) 68%, transparent)); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .board-square,
   .board-piece,
-  .board-square.is-check { transition: none; animation: none; }
+  .board-square.is-check,
+  .board-square.is-last-destination::after,
+  .board-square.is-last-destination .board-piece,
+  .board-move-trail line,
+  .board-move-trail circle,
+  .board-stage::before,
+  .board-ambient i { transition: none; animation: none; }
+  .board-ambient { display: none; }
+  .board-move-trail line { stroke-dashoffset: 0; opacity: 0.16; }
+  .board-move-trail circle { opacity: 0.12; }
 }
 
 /* Explicit bilingual helpers for mixed lines: <span class="cjk">中文</span> */
