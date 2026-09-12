@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { DuelSession } from "@/hooks/useDuelSession";
 import { fmtClock } from "@/hooks/useDuelSession";
+import { Button } from "@/components/ui/button";
 
 type TabKey = "log" | "mind" | "spoils" | "review";
 export type PanelVariant = "duel" | "review";
@@ -131,24 +132,20 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
         </div>
         {session && (
           <div className="grid grid-cols-3 gap-1 pt-1">
-            <button
-              onClick={() => session.playMove()}
-              className="h-11 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
-            >
-              落子
-            </button>
-            <button
+            {import.meta.env.DEV && <Button
               onClick={session.simulateDrop}
-              className="h-11 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+              variant="ghost"
+              className="col-span-2 h-11 rounded-none bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
             >
-              模拟断线
-            </button>
-            <button
+              测试断线追帧
+            </Button>}
+            <Button
               onClick={session.resign}
-              className="h-11 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+              variant="ghost"
+              className={`${import.meta.env.DEV ? "" : "col-span-3"} h-11 rounded-none bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform`}
             >
               认输
-            </button>
+            </Button>
           </div>
         )}
       </div>

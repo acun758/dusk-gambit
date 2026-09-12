@@ -133,6 +133,10 @@
   --color-board-dark: #3a1718;
   --color-board-white: #f3dfb8;
   --color-board-black: #17100f;
+  --color-board-frame: #24140f;
+  --color-board-frame-highlight: #b98a45;
+  --color-board-light-highlight: #c49a68;
+  --color-board-dark-highlight: #592326;
   --font-serifTitle: "Cinzel", "Playfair Display", Didot, STSong, SimSun, serif;
   --font-sansUI: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
@@ -262,6 +266,150 @@
 .game-board {
   width: min(100%, 520px);
   aspect-ratio: 1;
+}
+
+.board-stage {
+  position: relative;
+  padding: clamp(8px, 1.6vw, 14px);
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--color-board-frame-highlight) 45%, transparent), transparent 22%),
+    linear-gradient(315deg, var(--color-surface-container-lowest), var(--color-board-frame));
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 48%, transparent);
+  box-shadow:
+    inset 0 0 0 2px var(--color-surface-container-lowest),
+    inset 0 0 20px color-mix(in oklab, var(--color-secondary) 12%, transparent),
+    0 18px 40px color-mix(in oklab, var(--color-surface-dim) 86%, transparent);
+}
+
+.board-stage::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 22%, transparent);
+  pointer-events: none;
+}
+
+.board-grid {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-surface-container-lowest);
+  box-shadow: inset 0 0 18px color-mix(in oklab, var(--color-surface-dim) 68%, transparent);
+}
+
+.board-square {
+  isolation: isolate;
+  overflow: hidden;
+  cursor: pointer;
+  transition: filter 140ms ease, box-shadow 140ms ease;
+}
+
+.board-square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(145deg, color-mix(in oklab, var(--color-on-surface) 8%, transparent), transparent 36%),
+    repeating-linear-gradient(90deg, transparent 0 9px, color-mix(in oklab, var(--color-surface-dim) 8%, transparent) 10px 11px);
+  opacity: 0.7;
+}
+
+.board-square-light { background-color: var(--color-board-light); }
+.board-square-dark { background-color: var(--color-board-dark); }
+.board-square-light:hover { background-color: var(--color-board-light-highlight); }
+.board-square-dark:hover { background-color: var(--color-board-dark-highlight); }
+
+.board-square.is-last-move {
+  box-shadow: inset 0 0 0 999px color-mix(in oklab, var(--color-secondary) 18%, transparent);
+}
+
+.board-square.is-selected {
+  z-index: 12;
+  box-shadow: inset 0 0 0 3px var(--color-secondary), inset 0 0 18px color-mix(in oklab, var(--color-secondary) 46%, transparent);
+}
+
+.board-square.is-check {
+  animation: boardCheck 1.3s ease-in-out infinite;
+}
+
+.board-piece {
+  display: block;
+  transform: translateY(-2%);
+  font-family: "Times New Roman", "Noto Serif Symbols 2", serif;
+  transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 150ms ease;
+  filter: drop-shadow(0 5px 2px color-mix(in oklab, var(--color-surface-dim) 62%, transparent));
+}
+
+.board-piece::before {
+  content: attr(data-glyph);
+  position: absolute;
+  inset: 0;
+  transform: translate(-1px, -1px);
+  z-index: -1;
+  color: color-mix(in oklab, var(--color-on-surface) 62%, transparent);
+  filter: blur(0.2px);
+}
+
+.board-piece[data-color="w"] {
+  color: var(--color-board-white);
+  -webkit-text-stroke: 0.6px var(--color-board-frame);
+  text-shadow: 0 1px 0 var(--color-on-surface), 0 3px 0 var(--color-goldSubtle);
+}
+
+.board-piece[data-color="b"] {
+  color: var(--color-board-black);
+  -webkit-text-stroke: 0.7px var(--color-antiqueGold);
+  text-shadow: 0 1px 0 var(--color-outline), 0 3px 0 var(--color-surface-container-lowest);
+}
+
+.board-square:hover .board-piece,
+.board-square.is-selected .board-piece { transform: translateY(-7%) scale(1.06); }
+
+.board-target,
+.board-capture {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.board-target {
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-secondary) 76%, transparent);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--color-secondary) 58%, transparent);
+}
+
+.board-capture {
+  inset: 8%;
+  border-radius: 999px;
+  border: 3px solid color-mix(in oklab, var(--color-primary) 84%, transparent);
+  box-shadow: inset 0 0 10px color-mix(in oklab, var(--color-primary) 40%, transparent);
+}
+
+.board-file,
+.board-rank {
+  position: absolute;
+  z-index: 20;
+  color: color-mix(in oklab, var(--color-on-surface) 68%, transparent);
+  font-family: var(--font-label-sm);
+  font-size: clamp(7px, 1.2vw, 10px);
+  line-height: 1;
+  pointer-events: none;
+}
+.board-rank { top: 3px; left: 3px; }
+.board-file { right: 3px; bottom: 3px; }
+
+@keyframes boardCheck {
+  0%, 100% { box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--color-primary) 55%, transparent); }
+  50% { box-shadow: inset 0 0 24px color-mix(in oklab, var(--color-primary) 78%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-square,
+  .board-piece,
+  .board-square.is-check { transition: none; animation: none; }
 }
 
 /* Explicit bilingual helpers for mixed lines: <span class="cjk">中文</span> */
