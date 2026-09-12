@@ -47,7 +47,7 @@ function Battle() {
 
       <main className="desktop-page-container pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg">
         <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
-          <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
+          <PlayerBar name={opponent.name} elo={oppElo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
           <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
             <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title="实时评估">
