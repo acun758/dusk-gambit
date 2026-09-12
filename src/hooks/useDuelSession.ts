@@ -133,7 +133,7 @@ export function useDuelSession(): DuelSession {
     void (async () => {
       const { data } = await supabase.auth.getSession();
       if (cancelled) return;
-      if (!data.session) {
+      if (!data.session || matchmakingKey === 0) {
         setMode("local");
         return;
       }

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
-import { useProfile, tierFor } from "@/lib/profile";
+import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/crucible")({
@@ -77,7 +77,6 @@ function Crucible() {
   const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number; explanation?: { zh: string; en: string } } | null>(null);
   const [busy, setBusy] = useState(false);
   const [blind, setBlind] = useState(true);
-  const [promo, setPromo] = useState<{ tier: string; tierZh: string } | null>(null);
 
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
@@ -100,7 +99,7 @@ function Crucible() {
   }, [levels, activeId]);
 
   const active = levels.find((l) => l.id === activeId) ?? null;
-  const locked = active ? profile.elo < active.elo_required : false;
+  const locked = active ? profile.trainingPoints < active.elo_required : false;
   const board = useMemo(() => (active ? boardFromFen(active.fen) : boardFromFen("8/8/8/8/8/8/8/8")), [active]);
 
   const select = useCallback((id: number) => {
@@ -121,11 +120,6 @@ function Crucible() {
       })) as { correct: boolean; firstSolve: boolean; expectedLength: number; explanation?: { zh: string; en: string } };
       setResult(res);
       if (res.correct) {
-        if (res.firstSolve) {
-          const before = tierFor(profile.elo);
-          const after = tierFor(profile.elo + active.elo_reward);
-          setPromo(after.tier === before.tier ? null : after);
-        }
         await refresh();
         await progressQ.refetch();
       }
@@ -134,7 +128,7 @@ function Crucible() {
     } finally {
       setBusy(false);
     }
-  }, [active, locked, busy, entry, startedAt, refresh, progressQ, profile.elo]);
+  }, [active, locked, busy, entry, startedAt, refresh, progressQ]);
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
@@ -142,7 +136,7 @@ function Crucible() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
-              {profile.elo} ELO · {t(profile.tierZh, profile.tier)}
+              {profile.trainingPoints} {t("训练积分", "Training points")} · {t(profile.tierZh, profile.tier)}
             </span>
             <span className="font-headline-sm text-headline-sm tracking-wider truncate">
               <Bi zh="盲棋心算" en="Blindfold Crucible" />
@@ -174,7 +168,7 @@ function Crucible() {
           <div className="grid gap-space-xs">
             {levels.map((l) => {
               const p = progress.get(l.id);
-              const lock = profile.elo < l.elo_required;
+              const lock = profile.trainingPoints < l.elo_required;
               const on = l.id === activeId;
               return (
                 <button
@@ -189,7 +183,7 @@ function Crucible() {
                       {t(l.name_zh, l.name_en)}
                     </span>
                     <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
-                      {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} ELO
+                      {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} {t("训练分", "TP")}
                     </span>
                   </span>
                   <span className="material-symbols-outlined text-[18px] shrink-0 text-secondary">
@@ -224,14 +218,14 @@ function Crucible() {
                     {t(`计算深度 ${active.depth}`, `Depth ${active.depth}`)}
                   </span>
                   <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
-                    +{active.elo_reward} ELO
+                    +{active.elo_reward} {t("训练积分", "Training")}
                   </span>
                   <span className="px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-secondary tracking-widest">
                     +{active.diamond_reward} {t("钻石","Gems")}
                   </span>
                   {active.elo_required > 0 && (
                     <span className="cjk px-space-sm py-0.5 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">
-                      {t(`需 ${active.elo_required} 分`, `Requires ${active.elo_required}`)}
+                      {t(`需 ${active.elo_required} 训练分`, `Requires ${active.elo_required} TP`)}
                     </span>
                   )}
                 </div>
@@ -294,12 +288,12 @@ function Crucible() {
 
                 {!signedIn && (
                   <Link to="/auth" className="cjk font-body-sm text-body-sm text-secondary">
-                    {t("登录后才能由服务端校验并结算段位奖励 →", "Sign in so the server can verify and award rating →")}
+                    {t("登录后由服务端校验并结算训练积分与钻石 →", "Sign in for verified training points and diamonds →")}
                   </Link>
                 )}
                 {locked && (
                   <p className="cjk font-body-sm text-body-sm text-primary">
-                    {t(`需要 ${active.elo_required} 分才能开启此试炼。`, `Reach ${active.elo_required} rating to unlock this trial.`)}
+                    {t(`需要 ${active.elo_required} 训练积分才能开启此试炼。`, `Reach ${active.elo_required} training points to unlock this trial.`)}
                   </p>
                 )}
                 {result && (
@@ -309,7 +303,7 @@ function Crucible() {
                     <p className="cjk font-body-sm text-body-sm">
                       {result.correct
                         ? result.firstSolve
-                          ? t("解法正确，段位与钻石已结算。", "Correct — rating and diamonds settled.")
+                          ? t("解法正确，训练积分与钻石已结算。", "Correct — training points and diamonds settled.")
                           : t("解法正确，此关此前已通过。", "Correct — this trial was already solved.")
                         : t("解法不成立，再算一遍。", "That line does not hold. Calculate again.")}
                     </p>
@@ -318,21 +312,6 @@ function Crucible() {
                         {t(result.explanation.zh, result.explanation.en)}
                       </p>
                     )}
-                  </div>
-                )}
-                {promo && (
-                  <div className="p-space-sm bg-primary-container/30 flex flex-col gap-space-xs">
-                    <p className="cjk font-label-md text-label-md text-secondary">
-                      {t(`晋级「${promo.tierZh}」，对应天梯已开启。`, `Promoted to ${promo.tier} — the matching ladder is open.`)}
-                    </p>
-                    <div className="flex gap-space-xs">
-                      <Link to="/battle" className="flex-1 py-space-sm bg-primary-container text-on-primary-container text-center cjk font-label-md text-label-md">
-                        {t("立即进入天梯对局", "Enter ranked now")}
-                      </Link>
-                      <Link to="/dynasty" className="py-space-sm px-space-md bg-surface-container-high text-on-surface text-center cjk font-label-md text-label-md">
-                        {t("查看段位", "Sanctum")}
-                      </Link>
-                    </div>
                   </div>
                 )}
               </div>

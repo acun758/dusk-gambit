@@ -178,7 +178,7 @@ function Index() {
                 { zh: "段位", en: "Tier", v: t(profile.tierZh, profile.tier) },
                 { zh: "胜场", en: "Wins", v: String(profile.wins) },
                 { zh: "胜率", en: "Win rate", v: `${winRate}%` },
-                { zh: "钻石", en: "Diamonds", v: profile.diamonds.toLocaleString() },
+                { zh: "训练分", en: "Training", v: profile.trainingPoints.toLocaleString() },
               ].map((s) => (
                 <div key={s.en} className="bg-surface-container-low p-space-sm flex flex-col gap-0.5 gold-hairline min-w-0">
                   <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t(s.zh, s.en)}</span>
