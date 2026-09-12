@@ -559,6 +559,10 @@ export function useDuelSession(): DuelSession {
       aiLevelId: levelId,
       ratings: null,
       resumed: false,
+      canPause: mode === "local",
+      paused,
+      togglePause,
+      restart,
       setAiLevel,
       startRanked,
       playMove,
@@ -567,5 +571,5 @@ export function useDuelSession(): DuelSession {
       useLocalPractice,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed, paused, togglePause, restart]);
 }
