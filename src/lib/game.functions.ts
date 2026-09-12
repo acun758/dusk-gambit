@@ -45,6 +45,7 @@ export interface ProfileRow {
   draws: number;
   streak: number;
   training_points: number;
+  real_name?: string;
 }
 
 export interface FriendProfile extends ProfileRow {
