@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { GAME_ART } from "@/lib/game-art-assets";
 
 export const Route = createFileRoute("/arsenal")({
   head: () => ({
@@ -48,7 +49,7 @@ function Arsenal() {
 </svg>
 
 <div className={"relative w-64 h-72 flex items-center justify-center"}>
-<img className={"w-full h-full object-contain filter drop-shadow-[0_20px_25px_rgba(147,0,10,0.45)] transition-transform duration-700 active:scale-95"} data-alt={"Hyper-realistic obsidian and crimson crystal chess Queen piece with jagged gothic crown, bathed in dramatic cinematic chiaroscuro volumetric red light and floating golden embers, intricate gold filigree runes etched into reflective pitch-black marble pedestal."} id={"heroPieceGraphic"} src={"/__l5e/assets-v1/d6d54e1c-7da9-4c86-a17f-c85264ba2370/skin-gilded.png"} />
+<img className={"w-full h-full object-contain filter drop-shadow-[0_20px_25px_rgba(147,0,10,0.45)] transition-transform duration-700 active:scale-95"} alt={"鎏金王后棋子套装"} id={"heroPieceGraphic"} src={GAME_ART.sets.gilded} />
 
 <div className={"absolute bottom-2 w-48 h-6 bg-radial from-secondary/20 via-primary-container/30 to-transparent blur-md"}></div>
 </div>
@@ -175,7 +176,7 @@ function Arsenal() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex gap-space-sm overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.6)]"}>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Dramatic dark fantasy chess knight carved from rough black basalt stone with glowing golden cracks and an intense glowing eye, captured on velvet chessboard with smoke atmosphere."} src={"/__l5e/assets-v1/2b347765-259e-4e34-90ff-448475092c21/skin-shadow.png"} />
+<img className={"w-full h-full object-cover"} alt={"黑曜棋子套装"} src={GAME_ART.sets.shadow} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-secondary text-on-secondary font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Equipped
           </span>
@@ -207,7 +208,7 @@ function Arsenal() {
 <div className={"relative bg-surface-container p-space-sm flex gap-space-sm overflow-hidden shadow-[0_8px_20px_rgba(139,30,30,0.35)]"}>
 <div className={"absolute left-0 top-0 bottom-0 w-1 bg-primary"}></div>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Gothic royal chess queen piece rendered in blood red polished ruby lacquer with razor sharp points, shrouded in dark occult shadows with subtle golden crest."} src={"/__l5e/assets-v1/3d15abc2-eee8-49ed-b811-31dbef55bf45/skin-classic.png"} />
+<img className={"w-full h-full object-cover"} alt={"猩红经典棋子套装"} src={GAME_ART.sets.classic} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-tertiary-container text-on-tertiary font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Active Focus
           </span>
@@ -240,7 +241,7 @@ function Arsenal() {
 
 <div className={"relative bg-surface-container-low p-space-sm flex gap-space-sm overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.6)]"}>
 <div className={"relative w-24 h-28 bg-surface-container-lowest flex-shrink-0 flex items-center justify-center overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Intricate bone and burnished antique gold chess bishop carved like an austere occult grand inquisitor wearing a horned miter, cinematic dark fantasy lighting."} src={"/__l5e/assets-v1/d6d54e1c-7da9-4c86-a17f-c85264ba2370/skin-gilded.png"} />
+<img className={"w-full h-full object-cover"} alt={"鎏金棋子套装"} src={GAME_ART.sets.gilded} />
 <span className={"absolute top-1 left-1 px-1.5 py-0.5 bg-surface-container-high text-on-surface-variant font-label-sm text-[9px] tracking-widest font-bold uppercase"}>
             Rare
           </span>
@@ -268,7 +269,7 @@ function Arsenal() {
 <div className={"grid grid-cols-2 gap-space-sm md:col-span-2"}>
 <div className={"bg-surface-container-low p-space-sm flex flex-col justify-between"}>
 <div className={"relative w-full h-24 bg-surface-container-lowest mb-2 overflow-hidden flex items-center justify-center"}>
-<img className={"w-full h-full object-cover"} data-alt={"A monolithic chess rook made of cracked basalt stone with crackling lightning arcane blue energy pulsing from within its battlements on a dark moody surface."} src={"/__l5e/assets-v1/2b347765-259e-4e34-90ff-448475092c21/skin-shadow.png"} />
+<img className={"w-full h-full object-cover"} alt={"黑曜棋车套装"} src={GAME_ART.sets.shadow} />
 <span className={"absolute bottom-1 right-1 px-1 bg-surface-container-highest text-secondary font-label-sm text-[9px]"}>Rook</span>
 </div>
 <span className={"font-headline-sm text-[13px] text-on-surface uppercase truncate"}>风暴壁垒 · 裂隙</span>
@@ -279,7 +280,7 @@ function Arsenal() {
 </div>
 <div className={"bg-surface-container-low p-space-sm flex flex-col justify-between"}>
 <div className={"relative w-full h-24 bg-surface-container-lowest mb-2 overflow-hidden flex items-center justify-center"}>
-<img className={"w-full h-full object-cover"} data-alt={"Dark wrought iron chess pawn sculpted with a screaming skull crest under dramatic directional golden rim light in an atmospheric grimdark chamber."} src={"/__l5e/assets-v1/3d15abc2-eee8-49ed-b811-31dbef55bf45/skin-classic.png"} />
+<img className={"w-full h-full object-cover"} alt={"猩红兵阵套装"} src={GAME_ART.sets.classic} />
 <span className={"absolute bottom-1 right-1 px-1 bg-surface-container-highest text-primary font-label-sm text-[9px]"}>8x Pawns</span>
 </div>
 <span className={"font-headline-sm text-[13px] text-on-surface uppercase truncate"}>无名死侍 · 誓约</span>
@@ -305,7 +306,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Top down diagonal cinematic angle of an ancient gothic chessboard made of deep veined black obsidian and polished gold-accented white marble with atmospheric fog."} src={"/__l5e/assets-v1/96567e8b-b65b-4651-af12-7edcd6ee63b0/review-board.jpg"} />
+<img className={"w-full h-full object-cover"} alt={"永夜神庙棋盘"} src={GAME_ART.reviewBoard} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm font-bold uppercase tracking-wider"}>
             Active Field
@@ -326,7 +327,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"Grimdark battlefield chessboard formed from charred ashen soil with glowing red embers outlining each chess square, surrounded by ancient battle standards."} src={"/__l5e/assets-v1/512864e6-ef6d-48cb-92db-9ce4af25bb06/match-arena.jpg"} />
+<img className={"w-full h-full object-cover"} alt={"血色战壕棋盘"} src={GAME_ART.matchArena} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm uppercase tracking-wider"}>
             Grandmaster Exclusive
@@ -347,7 +348,7 @@ function Arsenal() {
 
 <div className={"w-64 flex-shrink-0 bg-surface-container-low p-space-sm shadow-[0_4px_16px_rgba(0,0,0,0.8)]"}>
 <div className={"relative w-full h-32 bg-surface-container-lowest overflow-hidden"}>
-<img className={"w-full h-full object-cover"} data-alt={"A celestial cosmic chessboard floating in the dark starlit void, surrounded by golden astrological clockwork rings and shimmering nebula dust."} src={"/__l5e/assets-v1/936655a1-a5fa-43b9-9916-f88a933b250b/hero-throne.jpg"} />
+<img className={"w-full h-full object-cover"} alt={"星穹天顶棋盘"} src={GAME_ART.hero} />
 <div className={"absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"}></div>
 <span className={"absolute top-2 left-2 px-2 py-0.5 bg-surface-container-highest text-on-surface font-label-sm text-label-sm uppercase tracking-wider"}>
             Astral Relic
