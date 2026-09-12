@@ -264,6 +264,57 @@ function Analysis() {
                   ))}
                 </div>
               </div>
+
+              <div className="bg-surface-container-low p-space-sm gold-hairline grid gap-2 md:col-span-2 xl:col-span-1">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="cjk font-label-lg text-label-lg">AI 分段讲解</h3>
+                  <Button
+                    type="button"
+                    onClick={() => narrative.mutate()}
+                    disabled={steps.length === 0 || narrative.isPending}
+                    className="h-11 rounded-none bg-secondary text-on-secondary cjk shrink-0"
+                  >
+                    {narrative.isPending ? "生成中…" : narrative.data ? "重新生成" : "生成讲解"}
+                  </Button>
+                </div>
+                {steps.length === 0 && (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">选择一局有着法的对局后可生成开局、中局、残局讲解。</p>
+                )}
+                {narrative.isError && (
+                  <p className="cjk font-body-sm text-body-sm text-primary">{(narrative.error as Error).message}</p>
+                )}
+                {narrative.data && (
+                  <div className="grid gap-2">
+                    <p className="cjk font-label-md text-label-md text-secondary">{narrative.data.headline}</p>
+                    {narrative.data.segments.map((seg, i) => (
+                      <article key={`${seg.phase}-${i}`} className="bg-surface-container p-space-sm grid gap-1">
+                        <h4 className="cjk font-label-md text-label-md">
+                          {PHASE_ZH[seg.phase] ?? seg.phase} · {seg.title}
+                        </h4>
+                        <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">{seg.summary}</p>
+                        {seg.keyMoves.length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {seg.keyMoves.map((km) => {
+                              const ply = Number(km.match(/\d+/)?.[0] ?? 0);
+                              return (
+                                <button
+                                  key={km}
+                                  onClick={() => ply > 0 && setIndex(Math.min(steps.length, ply))}
+                                  className="cjk min-h-9 px-2 bg-surface-container-high text-secondary font-label-sm text-label-sm"
+                                >
+                                  {km}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                        <p className="cjk font-body-sm text-body-sm text-secondary-fixed">建议：{seg.advice}</p>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+
             </div>
           </section>
         </div>
