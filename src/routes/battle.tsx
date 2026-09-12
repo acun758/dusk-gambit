@@ -45,8 +45,9 @@ function Battle() {
           <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
           <div className="w-full flex items-stretch justify-center gap-2">
-            <div className="hidden sm:flex w-8 bg-surface-container-lowest gold-hairline flex-col justify-end" title="实时评估">
-              <div className="bg-secondary-fixed transition-[height] duration-500" style={{ height: `${Math.max(8, Math.min(92, 50 + session.cp / 20))}%` }} />
+            <div className="hidden sm:flex w-3 rounded-sm overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end relative" title="实时评估">
+              <div className="absolute left-0 right-0 top-1/2 h-px bg-outline-variant/60" />
+              <div className="bg-secondary/70 transition-[height] duration-500" style={{ height: `${Math.max(8, Math.min(92, 50 + session.cp / 20))}%` }} />
             </div>
             <PlayableBoard
               fen={session.state.fen}

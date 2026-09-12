@@ -158,9 +158,9 @@ function Crucible() {
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 md:grid-cols-[240px_minmax(0,1fr)] md:items-start md:gap-space-lg md:px-space-lg lg:grid-cols-[260px_minmax(0,1fr)]">
+      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[240px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:grid-cols-[260px_minmax(0,1fr)]">
         {/* 关卡列表 */}
-        <section className="flex min-w-0 flex-col gap-space-xs mt-space-md md:sticky md:top-24">
+        <section className="flex min-w-0 flex-col gap-space-xs mt-space-md lg:sticky lg:top-24">
           <h2 className="font-headline-sm text-headline-sm">
             <Bi zh="六道实战试炼" en="Six Practical Trials" />
           </h2>
@@ -202,7 +202,7 @@ function Crucible() {
         </section>
 
         {/* 当前关卡 */}
-        <section className="flex w-full min-w-0 flex-col gap-space-sm mt-space-md md:max-w-[620px]">
+        <section className="flex w-full min-w-0 flex-col gap-space-sm mt-space-md lg:max-w-[620px]">
           {levelsQ.isLoading && (
             <div className="grid gap-space-sm" aria-hidden="true">
               <div className="h-32 bg-surface-container-low animate-pulse" />
@@ -238,7 +238,7 @@ function Crucible() {
                 <p className="cjk font-body-sm text-body-sm text-secondary mt-1">{t(`提示：${active.hint_zh}`, `Hint: ${active.hint_en}`)}</p>
               </div>
 
-              <div className="relative aspect-square w-full max-w-[520px] self-center bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)] md:self-start">
+              <div className="relative aspect-square w-full max-w-[520px] self-center bg-surface-container-lowest p-space-xs shadow-[inset_0_0_40px_rgba(0,0,0,0.95)] lg:self-start">
                 <div className="grid grid-cols-8 grid-rows-8 w-full h-full">
                   {board.flatMap((row, r) =>
                     row.map((cell, c) => (

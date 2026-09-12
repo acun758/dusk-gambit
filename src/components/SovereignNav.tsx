@@ -33,8 +33,8 @@ export function SovereignNav() {
 
   return (
     <>
-      {/* Phones: single bottom bar */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
+      {/* Phones & iPad portrait: single bottom bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <nav className="h-[4.5rem] px-gutter-mobile grid grid-cols-5 items-center">
           {PRIMARY.map((item) => (
             <Link
@@ -55,8 +55,8 @@ export function SovereignNav() {
         </nav>
       </div>
 
-      {/* iPad portrait and up: left rail */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 z-50 w-48 lg:w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
+      {/* iPad landscape and desktop: left rail */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
         <div className="px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="font-headline-sm text-headline-sm tracking-widest uppercase text-secondary">
             Blood Sovereign
