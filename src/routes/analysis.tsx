@@ -74,10 +74,17 @@ function cpText(cp: number) {
   return `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
 }
 
+function matchResult(match: { outcome: string | null; you: string }) {
+  if (!match.outcome) return "进行中";
+  if (match.outcome === "draw") return "和棋";
+  return match.outcome === (match.you === "w" ? "white" : "black") ? "胜" : "负";
+}
+
 function Analysis() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
@@ -91,10 +98,14 @@ function Analysis() {
 
   const matches = listQ.data ?? [];
   const activeId = matchId ?? matches[0]?.id ?? null;
+  const activeMatch = matches.find((match) => match.id === activeId) ?? matches[0];
 
   const detailQ = useQuery({
     queryKey: ["match-review", activeId],
-    queryFn: () => getMatch({ data: { matchId: activeId!, lastSeq: 0 } }),
+    queryFn: () => {
+      if (!activeId) throw new Error("尚未选择对局");
+      return getMatch({ data: { matchId: activeId, lastSeq: 0 } });
+    },
     enabled: !!activeId,
   });
 
@@ -124,27 +135,58 @@ function Analysis() {
       </header>
 
       <main className="pt-16 px-margin-mobile lg:px-space-lg">
-        <div className="w-full max-w-[1180px] mx-auto py-space-md grid gap-space-md lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start">
-          <section aria-label="对局历史" className="bg-surface-container-low p-space-sm gold-hairline lg:sticky lg:top-20">
-            <h2 className="cjk font-label-lg text-label-lg mb-2">对局历史</h2>
+        <div className="w-full max-w-[1280px] mx-auto py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
+          <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-space-sm">
+              <div className="min-w-0">
+                <h2 className="cjk font-label-lg text-label-lg">对局历史</h2>
+                {activeMatch ? (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                    对手 {activeMatch.opponent} · {matchResult(activeMatch)} · {activeMatch.ply} 手 · {new Date(activeMatch.playedAt).toLocaleDateString("zh-CN")}
+                  </p>
+                ) : (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">选择一局已完成或进行中的对局</p>
+                )}
+              </div>
+              {signedIn === true && matches.length > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  aria-expanded={historyOpen}
+                  aria-controls="match-history-list"
+                  onClick={() => setHistoryOpen((open) => !open)}
+                  className="h-11 rounded-none px-3 text-secondary shrink-0"
+                >
+                  <span className="material-symbols-outlined" aria-hidden="true">{historyOpen ? "expand_less" : "expand_more"}</span>
+                  <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
+                </Button>
+              )}
+            </div>
             {signedIn === false && (
-              <div className="grid gap-2">
+              <div className="grid gap-2 px-space-sm pb-space-sm">
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant">登录后这里会列出你的每一局天梯对局，可逐手回放并查看点评。</p>
                 <Link to="/auth" className="h-11 flex items-center justify-center bg-secondary text-on-secondary cjk font-label-md text-label-md">去登录</Link>
               </div>
             )}
-            {signedIn === true && listQ.isLoading && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">正在读取…</p>}
+            {signedIn === true && listQ.isLoading && <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">正在读取…</p>}
             {signedIn === true && !listQ.isLoading && matches.length === 0 && (
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先去对弈一局吧。</p>
+              <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先去对弈一局吧。</p>
             )}
-            <div className="grid gap-1 max-h-[46vh] overflow-y-auto overscroll-contain">
+            <div
+              id="match-history-list"
+              hidden={!historyOpen}
+              className="review-history-list grid gap-1 max-h-[min(42vh,430px)] overflow-y-auto overscroll-contain border-t border-outline-variant/30 p-2"
+            >
               {matches.map((m) => {
                 const active = m.id === activeId;
-                const result = m.outcome ? (m.outcome === "draw" ? "和棋" : m.outcome === (m.you === "w" ? "white" : "black") ? "胜" : "负") : "进行中";
+                const result = matchResult(m);
                 return (
                   <button
                     key={m.id}
-                    onClick={() => setMatchId(m.id)}
+                    onClick={() => {
+                      setMatchId(m.id);
+                      setHistoryOpen(false);
+                    }}
                     className={`min-h-14 px-2 py-2 text-left transition-colors ${active ? "bg-primary-container text-on-primary-container" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
                   >
                     <span className="cjk block font-label-md text-label-md truncate">对手 {m.opponent}</span>
@@ -158,12 +200,13 @@ function Analysis() {
             </div>
           </section>
 
-          <section aria-label="逐手复盘" className="grid gap-space-sm min-w-0">
-            <div className="flex justify-center">
-              <PlayableBoard fen={fen} lastMove={undefined} disabled onMove={() => {}} />
-            </div>
+          <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,660px)_minmax(320px,1fr)] xl:items-start">
+            <div className="review-playback grid gap-space-sm min-w-0">
+              <div className="review-board flex justify-center">
+                <PlayableBoard fen={fen} lastMove={undefined} disabled onMove={() => {}} />
+              </div>
 
-            <div className="bg-surface-container-low p-space-sm gold-hairline grid gap-2">
+              <div className="review-controls bg-surface-container-low p-space-sm gold-hairline grid gap-2">
               <div className="flex items-center justify-between gap-2">
                 <span className="cjk font-label-md text-label-md">
                   {current ? `第 ${current.ply} 手 ${current.san}` : "起始局面"}
@@ -176,15 +219,16 @@ function Analysis() {
                   {current.swing >= 0 ? `多得 ${(current.swing / 100).toFixed(2)} 兵的优势` : `损失 ${(Math.abs(current.swing) / 100).toFixed(2)} 兵的优势`}
                 </p>
               )}
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <Button onClick={() => setIndex(0)} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface">起始</Button>
                 <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface">上一手</Button>
                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="h-12 rounded-none bg-secondary text-on-secondary">下一手</Button>
                 <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="h-12 rounded-none bg-surface-container text-on-surface">终局</Button>
               </div>
+              </div>
             </div>
 
-            <div className="grid gap-space-sm md:grid-cols-2">
+            <div className="review-insights grid gap-space-sm md:grid-cols-2 xl:grid-cols-1">
               <div className="bg-surface-container-low p-space-sm gold-hairline">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
