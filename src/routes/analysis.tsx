@@ -101,8 +101,10 @@ function Analysis() {
   });
 
   const matches = listQ.data ?? [];
-  const activeId = matchId ?? matches[0]?.id ?? null;
-  const activeMatch = matches.find((match) => match.id === activeId) ?? matches[0];
+  // 默认选中最近一局“有着法”的对局，空局（0 手）不会让复盘区看起来是空的
+  const firstPlayed = matches.find((m) => (m.ply ?? 0) > 0) ?? matches[0];
+  const activeId = matchId ?? firstPlayed?.id ?? null;
+  const activeMatch = matches.find((match) => match.id === activeId) ?? firstPlayed;
 
   const detailQ = useQuery({
     queryKey: ["match-review", activeId],
