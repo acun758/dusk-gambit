@@ -27,6 +27,14 @@ export function PlayableBoard({
   const [selected, setSelected] = useState<Square | null>(null);
   const legalMoves = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }) : [], [chess, selected]);
   const targets = useMemo(() => legalMoves.map((m) => m.to), [legalMoves]);
+  const moveTrail = useMemo(() => {
+    if (!lastMove || lastMove.length < 4) return null;
+    const point = (square: string) => ({
+      x: (square.charCodeAt(0) - 96 - 0.5) * 12.5,
+      y: (8 - Number(square[1]) + 0.5) * 12.5,
+    });
+    return { from: point(lastMove.slice(0, 2)), to: point(lastMove.slice(2, 4)) };
+  }, [lastMove]);
   const checkedKing = useMemo(() => {
     if (!chess.inCheck()) return null;
     for (const rank of "12345678") {
@@ -58,6 +66,13 @@ export function PlayableBoard({
         <i /><i /><i /><i /><i /><i />
       </div>
       <div className="board-grid grid grid-cols-8 grid-rows-8">
+        {moveTrail && (
+          <svg className={`board-move-trail ${lastMoveWasCapture ? "is-capture" : ""}`} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line x1={moveTrail.from.x} y1={moveTrail.from.y} x2={moveTrail.to.x} y2={moveTrail.to.y} pathLength="1" />
+            <circle cx={moveTrail.from.x} cy={moveTrail.from.y} r="1.1" />
+            <circle cx={moveTrail.to.x} cy={moveTrail.to.y} r="1.7" />
+          </svg>
+        )}
         {Array.from({ length: 64 }, (_, i) => {
           const file = i % 8;
           const rank = 8 - Math.floor(i / 8);
