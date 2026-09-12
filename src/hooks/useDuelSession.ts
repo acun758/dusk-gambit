@@ -44,6 +44,11 @@ export interface DuelSession {
   /** 真人对局中双方的实时积分，每一步与重连后都会刷新 */
   ratings: DuelRatings | null;
   resumed: boolean;
+  /** 本地陪练可暂停；真人天梯由服务端仲裁，不可暂停 */
+  canPause: boolean;
+  paused: boolean;
+  togglePause: () => void;
+  restart: () => void;
   setAiLevel: (id: AiLevelId) => void;
   startRanked: () => void;
   playMove: (uci?: string) => void;
@@ -152,6 +157,8 @@ export function useDuelSession(): DuelSession {
   const [matchmakingKey, setMatchmakingKey] = useState(0);
   const [ratings, setRatings] = useState<DuelRatings | null>(null);
   const [resumed, setResumed] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [localKey, setLocalKey] = useState(0);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
 
@@ -323,7 +330,7 @@ export function useDuelSession(): DuelSession {
 
   useEffect(() => {
     if (mode !== "local") return;
-    if (!clientRef.current) clientRef.current = new DuelClient("blitz-3-2-demo", "w", levelId);
+    if (!clientRef.current) clientRef.current = new DuelClient(`blitz-3-2-${localKey}`, "w", levelId);
     const client = clientRef.current;
     setLocalState(client.snapshot);
     const apply = (msg: ServerMessage) => {
@@ -381,7 +388,27 @@ export function useDuelSession(): DuelSession {
       off();
       client.disconnect();
     };
-  }, [mode]);
+  }, [mode, localKey]);
+
+  const togglePause = useCallback(() => {
+    const client = clientRef.current;
+    if (!client) return;
+    const next = !client.isPaused;
+    client.setPaused(next);
+    setPaused(next);
+  }, []);
+
+  /** 重新开始：仅本地陪练可用，清空棋谱与时钟重开一局 */
+  const restart = useCallback(() => {
+    clientRef.current?.disconnect();
+    clientRef.current = null;
+    setLocalState(null);
+    setPaused(false);
+    setNotice(null);
+    setMode("local");
+    setPhase("connecting");
+    setLocalKey((k) => k + 1);
+  }, []);
 
   const setAiLevel = useCallback((id: AiLevelId) => {
     setLevelId(id);
@@ -492,6 +519,10 @@ export function useDuelSession(): DuelSession {
         aiLevelId: levelId,
         ratings,
         resumed,
+        canPause: false,
+        paused: false,
+        togglePause,
+        restart,
         setAiLevel,
         startRanked,
         playMove,
