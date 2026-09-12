@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DuelClient } from "@/lib/duel-client";
 import { supabase } from "@/integrations/supabase/client";
-import { claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
+import { cancelWaitingMatch, claimTimeout, findMatch, getMatch, resignMatch, submitMove } from "@/lib/game.functions";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/lib/local-engine";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
@@ -18,6 +18,7 @@ export interface DuelSession {
   movePending: boolean;
   aiLevelId: AiLevelId;
   setAiLevel: (id: AiLevelId) => void;
+  startRanked: () => void;
   playMove: (uci?: string) => void;
   resign: () => void;
   simulateDrop: () => void;
@@ -31,20 +32,6 @@ export function fmtClock(ms: number): string {
   const tenth = ms < 20_000 ? `.${Math.floor((Math.max(0, ms) % 1000) / 100)}` : "";
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}${tenth}`;
 }
-
-/** 演示用的着法序列——真实引擎（Cocos WASM，深度 4~6）接入后替换这里即可。 */
-const SCRIPT = [
-  { uci: "e2e4", san: "e4", zh: "王前兵开局", cp: 24 },
-  { uci: "c7c5", san: "c5", zh: "西西里防御", cp: 18 },
-  { uci: "g1f3", san: "Nf3", zh: "出马控中", cp: 31 },
-  { uci: "d7d6", san: "d6", zh: "稳固中心", cp: 27 },
-  { uci: "d2d4", san: "d4", zh: "中心突破", cp: 44 },
-  { uci: "c5d4", san: "cxd4", zh: "兑子换线", cp: 36 },
-  { uci: "f3d4", san: "Nxd4", zh: "马占要津", cp: 52 },
-  { uci: "g8f6", san: "Nf6", zh: "反压中心", cp: 41 },
-  { uci: "b1c3", san: "Nc3", zh: "双马联防", cp: 58 },
-  { uci: "a7a6", san: "a6", zh: "纳道尔夫", cp: 47 },
-];
 
 interface MatchRowLite {
   id: string;
@@ -135,6 +122,7 @@ export function useDuelSession(): DuelSession {
   const [movePending, setMovePending] = useState(false);
   const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
+  const [matchmakingKey, setMatchmakingKey] = useState(0);
   const lastSeq = useRef(0);
   const matchRef = useRef<MatchRowLite | null>(null);
 
@@ -172,7 +160,7 @@ export function useDuelSession(): DuelSession {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [matchmakingKey]);
 
   // realtime：对手落子与对局状态
   useEffect(() => {
@@ -308,7 +296,21 @@ export function useDuelSession(): DuelSession {
   const setAiLevel = useCallback((id: AiLevelId) => {
     setLevelId(id);
     clientRef.current?.setLevel(id);
+    const waitingId = matchRef.current?.status === "waiting" ? matchRef.current.id : null;
+    if (waitingId) void cancelWaitingMatch({ data: { matchId: waitingId } });
+    matchRef.current = null;
+    setCloud(null);
     setMode("local");
+  }, []);
+
+  const startRanked = useCallback(() => {
+    clientRef.current?.disconnect();
+    clientRef.current = null;
+    setLocalState(null);
+    setNotice(null);
+    setMode("cloud");
+    setPhase("connecting");
+    setMatchmakingKey((key) => key + 1);
   }, []);
 
   /* --------------------------------- actions --------------------------------- */
@@ -320,7 +322,8 @@ export function useDuelSession(): DuelSession {
     }
     const m = matchRef.current;
     if (!m || m.status !== "live" || movePending) return;
-    const s = uci ? { uci, san: uci, zh: "实战落子", cp: m.cp } : SCRIPT[m.ply % SCRIPT.length]!;
+    if (!uci) return;
+    const s = { uci, san: uci, zh: "实战落子", cp: m.cp };
     setMovePending(true);
     setNotice(null);
     void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
@@ -398,6 +401,7 @@ export function useDuelSession(): DuelSession {
         movePending,
         aiLevelId: levelId,
         setAiLevel,
+        startRanked,
         playMove,
         resign,
         simulateDrop,
@@ -431,11 +435,12 @@ export function useDuelSession(): DuelSession {
       movePending,
       aiLevelId: levelId,
       setAiLevel,
+      startRanked,
       playMove,
       resign,
       simulateDrop,
       useLocalPractice,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, levelId, tick]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick]);
 }
