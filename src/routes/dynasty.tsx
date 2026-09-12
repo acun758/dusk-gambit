@@ -37,12 +37,16 @@ interface ProgressRow {
 }
 
 const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords" },
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown", accent: "from-primary/70 via-primary/20 to-transparent" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "workspace_premium", accent: "from-secondary/60 via-secondary/15 to-transparent" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "military_tech", accent: "from-secondary/45 via-secondary/10 to-transparent" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "shield", accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "swords", accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
 ];
+
+function tierOf(elo: number) {
+  return TIERS.find((x) => elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+}
 
 function Dynasty() {
   const t = useT();
@@ -56,6 +60,12 @@ function Dynasty() {
     queryKey: ["endgame-progress", signedIn],
     queryFn: () => (signedIn ? (loadEndgameProgress() as Promise<ProgressRow[]>) : Promise.resolve([])),
   });
+  const ladderQ = useQuery({
+    queryKey: ["ladder-board"],
+    queryFn: () => listLadder() as Promise<LadderRow[]>,
+    refetchInterval: 30_000,
+  });
+
 
   const levels = levelsQ.data ?? [];
   const solvedIds = useMemo(
