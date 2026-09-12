@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
 import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
+import { OpponentPanel } from "@/components/OpponentPanel";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
