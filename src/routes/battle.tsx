@@ -32,7 +32,7 @@ function Battle() {
   const coach = getCoachInsight(session.state.fen, session.moves, ranked);
   return (
     <div className="min-h-screen bg-surface text-on-surface pb-32 lg:pb-space-lg">
-      <header className="fixed top-0 inset-x-0 lg:left-56 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
+      <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><span className="material-symbols-outlined">arrow_back</span></Link>
           <div className="flex-1 min-w-0">
@@ -43,7 +43,7 @@ function Battle() {
         </div>
       </header>
 
-      <main className="pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg lg:px-space-lg">
+      <main className="desktop-page-container pt-16 px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg">
         <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
           <PlayerBar name={opponent.name} elo={opponent.elo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 

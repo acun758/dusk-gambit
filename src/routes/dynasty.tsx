@@ -102,7 +102,7 @@ function Dynasty() {
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:pt-24">
+      <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:pt-20">
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0">
           {/* 当前段位 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">

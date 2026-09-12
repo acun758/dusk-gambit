@@ -63,18 +63,18 @@
   --spacing-space-xs: 0.25rem;
   --font-cjk-sans: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-cjk-serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  --font-body-lg: Geist, var(--font-cjk-sans);
-  --font-body-md: Geist, var(--font-cjk-sans);
-  --font-body-sm: Geist, var(--font-cjk-sans);
-  --font-headline-lg: Bodoni Moda, var(--font-cjk-serif);
-  --font-headline-lg-mobile: Bodoni Moda, var(--font-cjk-serif);
-  --font-headline-md: Bodoni Moda, var(--font-cjk-serif);
-  --font-headline-sm: Bodoni Moda, var(--font-cjk-serif);
-  --font-headline-xl: Bodoni Moda, var(--font-cjk-serif);
-  --font-headline-xl-mobile: Bodoni Moda, var(--font-cjk-serif);
-  --font-label-lg: Geist, var(--font-cjk-sans);
-  --font-label-md: Geist, var(--font-cjk-sans);
-  --font-label-sm: Geist, var(--font-cjk-sans);
+  --font-body-lg: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-body-md: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-body-sm: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-headline-lg: "Libre Baskerville", var(--font-cjk-serif);
+  --font-headline-lg-mobile: "Libre Baskerville", var(--font-cjk-serif);
+  --font-headline-md: "Libre Baskerville", var(--font-cjk-serif);
+  --font-headline-sm: "Libre Baskerville", var(--font-cjk-serif);
+  --font-headline-xl: "Libre Baskerville", var(--font-cjk-serif);
+  --font-headline-xl-mobile: "Libre Baskerville", var(--font-cjk-serif);
+  --font-label-lg: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-label-md: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-label-sm: "IBM Plex Sans", var(--font-cjk-sans);
   --text-body-lg: 16px;
   --text-body-lg--line-height: 27px;
   --text-body-lg--font-weight: 400;
@@ -249,6 +249,22 @@
     padding-bottom: 3rem;
   }
 
+  .desktop-page-header {
+    left: 14rem;
+    width: calc(100% - 14rem);
+  }
+
+  .desktop-page-container {
+    width: min(100%, 1280px);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .desktop-content-flow {
+    width: min(100%, 1280px);
+    margin-inline: auto;
+  }
+
 }
 
 /* Below the rail breakpoint the bottom bar is visible — keep content clear of it. */
@@ -321,6 +337,11 @@
   width: var(--review-core-width);
 }
 
+.review-insights {
+  width: min(100%, 640px);
+  margin-inline: auto;
+}
+
 .review-board,
 .review-controls,
 .review-board .game-board {
@@ -385,6 +406,21 @@
   .review-playback,
   .review-history {
     margin-inline: 0;
+  }
+
+  .review-history {
+    width: 100%;
+  }
+
+  .review-insights {
+    width: auto;
+    margin-inline: 0;
+  }
+
+  .review-layout {
+    grid-template-columns: minmax(0, 640px) minmax(340px, 380px);
+    justify-content: center;
+    gap: 2rem;
   }
 }
 
