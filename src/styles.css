@@ -276,6 +276,41 @@
   aspect-ratio: 1;
 }
 
+/* Review gives the board visual priority without changing the live-board cap. */
+.review-board .game-board {
+  width: min(100%, 620px);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .review-board .ipad-board {
+    width: min(600px, calc(100vw - 5rem));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 1023px) {
+  .review-layout {
+    grid-template-columns: minmax(280px, calc(100dvh - 6.5rem)) minmax(280px, 1fr);
+    align-items: start;
+  }
+
+  .review-playback {
+    position: sticky;
+    top: 4.5rem;
+  }
+
+  .review-board .game-board {
+    width: min(100%, calc(100dvh - 7.5rem));
+  }
+
+  .review-controls .grid-cols-2 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .review-history-list {
+    max-height: 48dvh;
+  }
+}
+
 .board-stage {
   position: relative;
   padding: clamp(8px, 1.6vw, 14px);
