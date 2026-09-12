@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Chess } from "chess.js";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getMatch, listMyMatches } from "@/lib/game.functions";
+import { explainMatch } from "@/lib/ai-review.functions";
 import { evaluateDeep } from "@/lib/local-engine";
+
+const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
 export const Route = createFileRoute("/analysis")({
   head: () => ({
