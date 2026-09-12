@@ -60,9 +60,23 @@ export class DuelClient {
   constructor(
     private matchId: string,
     private you: Color = "w",
+    private levelId: AiLevelId = "club",
   ) {
-    this.state = baseState(matchId, you);
+    this.state = baseState(matchId, you, levelId);
     this.url = (import.meta.env["VITE_DUEL_WS_URL"] as string | undefined) || undefined;
+  }
+
+  /** 切换 AI 陪练段位（立即生效于下一手）。 */
+  setLevel(levelId: AiLevelId) {
+    this.levelId = levelId;
+    const level = aiLevel(levelId);
+    this.state.players = { ...this.state.players, b: { name: `AI · ${level.zh}`, elo: level.elo } };
+    this.state.depth = level.depth;
+    this.emit({ t: "state", seq: ++this.seq, ...this.state }, this.phase === "idle" ? "live" : this.phase);
+  }
+
+  get levels() {
+    return AI_LEVELS;
   }
 
   get snapshot(): DuelState {
