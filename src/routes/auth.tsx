@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -67,7 +68,8 @@ function AuthPage() {
   }
 
   return (
-    <div className="bg-surface text-on-surface min-h-screen flex items-center justify-center px-margin-mobile py-space-lg">
+    <div className="themed-page text-on-surface min-h-screen flex items-center justify-center px-margin-mobile py-space-lg">
+      <ThemeBackdrop theme="gothic" />
       <div className="w-full max-w-sm bg-surface-container-low p-space-lg flex flex-col gap-space-md gold-hairline">
         <div className="flex flex-col gap-1">
           <span className="font-label-sm text-label-sm uppercase tracking-[0.25em] text-on-surface-variant">

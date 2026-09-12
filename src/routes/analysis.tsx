@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Chess } from "chess.js";
@@ -121,7 +122,8 @@ function Analysis() {
   const worst = useMemo(() => [...steps].sort((a, b) => a.swing - b.swing).slice(0, 3).filter((s) => s.swing < -40), [steps]);
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface pb-32 md:pb-space-lg">
+    <div className="themed-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
+      <ThemeBackdrop theme="fallen" />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <div className="min-w-0">

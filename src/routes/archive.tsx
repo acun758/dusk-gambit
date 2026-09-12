@@ -1,6 +1,7 @@
 import tarotKingAsset from "@/assets/tarot-king.jpg.asset.json";
 const posterThumb = tarotKingAsset.url;
 import { createFileRoute } from "@tanstack/react-router";
+import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 
 export const Route = createFileRoute("/archive")({
   head: () => ({
@@ -18,7 +19,8 @@ export const Route = createFileRoute("/archive")({
 
 function ArchiveChronicle() {
   return (
-    <div className="bg-surface text-on-surface flex flex-col min-h-screen">
+    <div className="themed-page text-on-surface flex flex-col min-h-screen">
+      <ThemeBackdrop theme="fallen" />
 <header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface"}>
 
 <div className={"fixed inset-0 pointer-events-none overflow-hidden -z-10"}>

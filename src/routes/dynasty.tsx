@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress } from "@/lib/game.functions";
@@ -69,7 +70,8 @@ function Dynasty() {
   const total = profile.wins + profile.losses + profile.draws;
 
   return (
-    <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
+    <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
+      <ThemeBackdrop theme="blackGold" />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
