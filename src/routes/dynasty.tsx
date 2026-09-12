@@ -103,8 +103,8 @@ function Dynasty() {
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 md:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)] md:items-start md:gap-space-lg md:px-space-lg lg:pt-24">
-        <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md md:mt-0">
+      <main className="mx-auto grid w-full max-w-[1180px] grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:pt-24">
+        <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0">
           {/* 当前段位 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <div className="flex items-start justify-between gap-space-sm">
@@ -194,7 +194,7 @@ function Dynasty() {
         </div>
 
         {/* 九重王座 + 试炼联动 */}
-        <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md md:mt-0 lg:sticky lg:top-24">
+        <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0 lg:sticky lg:top-24">
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-xs">
             <div className="flex items-center justify-between mb-space-xs">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
