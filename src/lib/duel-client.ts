@@ -55,6 +55,7 @@ export class DuelClient {
   private botTimer: ReturnType<typeof setTimeout> | null = null;
   private lastTs = 0;
   private phase: ConnectionPhase = "idle";
+  private paused = false;
   private readonly url: string | undefined;
 
   constructor(
@@ -117,6 +118,26 @@ export class DuelClient {
     this.startLocalArbiter(lastSeq);
   }
 
+  /** 本地陪练暂停/继续：停表并暂停 AI 思考。天梯真人局由服务端仲裁，不可暂停。 */
+  setPaused(next: boolean) {
+    if (this.url) return;
+    this.paused = next;
+    if (next) {
+      if (this.tick) clearInterval(this.tick);
+      if (this.botTimer) clearTimeout(this.botTimer);
+      this.tick = null;
+      this.botTimer = null;
+      return;
+    }
+    this.lastTs = Date.now();
+    this.tick = setInterval(() => this.tickClock(), 250);
+    this.scheduleBot();
+  }
+
+  get isPaused() {
+    return this.paused;
+  }
+
   disconnect() {
     if (this.tick) clearInterval(this.tick);
     if (this.botTimer) clearTimeout(this.botTimer);
@@ -176,7 +197,7 @@ export class DuelClient {
   }
 
   private tickClock() {
-    if (this.state.status !== "live") return;
+    if (this.state.status !== "live" || this.paused) return;
     const now = Date.now();
     const dt = now - this.lastTs;
     this.lastTs = now;
@@ -219,6 +240,7 @@ export class DuelClient {
   }
 
   private localHandle(msg: ClientMessage) {
+    if (this.paused) return;
     if (msg.t === "move") {
       if (this.state.turn !== this.you) {
         this.emit(

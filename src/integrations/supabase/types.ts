@@ -396,6 +396,7 @@ export type Database = {
           id: string
           losses: number
           name: string
+          real_name: string
           streak: number
           training_points: number
           updated_at: string
@@ -410,6 +411,7 @@ export type Database = {
           id: string
           losses?: number
           name?: string
+          real_name?: string
           streak?: number
           training_points?: number
           updated_at?: string
@@ -424,6 +426,7 @@ export type Database = {
           id?: string
           losses?: number
           name?: string
+          real_name?: string
           streak?: number
           training_points?: number
           updated_at?: string

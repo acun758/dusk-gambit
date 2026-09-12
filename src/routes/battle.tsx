@@ -35,6 +35,8 @@ function Battle() {
   const oppSide = session.state.you === "w" ? "b" : "w";
   const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
+  const myClock = session.clock[session.state.you];
+  const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
@@ -73,8 +75,44 @@ function Battle() {
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{waiting ? "保持页面开启，匹配成功后自动开局" : `点击棋子，再点击高亮目标格 · 评估 ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`}</p>
             </div>
-            {!waiting && <Button onClick={session.resign} variant="ghost" className="h-11 rounded-none bg-surface-container-high px-4 text-primary cjk font-label-sm text-label-sm shrink-0">认输</Button>}
+            <span className={`font-label-md text-label-md tabular-nums shrink-0 ${timeLevel === "critical" ? "text-primary animate-pulse" : timeLevel === "warn" ? "text-secondary" : "text-on-surface-variant"}`}>
+              {session.state.tc.label} · 余 {fmtClock(myClock)}
+            </span>
           </div>
+
+          {timeLevel !== "calm" && session.state.status === "live" && (
+            <p role="status" className={`battle-core-width cjk px-space-sm py-2 font-body-sm text-body-sm gold-hairline ${timeLevel === "critical" ? "bg-primary-container/40 text-on-primary-container" : "bg-surface-container-high text-on-surface-variant"}`}>
+              {timeLevel === "critical" ? `只剩 ${Math.ceil(myClock / 1000)} 秒，先落子保时间，每步加 2 秒。` : "剩余时间不足 1 分钟，注意读秒节奏。"}
+            </p>
+          )}
+
+          <div className="battle-core-width grid grid-cols-3 gap-2">
+            <Button
+              onClick={session.togglePause}
+              disabled={!session.canPause || session.state.status !== "live"}
+              variant="ghost"
+              className="h-12 rounded-none bg-surface-container text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <span className="material-symbols-outlined text-secondary">{session.paused ? "play_arrow" : "pause"}</span>
+              {session.paused ? "继续" : "暂停"}
+            </Button>
+            <Button
+              onClick={session.resign}
+              disabled={waiting || session.state.status !== "live"}
+              variant="ghost"
+              className="h-12 rounded-none bg-surface-container text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <span className="material-symbols-outlined">flag</span>
+              结束本局
+            </Button>
+            <Button onClick={session.restart} variant="ghost" className="h-12 rounded-none bg-surface-container text-secondary cjk font-label-sm text-label-sm">
+              <span className="material-symbols-outlined">refresh</span>
+              重新开始
+            </Button>
+          </div>
+          {!session.canPause && (
+            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。</p>
+          )}
           {session.notice && (
             <div role="status" className="battle-core-width bg-primary-container/30 px-space-sm py-3 flex items-center justify-between gap-3 gold-hairline">
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>

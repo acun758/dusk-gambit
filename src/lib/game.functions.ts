@@ -45,6 +45,7 @@ export interface ProfileRow {
   draws: number;
   streak: number;
   training_points: number;
+  real_name?: string;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -552,4 +553,21 @@ export const listDuelInvites = createServerFn({ method: "POST" })
       open: invites.filter((r) => r.host_id !== context.userId && !r.invited_id).map(shape),
       mine: invites.filter((r) => r.host_id === context.userId).map(shape)[0] ?? null,
     };
+  });
+
+/** 实名填写：约战与天梯对局前记录真实姓名，仅自己与服务端可见。 */
+export const saveRealName = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { realName: string }) => ({ realName: input.realName.trim().slice(0, 24) }))
+  .handler(async ({ data, context }) => {
+    if (data.realName.length < 2) throw new Error("real name too short");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("profiles")
+      .update({ real_name: data.realName, updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
   });

@@ -112,7 +112,8 @@ export function useProfile() {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") void refresh();
     });
-    const channel = supabase.channel("my-profile-live").on(
+    // 每个组件实例独立频道，避免多处同时使用 useProfile 时重复订阅报错
+    const channel = supabase.channel(`my-profile-live-${Math.random().toString(36).slice(2)}`).on(
       "postgres_changes",
       { event: "UPDATE", schema: "public", table: "profiles" },
       () => void refresh(),
