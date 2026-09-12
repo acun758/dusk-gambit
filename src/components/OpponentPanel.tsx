@@ -250,14 +250,55 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
         )}
 
         {tab === "lobby" && (
-          <div className="space-y-2">
-            {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。</p>}
-            {open.map((i) => (
-              <div key={i.code} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
-                <span className="min-w-0"><strong className="block truncate">{i.hostName}</strong><small className="text-on-surface-variant">{i.hostElo} ELO · {i.code}</small></span>
-                <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">应战</button>
+          <div className="space-y-space-sm">
+            <div className="relative overflow-hidden gold-hairline">
+              <img src={lobbyBanner} alt="约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章" loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent" />
+              <div className="absolute inset-0 p-3 flex flex-col justify-center">
+                <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">约 战 大 厅</span>
+                <span className="cjk font-label-md text-label-md text-on-surface">{statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.queueing ?? 0} 人排队</span>
               </div>
-            ))}
+            </div>
+
+            <div className="p-3 bg-surface-container gold-hairline">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">段位分布</p>
+              <ul className="mt-2 space-y-1.5">
+                {(statsQ.data?.tiers ?? []).map((t) => {
+                  const total = Math.max(1, (statsQ.data?.tiers ?? []).reduce((s, x) => s + x.count, 0));
+                  return (
+                    <li key={t.tier} className="flex items-center gap-2">
+                      <span className="cjk font-label-sm text-label-sm text-on-surface-variant w-24 shrink-0 truncate">{t.tierZh}</span>
+                      <span className="h-2 flex-1 bg-surface-container-highest overflow-hidden">
+                        <span className="block h-full bg-secondary/70" style={{ width: `${(t.count / total) * 100}%` }} />
+                      </span>
+                      <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums w-8 text-right">{t.count}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">公开约战</p>
+              {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。</p>}
+              {open.map((i) => (
+                <div key={i.code} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
+                  <span className="min-w-0"><strong className="block truncate">{i.hostName}</strong><small className="text-on-surface-variant">{i.hostElo} ELO · {i.code}</small></span>
+                  <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">应战</button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-1">
+              <p className="cjk font-label-sm text-label-sm text-on-surface">最近战报</p>
+              {(statsQ.data?.recent ?? []).length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有已结算的对局。</p>}
+              {(statsQ.data?.recent ?? []).map((m) => (
+                <p key={m.id} className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                  {m.white} vs {m.black} · {m.outcome === "1-0" ? "白胜" : m.outcome === "0-1" ? "黑胜" : "和棋"}
+                  {m.ratingDelta !== null && <span className="text-secondary tabular-nums"> · ±{Math.abs(m.ratingDelta)} 分</span>}
+                </p>
+              ))}
+            </div>
           </div>
         )}
       </div>
