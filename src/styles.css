@@ -452,18 +452,22 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .battle-column,
   .crucible-column {
-    --battle-core-width: min(100%, 640px);
-    --crucible-core-width: min(100%, 640px);
+    --battle-core-width: 100%;
+    --crucible-core-width: 100%;
   }
 
   .review-playback,
   .review-history {
-    --review-core-width: min(100%, 640px);
+    --review-core-width: 100%;
   }
 
   .app-shell main > .crucible-levels {
-    width: min(100%, 640px);
+    width: 100%;
     margin-inline: auto;
+  }
+
+  .review-insights {
+    width: 100%;
   }
 
   .crucible-level-list {
