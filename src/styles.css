@@ -355,16 +355,25 @@
   }
 }
 
-/* iPad portrait: full-width canvas, no side rail — just a comfortable inset. */
+/* iPad portrait uses the same outer gutter as the dashboard and ladder.
+   Never pad direct children again: that previously created a second inset on
+   board-led pages and made battle, crucible and review look phone-width. */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .app-shell main > div,
-  .app-shell main > section {
+  .desktop-page-container,
+  .desktop-content-flow {
+    width: 100%;
     max-width: none;
-    margin-inline: 0;
-    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
   }
+
+  .desktop-page-container > section,
+  .desktop-page-container > div {
+    padding-inline: 0;
+  }
+
   .ipad-board {
-    width: min(520px, calc(100vw - 4rem));
+    width: min(640px, calc(100vw - 3rem));
   }
 }
 
@@ -455,7 +464,6 @@
   .app-shell main > .crucible-levels {
     width: min(100%, 640px);
     margin-inline: auto;
-    padding-inline: 0;
   }
 
   .crucible-level-list {
