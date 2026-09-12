@@ -144,3 +144,14 @@ export function chooseMove(fen: string, level: AiLevel): EngineChoice | null {
     cp: Math.max(-2000, Math.min(2000, Math.round(picked.raw))),
   };
 }
+
+/** 复盘用：对给定局面做一次浅层搜索评估（白方视角，厘兵）。 */
+export function evaluateDeep(fen: string, depth = 2): number {
+  try {
+    const chess = new Chess(fen);
+    if (chess.isGameOver()) return evaluate(chess);
+    return search(chess, depth, -Infinity, Infinity);
+  } catch {
+    return 0;
+  }
+}
