@@ -132,7 +132,7 @@ function Crucible() {
 
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen pb-32">
-      <header className="fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)] lg:left-56 lg:w-[calc(100%-14rem)]">
+      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
