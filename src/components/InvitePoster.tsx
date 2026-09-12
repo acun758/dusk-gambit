@@ -34,6 +34,11 @@ export function InvitePoster({ compact = false }: { compact?: boolean }) {
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums">
           {profile.elo} 分 · 胜率 {winRate}% · ♦ {profile.diamonds}
         </p>
+        <p className="cjk font-label-sm text-label-sm">
+          {profile.realName
+            ? <span className="text-secondary">已实名 · {profile.realName} · 段位与积分实时同步</span>
+            : <span className="text-primary">未实名 · 约战与天梯前请先填写真实姓名</span>}
+        </p>
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant">系统按段位就近匹配，段位相近者优先。</p>
         <Link
           to="/battle"
