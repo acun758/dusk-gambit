@@ -234,7 +234,7 @@ function Dynasty() {
           </section>
 
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
-            <h2 className="font-headline-sm text-headline-sm tracking-wider">
+            <h2 className="font-headline-sm text-headline-sm tracking-wider whitespace-nowrap">
               <Bi zh="残局试炼联动" en="Crucible Link" />
             </h2>
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
