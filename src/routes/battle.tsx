@@ -35,6 +35,8 @@ function Battle() {
   const oppSide = session.state.you === "w" ? "b" : "w";
   const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
+  const myClock = session.clock[session.state.you];
+  const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
