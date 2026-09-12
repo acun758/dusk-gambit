@@ -571,3 +571,58 @@ export const saveRealName = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return row as ProfileRow;
   });
+
+/* ------------------------------ lobby stats ------------------------------- */
+
+export interface LobbyStats {
+  online: number;
+  queueing: number;
+  openInvites: number;
+  tiers: { tier: string; tierZh: string; count: number }[];
+  recent: { id: string; white: string; black: string; outcome: string | null; ratingDelta: number | null; playedAt: string }[];
+}
+
+const TIER_BUCKETS: { min: number; tier: string; tierZh: string }[] = [
+  { min: 2600, tier: "Sovereign", tierZh: "血誓君主" },
+  { min: 2500, tier: "Apex", tierZh: "神圣大宗师" },
+  { min: 2400, tier: "Grandmaster", tierZh: "宗师" },
+  { min: 2200, tier: "Master", tierZh: "大师" },
+  { min: 0, tier: "Knight", tierZh: "骑士" },
+];
+
+/** 约战大厅概况：在线人数、排队人数、段位分布与最近战报。 */
+export const getLobbyStats = createServerFn({ method: "GET" }).handler(async (): Promise<LobbyStats> => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const nowIso = new Date().toISOString();
+  const activeSince = new Date(Date.now() - 10 * 60_000).toISOString();
+
+  const [{ data: profiles }, { data: waiting }, { data: invites }, { data: recentRows }] = await Promise.all([
+    supabaseAdmin.from("profiles").select("elo,updated_at").limit(500),
+    supabaseAdmin.from("matches").select("id").eq("status", "waiting"),
+    supabaseAdmin.from("match_invites").select("code").eq("status", "open").gt("expires_at", nowIso),
+    supabaseAdmin.from("matches").select("id,white_name,black_name,outcome,rating_delta,last_move_at,status")
+      .eq("status", "over").order("last_move_at", { ascending: false }).limit(8),
+  ]);
+
+  const rows = profiles ?? [];
+  const tiers = TIER_BUCKETS.map((b) => ({
+    tier: b.tier,
+    tierZh: b.tierZh,
+    count: rows.filter((p) => p.elo >= b.min && p.elo < (TIER_BUCKETS.find((x) => x.min > b.min && x.min === Math.min(...TIER_BUCKETS.filter((y) => y.min > b.min).map((y) => y.min)))?.min ?? Infinity)).length,
+  }));
+
+  return {
+    online: rows.filter((p) => p.updated_at >= activeSince).length,
+    queueing: (waiting ?? []).length,
+    openInvites: (invites ?? []).length,
+    tiers,
+    recent: (recentRows ?? []).map((m) => ({
+      id: m.id,
+      white: m.white_name,
+      black: m.black_name,
+      outcome: m.outcome,
+      ratingDelta: m.rating_delta,
+      playedAt: m.last_move_at,
+    })),
+  };
+});
