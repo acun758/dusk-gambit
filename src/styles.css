@@ -251,6 +251,13 @@
 
 }
 
+/* Below the rail breakpoint the bottom bar is visible — keep content clear of it. */
+@media (max-width: 1023px) {
+  .app-shell main {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px) + 1rem);
+  }
+}
+
 /* iPad portrait: full-width canvas, no side rail — just a comfortable inset. */
 @media (min-width: 768px) and (max-width: 1023px) {
   .app-shell main > div,
