@@ -108,7 +108,7 @@ function Index() {
               <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-surface-container-lowest/60 to-surface-container-lowest pointer-events-none" />
               <div className="flex items-center justify-between gap-space-sm relative z-10">
                 <div className="flex items-center gap-space-xs min-w-0">
-                  <UiIcon name="gem" className="h-6 w-6" />
+                  <PlayerAvatar className="h-7 w-7" />
                   <span className="font-label-md text-label-md text-on-surface tracking-widest truncate">{profile.name}</span>
                 </div>
                 <div className="flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest shrink-0">
