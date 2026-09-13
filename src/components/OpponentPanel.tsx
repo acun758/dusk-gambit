@@ -51,7 +51,8 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   useEffect(() => {
     const saved = profileQ.data?.real_name ?? "";
     if (saved) setRealNameSaved(saved);
-  }, [profileQ.data?.real_name]);
+    setVerifyStatus(profileQ.data?.verify_status ?? "none");
+  }, [profileQ.data?.real_name, profileQ.data?.verify_status]);
 
   // 实名完成后从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
   const [autoQueued, setAutoQueued] = useState(false);
