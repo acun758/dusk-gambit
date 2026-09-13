@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
-import { GameIcon } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/crucible")({
   head: () => ({
@@ -149,7 +149,7 @@ function Crucible() {
             onClick={() => setBlind((b) => !b)}
             className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
           >
-            <GameIcon name={blind ? "trial-blind" : "trial-visible"} className="h-5 w-5" />
+            <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6" />
             <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
           </button>
         </div>
@@ -189,7 +189,7 @@ function Crucible() {
                       {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} {t("训练分", "TP")}
                     </span>
                   </span>
-                  <GameIcon name={p?.solved ? "trial-complete" : lock ? "status-lock" : "trial-enter"} className="h-6 w-6 shrink-0" />
+                  <UiIcon name={p?.solved ? "medal-star" : lock ? "seal" : "pawn-up"} className="h-6 w-6 shrink-0" />
                 </button>
               );
             })}
@@ -281,7 +281,7 @@ function Crucible() {
                   onClick={() => void submit()}
                   className="w-full py-space-md bg-primary-container text-on-primary-container disabled:opacity-40 flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
                 >
-                  <GameIcon name="trial-fire" className="h-7 w-7" />
+                  <UiIcon name="flame" className="h-7 w-7" />
                   <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
                     <Bi zh="提交心算解法" en="Submit Mental Line" />
                   </span>

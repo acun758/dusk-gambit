@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -86,7 +87,7 @@ function AuthPage() {
 
         <form onSubmit={submit} className="flex flex-col gap-space-sm">
           <label className="relative block">
-            <GameIcon name="auth-email" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="send" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
             <input
               type="email"
               required
@@ -97,7 +98,7 @@ function AuthPage() {
             />
           </label>
           <label className="relative block">
-            <GameIcon name="auth-password" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="seal" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
             <input
               type="password"
               required

@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import type { DuelSession } from "@/hooks/useDuelSession";
 import { fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
-import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 type TabKey = "log" | "mind" | "spoils" | "review";
 export type PanelVariant = "duel" | "review";
 
-const TABS: { key: TabKey; label: string; zh: string; icon: GameIconName }[] = [
-  { key: "log", label: "Log", zh: "棋谱", icon: "panel-log" },
-  { key: "mind", label: "Mind", zh: "心智", icon: "panel-mind" },
-  { key: "spoils", label: "Spoils", zh: "战利", icon: "panel-spoils" },
-  { key: "review", label: "Review", zh: "分析", icon: "panel-analysis" },
+const TABS: { key: TabKey; label: string; zh: string; icon: UiIconName }[] = [
+  { key: "log", label: "Log", zh: "棋谱", icon: "note" },
+  { key: "mind", label: "Mind", zh: "心智", icon: "lotus" },
+  { key: "spoils", label: "Spoils", zh: "战利", icon: "token" },
+  { key: "review", label: "Review", zh: "分析", icon: "equalizer" },
 ];
 
 const MISTAKES = [
@@ -268,7 +268,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
               : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
           }`}
         >
-          <GameIcon name={t.icon} className="h-5 w-5" />
+          <UiIcon name={t.icon} className="h-5 w-5" />
           <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{t.zh}</span>
         </button>
       ))}
@@ -307,7 +307,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
                 {variant === "review" ? "棋谱 · 心智 · 战利 · 分析" : "棋谱 · 心智 · 战利品"}
               </span>
             </span>
-            <GameIcon name={open ? "action-expand" : "action-collapse"} className="h-6 w-6 opacity-80" />
+            <UiIcon name={open ? "eye" : "sliders"} className="h-6 w-6 opacity-80" />
           </button>
           <div
             className="overflow-hidden transition-[max-height,opacity] duration-250 ease-out"
@@ -332,8 +332,8 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
       </div>
 
       {/* Wide: live right column (iPad landscape / desktop) */}
-      <aside className="hidden lg:flex flex-col gap-space-sm w-[290px] xl:w-[340px] shrink-0 self-start sticky top-20">
-        <div className="bg-surface-container-lowest p-space-md flex flex-col gap-space-sm gold-hairline shadow-xl">
+      <aside className="duel-live-panel hidden lg:flex flex-col gap-space-sm w-[290px] xl:w-[340px] shrink-0 self-start sticky top-20">
+        <div className="stage-panel bg-surface-container-lowest p-space-md flex flex-col gap-space-sm gold-hairline shadow-xl">
           <div className="flex items-baseline justify-between">
             <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{evalText}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
