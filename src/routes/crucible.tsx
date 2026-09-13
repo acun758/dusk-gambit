@@ -149,7 +149,7 @@ function Crucible() {
             onClick={() => setBlind((b) => !b)}
             className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
           >
-            <span className="material-symbols-outlined text-[18px]">{blind ? "visibility_off" : "visibility"}</span>
+            <GameIcon name={blind ? "trial-blind" : "trial-visible"} className="h-5 w-5" />
             <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
           </button>
         </div>

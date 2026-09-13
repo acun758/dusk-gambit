@@ -46,7 +46,7 @@ export function InvitePoster({ compact = false }: { compact?: boolean }) {
           className="cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 bg-primary-container px-4 text-on-primary-container font-label-sm text-label-sm"
         >
           发起 3+2 约战
-          <GameIcon name="match" className="h-6 w-6" />
+          <GameIcon name="duel-match" className="h-6 w-6" />
         </Link>
       </div>
     </section>
