@@ -59,15 +59,15 @@ export function SovereignNav() {
       </div>
 
       {/* iPad landscape and desktop: left rail */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
-        <div className="px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
-          <div className="font-headline-sm text-headline-sm tracking-widest uppercase text-secondary">
+      <aside className="sovereign-rail hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
+        <div className="rail-brand px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
+          <div className="rail-brand-title font-headline-sm text-headline-sm uppercase text-secondary">
             Blood Sovereign
           </div>
-          <div className="cjk font-label-sm text-label-sm tracking-widest text-on-surface-variant">
+          <div className="rail-brand-subtitle cjk font-label-sm text-label-sm text-on-surface-variant">
             猩红王权 · 王座殿堂
           </div>
-          <div className="flex flex-wrap items-center gap-space-xs mt-1">
+          <div className="rail-account flex flex-wrap items-center gap-space-xs mt-1">
             <LangToggle />
             <Link
               to="/auth"
@@ -90,7 +90,7 @@ export function SovereignNav() {
               }`}
             >
               <UiIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-65 grayscale-[25%]"}`} />
-              <span className="font-label-lg text-label-lg uppercase tracking-widest">
+              <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
             </Link>
@@ -106,7 +106,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="forge" className="h-7 w-7" />军械典藏
+            <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">军械典藏</span>
           </Link>
         </div>
       </aside>

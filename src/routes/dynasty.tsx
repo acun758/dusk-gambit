@@ -40,11 +40,11 @@ interface ProgressRow {
 }
 
 const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" as UiIconName, accent: "from-primary/70 via-primary/20 to-transparent" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "medal-star" as UiIconName, accent: "from-secondary/60 via-secondary/15 to-transparent" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "medal-laurel" as UiIconName, accent: "from-secondary/45 via-secondary/10 to-transparent" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "badge-hex" as UiIconName, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "shield" as UiIconName, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" as UiIconName, art: "rank-sovereign" as const, accent: "from-primary/70 via-primary/20 to-transparent" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "medal-star" as UiIconName, art: "rank-apex" as const, accent: "from-secondary/60 via-secondary/15 to-transparent" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "medal-laurel" as UiIconName, art: "rank-grandmaster" as const, accent: "from-secondary/45 via-secondary/10 to-transparent" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "badge-hex" as UiIconName, art: "rank-master" as const, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "shield" as UiIconName, art: "rank-knight" as const, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
 ];
 
 function tierOf(elo: number) {
@@ -126,8 +126,8 @@ function Dynasty() {
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <div className="flex items-start justify-between gap-space-sm">
               <div className="flex items-center gap-space-md min-w-0">
-                <div className="w-16 h-16 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
-                  <UiIcon name={current.icon} className="h-12 w-12" />
+                <div className="rank-hero-mark w-20 h-20 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
+                  <GameIcon name={current.art} className="h-[4.5rem] w-[4.5rem]" />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>

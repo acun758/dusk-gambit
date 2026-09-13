@@ -10,6 +10,7 @@ import { getMatch, listMyMatches } from "@/lib/game.functions";
 import { explainMatch } from "@/lib/ai-review.functions";
 import { evaluateDeep } from "@/lib/local-engine";
 import { GameIcon } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
@@ -179,7 +180,7 @@ function Analysis() {
                   onClick={() => setHistoryOpen((open) => !open)}
                   className="h-11 rounded-none px-3 text-secondary shrink-0"
                 >
-                  <GameIcon name={historyOpen ? "action-collapse" : "action-expand"} className="h-5 w-5" />
+                  <UiIcon name={historyOpen ? "eye" : "scroll"} className="h-5 w-5" />
                   <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
                 </Button>
               )}
@@ -242,10 +243,10 @@ function Analysis() {
                 </p>
               )}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <Button onClick={() => setIndex(0)} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface">起始</Button>
-                <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface">上一手</Button>
-                <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="h-12 rounded-none bg-secondary text-on-secondary">下一手</Button>
-                <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="h-12 rounded-none bg-surface-container text-on-surface">终局</Button>
+                <Button onClick={() => setIndex(0)} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />起始</Button>
+                <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />上一手</Button>
+                <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="h-12 rounded-none bg-secondary text-on-secondary"><UiIcon name="play-motion" className="h-5 w-5" />下一手</Button>
+                <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />终局</Button>
               </div>
               </div>
             </div>
