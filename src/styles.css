@@ -228,6 +228,25 @@
   filter: drop-shadow(0 1px 3px color-mix(in oklab, var(--color-surface) 72%, transparent));
 }
 
+.ui-icon {
+  display: block;
+  flex: none;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(0 1px 2px color-mix(in oklab, var(--color-surface) 65%, transparent));
+}
+
+.player-mark {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  background: var(--color-surface-container-highest);
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 52%, transparent);
+  box-shadow: inset 0 0 0 2px var(--color-surface-container-lowest);
+}
+
 /* Responsive artwork supplied as one composition for each device family.
    It is intentionally subdued so boards, controls and bilingual text remain primary. */
 .themed-page {

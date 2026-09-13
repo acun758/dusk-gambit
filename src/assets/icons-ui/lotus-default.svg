@@ -1,0 +1,8 @@
+<!-- lotus / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 19 C12 19 8 16 8 12 C8 9 10 7 12 7 C14 7 16 9 16 12 C16 16 12 19 12 19Z"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 19 C12 19 6 17 5 13 C4.5 10.5 6 8.5 8 8 C9 8 10 9 10 10"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 19 C12 19 18 17 19 13 C19.5 10.5 18 8.5 16 8 C15 8 14 9 14 10"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="9" y1="20" x2="15" y2="20"/>
+</svg>

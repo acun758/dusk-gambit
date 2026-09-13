@@ -1,0 +1,7 @@
+<!-- note / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<ellipse fill="currentColor" stroke="none" cx="8" cy="18" rx="3" ry="2" transform="rotate(-15,8,18)"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="10.5" y1="17.5" x2="10.5" y2="7"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M10.5 7 C13 6 16 7 17 9 C17.5 10 17 11 16 11.5"/>
+</svg>

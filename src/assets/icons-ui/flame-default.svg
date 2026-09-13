@@ -1,0 +1,7 @@
+<!-- flame / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 3 C10 6 7 8 7 12 C7 15.5 9.5 18 12 19 C14.5 18 17 15.5 17 12 C17 8 14 6 12 3Z"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 19 C10.5 18 9 16.5 9 14.5 C9 12.5 10.5 11 12 10 C13.5 11 15 12.5 15 14.5 C15 16.5 13.5 18 12 19Z"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="9" y1="20" x2="15" y2="20"/>
+</svg>

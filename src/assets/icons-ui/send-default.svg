@@ -1,0 +1,7 @@
+<!-- send / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<polygon fill="currentColor" stroke="none" points="3,12 21,4 13,21"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="13" y1="21" x2="10" y2="14"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="3" y1="12" x2="10" y2="14"/>
+</svg>

@@ -1,0 +1,8 @@
+<!-- wallpaper / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="6" y="3" width="12" height="18" rx="2"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M8 16 C9 14 10 13 11 14 C12 15 13 14 14 13 C15 12 16 13 16 14"/>
+<circle stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" cx="15" cy="8" r="1.5"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M17 5 C18.5 5.5 19 6.5 18.5 7.5"/>
+</svg>

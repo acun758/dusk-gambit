@@ -8,6 +8,7 @@ import { GAME_ART } from "@/lib/game-art-assets";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
 import { GameIcon } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 const HERO_PORTRAIT = GAME_ART.heroPortrait;
 const HERO_VIDEO = GAME_ART.heroVideo;
@@ -54,7 +55,7 @@ function Index() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
-              <GameIcon name="brand-emblem" label={t("血誓王权徽章", "Blood Sovereign emblem")} className="w-full h-full" />
+              <UiIcon name="chip-king" label={t("血誓王权徽章", "Blood Sovereign emblem")} className="h-9 w-9" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -73,7 +74,7 @@ function Index() {
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
             <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
-              <GameIcon name="currency-diamond" className="h-5 w-5" />
+              <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
               </span>
@@ -99,7 +100,7 @@ function Index() {
               <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-surface-container-lowest/60 to-surface-container-lowest pointer-events-none" />
               <div className="flex items-center justify-between gap-space-sm relative z-10">
                 <div className="flex items-center gap-space-xs min-w-0">
-                  <GameIcon name="currency-diamond" className="h-5 w-5" />
+                  <UiIcon name="gem" className="h-6 w-6" />
                   <span className="font-label-md text-label-md text-on-surface tracking-widest truncate">{profile.name}</span>
                 </div>
                 <div className="flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest shrink-0">
@@ -203,7 +204,7 @@ function Index() {
                 <span className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed min-w-0">
                   {t("登录后段位、钻石与胜率由服务端结算，天梯对局才会计分。", "Sign in so rank, diamonds and win rate are settled server-side.")}
                 </span>
-                <GameIcon name="action-forward" className="h-5 w-5" />
+                <UiIcon name="send" className="h-6 w-6" />
               </Link>
             )}
 
@@ -232,7 +233,7 @@ function Index() {
               to="/battle"
               className="w-full py-space-md bg-primary-container hover:bg-inverse-primary text-on-primary-container active:scale-[0.99] transition-all flex items-center justify-center gap-space-sm shadow-[0_8px_24px_rgba(139,30,30,0.45)]"
             >
-              <GameIcon name="duel-match" className="h-5 w-5" />
+              <UiIcon name="shield" className="h-6 w-6" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
                 <Bi zh="开始 AI 分级陪练" en="Start AI Training" />
               </span>
@@ -276,7 +277,7 @@ function Index() {
                   {t("每关给出目标解法，解对即由服务端结算训练积分与钻石；不影响真人天梯段位。", "Each line is verified for training points and diamonds without changing ranked rating.")}
                 </p>
               </div>
-              <GameIcon name="coach-mind" className="h-5 w-5" />
+              <UiIcon name="lotus" className="h-8 w-8 shrink-0" />
             </Link>
           </section>
 
@@ -304,7 +305,7 @@ function Index() {
           </section>
 
           <footer className="py-space-lg flex flex-col items-center text-center gap-1">
-            <GameIcon name="duel-evaluation" className="h-5 w-5" />
+            <UiIcon name="equalizer" className="h-6 w-6" />
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-[0.2em]">
               {t("今日的每一步，都在铸造明日的王座。", "Every move today shapes your throne tomorrow.")}
             </p>

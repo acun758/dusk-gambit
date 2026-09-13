@@ -6,7 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
-import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { GameIcon } from "@/components/GameIcon";
+import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
@@ -39,11 +40,11 @@ interface ProgressRow {
 }
 
 const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "rank-sovereign" as GameIconName, accent: "from-primary/70 via-primary/20 to-transparent" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "rank-apex" as GameIconName, accent: "from-secondary/60 via-secondary/15 to-transparent" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "rank-grandmaster" as GameIconName, accent: "from-secondary/45 via-secondary/10 to-transparent" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "rank-master" as GameIconName, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "rank-knight" as GameIconName, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
+  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" as UiIconName, accent: "from-primary/70 via-primary/20 to-transparent" },
+  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "medal-star" as UiIconName, accent: "from-secondary/60 via-secondary/15 to-transparent" },
+  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "medal-laurel" as UiIconName, accent: "from-secondary/45 via-secondary/10 to-transparent" },
+  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "badge-hex" as UiIconName, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
+  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "shield" as UiIconName, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
 ];
 
 function tierOf(elo: number) {
@@ -90,7 +91,7 @@ function Dynasty() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
-              <GameIcon name="rank-grandmaster" className="h-8 w-8" />
+              <UiIcon name="medal-laurel" className="h-9 w-9" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -109,7 +110,7 @@ function Dynasty() {
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
             <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
-              <GameIcon name="currency-diamond" className="h-5 w-5" />
+              <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
               </span>
@@ -126,7 +127,7 @@ function Dynasty() {
             <div className="flex items-start justify-between gap-space-sm">
               <div className="flex items-center gap-space-md min-w-0">
                 <div className="w-16 h-16 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
-                  <GameIcon name={current.icon} className="h-12 w-12" />
+                  <UiIcon name={current.icon} className="h-12 w-12" />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>
@@ -202,7 +203,7 @@ function Dynasty() {
               to="/battle"
               className="w-full py-space-md bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
             >
-              <GameIcon name="duel-match" className="h-5 w-5" />
+              <UiIcon name="shield" className="h-6 w-6" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
                 <Bi zh="进入 3+2 天梯对局" en="Enter 3+2 Ranked" />
               </span>
@@ -244,7 +245,7 @@ function Dynasty() {
                         className={`w-9 h-9 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
-                        <GameIcon name={tier.icon} className="h-7 w-7" />
+                        <UiIcon name={tier.icon} className="h-8 w-8" />
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-md text-label-md truncate">{row.name}</span>
@@ -292,7 +293,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <GameIcon name={tier.icon} className="h-8 w-8" /> : <GameIcon name="status-lock" className="h-5 w-5" />}
+                      {unlocked ? <UiIcon name={tier.icon} className="h-9 w-9" /> : <GameIcon name="status-lock" className="h-6 w-6" />}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
@@ -333,7 +334,7 @@ function Dynasty() {
               to="/crucible"
               className="w-full py-space-sm bg-surface-container-high text-on-surface flex items-center justify-center gap-space-xs"
             >
-              <GameIcon name="coach-mind" className="h-5 w-5" />
+              <UiIcon name="lotus" className="h-6 w-6" />
               <span className="cjk font-label-md text-label-md">{t("前往盲棋试炼", "Go to trials")}</span>
             </Link>
           </section>
