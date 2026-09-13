@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
-import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/dynasty")({
