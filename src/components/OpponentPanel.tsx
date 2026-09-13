@@ -200,10 +200,10 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
           <div className="space-y-space-sm">
             <div className="p-3 bg-surface-container gold-hairline">
               <p className="cjk font-label-md text-label-md text-on-surface">
-                实名认证{verified && <span className="text-secondary"> · 已认证</span>}
+                实名认证（可选）{verified && <span className="text-secondary"> · 已认证</span>}
               </p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                约战与天梯对局需先完成实名认证，证件号仅保留后四位。
+                认证纯属自愿，完成后在档案中显示认证徽章，不影响对弈与天梯。证件号仅保留后四位。
               </p>
               {!verified && (
                 <>
