@@ -32,6 +32,8 @@ const PHASE: Record<string, string> = { idle: "待命", connecting: "连接中",
 function Battle() {
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
+  const t = useT();
+  const { lang } = useLang();
   const waiting = session.state.status === "waiting";
   const myTurn = session.state.turn === session.state.you && session.state.status === "live" && !session.movePending;
   const opponent = session.state.you === "w" ? session.state.players.b : session.state.players.w;
