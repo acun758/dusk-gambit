@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { EndgameDrill } from "@/components/EndgameDrill";
 import { DuelPanel } from "@/components/DuelPanel";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
@@ -14,6 +16,8 @@ import { useProfile } from "@/lib/profile";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 export const Route = createFileRoute("/battle")({
+  validateSearch: (search: Record<string, unknown>): { drill?: string } =>
+    typeof search['drill'] === "string" ? { drill: search['drill'] as string } : {},
   head: () => ({
     meta: [
       { title: "3+2 实时对弈 · 血誓王权" },
@@ -30,6 +34,11 @@ export const Route = createFileRoute("/battle")({
 const PHASE: Record<string, string> = { idle: "待命", connecting: "连接中", live: "实时同步", resyncing: "追帧中", offline: "断线重连" };
 
 function Battle() {
+  const { drill } = Route.useSearch();
+  const [tab, setTab] = useState<"duel" | "drill">(drill ? "drill" : "duel");
+  useEffect(() => {
+    if (drill) setTab("drill");
+  }, [drill]);
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
   const t = useT();
@@ -68,7 +77,28 @@ function Battle() {
       </header>
 
       <main className="page-main-compact battle-stage desktop-page-container px-margin-mobile lg:flex lg:items-start lg:justify-center lg:gap-space-lg">
+        {tab === "drill" ? (
+          <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm">
+            <div className="battle-core-width flex gap-1">
+              <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="h-11 flex-1 rounded-none bg-surface-container text-on-surface-variant cjk">
+                {t("对弈", "Duel")}
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="h-11 flex-1 rounded-none bg-secondary text-on-secondary cjk">
+                {t("残局试炼", "Endgame drill")}
+              </Button>
+            </div>
+            <EndgameDrill initialCode={drill} />
+          </section>
+        ) : (
         <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
+          <div className="battle-core-width flex gap-1">
+            <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="h-11 flex-1 rounded-none bg-secondary text-on-secondary cjk">
+              {t("对弈", "Duel")}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="h-11 flex-1 rounded-none bg-surface-container text-on-surface-variant cjk">
+              {t("残局试炼", "Endgame drill")}
+            </Button>
+          </div>
           <PlayerBar name={opponent.name} seed={opponent.name} elo={oppElo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
 
           <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
@@ -189,7 +219,8 @@ function Battle() {
 
           <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
         </section>
-        <DuelPanel session={session} />
+        )}
+        {tab === "duel" && <DuelPanel session={session} />}
       </main>
     </div>
   );

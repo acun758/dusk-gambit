@@ -1,19 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { UiIcon } from "@/components/UiIcon";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { useProfile } from "@/lib/profile";
+import { useT } from "@/lib/i18n";
+import { listEndgameLevels } from "@/lib/game.functions";
+import type { DrillLevel } from "@/components/EndgameDrill";
 
 export const Route = createFileRoute("/arsenal")({
   head: () => ({
     meta: [
       { title: "军械典藏 · 血誓王权 | Arsenal Collection" },
-      { name: "description", content: "浏览血誓王权棋子套装、战盘与对局视觉收藏。" },
+      { name: "description", content: "浏览血誓王权棋子套装、战盘与残局试炼卡片。" },
       { property: "og:title", content: "军械典藏 · 血誓王权" },
-      { property: "og:description", content: "浏览棋子套装、战盘与对局视觉收藏。" },
+      { property: "og:description", content: "浏览棋子套装、战盘与残局试炼卡片。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -26,24 +30,42 @@ import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp.asset.json";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp.asset.json";
 
+const KINDS = [
+  { id: "all", zh: "全部", en: "All" },
+  { id: "knight", zh: "骑士", en: "Knight" },
+  { id: "queen", zh: "女王", en: "Queen" },
+  { id: "bishop", zh: "主教", en: "Bishop" },
+] as const;
+
 const SETS = [
-  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "骑士", image: GAME_ART.sets.shadow, floor: 0, price: 0, pieceSetId: "sovereign" },
-  { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "骑士", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
-  { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "骑士", image: demonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "demon-gold" },
-  { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "骑士", image: darkDragonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
-  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "女王", image: GAME_ART.sets.classic, floor: 2400, price: 1200, pieceSetId: null },
-  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "主教", image: GAME_ART.sets.gilded, floor: 2500, price: 1800, pieceSetId: null },
+  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "knight", image: GAME_ART.sets.shadow, floor: 0, price: 0, pieceSetId: "sovereign" },
+  { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "knight", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
+  { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "knight", image: demonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "demon-gold" },
+  { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
+  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: GAME_ART.sets.classic, floor: 2400, price: 1200, pieceSetId: null },
+  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: GAME_ART.sets.gilded, floor: 2500, price: 1800, pieceSetId: null },
 ] as const;
 
 function Arsenal() {
+  const t = useT();
   const { profile } = useProfile();
-  const [filter, setFilter] = useState("全部");
+  const [filter, setFilter] = useState<string>("all");
   const [selectedId, setSelectedId] = useState("shadow");
   const [equippedId, setEquippedId] = useState("shadow");
   const [notice, setNotice] = useState("");
-  const visible = useMemo(() => filter === "全部" ? SETS : SETS.filter((item) => item.kind === filter), [filter]);
+  const visible = useMemo(() => (filter === "all" ? SETS : SETS.filter((item) => item.kind === filter)), [filter]);
   const selected = SETS.find((item) => item.id === selectedId) ?? SETS[0];
   const unlocked = profile.elo >= selected.floor;
+  const kindLabel = (id: string) => {
+    const k = KINDS.find((x) => x.id === id);
+    return k ? t(k.zh, k.en) : id;
+  };
+
+  const drillsQ = useQuery({
+    queryKey: ["endgame-levels"],
+    queryFn: () => listEndgameLevels() as Promise<DrillLevel[]>,
+  });
+  const drills = (drillsQ.data ?? []).slice(0, 6);
 
   useEffect(() => {
     try {
@@ -55,7 +77,7 @@ function Arsenal() {
 
   const equip = () => {
     if (!unlocked) {
-      setNotice(`达到 ${selected.floor} ELO 后解锁此套装。`);
+      setNotice(t(`达到 ${selected.floor} ELO 后解锁此套装。`, `Reach ${selected.floor} ELO to unlock this set.`));
       return;
     }
     setEquippedId(selected.id);
@@ -70,8 +92,8 @@ function Arsenal() {
     }
     setNotice(
       selected.pieceSetId
-        ? `${selected.zh}已装备，对弈棋盘立即切换为这套棋子。`
-        : `${selected.zh}已装备为展示套装，棋盘棋子沿用当前套装。`,
+        ? t(`${selected.zh}已装备，对弈棋盘立即切换为这套棋子。`, `${selected.en} equipped — the board switches to these pieces instantly.`)
+        : t(`${selected.zh}已装备为展示套装，棋盘棋子沿用当前套装。`, `${selected.en} equipped for display only; board pieces stay unchanged.`),
     );
   };
 
@@ -84,15 +106,15 @@ function Arsenal() {
           <section className="grid gap-space-md">
             <div className="section-heading-row">
               <div className="min-w-0">
-                <p className="cjk font-label-sm text-label-sm text-primary">棋具收藏 · VISUAL LOADOUT</p>
-                <h2 className="cjk font-headline-md text-headline-md">棋子套装</h2>
+                <p className="cjk font-label-sm text-label-sm text-primary">{t("棋具收藏 · VISUAL LOADOUT", "Visual loadout · 棋具收藏")}</p>
+                <h2 className="cjk font-headline-md text-headline-md">{t("棋子套装", "Piece Sets")}</h2>
               </div>
               <span className="font-label-md text-label-md tabular-nums text-secondary">{profile.elo} ELO · ♦ {profile.diamonds}</span>
             </div>
 
             <div className="flex gap-1 overflow-x-auto">
-              {["全部", "骑士", "女王", "主教"].map((item) => (
-                <Button key={item} type="button" onClick={() => setFilter(item)} variant="ghost" className={`h-11 shrink-0 rounded-none px-4 ${filter === item ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"}`}>{item}</Button>
+              {KINDS.map((item) => (
+                <Button key={item.id} type="button" onClick={() => setFilter(item.id)} variant="ghost" className={`h-11 shrink-0 rounded-none px-4 cjk ${filter === item.id ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"}`}>{t(item.zh, item.en)}</Button>
               ))}
             </div>
 
@@ -103,28 +125,58 @@ function Arsenal() {
                 return (
                   <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`grid min-w-0 gap-2 bg-surface-container-low p-space-sm text-left transition-colors ${active ? "gold-hairline bg-surface-container-high" : "hover:bg-surface-container"}`}>
                     <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-lowest">
-                      <img src={item.image} alt={`${item.zh}棋子套装`} className="h-full w-full object-cover" />
-                      <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? "已装备" : canUse ? "可使用" : `${item.floor} ELO`}</span>
+                      <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-cover" />
+                      <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
                     <div className="min-w-0">
-                      <h3 className="cjk truncate font-headline-sm text-headline-sm">{item.zh}</h3>
-                      <p className="truncate font-label-sm text-label-sm text-on-surface-variant">{item.en} · {item.kind}</p>
+                      <h3 className="cjk truncate font-headline-sm text-headline-sm">{t(item.zh, item.en)}</h3>
+                      <p className="truncate font-label-sm text-label-sm text-on-surface-variant">{t(item.en, item.zh)} · {kindLabel(item.kind)}</p>
                     </div>
                   </button>
                 );
               })}
             </div>
 
+            {/* 残局试炼卡片：直接进入对弈页的残局模式 */}
+            <section className="grid gap-space-sm bg-surface-container-low p-space-md gold-hairline">
+              <div className="section-heading-row">
+                <h2 className="cjk font-headline-sm text-headline-sm">{t("残局试炼卡片", "Endgame Drill Cards")}</h2>
+                <Link to="/crucible" className="cjk flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("盲视心算版 →", "Blindfold version →")}</Link>
+              </div>
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                {t("选一张卡片，在对弈页的残局模式里真正走完，将死后进入复盘讲解。", "Pick a card, play it out in drill mode on the duel page, then read the review after mate.")}
+              </p>
+              {drillsQ.isLoading && <div className="h-14 animate-pulse bg-surface-container" />}
+              <div className="grid gap-space-xs sm:grid-cols-2">
+                {drills.map((level) => (
+                  <Link
+                    key={level.id}
+                    to="/battle"
+                    search={{ drill: level.code }}
+                    className="grid min-w-0 gap-1 bg-surface-container p-space-sm hover:bg-surface-container-high"
+                  >
+                    <span className="cjk truncate font-label-md text-label-md">{t(level.name_zh, level.name_en)}</span>
+                    <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">
+                      {t(level.theme_zh, level.theme_en)} · {t(`${level.moves_to_mate} 步将死`, `Mate in ${level.moves_to_mate}`)} · D{level.depth}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
             <section className="grid gap-2 bg-surface-container-low p-space-md gold-hairline">
                <div className="section-heading-row">
-                <h2 className="cjk font-headline-sm text-headline-sm">战盘收藏</h2>
-                <span className="cjk font-label-sm text-label-sm text-on-surface-variant">随段位解锁</span>
+                <h2 className="cjk font-headline-sm text-headline-sm">{t("战盘收藏", "Board Collection")}</h2>
+                <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t("随段位解锁", "Unlocked by tier")}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {[{ image: GAME_ART.reviewBoard, name: "永夜神庙", state: "已启用" }, { image: GAME_ART.matchArena, name: "血色战壕", state: "2600 ELO" }].map((board) => (
-                  <div key={board.name} className="bg-surface-container p-2">
-                    <img src={board.image} alt={`${board.name}战盘`} className="aspect-video w-full object-cover" />
-                    <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{board.name}</span><span className="shrink-0 font-label-sm text-label-sm text-secondary">{board.state}</span></div>
+                {[
+                  { image: GAME_ART.reviewBoard, zh: "永夜神庙", en: "Everdark Temple", stateZh: "已启用", stateEn: "Active" },
+                  { image: GAME_ART.matchArena, zh: "血色战壕", en: "Crimson Trench", stateZh: "2600 ELO", stateEn: "2600 ELO" },
+                ].map((board) => (
+                  <div key={board.en} className="bg-surface-container p-2">
+                    <img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} className="aspect-video w-full object-cover" />
+                    <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{t(board.stateZh, board.stateEn)}</span></div>
                   </div>
                 ))}
               </div>
@@ -133,17 +185,22 @@ function Arsenal() {
 
           <aside className="stage-panel grid gap-space-sm bg-surface-container-low p-space-md gold-hairline lg:sticky lg:top-24">
             <div className="relative aspect-square overflow-hidden bg-surface-container-lowest">
-              <img src={selected.image} alt={`${selected.zh}大图`} className="h-full w-full object-cover" />
+              <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-cover" />
             </div>
             <div>
-              <p className="cjk font-label-sm text-label-sm text-primary">{selected.kind} · {unlocked ? "已解锁" : "段位锁定"}</p>
-              <h2 className="cjk mt-1 font-headline-md text-headline-md">{selected.zh}</h2>
-              <p className="font-label-md text-label-md text-on-surface-variant">{selected.en}</p>
+              <p className="cjk font-label-sm text-label-sm text-primary">{kindLabel(selected.kind)} · {unlocked ? t("已解锁", "Unlocked") : t("段位锁定", "Tier locked")}</p>
+              <h2 className="cjk mt-1 font-headline-md text-headline-md">{t(selected.zh, selected.en)}</h2>
+              <p className="font-label-md text-label-md text-on-surface-variant">{t(selected.en, selected.zh)}</p>
             </div>
-            <p className="cjk font-body-sm text-body-sm leading-relaxed text-on-surface-variant">统一比例的 3D 棋子套装，仅改变对弈视觉，不影响规则、落子判定或天梯积分。</p>
+            <p className="cjk font-body-sm text-body-sm leading-relaxed text-on-surface-variant">
+              {t(
+                "统一比例的 3D 棋子套装，仅改变对弈视觉，不影响规则、落子判定或天梯积分。",
+                "Consistently scaled 3D piece sets. Visual only — rules, move validation and ladder rating are unaffected.",
+              )}
+            </p>
             <Button type="button" onClick={equip} disabled={equippedId === selected.id} className="h-12 rounded-none bg-primary-container text-on-primary-container disabled:opacity-50">
               <UiIcon name={unlocked ? "forge" : "seal"} className="h-6 w-6" />
-              <span className="cjk">{equippedId === selected.id ? "当前已装备" : unlocked ? "装备此套" : `${selected.floor} ELO 解锁`}</span>
+              <span className="cjk">{equippedId === selected.id ? t("当前已装备", "Currently equipped") : unlocked ? t("装备此套", "Equip this set") : t(`${selected.floor} ELO 解锁`, `Unlocks at ${selected.floor} ELO`)}</span>
             </Button>
             {notice && <p role="status" className="cjk font-body-sm text-body-sm text-secondary">{notice}</p>}
           </aside>
