@@ -1,4 +1,4 @@
-import { CHESS_PIECE_ASSETS } from "./chess-piece-assets";
+import { CHESS_PIECE_ASSETS, STELLAR_PIECE_ASSETS } from "./chess-piece-assets";
 
 /**
  * 棋子套装登记表。
@@ -24,6 +24,13 @@ export const PIECE_SETS: PieceSet[] = [
     zh: "白金 · 黑曜绯红",
     en: "Platinum & Obsidian Crimson",
     assets: CHESS_PIECE_ASSETS,
+    source: "src/assets/chess-next/optimized",
+  },
+  {
+    id: "stellar",
+    zh: "星钻圣辉",
+    en: "Star Diamond Radiance",
+    assets: STELLAR_PIECE_ASSETS,
     source: "src/assets/chess-next/optimized",
   },
 ];
