@@ -178,7 +178,7 @@ function Analysis() {
                   onClick={() => setHistoryOpen((open) => !open)}
                   className="h-11 rounded-none px-3 text-secondary shrink-0"
                 >
-                  <span className="material-symbols-outlined" aria-hidden="true">{historyOpen ? "expand_less" : "expand_more"}</span>
+                  <GameIcon name={historyOpen ? "action-collapse" : "action-expand"} className="h-5 w-5" />
                   <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
                 </Button>
               )}

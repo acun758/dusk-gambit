@@ -189,9 +189,7 @@ function Crucible() {
                       {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} {t("训练分", "TP")}
                     </span>
                   </span>
-                  <span className="material-symbols-outlined text-[18px] shrink-0 text-secondary">
-                    {p?.solved ? "verified" : lock ? "lock" : "chevron_right"}
-                  </span>
+                  <GameIcon name={p?.solved ? "trial-complete" : lock ? "status-lock" : "trial-enter"} className="h-6 w-6 shrink-0" />
                 </button>
               );
             })}

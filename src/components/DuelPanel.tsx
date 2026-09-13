@@ -307,11 +307,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
                 {variant === "review" ? "棋谱 · 心智 · 战利 · 分析" : "棋谱 · 心智 · 战利品"}
               </span>
             </span>
-            <span className="material-symbols-outlined text-on-surface-variant text-[22px] transition-transform duration-200"
-              style={{ transform: open ? "rotate(180deg)" : "none" }}
-            >
-              keyboard_arrow_up
-            </span>
+            <GameIcon name={open ? "action-expand" : "action-collapse"} className="h-6 w-6 opacity-80" />
           </button>
           <div
             className="overflow-hidden transition-[max-height,opacity] duration-250 ease-out"

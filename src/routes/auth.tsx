@@ -85,23 +85,29 @@ function AuthPage() {
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-space-sm">
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("邮箱 Email", "Email 邮箱")}
-            className="h-11 px-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
-          />
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={t("密码 Password", "Password 密码")}
-            className="h-11 px-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
-          />
+          <label className="relative block">
+            <GameIcon name="auth-email" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t("邮箱 Email", "Email 邮箱")}
+              className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+            />
+          </label>
+          <label className="relative block">
+            <GameIcon name="auth-password" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t("密码 Password", "Password 密码")}
+              className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+            />
+          </label>
           <button
             type="submit"
             disabled={busy}
@@ -114,8 +120,9 @@ function AuthPage() {
         <button
           onClick={google}
           disabled={busy}
-          className="h-11 bg-surface-container-high text-on-surface font-label-md text-label-md uppercase tracking-widest disabled:opacity-60"
+          className="h-11 bg-surface-container-high text-on-surface font-label-md text-label-md uppercase tracking-widest disabled:opacity-60 flex items-center justify-center gap-2"
         >
+          <GameIcon name="auth-google" className="h-7 w-7" />
           <Bi zh="用 Google 继续" en="Continue with Google" />
         </button>
 
