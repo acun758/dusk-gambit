@@ -267,9 +267,13 @@
   background-color: var(--color-surface);
 }
 
-.themed-page > :not(.theme-backdrop) {
+.themed-page > :not(.theme-backdrop):not([class*="fixed"]):not([class*="sticky"]) {
   position: relative;
   z-index: 1;
+}
+
+.themed-page > [class*="fixed"] {
+  z-index: 40;
 }
 
 .theme-backdrop {
