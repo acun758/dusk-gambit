@@ -19,7 +19,7 @@ import {
   type LadderRow,
 } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
-import { Bi, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
