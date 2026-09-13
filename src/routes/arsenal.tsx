@@ -21,10 +21,14 @@ export const Route = createFileRoute("/arsenal")({
   component: Arsenal,
 });
 
+import { PIECE_SET_EVENT, PIECE_SET_STORAGE_KEY } from "@/components/PlayableBoard";
+import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
+
 const SETS = [
-  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "骑士", image: GAME_ART.sets.shadow, floor: 0, price: 0 },
-  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "女王", image: GAME_ART.sets.classic, floor: 2400, price: 1200 },
-  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "主教", image: GAME_ART.sets.gilded, floor: 2500, price: 1800 },
+  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "骑士", image: GAME_ART.sets.shadow, floor: 0, price: 0, pieceSetId: "sovereign" },
+  { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "骑士", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
+  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "女王", image: GAME_ART.sets.classic, floor: 2400, price: 1200, pieceSetId: null },
+  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "主教", image: GAME_ART.sets.gilded, floor: 2500, price: 1800, pieceSetId: null },
 ] as const;
 
 function Arsenal() {
@@ -53,10 +57,18 @@ function Arsenal() {
     setEquippedId(selected.id);
     try {
       window.localStorage.setItem("bs.arsenal.equipped", selected.id);
+      if (selected.pieceSetId) {
+        window.localStorage.setItem(PIECE_SET_STORAGE_KEY, selected.pieceSetId);
+        window.dispatchEvent(new Event(PIECE_SET_EVENT));
+      }
     } catch {
       /* storage unavailable */
     }
-    setNotice(`${selected.zh}已装备，对弈棋盘将在下次开局时使用。`);
+    setNotice(
+      selected.pieceSetId
+        ? `${selected.zh}已装备，对弈棋盘立即切换为这套棋子。`
+        : `${selected.zh}已装备为展示套装，棋盘棋子沿用当前套装。`,
+    );
   };
 
   return (

@@ -1,7 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Chess, type Square } from "chess.js";
 import { Button } from "@/components/ui/button";
-import { CHESS_PIECE_ASSETS } from "@/lib/chess-piece-assets";
+import { DEFAULT_PIECE_SET_ID, pieceSet } from "@/lib/piece-sets";
+
+export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
+export const PIECE_SET_EVENT = "bs:piece-set";
+
+function usePieceAssets(): Record<string, string> {
+  const [setId, setSetId] = useState(DEFAULT_PIECE_SET_ID);
+  useEffect(() => {
+    const read = () => {
+      try {
+        setSetId(window.localStorage.getItem(PIECE_SET_STORAGE_KEY) ?? DEFAULT_PIECE_SET_ID);
+      } catch {
+        setSetId(DEFAULT_PIECE_SET_ID);
+      }
+    };
+    read();
+    window.addEventListener(PIECE_SET_EVENT, read);
+    return () => window.removeEventListener(PIECE_SET_EVENT, read);
+  }, []);
+  return pieceSet(setId).assets;
+}
 
 const GLYPH: Record<string, string> = {
   wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
@@ -24,6 +44,7 @@ export function PlayableBoard({
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
+  const pieceAssets = usePieceAssets();
   const [selected, setSelected] = useState<Square | null>(null);
   const legalMoves = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }) : [], [chess, selected]);
   const targets = useMemo(() => legalMoves.map((m) => m.to), [legalMoves]);
@@ -108,7 +129,7 @@ export function PlayableBoard({
                 >
                   <span className="board-piece-fallback" aria-hidden="true">{GLYPH[`${piece.color}${piece.type}`]}</span>
                   <img
-                    src={CHESS_PIECE_ASSETS[`${piece.color}${piece.type}`]}
+                    src={pieceAssets[`${piece.color}${piece.type}`]}
                     alt=""
                     draggable={false}
                     onError={(event) => { event.currentTarget.hidden = true; }}
