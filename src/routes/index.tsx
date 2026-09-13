@@ -1,3 +1,4 @@
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
@@ -61,8 +62,8 @@ function Index() {
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
-              <UiIcon name="chip-king" label={t("血誓王权徽章", "Blood Sovereign emblem")} className="h-9 w-9" />
+            <div className="w-11 h-11 flex items-center justify-center shrink-0 overflow-hidden">
+              <PlayerAvatar className="h-10 w-10" label={t("玩家头像", "Player avatar")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -107,7 +108,7 @@ function Index() {
               <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-surface-container-lowest/60 to-surface-container-lowest pointer-events-none" />
               <div className="flex items-center justify-between gap-space-sm relative z-10">
                 <div className="flex items-center gap-space-xs min-w-0">
-                  <UiIcon name="gem" className="h-6 w-6" />
+                  <PlayerAvatar className="h-7 w-7" />
                   <span className="font-label-md text-label-md text-on-surface tracking-widest truncate">{profile.name}</span>
                 </div>
                 <div className="flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest shrink-0">
