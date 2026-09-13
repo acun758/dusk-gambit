@@ -16,7 +16,7 @@ export const Route = createFileRoute("/crucible")({
         content: "六道残局关卡：给出目标解法，服务端校验后结算积分与钻石，并解锁更高段位试炼。",
       },
       { property: "og:title", content: "盲棋心算 · 残局试炼 | Blindfold Endgame Crucible" },
-      { property: "og:description", content: "六道残局关卡，服务端校验解法并结算段位奖励。" },
+      { property: "og:description", content: "六道残局关卡，服务端校验解法并结算训练积分与钻石奖励。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

@@ -56,7 +56,7 @@ function Battle() {
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex-1 min-w-0">
-            <h1 className="font-headline-sm text-headline-sm truncate">3+2 对弈训练</h1>
+            <h1 className="font-headline-md text-headline-md leading-tight truncate">3+2 对弈</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? "正在等待另一位玩家加入" : `服务端仲裁 · ${PHASE[session.phase]}`) : "AI 分级陪练 · 不计天梯分"}</p>
           </div>
           <span className={`w-2.5 h-2.5 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
@@ -143,6 +143,7 @@ function Battle() {
               </p>
               <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">积分、段位徽章与战绩已同步到首页和天梯榜。</p>
               <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">查看段位变化 →</Link>
+              <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">复盘本局 →</Link>
             </section>
           )}
 

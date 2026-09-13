@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
@@ -31,11 +31,19 @@ function Arsenal() {
   const { profile } = useProfile();
   const [filter, setFilter] = useState("全部");
   const [selectedId, setSelectedId] = useState("shadow");
-  const [equippedId, setEquippedId] = useState(() => window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow");
+  const [equippedId, setEquippedId] = useState("shadow");
   const [notice, setNotice] = useState("");
   const visible = useMemo(() => filter === "全部" ? SETS : SETS.filter((item) => item.kind === filter), [filter]);
   const selected = SETS.find((item) => item.id === selectedId) ?? SETS[0];
   const unlocked = profile.elo >= selected.floor;
+
+  useEffect(() => {
+    try {
+      setEquippedId(window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow");
+    } catch {
+      /* storage unavailable */
+    }
+  }, []);
 
   const equip = () => {
     if (!unlocked) {
@@ -43,7 +51,11 @@ function Arsenal() {
       return;
     }
     setEquippedId(selected.id);
-    window.localStorage.setItem("bs.arsenal.equipped", selected.id);
+    try {
+      window.localStorage.setItem("bs.arsenal.equipped", selected.id);
+    } catch {
+      /* storage unavailable */
+    }
     setNotice(`${selected.zh}已装备，对弈棋盘将在下次开局时使用。`);
   };
 

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
+import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Chess } from "chess.js";
@@ -144,19 +145,9 @@ function Analysis() {
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
       <ThemeBackdrop theme="fallen" />
-      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
-        <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="font-headline-sm text-headline-sm truncate">对局复盘</h1>
-            <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">逐手回放 · 引擎评分 · 失误点评</p>
-          </div>
-          <Link to="/battle" className="h-11 px-3 flex items-center bg-primary-container text-on-primary-container cjk font-label-sm text-label-sm shrink-0">
-            去对弈
-          </Link>
-        </div>
-      </header>
+      <SovereignPageHeader icon="nav-review" titleZh="对局复盘" titleEn="Match Review" />
 
-      <main className="page-main-compact px-margin-mobile md:px-0">
+      <main className="page-main-dashboard px-margin-mobile md:px-0">
         <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
           <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-space-sm">
@@ -192,7 +183,10 @@ function Analysis() {
             )}
             {signedIn === true && listQ.isLoading && <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">正在读取…</p>}
             {signedIn === true && !listQ.isLoading && matches.length === 0 && (
-              <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先去对弈一局吧。</p>
+              <div className="grid gap-2 px-space-sm pb-space-sm">
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先完成一局 AI 陪练或真人对弈。</p>
+                <Link to="/battle" className="flex h-11 items-center justify-center bg-primary-container text-on-primary-container cjk font-label-md text-label-md">开始对弈</Link>
+              </div>
             )}
             <div
               id="match-history-list"
@@ -338,6 +332,13 @@ function Analysis() {
                   </div>
                 )}
               </div>
+
+              {steps.length > 0 && (
+                <Link to="/archive" className="min-h-12 bg-surface-container-high px-space-md flex items-center justify-between gap-space-sm text-secondary md:col-span-2 xl:col-span-1">
+                  <span className="cjk font-label-md text-label-md">将本局制作成绝杀典藏</span>
+                  <UiIcon name="cards" className="h-7 w-7" />
+                </Link>
+              )}
 
             </div>
           </section>

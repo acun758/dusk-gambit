@@ -113,7 +113,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
           className="max-h-[38vh] lg:max-h-[46vh] overflow-y-auto overscroll-contain flex flex-col gap-1 pr-0.5"
         >
           {rows.length === 0 && (
-            <p className="font-body-sm text-body-sm text-on-surface-variant py-3">等待首着 · Waiting for first move</p>
+            <p className="font-body-sm text-body-sm text-on-surface-variant py-3">等待第一步 · Waiting for first move</p>
           )}
           {rows.map((m) => (
             <div
@@ -188,9 +188,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
       <div className="flex flex-col gap-space-sm">
         <div className="flex items-center justify-between">
           <span className="font-label-md text-label-md text-on-surface">引擎评分曲线</span>
-          <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-            Depth 32 · Cloud
-          </span>
+            <span className="font-label-sm text-label-sm text-on-surface-variant">云端深度 32</span>
         </div>
         <div className="h-16 w-full bg-surface-container flex items-end gap-0.5 p-1">
           {[38, 44, 40, 52, 61, 48, 70, 66, 82, 74, 90, 96].map((v, i) => (
