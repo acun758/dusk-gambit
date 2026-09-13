@@ -157,7 +157,7 @@ function Crucible() {
 
       <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
         {/* 关卡列表 */}
-        <section className="crucible-levels flex min-w-0 flex-col gap-space-xs mt-space-md lg:sticky lg:top-24">
+        <section className="crucible-levels flex min-w-0 flex-col gap-space-xs mt-space-sm lg:mt-space-sm lg:sticky lg:top-24">
           <h2 className="font-headline-sm text-headline-sm">
             <Bi zh="六道实战试炼" en="Six Practical Trials" />
           </h2>
