@@ -135,7 +135,7 @@ function Battle() {
             <section role="status" aria-live="polite" className="battle-core-width bg-surface-container p-space-md gold-hairline text-center">
               <p className="cjk font-label-sm text-label-sm text-secondary">天梯结算完成</p>
               <p className="cjk mt-1 font-headline-md text-headline-md text-on-surface">
-                {session.state.outcome === "1/2-1/2" ? "和棋" : session.state.outcome === (session.state.you === "w" ? "1-0" : "0-1") ? "胜利" : "败北"}
+                {session.state.outcome === "draw" ? "和棋" : session.state.outcome === (session.state.you === "w" ? "white" : "black") ? "胜利" : "败北"}
               </p>
               <p className={`mt-1 font-label-lg text-label-lg tabular-nums ${ratingDelta >= 0 ? "text-secondary" : "text-primary"}`}>
                 {ratingDelta >= 0 ? "+" : ""}{ratingDelta} ELO · 当前 {myElo}
