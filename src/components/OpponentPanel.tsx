@@ -36,6 +36,8 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const [notice, setNotice] = useState<string | null>(null);
   const [realName, setRealName] = useState("");
   const [realNameSaved, setRealNameSaved] = useState<string>("");
+  const [idNumber, setIdNumber] = useState("");
+  const [verifyStatus, setVerifyStatus] = useState<string>("none");
 
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)));
