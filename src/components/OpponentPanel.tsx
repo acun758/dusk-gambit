@@ -54,17 +54,16 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     setVerifyStatus(profileQ.data?.verify_status ?? "none");
   }, [profileQ.data?.real_name, profileQ.data?.verify_status]);
 
-  // 实名完成后从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
+  // 从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
   const [autoQueued, setAutoQueued] = useState(false);
   useEffect(() => {
     if (autoQueued || signedIn !== true) return;
     if (!new URLSearchParams(window.location.search).has("lobby")) return;
-    if (profileQ.data?.verify_status !== "verified") return;
     setAutoQueued(true);
     setTab("auto");
-    setNotice("实名已确认，正在为你匹配段位相近的对手…");
+    setNotice("正在为你匹配段位相近的对手…");
     if (!ranked) onStartRanked();
-  }, [autoQueued, signedIn, profileQ.data?.real_name, ranked, onStartRanked]);
+  }, [autoQueued, signedIn, ranked, onStartRanked]);
 
   const invitesQ = useQuery({
     queryKey: ["duel-invites", signedIn],
@@ -95,14 +94,10 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
+  // 实名认证改为可选：不再限制约战与匹配
   const verified = verifyStatus === "verified" && realNameSaved.length >= 2;
-  const requireName = () => {
-    setNotice("请先完成实名认证，再发起或接受约战。");
-    setTab("invite");
-  };
 
   const accept = (inviteCode: string) => {
-    if (!verified) return requireName();
     setNotice(null);
     void joinDuelInvite({ data: { code: inviteCode } })
       .then(() => {
@@ -113,7 +108,6 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   };
 
   const makeInvite = (invitedId?: string) => {
-    if (!verified) return requireName();
     setNotice(null);
     void createDuelInvite({ data: invitedId ? { invitedId } : {} })
       .then((r) => {
@@ -206,10 +200,10 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
           <div className="space-y-space-sm">
             <div className="p-3 bg-surface-container gold-hairline">
               <p className="cjk font-label-md text-label-md text-on-surface">
-                实名认证{verified && <span className="text-secondary"> · 已认证</span>}
+                实名认证（可选）{verified && <span className="text-secondary"> · 已认证</span>}
               </p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                约战与天梯对局需先完成实名认证，证件号仅保留后四位。
+                认证纯属自愿，完成后在档案中显示认证徽章，不影响对弈与天梯。证件号仅保留后四位。
               </p>
               {!verified && (
                 <>
@@ -235,10 +229,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                         .then((r) => {
                           setRealNameSaved(r.profile.real_name ?? "");
                           setVerifyStatus(r.profile.verify_status ?? "verified");
-
-                          setTab("auto");
-                          setNotice("实名认证通过，正在为你匹配段位相近的对手…");
-                          if (!ranked) onStartRanked();
+                          setNotice("实名认证通过，档案中将显示认证徽章。");
                         })
                         .catch(() => setNotice("认证失败，请核对姓名与 18 位身份证号"))}
                       className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
