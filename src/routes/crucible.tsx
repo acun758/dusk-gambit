@@ -207,7 +207,7 @@ function Crucible() {
           {active && (
             <>
               <div className="crucible-core-width bg-surface-container-low p-space-md flex flex-col gap-space-xs">
-                <span className="cjk font-label-sm text-label-sm text-primary tracking-widest">
+                <span className="cjk font-label-md text-label-md text-primary">
                   {t(active.objective_zh, active.objective_en)}
                 </span>
                 <h3 className="font-headline-md text-headline-md">{t(active.name_zh, active.name_en)}</h3>
@@ -258,7 +258,7 @@ function Crucible() {
                 </div>
                 {blind && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-[0.3em]">
+                    <span className="cjk font-label-md text-label-md text-on-surface-variant">
                       {t("盲视模式 · 全凭心算", "Blindfold · calculate in the mind")}
                     </span>
                   </div>

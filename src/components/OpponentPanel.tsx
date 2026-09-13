@@ -133,8 +133,8 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
   return (
     <section aria-label="找对手" className="battle-core-width bg-surface-container-low p-space-sm gold-hairline">
-      <div className="flex items-baseline justify-between gap-2">
-        <h2 className="cjk font-label-md text-label-md text-on-surface">找对手</h2>
+      <div className="section-heading-row">
+        <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">找对手</h2>
         <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
           {incoming.length ? `${incoming.length} 条约战邀请` : open.length ? `大厅 ${open.length} 人等待` : "3+2 快棋"}
         </span>
@@ -202,16 +202,17 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
         {tab === "invite" && (
           <div className="space-y-space-sm">
             <div className="p-3 bg-surface-container gold-hairline">
-              <p className="cjk font-label-sm text-label-sm text-on-surface">实名填写{verified && <span className="text-secondary"> · 已完成</span>}</p>
+              <p className="cjk font-label-md text-label-md text-on-surface">实名填写{verified && <span className="text-secondary"> · 已完成</span>}</p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">约战与天梯对局需先填写真实姓名，仅本人与系统可见。</p>
-              <div className="flex gap-2 mt-2">
+              <div className="field-row mt-2">
                 <input
                   value={realName || realNameSaved}
                   onChange={(e) => setRealName(e.target.value)}
                   placeholder="真实姓名"
-                  className="cjk h-11 min-w-0 flex-1 bg-surface-container-highest px-3 outline-none focus:ring-1 focus:ring-secondary"
+                  className="field-control cjk"
                 />
-                <button
+                <Button
+                  type="button"
                   onClick={() => void saveRealName({ data: { realName: realName || realNameSaved } })
                     .then((r) => {
                       setRealNameSaved(r.real_name ?? "");
@@ -220,25 +221,26 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                       if (!ranked) onStartRanked();
                     })
                     .catch(() => setNotice("实名保存失败，请填写 2 个字以上的真实姓名"))}
-                  className="cjk h-11 px-4 bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0"
+                  className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
                 >
                   保存
-                </button>
+                </Button>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="field-row">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="搜索玩家名或账号"
-                className="h-11 min-w-0 flex-1 bg-surface-container-highest px-3 outline-none focus:ring-1 focus:ring-secondary"
+                className="field-control cjk"
               />
-              <button
+              <Button
+                type="button"
                 onClick={() => void searchPlayers({ data: { query } }).then((r) => { setResults(r as typeof results); if (!r.length) setNotice("没有找到该玩家"); }).catch(() => setNotice("搜索失败"))}
-                className="cjk h-11 px-4 bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0"
+                className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
               >
                 搜索
-              </button>
+              </Button>
             </div>
             {results.map((p) => (
               <div key={p.id} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
@@ -252,11 +254,11 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                 <button onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">约战</button>
               </div>
             ))}
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => makeInvite()} className="cjk h-11 bg-primary-container text-on-primary-container font-label-sm text-label-sm">创建公开对战码</button>
-              <div className="flex">
-                <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="h-11 min-w-0 flex-1 bg-surface-container-highest px-2 uppercase outline-none" />
-                <button onClick={() => accept(code)} className="cjk h-11 px-3 bg-secondary text-on-secondary shrink-0">加入</button>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button type="button" onClick={() => makeInvite()} className="cjk h-12 rounded-none bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码</Button>
+              <div className="field-row">
+                <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="field-control uppercase" />
+                <Button type="button" onClick={() => accept(code)} className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md">加入</Button>
               </div>
             </div>
             {(myCode || mine) && (
@@ -273,7 +275,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
               <img src={lobbyBanner} alt="约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章" loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent" />
               <div className="absolute inset-0 p-3 flex flex-col justify-center">
-                <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">约 战 大 厅</span>
+                <span className="cjk font-label-md text-label-md text-primary">约战大厅</span>
                 <span className="cjk font-label-md text-label-md text-on-surface">{statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.queueing ?? 0} 人排队</span>
               </div>
             </div>

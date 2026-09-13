@@ -127,7 +127,7 @@ function AuthPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("邮箱 Email", "Email 邮箱")}
-              className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+              className="field-control h-12 w-full pl-11 pr-3"
             />
           </label>
           <label className="relative block">
@@ -139,7 +139,7 @@ function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("密码 Password", "Password 密码")}
-              className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+              className="field-control h-12 w-full pl-11 pr-3"
             />
           </label>
           <label className="relative block">
@@ -149,7 +149,7 @@ function AuthPage() {
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
               placeholder={t("实名（约战必填）", "Real name (required for duels)")}
-              className="cjk h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+              className="field-control cjk h-12 w-full pl-11 pr-3"
             />
           </label>
           <div className="flex flex-col gap-2">

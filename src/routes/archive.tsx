@@ -51,7 +51,7 @@ function ArchiveChronicle() {
       <main className="page-main-dashboard">
         <div className="desktop-page-container grid w-full gap-space-md px-margin-mobile py-space-md lg:grid-cols-[minmax(0,640px)_minmax(300px,1fr)] lg:items-start">
           <section className="grid gap-space-sm">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+            <div className="section-heading-row">
               <div className="min-w-0">
                 <p className="cjk font-label-sm text-label-sm text-primary">对局高光 · PERSONAL ARCHIVE</p>
                 <h2 className="cjk font-headline-md text-headline-md truncate">王权战报典藏</h2>

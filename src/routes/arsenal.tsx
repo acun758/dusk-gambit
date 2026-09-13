@@ -66,7 +66,7 @@ function Arsenal() {
       <main className="page-main-dashboard">
         <div className="desktop-page-container grid w-full gap-space-md px-margin-mobile py-space-md lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-start">
           <section className="grid gap-space-md">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
+            <div className="section-heading-row">
               <div className="min-w-0">
                 <p className="cjk font-label-sm text-label-sm text-primary">棋具收藏 · VISUAL LOADOUT</p>
                 <h2 className="cjk font-headline-md text-headline-md">棋子套装</h2>
@@ -100,7 +100,7 @@ function Arsenal() {
             </div>
 
             <section className="grid gap-2 bg-surface-container-low p-space-md gold-hairline">
-              <div className="flex items-center justify-between gap-3">
+               <div className="section-heading-row">
                 <h2 className="cjk font-headline-sm text-headline-sm">战盘收藏</h2>
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant">随段位解锁</span>
               </div>
