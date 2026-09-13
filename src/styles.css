@@ -328,6 +328,7 @@
 .themed-page {
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
   background-color: var(--color-surface);
 }
 
