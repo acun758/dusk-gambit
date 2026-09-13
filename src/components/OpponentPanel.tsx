@@ -202,30 +202,48 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
         {tab === "invite" && (
           <div className="space-y-space-sm">
             <div className="p-3 bg-surface-container gold-hairline">
-              <p className="cjk font-label-md text-label-md text-on-surface">实名填写{verified && <span className="text-secondary"> · 已完成</span>}</p>
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">约战与天梯对局需先填写真实姓名，仅本人与系统可见。</p>
-              <div className="field-row mt-2">
-                <input
-                  value={realName || realNameSaved}
-                  onChange={(e) => setRealName(e.target.value)}
-                  placeholder="真实姓名"
-                  className="field-control cjk"
-                />
-                <Button
-                  type="button"
-                  onClick={() => void saveRealName({ data: { realName: realName || realNameSaved } })
-                    .then((r) => {
-                      setRealNameSaved(r.real_name ?? "");
-                      setTab("auto");
-                      setNotice("实名已保存，正在为你匹配段位相近的对手…");
-                      if (!ranked) onStartRanked();
-                    })
-                    .catch(() => setNotice("实名保存失败，请填写 2 个字以上的真实姓名"))}
-                  className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
-                >
-                  保存
-                </Button>
-              </div>
+              <p className="cjk font-label-md text-label-md text-on-surface">
+                实名认证{verified && <span className="text-secondary"> · 已认证</span>}
+              </p>
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                约战与天梯对局需先完成实名认证，证件号仅保留后四位。
+              </p>
+              {!verified && (
+                <>
+                  <div className="field-row mt-2">
+                    <input
+                      value={realName || realNameSaved}
+                      onChange={(e) => setRealName(e.target.value)}
+                      placeholder="真实姓名"
+                      className="field-control cjk"
+                    />
+                  </div>
+                  <div className="field-row mt-2">
+                    <input
+                      value={idNumber}
+                      maxLength={18}
+                      onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
+                      placeholder="身份证号（18 位）"
+                      className="field-control"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => void submitVerification({ data: { realName: realName || realNameSaved, idNumber } })
+                        .then((r) => {
+                          setRealNameSaved(r.real_name ?? "");
+                          setVerifyStatus(r.verify_status ?? "verified");
+                          setTab("auto");
+                          setNotice("实名认证通过，正在为你匹配段位相近的对手…");
+                          if (!ranked) onStartRanked();
+                        })
+                        .catch(() => setNotice("认证失败，请核对姓名与 18 位身份证号"))}
+                      className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
+                    >
+                      认证
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
             <div className="field-row">
               <input
