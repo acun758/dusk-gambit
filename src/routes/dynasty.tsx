@@ -1,9 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
+import { useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import {
+  createDuelInvite,
+  getPromotionSeries,
+  listEndgameLevels,
+  listLadder,
+  listPromotionRivals,
+  loadEndgameProgress,
+  type LadderRow,
+} from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
