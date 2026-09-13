@@ -2,14 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { UiIcon } from "@/components/UiIcon";
+import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 
 export const Route = createFileRoute("/arsenal")({
   head: () => ({
     meta: [
-      { title: "Arsenal Relics \u2014 Blood Sovereign" },
-      { name: "description", content: "Browse mythic ancestral chess relics, 360\u00b0 forge views and equipped sets in the Blood Sovereign arsenal." },
-      { property: "og:title", content: "Arsenal Relics \u2014 Blood Sovereign" },
-      { property: "og:description", content: "Browse mythic ancestral chess relics, 360\u00b0 forge views and equipped sets in the Blood Sovereign arsenal." },
+      { title: "军械典藏 · 血誓王权 | Arsenal Collection" },
+      { name: "description", content: "浏览血誓王权棋子套装、战盘与对局视觉收藏。" },
+      { property: "og:title", content: "军械典藏 · 血誓王权" },
+      { property: "og:description", content: "浏览棋子套装、战盘与对局视觉收藏。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -21,7 +22,7 @@ function Arsenal() {
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="abyss" />
-<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><UiIcon name="medal-star" className="h-5 w-5" /></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><UiIcon name="equalizer" className="h-5 w-5" /><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><UiIcon name="volume" className="h-5 w-5" /></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><UiIcon name="chip-king" className="h-5 w-5" /></div></div></div></header><main className={"page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface select-none"}>
+<SovereignPageHeader icon="nav-arsenal" titleZh="军械典藏" titleEn="Arsenal Collection" backTo="/" /><main className={"page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface select-none"}>
 
 <section className={"relative w-full overflow-hidden bg-surface-container-lowest px-margin-mobile pt-space-sm pb-space-lg shadow-[inset_0_-24px_36px_rgba(0,0,0,0.9)]"}>
 

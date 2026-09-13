@@ -1,16 +1,17 @@
 import tarotKingAsset from "@/assets/tarot-king.jpg.asset.json";
 const posterThumb = tarotKingAsset.url;
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { UiIcon } from "@/components/UiIcon";
+import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 
 export const Route = createFileRoute("/archive")({
   head: () => ({
     meta: [
-      { title: "Archive Chronicle \u2014 Climax Studio" },
-      { name: "description", content: "Compose tarot, poster and dispatch cards from your greatest checkmate moments." },
-      { property: "og:title", content: "Archive Chronicle \u2014 Climax Studio" },
-      { property: "og:description", content: "Compose tarot, poster and dispatch cards from your greatest checkmate moments." },
+      { title: "绝杀典藏 · 血誓王权 | Victory Archive" },
+      { name: "description", content: "将已完成的精彩对局制作成典藏海报，保存棋谱、段位与胜负记录。" },
+      { property: "og:title", content: "绝杀典藏 · 血誓王权" },
+      { property: "og:description", content: "将精彩对局制作成可保存的典藏海报。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -22,7 +23,7 @@ function ArchiveChronicle() {
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="fallen" />
-<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><UiIcon name="medal-star" className="h-5 w-5" /></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><UiIcon name="equalizer" className="h-5 w-5" /><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><UiIcon name="volume" className="h-5 w-5" /></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><UiIcon name="chip-king" className="h-5 w-5" /></div></div></div></header><main className={"page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface"}>
+<SovereignPageHeader icon="archive-premium" titleZh="绝杀典藏" titleEn="Victory Archive" backTo="/analysis" /><main className={"page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface"}>
 
 <div className={"fixed inset-0 pointer-events-none overflow-hidden -z-10"}>
 <div className={"absolute -top-40 left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-primary-container/25 blur-[120px] rounded-full"}></div>
@@ -32,12 +33,12 @@ function ArchiveChronicle() {
 <section className={"px-margin-mobile pt-space-xs pb-space-sm flex flex-col gap-space-xs"}>
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
-<button aria-label={"Return to Battle Archive"} className={"w-8 h-8 flex items-center justify-center rounded bg-surface-container-high text-on-surface-variant hover:text-secondary transition-colors"}>
+<Link to="/analysis" aria-label={"返回复盘"} className={"w-8 h-8 flex items-center justify-center bg-surface-container-high text-on-surface-variant hover:text-secondary transition-colors"}>
 <UiIcon name="play-motion" className="h-5 w-5" />
-</button>
+</Link>
 <div className={"flex flex-col"}>
 <span className={"font-label-sm text-label-sm uppercase tracking-[0.2em] text-secondary"}>ARCHIVE CHRONICLE // 绝杀典藏</span>
-<span className={"font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface"}>CLIMAX STUDIO</span>
+<span className={"font-headline-sm text-headline-sm text-on-surface"}>血誓王权 · VICTORY ARCHIVE</span>
 </div>
 </div>
 <div className={"flex items-center gap-space-xs"}>

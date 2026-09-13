@@ -2,9 +2,6 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
-import { createDuelInvite, joinDuelInvite, loadFriends, requestFriend, respondFriend, searchPlayers } from "@/lib/game.functions";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
@@ -43,12 +40,6 @@ function Index() {
   const nextTier = profile.elo >= 2500 ? 2600 : profile.elo >= 2400 ? 2500 : 2400;
   const floor = nextTier - 100;
   const progress = Math.max(4, Math.min(100, ((profile.elo - floor) / (nextTier - floor)) * 100));
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Array<{ id: string; name: string; handle: string; elo: number }>>([]);
-  const [inviteCode, setInviteCode] = useState("");
-  const [createdCode, setCreatedCode] = useState("");
-  const [notice, setNotice] = useState("");
-  const friendsQ = useQuery({ queryKey: ["friends", signedIn], queryFn: () => signedIn ? loadFriends() : Promise.resolve([]) });
   const rankArt = profile.elo >= 2600 ? "rank-sovereign" : profile.elo >= 2500 ? "rank-apex" : profile.elo >= 2400 ? "rank-grandmaster" : profile.elo >= 2200 ? "rank-master" : "rank-knight";
   const ceremony = usePromotionCeremony(
     { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: profile.elo >= 2600 ? 2600 : profile.elo >= 2500 ? 2500 : profile.elo >= 2400 ? 2400 : profile.elo >= 2200 ? 2200 : 0 },
@@ -89,10 +80,10 @@ function Index() {
               </span>
             </div>
             <Link
-              to="/auth"
+               to={signedIn ? "/dynasty" : "/auth"}
               className="h-9 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest flex items-center"
             >
-              {signedIn ? t("已登录", "Signed in") : t("登录", "Sign in")}
+               {signedIn ? t("我的档案", "Profile") : t("登录", "Sign in")}
             </Link>
           </div>
         </div>
@@ -223,8 +214,11 @@ function Index() {
                 { zh: "慢棋", en: "Rapid", tc: "10 | 0", live: false },
                 { zh: "超快棋", en: "Bullet", tc: "1 | 1", live: false },
               ].map((m) => (
-                <div
+                <Link
                   key={m.en}
+                  to={m.live ? "/battle" : "/"}
+                  aria-disabled={!m.live}
+                  onClick={(event) => { if (!m.live) event.preventDefault(); }}
                   className={`min-h-20 p-space-sm flex flex-col items-center justify-center gap-1 ${m.live ? "bg-surface-container-high" : "bg-surface-container"}`}
                 >
                   <span className={`font-label-sm text-label-sm tracking-widest ${m.live ? "text-primary" : "text-secondary"}`}>
@@ -234,7 +228,7 @@ function Index() {
                   <span className="cjk font-label-sm text-label-sm text-on-surface-variant text-center leading-snug">
                     {m.live ? t("已开放", "Live") : t("即将开放", "Soon")}
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
 
@@ -250,23 +244,17 @@ function Index() {
           </section>
 
           <section className="mt-space-lg flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between"><h2 className="font-headline-sm text-headline-sm"><Bi zh="好友与点名对战" en="Friends & Challenges" /></h2><span className="font-label-sm text-label-sm text-secondary">3+2</span></div>
-            {!signedIn ? (
-              <Link to="/auth" className="h-12 bg-surface-container-high text-secondary flex items-center justify-center cjk font-label-md text-label-md">登录后搜索好友并创建对战码</Link>
-            ) : (
-              <div className="grid lg:grid-cols-2 gap-space-sm">
-                <div className="bg-surface-container-low p-space-sm flex flex-col gap-space-xs">
-                  <div className="flex gap-space-xs"><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="输入玩家名或账号" className="h-11 min-w-0 flex-1 bg-surface-container-highest px-3 outline-none focus:ring-1 focus:ring-secondary"/><button onClick={() => void searchPlayers({ data: { query } }).then((r) => setResults(r as typeof results)).catch(() => setNotice("没有找到该玩家"))} className="h-11 px-4 bg-secondary text-on-secondary cjk font-label-sm text-label-sm">搜索</button></div>
-                  {results.map((r) => <div key={r.id} className="min-h-12 px-2 bg-surface-container flex items-center justify-between gap-2"><span className="min-w-0"><strong className="block truncate">{r.name}</strong><small className="text-on-surface-variant">@{r.handle} · {r.elo} ELO</small></span><button onClick={() => void requestFriend({ data: { userId: r.id } }).then(() => { setNotice("好友请求已发送"); void friendsQ.refetch(); })} className="h-10 px-3 text-secondary">加好友</button></div>)}
-                </div>
-                <div className="bg-surface-container-low p-space-sm flex flex-col gap-space-xs">
-                  <div className="grid grid-cols-2 gap-space-xs"><button onClick={() => void createDuelInvite({ data: {} }).then((r) => setCreatedCode(r?.code ?? ""))} className="h-11 bg-primary-container text-on-primary-container cjk font-label-sm text-label-sm">创建对战码</button><div className="flex"><input value={inviteCode} onChange={(e) => setInviteCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="h-11 min-w-0 flex-1 bg-surface-container-highest px-2 uppercase"/><button onClick={() => void joinDuelInvite({ data: { code: inviteCode } }).then(() => { setNotice("已加入对局"); window.location.assign("/battle"); }).catch(() => setNotice("对战码无效或已过期"))} className="h-11 px-3 bg-secondary text-on-secondary">加入</button></div></div>
-                  {createdCode && <p className="cjk font-body-sm text-body-sm text-secondary">对战码：<strong className="tracking-widest">{createdCode}</strong> · 10 分钟内有效</p>}
-                  {(friendsQ.data ?? []).map((f) => <div key={f.friendshipId} className="min-h-12 px-2 bg-surface-container flex items-center justify-between gap-2"><span className="min-w-0"><strong className="block truncate">{f.name}</strong><small className="text-on-surface-variant">{f.elo} ELO · ♦ {f.diamonds} · {f.wins}胜</small></span>{f.friendshipStatus === "pending" && f.incoming ? <button onClick={() => void respondFriend({ data: { friendshipId: f.friendshipId, accept: true } }).then(() => friendsQ.refetch())} className="h-10 px-3 text-secondary">接受</button> : f.friendshipStatus === "accepted" ? <button onClick={() => void createDuelInvite({ data: { invitedId: f.id } }).then((r) => setCreatedCode(r?.code ?? ""))} className="h-10 px-3 text-primary">挑战</button> : <span className="text-on-surface-variant text-xs">待回应</span>}</div>)}
-                  {notice && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{notice}</p>}
-                </div>
-              </div>
-            )}
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm"><Bi zh="真人约战" en="Ranked Challenges" /></h2>
+              <span className="font-label-sm text-label-sm text-secondary">3+2</span>
+            </div>
+            <Link to={signedIn ? "/battle" : "/auth"} className="min-h-20 bg-surface-container-low p-space-md grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md gold-hairline">
+              <span className="min-w-0">
+                <strong className="cjk block font-label-lg text-label-lg text-on-surface">{t("系统匹配、好友点名与对战码", "Matchmaking, friends and invite codes")}</strong>
+                <small className="cjk mt-1 block font-body-sm text-body-sm text-on-surface-variant">{t("完整约战操作集中在对弈页，段位相近者优先匹配。", "All challenge tools live on the duel page, with nearby ratings prioritized.")}</small>
+              </span>
+              <UiIcon name="send" className="h-8 w-8" />
+            </Link>
           </section>
 
           {/* 残局试炼 */}
@@ -292,9 +280,10 @@ function Index() {
 
           {/* 军械库 */}
           <section className="mt-space-lg flex flex-col gap-space-sm">
-            <h2 className="font-headline-sm text-headline-sm text-on-surface">
-              <Bi zh="圣物军械库" en="Vault & Armory" />
-            </h2>
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm text-on-surface"><Bi zh="军械典藏" en="Arsenal Collection" /></h2>
+              <Link to="/arsenal" className="cjk min-h-11 flex items-center text-secondary font-label-sm text-label-sm">{t("查看全部 →", "View all →")}</Link>
+            </div>
             <div className="grid grid-cols-2 gap-space-xs">
               {[
                 { img: RELIC_A, zh: "黑曜骑士", en: "Obsidian Knight", tagZh: "已装备", tagEn: "Equipped", locked: false },

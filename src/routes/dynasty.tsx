@@ -156,20 +156,20 @@ function Dynasty() {
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center shrink-0">
-              <GameIcon name="nav-ladder" className="h-11 w-11 sm:h-14 sm:w-14 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
+            <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
+              <GameIcon name="nav-ladder" className="h-14 w-14 sm:h-16 sm:w-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
-                <span className="font-label-sm text-label-sm text-secondary tracking-widest tabular-nums">
+                <span className="font-label-md text-label-md text-secondary tabular-nums">
                   {profile.elo} ELO
                 </span>
-                <span className="w-1 h-1 rounded-full bg-primary" />
-                <span className="cjk font-label-sm text-label-sm text-primary-fixed truncate">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="cjk font-label-md text-label-md text-primary-fixed truncate">
                   {t(current.zh, current.en)}
                 </span>
               </div>
-              <span className="font-headline-sm text-headline-sm tracking-wider truncate">
+              <span className="font-headline-md text-headline-md leading-tight truncate">
                 <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
               </span>
             </div>
@@ -198,22 +198,22 @@ function Dynasty() {
           <InvitePoster compact />
           {/* 当前段位 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
-            <div className="flex items-start justify-between gap-space-sm">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <div className="flex items-center gap-space-md min-w-0">
-                <div className="rank-hero-mark w-20 h-20 sm:w-24 sm:h-24 p-1 shrink-0">
+                 <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 p-0 shrink-0">
                   <GameIcon name={current.art} className="h-full w-full" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                   <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
+                   <span className="font-label-md text-label-md text-on-surface-variant">
                     {t(current.en, current.zh)}
                   </span>
-                  <span className="cjk font-label-sm text-label-sm text-secondary mt-1 truncate">
+                   <span className="cjk font-label-md text-label-md text-secondary mt-1 truncate">
                     {profile.name} · {t("连胜", "Streak")} {profile.streak}
                   </span>
                 </div>
               </div>
-              <div className="text-right shrink-0">
+               <div className="hidden text-right shrink-0 sm:block">
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant block tracking-widest">
                   {t("下一段位", "Next tier")}
                 </span>
@@ -406,21 +406,21 @@ function Dynasty() {
                     <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
                     <div className="flex items-center gap-space-sm min-w-0">
                       <span
-                        className={`w-9 h-9 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
+                        className={`w-11 h-11 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
-                        <UiIcon name={tier.icon} className="h-8 w-8" />
+                        <UiIcon name={tier.icon} className="h-10 w-10" />
                       </span>
                       <div className="flex flex-col min-w-0">
-                        <span className="cjk font-label-md text-label-md truncate">{row.name}</span>
-                        <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
+                        <span className="cjk font-label-lg text-label-lg truncate">{row.name}</span>
+                        <span className="cjk font-label-md text-label-md text-on-surface-variant truncate">
                           {t(tier.zh, tier.en)} · {row.wins}
                           {t("胜", "W")} {row.losses}
                           {t("负", "L")}
                         </span>
                       </div>
                     </div>
-                    <span className="font-label-md text-label-md tabular-nums text-primary shrink-0">{row.elo}</span>
+                    <span className="font-label-lg text-label-lg tabular-nums text-primary shrink-0">{row.elo}</span>
                   </li>
                 );
               })}
