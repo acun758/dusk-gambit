@@ -1,4 +1,4 @@
-import { CHESS_PIECE_ASSETS, DEMON_GOLD_PIECE_ASSETS, STELLAR_PIECE_ASSETS } from "./chess-piece-assets";
+import { CHESS_PIECE_ASSETS, DARK_DRAGON_PIECE_ASSETS, DEMON_GOLD_PIECE_ASSETS, STELLAR_PIECE_ASSETS } from "./chess-piece-assets";
 
 /**
  * 棋子套装登记表。
@@ -39,6 +39,13 @@ export const PIECE_SETS: PieceSet[] = [
     en: "Demon Emperor Antique Gold",
     assets: DEMON_GOLD_PIECE_ASSETS,
     source: "src/assets/chess/demon-gold",
+  },
+  {
+    id: "dark-dragon",
+    zh: "暗黑龙语",
+    en: "Dark Dragon Tongue",
+    assets: DARK_DRAGON_PIECE_ASSETS,
+    source: "src/assets/chess/dark-dragon",
   },
 ];
 
