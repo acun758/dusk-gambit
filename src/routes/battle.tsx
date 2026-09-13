@@ -32,6 +32,11 @@ export const Route = createFileRoute("/battle")({
 const PHASE: Record<string, string> = { idle: "待命", connecting: "连接中", live: "实时同步", resyncing: "追帧中", offline: "断线重连" };
 
 function Battle() {
+  const { drill } = Route.useSearch();
+  const [tab, setTab] = useState<"duel" | "drill">(drill ? "drill" : "duel");
+  useEffect(() => {
+    if (drill) setTab("drill");
+  }, [drill]);
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
   const t = useT();
