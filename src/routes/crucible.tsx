@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
-import { Bi, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/crucible")({
@@ -145,6 +145,8 @@ function Crucible() {
               <Bi zh="残局试炼" en="Endgame Crucible" />
             </h1>
           </div>
+          <div className="flex shrink-0 items-center gap-space-xs">
+            <LangToggle />
           <button
             onClick={() => setBlind((b) => !b)}
             className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
@@ -152,6 +154,7 @@ function Crucible() {
             <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6" />
             <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
           </button>
+          </div>
         </div>
       </header>
 
