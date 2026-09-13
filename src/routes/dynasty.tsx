@@ -175,7 +175,7 @@ function Dynasty() {
                 </span>
               </div>
               <h1 className="font-headline-md text-headline-md leading-tight truncate">
-                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" subClassName="hidden sm:inline" />
+                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
               </h1>
             </div>
           </div>
