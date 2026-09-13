@@ -179,6 +179,14 @@ function Dynasty() {
                 {profile.diamonds.toLocaleString()}
               </span>
             </div>
+            {signedIn && (
+              <button
+                onClick={() => void signOut()}
+                className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+              >
+                {t("退出登录", "Sign out")}
+              </button>
+            )}
           </div>
         </div>
       </header>
