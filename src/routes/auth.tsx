@@ -6,7 +6,8 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveRealName } from "@/lib/game.functions";
+import { saveAvatar, saveRealName } from "@/lib/game.functions";
+import { AVATAR_OPTIONS, DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 const REAL_NAME_KEY = "bs.realname.v1";
+const AVATAR_KEY = "bs.avatar.v1";
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -31,12 +33,14 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [realName, setRealName] = useState("");
+  const [avatar, setAvatar] = useState(DEFAULT_AVATAR_KEY);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
   useEffect(() => {
     try {
       setRealName(window.localStorage.getItem(REAL_NAME_KEY) ?? "");
+      setAvatar(window.localStorage.getItem(AVATAR_KEY) ?? DEFAULT_AVATAR_KEY);
     } catch {
       /* storage unavailable */
     }
@@ -63,6 +67,12 @@ function AuthPage() {
       return;
     }
     if (res.data.session) {
+      try {
+        window.localStorage.setItem(AVATAR_KEY, avatar);
+      } catch {
+        /* storage unavailable */
+      }
+      await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
       const name = realName.trim();
       let verified = false;
       if (name.length >= 2) {
@@ -142,6 +152,25 @@ function AuthPage() {
               className="cjk h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
             />
           </label>
+          <div className="flex flex-col gap-2">
+            <span className="cjk font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
+              {t("选择头像（对局中显示）", "Choose your avatar")}
+            </span>
+            <div className="grid grid-cols-6 gap-2">
+              {AVATAR_OPTIONS.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => setAvatar(option.key)}
+                  aria-label={t(option.zh, option.en)}
+                  aria-pressed={avatar === option.key}
+                  className={`aspect-square flex items-center justify-center bg-surface-container p-1 ${avatar === option.key ? "gold-hairline opacity-100" : "opacity-60 hover:opacity-90"}`}
+                >
+                  <img src={option.url} alt="" className="h-full w-full object-contain" />
+                </button>
+              ))}
+            </div>
+          </div>
           <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
             {t("填好实名后登录即自动保存，下次进入自动带出；退出登录会清除本机实名与段位缓存。", "Your real name is saved on sign-in and restored next time; signing out clears it on this device.")}
           </p>

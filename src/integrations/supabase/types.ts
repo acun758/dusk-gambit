@@ -388,6 +388,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_key: string
           created_at: string
           diamonds: number
           draws: number
@@ -403,6 +404,7 @@ export type Database = {
           wins: number
         }
         Insert: {
+          avatar_key?: string
           created_at?: string
           diamonds?: number
           draws?: number
@@ -418,6 +420,7 @@ export type Database = {
           wins?: number
         }
         Update: {
+          avatar_key?: string
           created_at?: string
           diamonds?: number
           draws?: number
