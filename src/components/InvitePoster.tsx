@@ -24,7 +24,7 @@ export function InvitePoster({ compact = false }: { compact?: boolean }) {
         loading="lazy"
         width={1536}
         height={864}
-        className={`w-full object-cover ${compact ? "h-44 sm:h-52" : "h-52 sm:h-64 lg:h-72"}`}
+        className={`w-full object-cover ${compact ? "h-56 sm:h-64" : "h-52 sm:h-64 lg:h-72"}`}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/95 via-surface-container-lowest/70 to-transparent" />
       <div className="absolute inset-0 p-space-md flex flex-col justify-center gap-1 max-w-[68%]">
