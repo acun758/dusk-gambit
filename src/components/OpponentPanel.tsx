@@ -213,7 +213,12 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                 />
                 <button
                   onClick={() => void saveRealName({ data: { realName: realName || realNameSaved } })
-                    .then((r) => { setRealNameSaved(r.real_name ?? ""); setNotice("实名已保存"); })
+                    .then((r) => {
+                      setRealNameSaved(r.real_name ?? "");
+                      setTab("auto");
+                      setNotice("实名已保存，正在为你匹配段位相近的对手…");
+                      if (!ranked) onStartRanked();
+                    })
                     .catch(() => setNotice("实名保存失败，请填写 2 个字以上的真实姓名"))}
                   className="cjk h-11 px-4 bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0"
                 >
