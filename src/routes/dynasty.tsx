@@ -156,8 +156,8 @@ function Dynasty() {
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-surface-container-high flex items-center justify-center shrink-0">
-              <UiIcon name="medal-laurel" className="h-9 w-9 sm:h-11 sm:w-11" />
+            <div className="w-11 h-11 sm:w-14 sm:h-14 flex items-center justify-center shrink-0">
+              <GameIcon name="nav-ladder" className="h-11 w-11 sm:h-14 sm:w-14 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
