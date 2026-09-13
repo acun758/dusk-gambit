@@ -255,6 +255,48 @@ function Dynasty() {
             )}
           </section>
 
+          {/* 个人资料：头像与实名认证 */}
+          {signedIn && (
+            <>
+              <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+                <div className="section-heading-row">
+                  <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                    <Bi zh="个人资料" en="Profile" />
+                  </h2>
+                  <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{profile.name}</span>
+                </div>
+                <div className="flex items-center gap-space-md">
+                  <PlayerAvatar className="h-16 w-16" avatarKey={profile.avatarKey} avatarPath={profile.avatarPath} seed={profile.name} label={profile.name} />
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                    {t("换头像后，对弈页的玩家条与段位榜会实时更新。", "Changing your avatar updates the duel player bar and ladder instantly.")}
+                  </p>
+                </div>
+                <AvatarPicker
+                  value={profile.avatarPath ? "upload" : profile.avatarKey}
+                  uploadedPath={profile.avatarPath || null}
+                  uploading={avatarBusy}
+                  error={avatarError}
+                  onSelect={(key) => {
+                    if (key === "upload") return;
+                    setAvatarError(null);
+                    void setAvatar(key).catch((e: unknown) => setAvatarError(e instanceof Error ? e.message : "更换头像失败"));
+                  }}
+                  onUpload={async (file) => {
+                    setAvatarBusy(true);
+                    setAvatarError(null);
+                    try {
+                      await setAvatarImage(file);
+                    } catch (e) {
+                      setAvatarError(e instanceof Error ? e.message : "头像上传失败");
+                    }
+                    setAvatarBusy(false);
+                  }}
+                />
+              </section>
+              <VerificationCard profile={profile} onVerify={verifyIdentity} />
+            </>
+          )}
+
           {/* 晋升挑战赛 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <div className="section-heading-row">
