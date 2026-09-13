@@ -229,10 +229,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                         .then((r) => {
                           setRealNameSaved(r.profile.real_name ?? "");
                           setVerifyStatus(r.profile.verify_status ?? "verified");
-
-                          setTab("auto");
-                          setNotice("实名认证通过，正在为你匹配段位相近的对手…");
-                          if (!ranked) onStartRanked();
+                          setNotice("实名认证通过，档案中将显示认证徽章。");
                         })
                         .catch(() => setNotice("认证失败，请核对姓名与 18 位身份证号"))}
                       className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
