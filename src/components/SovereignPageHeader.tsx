@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { Bi, LangToggle, useT } from "@/lib/i18n";
+import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 
 export function SovereignPageHeader({
@@ -17,8 +17,7 @@ export function SovereignPageHeader({
 }) {
   const { profile, signedIn } = useProfile();
   const t = useT();
-  // 未完成实名认证时隐藏段位徽章，认证通过后自动显示
-  const showRank = !signedIn || profile.verifyStatus === "verified";
+  const { lang } = useLang();
 
   return (
     <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/88 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
@@ -34,17 +33,14 @@ export function SovereignPageHeader({
             </div>
           )}
           <div className="min-w-0">
-            {showRank ? (
-              <div className="flex min-w-0 items-center gap-space-xs">
-                <span className="font-label-md text-label-md text-secondary tabular-nums">{profile.elo} ELO</span>
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(profile.tierZh, profile.tier)}</span>
-              </div>
-            ) : (
-              <p className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">实名认证通过后显示段位</p>
-            )}
-            <h1 className="truncate font-headline-md text-headline-md leading-tight text-on-surface">
-              <Bi zh={titleZh} en={titleEn} />
+            <div className="flex min-w-0 items-center gap-space-xs">
+              <span className="font-label-md text-label-md text-secondary tabular-nums">{profile.elo} ELO</span>
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+              <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(profile.tierZh, profile.tier)}</span>
+            </div>
+            {/* 页眉随语言开关实时切换中/英文，单行截断保持布局不变 */}
+            <h1 className={`truncate font-headline-md text-headline-md leading-tight text-on-surface ${lang === "zh" ? "cjk" : ""}`}>
+              {lang === "zh" ? titleZh : titleEn}
             </h1>
           </div>
         </div>
