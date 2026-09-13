@@ -21,16 +21,24 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const REAL_NAME_KEY = "bs.realname.v1";
+
 function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [realName, setRealName] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    try {
+      setRealName(window.localStorage.getItem(REAL_NAME_KEY) ?? "");
+    } catch {
+      /* storage unavailable */
+    }
     void supabase.auth.getSession().then(({ data }) => {
       if (data.session) void navigate({ to: "/" });
     });
@@ -53,8 +61,18 @@ function AuthPage() {
       setMsg(res.error.message);
       return;
     }
-    if (res.data.session) void navigate({ to: "/" });
-    else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
+    if (res.data.session) {
+      const name = realName.trim();
+      if (name.length >= 2) {
+        try {
+          window.localStorage.setItem(REAL_NAME_KEY, name);
+        } catch {
+          /* storage unavailable */
+        }
+        await saveRealName({ data: { realName: name } }).catch(() => null);
+      }
+      void navigate({ to: "/" });
+    } else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
   }
 
   async function google() {
