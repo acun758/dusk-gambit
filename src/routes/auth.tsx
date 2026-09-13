@@ -35,7 +35,9 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [realName, setRealName] = useState("");
+  const [idNumber, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState(DEFAULT_AVATAR_KEY);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
