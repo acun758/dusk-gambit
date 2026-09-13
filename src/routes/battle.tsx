@@ -7,7 +7,6 @@ import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
 import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
-import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/battle")({
@@ -44,7 +43,7 @@ function Battle() {
       <ThemeBackdrop theme="gothic" />
       <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
-          <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><GameIcon name="action-back" className="h-7 w-7" /></Link>
+          <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex-1 min-w-0">
             <h1 className="font-headline-sm text-headline-sm truncate">3+2 对弈训练</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? "正在等待另一位玩家加入" : `服务端仲裁 · ${PHASE[session.phase]}`) : "AI 分级陪练 · 不计天梯分"}</p>

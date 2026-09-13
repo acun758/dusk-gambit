@@ -329,73 +329,6 @@
   }
 }
 
-/* Desktop-only immersive stage. Phone and iPad geometry remains unchanged. */
-@media (min-width: 1280px) {
-  .app-shell {
-    padding-left: 10rem;
-  }
-
-  .sovereign-rail {
-    width: 10rem;
-    background: color-mix(in oklab, var(--color-surface-container-lowest) 92%, transparent);
-  }
-
-  .rail-brand {
-    padding-inline: 1rem;
-  }
-
-  .rail-brand-title {
-    font-size: 1rem;
-    line-height: 1.35;
-  }
-
-  .rail-brand-subtitle,
-  .rail-account {
-    display: none;
-  }
-
-  .rail-label {
-    font-size: 0.75rem;
-    letter-spacing: 0;
-  }
-
-  .app-shell [class*="fixed"][class*="top-0"],
-  .app-shell [class*="fixed"][class*="bottom-0"],
-  .desktop-page-header {
-    left: 10rem;
-    width: calc(100% - 10rem);
-  }
-
-  .desktop-page-container,
-  .desktop-content-flow {
-    width: min(100%, 1440px);
-  }
-
-  .battle-stage {
-    min-height: calc(100dvh - 4rem);
-    align-content: start;
-    padding-top: 1rem;
-    gap: 1.5rem;
-  }
-
-  .battle-stage .battle-column {
-    --battle-core-width: min(66vw, 720px, calc(100dvh - 7rem));
-    max-width: var(--battle-core-width);
-  }
-
-  .duel-live-panel {
-    width: min(23vw, 360px);
-    top: 5rem;
-  }
-
-  .stage-panel {
-    background: color-mix(in oklab, var(--color-surface-container-lowest) 78%, transparent);
-    border-left: 1px solid color-mix(in oklab, var(--color-secondary) 24%, transparent);
-    backdrop-filter: blur(18px);
-    box-shadow: -18px 0 46px color-mix(in oklab, var(--color-surface-dim) 46%, transparent);
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .theme-backdrop img {
     animation: themeBreath 18s ease-in-out infinite alternate;
@@ -451,6 +384,29 @@
     margin-inline: auto;
   }
 
+}
+
+/* Desktop-only immersive stage. Phone and iPad geometry remains unchanged. */
+@media (min-width: 1280px) {
+  .app-shell { padding-left: 10rem; }
+  .sovereign-rail { width: 10rem; background: color-mix(in oklab, var(--color-surface-container-lowest) 92%, transparent); }
+  .rail-brand { padding-inline: 1rem; }
+  .rail-brand-title { font-size: 1rem; line-height: 1.35; }
+  .rail-brand-subtitle, .rail-account { display: none; }
+  .rail-label { font-size: 0.75rem; letter-spacing: 0; }
+  .app-shell [class*="fixed"][class*="top-0"],
+  .app-shell [class*="fixed"][class*="bottom-0"],
+  .desktop-page-header { left: 10rem; width: calc(100% - 10rem); }
+  .desktop-page-container, .desktop-content-flow { width: min(100%, 1440px); }
+  .battle-stage { min-height: calc(100dvh - 4rem); align-content: start; padding-top: 1rem; gap: 1.5rem; }
+  .battle-stage .battle-column { --battle-core-width: min(66vw, 720px, calc(100dvh - 7rem)); max-width: var(--battle-core-width); }
+  .duel-live-panel { width: min(23vw, 360px); top: 5rem; }
+  .stage-panel {
+    background: color-mix(in oklab, var(--color-surface-container-lowest) 78%, transparent);
+    border-left: 1px solid color-mix(in oklab, var(--color-secondary) 24%, transparent);
+    backdrop-filter: blur(18px);
+    box-shadow: -18px 0 46px color-mix(in oklab, var(--color-surface-dim) 46%, transparent);
+  }
 }
 
 /* Below the rail breakpoint the bottom bar is visible — keep content clear of it. */

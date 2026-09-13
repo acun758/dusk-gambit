@@ -357,7 +357,7 @@ function ArchiveChronicle() {
           </h3>
 </div>
 <button aria-label={"Close modal"} className={"w-8 h-8 rounded bg-surface-container-high text-on-surface-variant hover:text-secondary hover:bg-surface-container-highest flex items-center justify-center transition-colors"} id={"closeModalBtn"}>
-<UiIcon name="action-close" className="h-5 w-5" />
+<UiIcon name="seal" className="h-5 w-5" />
 </button>
 </div>
 </div>
@@ -389,7 +389,7 @@ function ArchiveChronicle() {
 
 <div className={"flex items-center gap-1.5 flex-wrap"}>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary text-label-sm font-medium transition-colors"}>
-<UiIcon name="archive-download" className="h-5 w-5" />
+<UiIcon name="download" className="h-5 w-5" />
 <span>保存到相册</span>
 </button>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-sm font-medium transition-colors"}>
@@ -397,7 +397,7 @@ function ArchiveChronicle() {
 <span>动态壁纸</span>
 </button>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant text-label-sm transition-colors"}>
-<UiIcon name="action-copy" className="h-5 w-5" />
+<UiIcon name="link" className="h-5 w-5" />
 <span>复制4K链接</span>
 </button>
 </div>
@@ -413,7 +413,7 @@ function ArchiveChronicle() {
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-secondary transition-colors shadow-sm"}>
-<UiIcon name="archive-share" className="h-5 w-5" />
+<UiIcon name="share" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>微信好友</span>
 </button>
@@ -427,14 +427,14 @@ function ArchiveChronicle() {
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-primary transition-colors shadow-sm"}>
-<UiIcon name="arsenal-vfx-style" className="h-5 w-5" />
+<UiIcon name="sparkles" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>小红书/微博</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-on-surface transition-colors shadow-sm"}>
-<UiIcon name="archive-airdrop" className="h-5 w-5" />
+<UiIcon name="airdrop" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>隔空投送</span>
 </button>
@@ -450,7 +450,7 @@ function ArchiveChronicle() {
 
 <button className={"flex items-center gap-2 p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-left"}>
 <div className={"w-8 h-8 rounded bg-primary-container flex items-center justify-center text-secondary shrink-0 shadow-sm"}>
-<UiIcon name="arsenal-shield" className="h-5 w-5" />
+<UiIcon name="shield" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col min-w-0 leading-tight"}>
 <span className={"cjk font-label-sm text-[11px] text-on-surface font-semibold whitespace-nowrap group-hover:text-secondary"}>血誓公会殿堂</span>
@@ -500,7 +500,7 @@ function ArchiveChronicle() {
 
 <div className={"pt-1 flex flex-col gap-1.5"}>
 <button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"dispatchNowBtn"}>
-<UiIcon name="archive-send" className="h-5 w-5" />
+<UiIcon name="send" className="h-5 w-5" />
 <span>一键全网分发 (SHARE IMMEDIATELY)</span>
 <UiIcon name="send" className="h-5 w-5" />
 </button>

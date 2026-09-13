@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import poster from "@/assets/invite-poster.jpg";
 import { useProfile } from "@/lib/profile";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 const TIER_ICON: Record<string, GameIconName> = {
   Sovereign: "rank-sovereign",
@@ -29,7 +30,7 @@ export function InvitePoster({ compact = false }: { compact?: boolean }) {
       <div className="absolute inset-0 p-space-md flex flex-col justify-center gap-1 max-w-[68%]">
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0">
-          <GameIcon name={icon} className="h-9 w-9" />
+          <GameIcon name={icon} className="h-12 w-12" />
           <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate">{profile.tierZh}</h2>
         </div>
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums">
@@ -46,7 +47,7 @@ export function InvitePoster({ compact = false }: { compact?: boolean }) {
           className="cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 bg-primary-container px-4 text-on-primary-container font-label-sm text-label-sm"
         >
           发起 3+2 约战
-          <GameIcon name="duel-match" className="h-6 w-6" />
+          <UiIcon name="shield" className="h-6 w-6" />
         </Link>
       </div>
     </section>

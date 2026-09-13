@@ -438,11 +438,11 @@ function Arsenal() {
 
 <div className={"flex items-center gap-space-xs"}>
 <button className={"px-3 py-2.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md tracking-wider uppercase flex items-center gap-1 transition-colors"}>
-<UiIcon name="trial-visible" className="h-5 w-5" />
+<UiIcon name="eye" className="h-5 w-5" />
 <span className={"hidden sm:inline"}>全屏检视</span>
 </button>
 <button className={"px-4 py-2.5 bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-md text-label-md tracking-widest uppercase flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(139,30,30,0.5)]"} id={"forgeBtn"}>
-<UiIcon name="arsenal-forge" className="h-5 w-5" />
+<UiIcon name="forge" className="h-5 w-5" />
 <span>熔铸装备此套</span>
 </button>
 </div>

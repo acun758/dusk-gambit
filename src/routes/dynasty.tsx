@@ -293,7 +293,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <UiIcon name={tier.icon} className="h-9 w-9" /> : <GameIcon name="status-lock" className="h-6 w-6" />}
+                      {unlocked ? <UiIcon name={tier.icon} className="h-9 w-9" /> : <UiIcon name="seal" className="h-6 w-6" />}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
