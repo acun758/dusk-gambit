@@ -9,6 +9,7 @@ import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
+import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 
 const HERO_PORTRAIT = GAME_ART.heroPortrait;
 const HERO_VIDEO = GAME_ART.heroVideo;
@@ -47,10 +48,16 @@ function Index() {
   const [createdCode, setCreatedCode] = useState("");
   const [notice, setNotice] = useState("");
   const friendsQ = useQuery({ queryKey: ["friends", signedIn], queryFn: () => signedIn ? loadFriends() : Promise.resolve([]) });
+  const rankArt = profile.elo >= 2600 ? "rank-sovereign" : profile.elo >= 2500 ? "rank-apex" : profile.elo >= 2400 ? "rank-grandmaster" : profile.elo >= 2200 ? "rank-master" : "rank-knight";
+  const ceremony = usePromotionCeremony(
+    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: profile.elo >= 2600 ? 2600 : profile.elo >= 2500 ? 2500 : profile.elo >= 2400 ? 2400 : profile.elo >= 2200 ? 2200 : 0 },
+    signedIn,
+  );
 
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="storm" />
+      <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
@@ -89,9 +96,9 @@ function Index() {
         </div>
       </header>
 
-      <main className="flex flex-col relative w-full pt-20 bg-surface min-h-screen">
+      <main className="page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen">
         <div className="desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
-          <div className="mt-space-md">
+          <div>
             <InvitePoster />
           </div>
           {/* 誓约横幅 */}

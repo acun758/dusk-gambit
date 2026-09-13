@@ -156,7 +156,7 @@ function Analysis() {
         </div>
       </header>
 
-      <main className="pt-16 px-margin-mobile md:px-0">
+      <main className="page-main-compact px-margin-mobile md:px-0">
         <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
           <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-space-sm">

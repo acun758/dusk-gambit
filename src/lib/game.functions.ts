@@ -572,6 +572,20 @@ export const saveRealName = createServerFn({ method: "POST" })
     return row as ProfileRow;
   });
 
+/** 退出登录前清除实名；积分与历史战绩保留在账号中。 */
+export const clearRealName = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ real_name: "", updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
+  });
+
 /* ------------------------------ lobby stats ------------------------------- */
 
 export interface LobbyStats {

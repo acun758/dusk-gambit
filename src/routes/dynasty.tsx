@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import {
   createDuelInvite,
+  clearRealName,
   getPromotionSeries,
   listEndgameLevels,
   listLadder,
@@ -134,6 +135,7 @@ function Dynasty() {
   };
 
   const signOut = async () => {
+    await clearRealName().catch(() => null);
     await queryClient.cancelQueries();
     queryClient.clear();
     for (const k of ["bs.profile.v1", "bs.tier.v1", "bs.realname.v1"]) {
@@ -191,7 +193,7 @@ function Dynasty() {
         </div>
       </header>
 
-      <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg lg:pt-20">
+      <main className="page-main-dashboard desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
         <div className="flex w-full min-w-0 flex-col gap-space-md">
           <InvitePoster compact />
           {/* 当前段位 */}
