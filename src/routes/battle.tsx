@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { EndgameDrill } from "@/components/EndgameDrill";
 import { DuelPanel } from "@/components/DuelPanel";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
