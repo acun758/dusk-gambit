@@ -9,6 +9,7 @@ import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 
