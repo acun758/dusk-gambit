@@ -30,7 +30,7 @@ export function SovereignNav() {
       {/* Phones & iPad portrait: single bottom bar */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
         <nav className="h-[4.5rem] px-gutter-mobile grid grid-cols-5 items-center">
-          {PRIMARY.map((item) => (
+          {items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -72,7 +72,7 @@ export function SovereignNav() {
         </div>
 
         <nav className="px-space-sm py-space-sm grid gap-1">
-          {PRIMARY.map((item) => (
+          {items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
