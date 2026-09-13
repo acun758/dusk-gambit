@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
+import { GameIcon } from "@/components/GameIcon";
 
 export const Route = createFileRoute("/arsenal")({
   head: () => ({
@@ -20,7 +21,7 @@ function Arsenal() {
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="abyss" />
-<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><span className={"material-symbols-outlined text-secondary text-[22px]"}>military_tech</span></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><span className={"material-symbols-outlined text-secondary text-[16px] mr-space-xs"}>timer</span><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><span className={"material-symbols-outlined text-[20px]"}>volume_up</span></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><span className={"material-symbols-outlined text-on-primary text-[18px]"}>person</span></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface select-none"}>
+<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><GameIcon name="arsenal-medal" className="h-5 w-5" /></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><GameIcon name="duel-clock" className="h-5 w-5" /><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><GameIcon name="arsenal-sound" className="h-5 w-5" /></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><GameIcon name="account-user" className="h-5 w-5" /></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface select-none"}>
 
 <section className={"relative w-full overflow-hidden bg-surface-container-lowest px-margin-mobile pt-space-sm pb-space-lg shadow-[inset_0_-24px_36px_rgba(0,0,0,0.9)]"}>
 
@@ -57,19 +58,19 @@ function Arsenal() {
 </div>
 
 <button aria-label={"Rotate Left"} className={"absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface-container/80 hover:bg-surface-container-highest text-secondary flex items-center justify-center transition-colors"}>
-<span className={"material-symbols-outlined text-[20px]"}>rotate_left</span>
+<GameIcon name="arsenal-rotate-left" className="h-5 w-5" />
 </button>
 <button aria-label={"Rotate Right"} className={"absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-surface-container/80 hover:bg-surface-container-highest text-secondary flex items-center justify-center transition-colors"}>
-<span className={"material-symbols-outlined text-[20px]"}>rotate_right</span>
+<GameIcon name="arsenal-rotate-right" className="h-5 w-5" />
 </button>
 
 <div className={"absolute bottom-1 flex items-center gap-space-xs"}>
 <div className={"flex items-center gap-1 px-2 py-0.5 bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm"}>
-<span className={"material-symbols-outlined text-[12px] text-tertiary"}>local_fire_department</span>
+<GameIcon name="arsenal-fire" className="h-5 w-5" />
 <span>EMBERS ACTIVE</span>
 </div>
 <div className={"flex items-center gap-1 px-2 py-0.5 bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm"}>
-<span className={"material-symbols-outlined text-[12px] text-secondary"}>graphic_eq</span>
+<GameIcon name="arsenal-audio-wave" className="h-5 w-5" />
 <span>OBSIDIAN RESONANCE</span>
 </div>
 </div>
@@ -80,7 +81,7 @@ function Arsenal() {
 <div className={"flex flex-col"}>
 <div className={"flex items-center gap-2"}>
 <span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>猩红女帝 · 永夜</span>
-<span className={"material-symbols-outlined text-[18px] text-secondary"}>verified</span>
+<GameIcon name="status-verified" className="h-5 w-5" />
 </div>
 <span className={"font-label-md text-label-md text-secondary tracking-widest uppercase mt-0.5"}>Crimson Queen Consort · Relic ID #001</span>
 </div>
@@ -98,21 +99,21 @@ function Arsenal() {
 <div className={"p-2 bg-surface-container flex flex-col items-center text-center"}>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase"}>Sovereign VFX</span>
 <div className={"flex items-center gap-0.5 text-secondary mt-1"}>
-<span className={"material-symbols-outlined text-[14px]"}>bolt</span>
+<GameIcon name="arsenal-vfx" className="h-5 w-5" />
 <span className={"font-label-md text-label-md"}>Tier V Blood</span>
 </div>
 </div>
 <div className={"p-2 bg-surface-container flex flex-col items-center text-center"}>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase"}>Timbre SFX</span>
 <div className={"flex items-center gap-0.5 text-tertiary mt-1"}>
-<span className={"material-symbols-outlined text-[14px]"}>volume_up</span>
+<GameIcon name="arsenal-sound" className="h-5 w-5" />
 <span className={"font-label-md text-label-md"}>Cathedral Bone</span>
 </div>
 </div>
 <div className={"p-2 bg-surface-container flex flex-col items-center text-center"}>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase"}>Execution</span>
 <div className={"flex items-center gap-0.5 text-primary mt-1"}>
-<span className={"material-symbols-outlined text-[14px]"}>swords</span>
+<GameIcon name="duel-match" className="h-5 w-5" />
 <span className={"font-label-md text-label-md"}>Void Beheading</span>
 </div>
 </div>
@@ -123,19 +124,19 @@ function Arsenal() {
 <section className={"w-full px-margin-mobile py-space-sm sticky top-20 z-40 bg-surface/95 backdrop-blur-md"}>
 <div className={"flex items-center justify-between gap-1 overflow-x-auto p-1 bg-surface-container-lowest"}>
 <button className={"flex-1 py-2 px-2 bg-primary-container text-on-primary-container font-label-md text-label-md tracking-wider uppercase text-center whitespace-nowrap flex items-center justify-center gap-1"}>
-<span className={"material-symbols-outlined text-[15px]"}>crown</span>
+<GameIcon name="rank-sovereign" className="h-5 w-5" />
 <span>棋具圣物</span>
 </button>
 <button className={"flex-1 py-2 px-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md tracking-wider uppercase text-center whitespace-nowrap flex items-center justify-center gap-1"}>
-<span className={"material-symbols-outlined text-[15px]"}>chess</span>
+<GameIcon name="arsenal-board" className="h-5 w-5" />
 <span>对局战盘</span>
 </button>
 <button className={"flex-1 py-2 px-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md tracking-wider uppercase text-center whitespace-nowrap flex items-center justify-center gap-1"}>
-<span className={"material-symbols-outlined text-[15px]"}>auto_fix_high</span>
+<GameIcon name="arsenal-vfx-style" className="h-5 w-5" />
 <span>处决特写</span>
 </button>
 <button className={"flex-1 py-2 px-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md tracking-wider uppercase text-center whitespace-nowrap flex items-center justify-center gap-1"}>
-<span className={"material-symbols-outlined text-[15px]"}>music_note</span>
+<GameIcon name="arsenal-music" className="h-5 w-5" />
 <span>对弈圣咏</span>
 </button>
 </div>
@@ -188,7 +189,7 @@ function Arsenal() {
 <div className={"flex items-center justify-between"}>
 <span className={"font-label-sm text-label-sm text-secondary tracking-widest uppercase"}>Knight · Grade V</span>
 <div className={"flex items-center gap-1 text-secondary"}>
-<span className={"material-symbols-outlined text-[14px]"}>shield</span>
+<GameIcon name="arsenal-shield" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm"}>+3 Valour</span>
 </div>
 </div>
@@ -200,7 +201,7 @@ function Arsenal() {
 <div className={"flex items-center justify-between pt-2"}>
 <span className={"font-label-sm text-label-sm text-on-surface-variant uppercase"}>Ancestral Relic</span>
 <button className={"px-3 py-1 bg-surface-container text-on-surface-variant font-label-sm text-label-sm tracking-widest uppercase flex items-center gap-1"}>
-<span className={"material-symbols-outlined text-[13px] text-secondary"}>check</span>
+<GameIcon name="status-check" className="h-5 w-5" />
 <span>已装配</span>
 </button>
 </div>
@@ -220,7 +221,7 @@ function Arsenal() {
 <div className={"flex items-center justify-between"}>
 <span className={"font-label-sm text-label-sm text-primary tracking-widest uppercase"}>Queen · Mythic</span>
 <div className={"flex items-center gap-1 text-primary"}>
-<span className={"material-symbols-outlined text-[14px]"}>local_fire_department</span>
+<GameIcon name="arsenal-fire" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm"}>Blood Embers</span>
 </div>
 </div>
@@ -231,7 +232,7 @@ function Arsenal() {
 </div>
 <div className={"flex items-center justify-between pt-2"}>
 <div className={"flex items-center gap-1 text-secondary"}>
-<span className={"material-symbols-outlined text-[14px]"}>toll</span>
+<GameIcon name="currency-blood" className="h-5 w-5" />
 <span className={"font-label-md text-label-md"}>1,200 🩸血晶石</span>
 </div>
 <button className={"px-3 py-1 bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center gap-1"}>
@@ -317,7 +318,7 @@ function Arsenal() {
 <div className={"mt-2 flex flex-col"}>
 <div className={"flex items-center justify-between"}>
 <span className={"font-headline-sm text-[14px] text-on-surface uppercase"}>永夜神庙 · 裂隙黑曜石</span>
-<span className={"material-symbols-outlined text-[16px] text-secondary"}>check_circle</span>
+<GameIcon name="status-check" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-label-sm text-on-surface-variant mt-0.5"}>Void Obsidian &amp; Veined Marble</span>
 <div className={"flex items-center justify-between mt-3 pt-2 bg-surface-container px-2 py-1"}>
@@ -375,7 +376,7 @@ function Arsenal() {
 <div className={"p-space-md bg-surface-container-high/90 relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.85)]"}>
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
-<span className={"material-symbols-outlined text-secondary text-[20px]"}>graphic_eq</span>
+<GameIcon name="arsenal-audio-wave" className="h-5 w-5" />
 <span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>棋音圣咏试听 · SFX Acoustics</span>
 </div>
 <span className={"px-2 py-0.5 bg-surface-container text-secondary font-label-sm text-label-sm uppercase tracking-widest"}>
@@ -384,7 +385,7 @@ function Arsenal() {
 </div>
 <div className={"mt-space-sm flex items-center gap-space-sm"}>
 <button className={"w-12 h-12 bg-primary-container text-on-primary-container flex items-center justify-center flex-shrink-0 transition-transform active:scale-95"} id={"playAudioPreviewBtn"}>
-<span className={"material-symbols-outlined text-[24px]"} id={"audioIcon"}>volume_up</span>
+<GameIcon name="arsenal-sound" className="h-5 w-5" />
 </button>
 <div className={"flex flex-col flex-1 min-w-0"}>
 <div className={"flex items-center justify-between"}>
@@ -424,12 +425,12 @@ function Arsenal() {
 </div>
 <div className={"flex items-center gap-2 mt-0.5"}>
 <div className={"flex items-center gap-1 text-secondary"}>
-<span className={"material-symbols-outlined text-[16px]"}>military_tech</span>
+<GameIcon name="arsenal-medal" className="h-5 w-5" />
 <span className={"font-label-md text-label-md font-bold"}>2,480 ELO</span>
 </div>
 <span className={"text-outline-variant"}>|</span>
 <div className={"flex items-center gap-1 text-primary"}>
-<span className={"material-symbols-outlined text-[16px]"}>toll</span>
+<GameIcon name="currency-blood" className="h-5 w-5" />
 <span className={"font-label-md text-label-md font-bold"}>3,450 🩸</span>
 </div>
 </div>
@@ -437,11 +438,11 @@ function Arsenal() {
 
 <div className={"flex items-center gap-space-xs"}>
 <button className={"px-3 py-2.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md tracking-wider uppercase flex items-center gap-1 transition-colors"}>
-<span className={"material-symbols-outlined text-[16px]"}>visibility</span>
+<GameIcon name="trial-visible" className="h-5 w-5" />
 <span className={"hidden sm:inline"}>全屏检视</span>
 </button>
 <button className={"px-4 py-2.5 bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-md text-label-md tracking-widest uppercase flex items-center gap-1.5 transition-all shadow-[0_0_20px_rgba(139,30,30,0.5)]"} id={"forgeBtn"}>
-<span className={"material-symbols-outlined text-[18px]"}>gavel</span>
+<GameIcon name="arsenal-forge" className="h-5 w-5" />
 <span>熔铸装备此套</span>
 </button>
 </div>
@@ -449,7 +450,7 @@ function Arsenal() {
 </aside>
 
 <div className={"fixed top-24 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-surface-container-highest text-secondary font-label-md text-label-md tracking-wider uppercase pointer-events-none opacity-0 transition-opacity duration-300 shadow-[0_8px_24px_rgba(0,0,0,0.9)] flex items-center gap-2"} id={"vaultToast"}>
-<span className={"material-symbols-outlined text-[16px] text-secondary"}>verified</span>
+<GameIcon name="status-verified" className="h-5 w-5" />
 <span id={"vaultToastMessage"}>已就位 · Relic Synchronized</span>
 </div>
 </div>

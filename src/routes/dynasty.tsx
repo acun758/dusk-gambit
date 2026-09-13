@@ -109,7 +109,7 @@ function Dynasty() {
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
             <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
-              <span className="material-symbols-outlined text-secondary text-[16px] mr-space-xs">diamond</span>
+              <GameIcon name="currency-diamond" className="h-5 w-5" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
               </span>
@@ -168,7 +168,8 @@ function Dynasty() {
             </div>
 
             {!signedIn && (
-              <Link to="/auth" className="cjk font-body-sm text-body-sm text-secondary">
+              <Link to="/auth" className="cjk min-h-11 px-3 bg-surface-container-high font-body-sm text-body-sm text-secondary flex items-center gap-2">
+                <GameIcon name="auth-google" className="h-7 w-7 shrink-0" />
                 {t("当前为本地演示数据，登录后段位与钻石由服务端结算 →", "Demo data — sign in for server-settled rating →")}
               </Link>
             )}
@@ -201,7 +202,7 @@ function Dynasty() {
               to="/battle"
               className="w-full py-space-md bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
             >
-              <span className="material-symbols-outlined text-secondary text-[20px]">swords</span>
+              <GameIcon name="duel-match" className="h-5 w-5" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
                 <Bi zh="进入 3+2 天梯对局" en="Enter 3+2 Ranked" />
               </span>
@@ -291,7 +292,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <GameIcon name={tier.icon} className="h-8 w-8" /> : <span className="material-symbols-outlined text-[20px] text-secondary">lock</span>}
+                      {unlocked ? <GameIcon name={tier.icon} className="h-8 w-8" /> : <GameIcon name="status-lock" className="h-5 w-5" />}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
@@ -332,7 +333,7 @@ function Dynasty() {
               to="/crucible"
               className="w-full py-space-sm bg-surface-container-high text-on-surface flex items-center justify-center gap-space-xs"
             >
-              <span className="material-symbols-outlined text-secondary text-[18px]">psychology</span>
+              <GameIcon name="coach-mind" className="h-5 w-5" />
               <span className="cjk font-label-md text-label-md">{t("前往盲棋试炼", "Go to trials")}</span>
             </Link>
           </section>

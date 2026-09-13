@@ -7,6 +7,7 @@ import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
 import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
+import { GameIcon } from "@/components/GameIcon";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -42,7 +43,7 @@ function Battle() {
       <ThemeBackdrop theme="gothic" />
       <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
-          <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><span className="material-symbols-outlined">arrow_back</span></Link>
+          <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><GameIcon name="action-back" className="h-5 w-5" /></Link>
           <div className="flex-1 min-w-0">
             <h1 className="font-headline-sm text-headline-sm truncate">3+2 对弈训练</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? "正在等待另一位玩家加入" : `服务端仲裁 · ${PHASE[session.phase]}`) : "AI 分级陪练 · 不计天梯分"}</p>
@@ -93,7 +94,7 @@ function Battle() {
               variant="ghost"
               className="h-12 rounded-none bg-surface-container text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
             >
-              <span className="material-symbols-outlined text-secondary">{session.paused ? "play_arrow" : "pause"}</span>
+              <GameIcon name={session.paused ? "duel-resume" : "duel-pause"} className="h-5 w-5" />
               {session.paused ? "继续" : "暂停"}
             </Button>
             <Button
@@ -102,11 +103,11 @@ function Battle() {
               variant="ghost"
               className="h-12 rounded-none bg-surface-container text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
             >
-              <span className="material-symbols-outlined">flag</span>
+              <GameIcon name="duel-resign" className="h-5 w-5" />
               结束本局
             </Button>
             <Button onClick={session.restart} variant="ghost" className="h-12 rounded-none bg-surface-container text-secondary cjk font-label-sm text-label-sm">
-              <span className="material-symbols-outlined">refresh</span>
+              <GameIcon name="duel-restart" className="h-5 w-5" />
               重新开始
             </Button>
           </div>
@@ -121,7 +122,7 @@ function Battle() {
           )}
 
           <section aria-label="棋局教练" className="battle-core-width bg-surface-container p-space-sm gold-hairline flex items-start gap-space-sm">
-            <span className="material-symbols-outlined text-secondary text-[22px] mt-0.5" aria-hidden="true">{coach.icon}</span>
+            <GameIcon name={coach.phase === "opening" ? "coach-opening" : coach.phase === "endgame" ? "coach-endgame" : coach.icon === "target" ? "coach-target" : "coach-mind"} className="h-7 w-7 mt-0.5" />
             <div className="min-w-0">
               <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
               <h2 className="cjk font-label-lg text-label-lg text-on-surface mt-0.5">{coach.title}</h2>

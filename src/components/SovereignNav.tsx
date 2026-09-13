@@ -1,18 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
-import throneIcon from "@/assets/nav/throne.webp";
-import duelIcon from "@/assets/nav/duel.webp";
-import trialsIcon from "@/assets/nav/trials.webp";
-import reviewIcon from "@/assets/nav/review.webp";
-import ladderIcon from "@/assets/nav/ladder.webp";
 import { GameIcon } from "@/components/GameIcon";
 
 const PRIMARY = [
-  { to: "/", icon: "crown", image: throneIcon, label: "Court", zh: "王座" },
-  { to: "/battle", icon: "swords", image: duelIcon, label: "Duel", zh: "对弈" },
-  { to: "/crucible", icon: "chess_knight", image: trialsIcon, label: "Trials", zh: "残局" },
-  { to: "/analysis", icon: "insights", image: reviewIcon, label: "Review", zh: "复盘" },
-  { to: "/dynasty", icon: "shield", image: ladderIcon, label: "Ladder", zh: "天梯" },
+  { to: "/", icon: "nav-throne", label: "Court", zh: "王座" },
+  { to: "/battle", icon: "nav-duel", label: "Duel", zh: "对弈" },
+  { to: "/crucible", icon: "nav-crucible", label: "Trials", zh: "残局" },
+  { to: "/analysis", icon: "nav-review", label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "nav-ladder", label: "Ladder", zh: "天梯" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -53,17 +48,7 @@ export function SovereignNav() {
               }`}
             >
               <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
-                <img
-                  src={item.image}
-                  alt=""
-                  width={256}
-                  height={256}
-                  className={`h-full w-full object-contain transition-[opacity,filter] duration-200 ${
-                    isActive(item.to)
-                      ? "opacity-100 drop-shadow-[0_0_5px_color-mix(in_oklab,var(--secondary)_55%,transparent)]"
-                      : "opacity-55 grayscale-[35%]"
-                  }`}
-                />
+                <GameIcon name={item.icon} className={`h-full w-full transition-[opacity,filter] duration-200 ${isActive(item.to) ? "opacity-100" : "opacity-55 grayscale-[35%]"}`} />
               </span>
               <span className="font-label-sm text-label-sm tracking-widest uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
@@ -104,12 +89,7 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
-              <img
-                src={item.image}
-                alt=""
-                aria-hidden="true"
-                className={`h-8 w-8 object-contain transition-[opacity,filter] ${isActive(item.to) ? "opacity-100" : "opacity-60 grayscale-[35%]"}`}
-              />
+              <GameIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter] ${isActive(item.to) ? "opacity-100" : "opacity-60 grayscale-[35%]"}`} />
               <span className="font-label-lg text-label-lg uppercase tracking-widest">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
@@ -126,7 +106,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <GameIcon name="arsenal" className="h-7 w-7" />军械典藏
+            <GameIcon name="nav-arsenal" className="h-7 w-7" />军械典藏
           </Link>
         </div>
       </aside>

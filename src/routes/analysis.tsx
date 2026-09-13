@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getMatch, listMyMatches } from "@/lib/game.functions";
 import { explainMatch } from "@/lib/ai-review.functions";
 import { evaluateDeep } from "@/lib/local-engine";
+import { GameIcon } from "@/components/GameIcon";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
@@ -178,7 +179,7 @@ function Analysis() {
                   onClick={() => setHistoryOpen((open) => !open)}
                   className="h-11 rounded-none px-3 text-secondary shrink-0"
                 >
-                  <span className="material-symbols-outlined" aria-hidden="true">{historyOpen ? "expand_less" : "expand_more"}</span>
+                  <GameIcon name={historyOpen ? "action-collapse" : "action-expand"} className="h-5 w-5" />
                   <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
                 </Button>
               )}
