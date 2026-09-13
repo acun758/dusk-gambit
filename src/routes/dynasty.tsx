@@ -19,7 +19,7 @@ import {
   type LadderRow,
 } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
-import { Bi, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
@@ -154,7 +154,45 @@ function Dynasty() {
     void navigate({ to: "/auth", replace: true });
   };
 
+  // 实名认证通过前不开放天梯：段位徽章与榜单暂时隐藏，只保留认证入口
+  if (signedIn && profile.verifyStatus !== "verified") {
+    return (
+      <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
+        <ThemeBackdrop theme="blackGold" />
+        <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+          <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
+            <div className="flex items-center gap-space-sm min-w-0">
+              <GameIcon name="nav-ladder" className="h-14 w-14 shrink-0" />
+              <div className="min-w-0">
+                <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">实名认证后开启天梯</p>
+                <h1 className="font-headline-md text-headline-md leading-tight truncate">
+                  <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
+                </h1>
+              </div>
+            </div>
+            <LangToggle />
+          </div>
+        </header>
+        <main className="app-container nav-clearance pt-24 flex flex-col gap-space-md">
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <h2 className="font-headline-sm text-headline-sm">
+              <Bi zh="天梯未解锁" en="Ladder locked" />
+            </h2>
+            <p className="cjk font-body-md text-body-md text-on-surface-variant">
+              按赛事规范，天梯对局需实名参赛。完成下方实名认证后即可进入天梯，段位徽章、积分与段位榜会立即显示；在此之前你可以自由使用对弈与残局试炼。
+            </p>
+            <Link to="/battle" className="cjk h-12 grid place-items-center bg-secondary text-on-secondary font-label-lg text-label-lg">
+              先去对弈练手
+            </Link>
+          </section>
+          <VerificationCard profile={profile} onVerify={verifyIdentity} />
+        </main>
+      </div>
+    );
+  }
+
   return (
+
     <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
       <ThemeBackdrop theme="blackGold" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
@@ -180,6 +218,8 @@ function Dynasty() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
+            <LangToggle />
+
             <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">

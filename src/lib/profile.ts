@@ -167,11 +167,13 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
-  /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。 */
+  /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
   const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
-    const row = (await submitVerification({ data: { realName, idNumber } })) as CloudRow;
-    setProfile(fromCloud(row));
+    const res = await submitVerification({ data: { realName, idNumber } });
+    setProfile(fromCloud(res.profile as unknown as CloudRow));
+    return res.mode;
   }, []);
+
 
   /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
   const recordResult = useCallback((outcome: "win" | "loss" | "draw", eloDelta = 8) => {

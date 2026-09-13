@@ -233,8 +233,9 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                       type="button"
                       onClick={() => void submitVerification({ data: { realName: realName || realNameSaved, idNumber } })
                         .then((r) => {
-                          setRealNameSaved(r.real_name ?? "");
-                          setVerifyStatus(r.verify_status ?? "verified");
+                          setRealNameSaved(r.profile.real_name ?? "");
+                          setVerifyStatus(r.profile.verify_status ?? "verified");
+
                           setTab("auto");
                           setNotice("实名认证通过，正在为你匹配段位相近的对手…");
                           if (!ranked) onStartRanked();

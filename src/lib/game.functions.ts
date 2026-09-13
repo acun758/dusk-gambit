@@ -142,7 +142,11 @@ function validChineseId(id: string): boolean {
   return ID_CHECK[sum % 11] === value[17];
 }
 
-/** 实名认证：校验姓名与身份证格式，通过后写入认证状态与时间。 */
+/**
+ * 实名认证：先做姓名与身份证号格式（含校验位）校验，再调用实名核验接口。
+ * 配置 ID_VERIFY_API_URL + ID_VERIFY_API_KEY 后走真实「姓名 + 身份证号」二要素核验；
+ * 未配置时只能完成格式校验，返回 mode="checksum" 由前端中文提示说明。
+ */
 export const submitVerification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { realName: string; idNumber: string }) => ({
@@ -153,6 +157,35 @@ export const submitVerification = createServerFn({ method: "POST" })
     if (data.realName.length < 2) throw new Error("请填写真实姓名（至少 2 个字）");
     if (!/^[\u4e00-\u9fa5·]{2,24}$|^[A-Za-z .'-]{2,24}$/.test(data.realName)) throw new Error("姓名格式不正确");
     if (!validChineseId(data.idNumber)) throw new Error("身份证号格式或校验位不正确");
+
+    const endpoint = process.env["ID_VERIFY_API_URL"];
+    const apiKey = process.env["ID_VERIFY_API_KEY"];
+    let mode: "provider" | "checksum" = "checksum";
+    if (endpoint && apiKey) {
+      mode = "provider";
+      let ok = false;
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
+          body: JSON.stringify({ name: data.realName, idCard: data.idNumber }),
+        });
+        if (!res.ok) throw new Error(`status ${res.status}`);
+        const body = (await res.json()) as { result?: number | string; success?: boolean; match?: boolean };
+        ok = body.success === true || body.match === true || body.result === 0 || body.result === "0";
+      } catch {
+        throw new Error("实名核验服务暂时不可用，请稍后再试");
+      }
+      if (!ok) {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        await supabaseAdmin
+          .from("profiles")
+          .update({ verify_status: "rejected", updated_at: new Date().toISOString() })
+          .eq("id", context.userId);
+        throw new Error("姓名与身份证号不一致，实名核验未通过");
+      }
+    }
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row, error } = await supabaseAdmin
       .from("profiles")
@@ -167,8 +200,9 @@ export const submitVerification = createServerFn({ method: "POST" })
       .select("*")
       .single();
     if (error) throw new Error(error.message);
-    return row as ProfileRow;
+    return { profile: row as ProfileRow, mode };
   });
+
 
 /* ---------------------------------- match ---------------------------------- */
 
