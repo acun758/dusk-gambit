@@ -33,6 +33,9 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   trainingPoints: 0,
   realName: "",
   avatarKey: "knight-azure",
+  avatarPath: "",
+  verifyStatus: "none",
+  idTail: "",
 };
 
 const KEY = "bs.profile.v1";
