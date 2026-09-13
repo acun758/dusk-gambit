@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AvatarPicker } from "@/components/AvatarPicker";
+import { VerificationCard } from "@/components/VerificationCard";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
@@ -66,7 +69,9 @@ function Dynasty() {
   const t = useT();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile, winRate, signedIn } = useProfile();
+  const { profile, winRate, signedIn, setAvatar, setAvatarImage, verifyIdentity } = useProfile();
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
