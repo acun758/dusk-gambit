@@ -2,7 +2,7 @@ import tarotKingAsset from "@/assets/tarot-king.jpg.asset.json";
 const posterThumb = tarotKingAsset.url;
 import { createFileRoute } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
-import { GameIcon } from "@/components/GameIcon";
+import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/archive")({
   head: () => ({
@@ -22,7 +22,7 @@ function ArchiveChronicle() {
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="fallen" />
-<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><GameIcon name="arsenal-medal" className="h-5 w-5" /></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><GameIcon name="duel-clock" className="h-5 w-5" /><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><GameIcon name="arsenal-sound" className="h-5 w-5" /></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><GameIcon name="account-user" className="h-5 w-5" /></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface"}>
+<header className={"desktop-page-header fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]"}><div className={"h-20 px-margin-mobile flex items-center justify-between"}><div className={"flex items-center gap-space-sm"}><div className={"w-11 h-11 bg-surface-container-high flex items-center justify-center relative"}><UiIcon name="medal-star" className="h-5 w-5" /></div><div className={"flex flex-col"}><div className={"flex items-center gap-space-xs"}><span className={"font-label-sm text-label-sm uppercase text-secondary tracking-widest"}>Rank 2480</span><span className={"w-1 h-1 rounded-full bg-primary"}></span><span className={"font-label-sm text-label-sm text-primary-fixed uppercase"}>Grandmaster</span></div><span className={"font-headline-sm text-headline-sm text-on-surface tracking-wider uppercase"}>Battle</span></div></div><div className={"flex items-center gap-space-xs"}><div className={"hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high"}><UiIcon name="equalizer" className="h-5 w-5" /><span className={"font-label-md text-label-md text-secondary tracking-widest"}>10:00</span></div><button aria-label={"Haptics & Audio"} className={"w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-secondary transition-colors"}><UiIcon name="volume" className="h-5 w-5" /></button><div className={"w-8 h-8 rounded-full bg-primary flex items-center justify-center"}><UiIcon name="chip-king" className="h-5 w-5" /></div></div></div></header><main className={"flex flex-col relative w-full pt-20 bg-surface min-h-screen"}><div className={"desktop-content-flow flex flex-col w-full pb-28 text-on-surface"}>
 
 <div className={"fixed inset-0 pointer-events-none overflow-hidden -z-10"}>
 <div className={"absolute -top-40 left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-primary-container/25 blur-[120px] rounded-full"}></div>
@@ -33,7 +33,7 @@ function ArchiveChronicle() {
 <div className={"flex items-center justify-between"}>
 <div className={"flex items-center gap-space-xs"}>
 <button aria-label={"Return to Battle Archive"} className={"w-8 h-8 flex items-center justify-center rounded bg-surface-container-high text-on-surface-variant hover:text-secondary transition-colors"}>
-<GameIcon name="action-back" className="h-5 w-5" />
+<UiIcon name="play-motion" className="h-5 w-5" />
 </button>
 <div className={"flex flex-col"}>
 <span className={"font-label-sm text-label-sm uppercase tracking-[0.2em] text-secondary"}>ARCHIVE CHRONICLE // 绝杀典藏</span>
@@ -42,7 +42,7 @@ function ArchiveChronicle() {
 </div>
 <div className={"flex items-center gap-space-xs"}>
 <button className={"px-space-sm py-1 rounded bg-surface-container-high text-on-surface flex items-center gap-1 hover:bg-surface-container-highest transition-colors"}>
-<GameIcon name="archive-tune" className="h-5 w-5" />
+<UiIcon name="sliders" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm uppercase tracking-widest"}>PRESETS</span>
 </button>
 </div>
@@ -60,7 +60,7 @@ function ArchiveChronicle() {
 <div className={"flex gap-space-xs overflow-x-auto no-scrollbar py-0.5"} id={"styleSelector"}>
 
 <button className={"flex items-center gap-1.5 px-space-sm py-1.5 rounded bg-surface-container-highest text-secondary shadow-[0_4px_16px_rgba(0,0,0,0.6)] shrink-0 transition-all"}>
-<GameIcon name="archive-tarot" className="h-5 w-5" />
+<UiIcon name="cards" className="h-5 w-5" />
 <div className={"flex flex-col items-start leading-none"}>
 <span className={"font-label-sm text-label-sm tracking-widest uppercase font-bold"}>TAROT ACE</span>
 <span className={"font-label-sm text-[9px] text-on-surface-variant tracking-normal"}>塔罗王牌</span>
@@ -68,7 +68,7 @@ function ArchiveChronicle() {
 </button>
 
 <button className={"flex items-center gap-1.5 px-space-sm py-1.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface shrink-0 transition-all"}>
-<GameIcon name="archive-landscape" className="h-5 w-5" />
+<UiIcon name="wallpaper" className="h-5 w-5" />
 <div className={"flex flex-col items-start leading-none"}>
 <span className={"font-label-sm text-label-sm tracking-widest uppercase"}>VOID POSTER</span>
 <span className={"font-label-sm text-[9px] text-outline tracking-normal"}>虚空巨幕</span>
@@ -76,7 +76,7 @@ function ArchiveChronicle() {
 </button>
 
 <button className={"flex items-center gap-1.5 px-space-sm py-1.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface shrink-0 transition-all"}>
-<GameIcon name="archive-notation" className="h-5 w-5" />
+<UiIcon name="scroll" className="h-5 w-5" />
 <div className={"flex flex-col items-start leading-none"}>
 <span className={"font-label-sm text-label-sm tracking-widest uppercase"}>WAR DISPATCH</span>
 <span className={"font-label-sm text-[9px] text-outline tracking-normal"}>战役军牒</span>
@@ -84,7 +84,7 @@ function ArchiveChronicle() {
 </button>
 
 <button className={"flex items-center gap-1.5 px-space-sm py-1.5 rounded bg-surface-container text-on-surface-variant hover:text-on-surface shrink-0 transition-all"}>
-<GameIcon name="archive-animation" className="h-5 w-5" />
+<UiIcon name="play-motion" className="h-5 w-5" />
 <div className={"flex flex-col items-start leading-none"}>
 <span className={"font-label-sm text-label-sm tracking-widest uppercase"}>9:16 STORY</span>
 <span className={"font-label-sm text-[9px] text-outline tracking-normal"}>动效剪影</span>
@@ -110,29 +110,29 @@ function ArchiveChronicle() {
 <div className={"flex items-center justify-between w-full"}>
 <div className={"flex flex-col items-center"}>
 <span className={"font-headline-sm text-headline-sm leading-none text-secondary font-bold"}>A</span>
-<GameIcon name="arsenal-fire" className="h-5 w-5" />
+<UiIcon name="flame" className="h-5 w-5" />
 </div>
 <div className={"flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md"}>
-<GameIcon name="archive-premium" className="h-5 w-5" />
+<UiIcon name="crown" className="h-5 w-5" />
 <span className={"font-label-sm text-[9px] text-secondary tracking-[0.2em] uppercase font-bold"}>ROYAL GRANDMASTER ARCHIVE</span>
 </div>
 <div className={"flex flex-col items-center"}>
 <span className={"font-headline-sm text-headline-sm leading-none text-secondary font-bold"}>A</span>
-<GameIcon name="arsenal-fire" className="h-5 w-5" />
+<UiIcon name="flame" className="h-5 w-5" />
 </div>
 </div>
 
 <div className={"flex items-center justify-between w-full"}>
 <div className={"flex flex-col items-center rotate-180"}>
 <span className={"font-headline-sm text-headline-sm leading-none text-secondary font-bold"}>A</span>
-<GameIcon name="arsenal-fire" className="h-5 w-5" />
+<UiIcon name="flame" className="h-5 w-5" />
 </div>
 <div className={"flex items-center gap-2"}>
 <span className={"font-label-sm text-[8px] tracking-[0.25em] text-outline uppercase font-mono"}>REGALIA SER. 049 // 3000</span>
 </div>
 <div className={"flex flex-col items-center rotate-180"}>
 <span className={"font-headline-sm text-headline-sm leading-none text-secondary font-bold"}>A</span>
-<GameIcon name="arsenal-fire" className="h-5 w-5" />
+<UiIcon name="flame" className="h-5 w-5" />
 </div>
 </div>
 </div>
@@ -148,7 +148,7 @@ function ArchiveChronicle() {
 
 <div className={"relative z-10 px-space-md pt-7 flex flex-col items-center text-center gap-1"}>
 <div className={"inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-primary-container/80 text-on-primary-container shadow-[0_0_12px_rgba(139,30,30,0.6)]"}>
-<GameIcon name="archive-brilliant" className="h-5 w-5" />
+<UiIcon name="sparkles" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm uppercase tracking-widest font-bold"}>BRILLIANT DECAPITATION • !!</span>
 </div>
 <h2 className={"font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-wider uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] mt-1"}>
@@ -157,7 +157,7 @@ function ArchiveChronicle() {
 <span className={"font-label-sm text-label-sm text-secondary tracking-[0.25em] uppercase"}>虚空斩首 • 终局绝杀</span>
 
 <div className={"mt-2 flex items-center gap-2 px-space-sm py-1 rounded bg-surface-container-high/90 backdrop-blur-md shadow-lg"}>
-<GameIcon name="arsenal-board" className="h-5 w-5" />
+<UiIcon name="cards" className="h-5 w-5" />
 <span className={"font-label-md text-label-md text-on-surface uppercase tracking-widest font-bold font-mono"}>MOVE 38: ♛ Qf7# CHECKMATE</span>
 <span className={"text-primary font-bold"}>#</span>
 </div>
@@ -177,7 +177,7 @@ function ArchiveChronicle() {
 
 <div className={"flex flex-col p-1.5 rounded bg-surface-container-high/80"}>
 <div className={"flex items-center gap-1 mb-0.5"}>
-<GameIcon name="arsenal-medal" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 <span className={"font-label-sm text-[10px] text-secondary font-bold uppercase tracking-wider"}>VICTOR</span>
 </div>
 <span className={"font-label-md text-label-md text-on-surface font-bold uppercase truncate"}>GM VANE</span>
@@ -189,7 +189,7 @@ function ArchiveChronicle() {
 
 <div className={"flex flex-col p-1.5 rounded bg-surface-container-low/80"}>
 <div className={"flex items-center gap-1 mb-0.5"}>
-<GameIcon name="archive-defeated" className="h-5 w-5" />
+<UiIcon name="skull" className="h-5 w-5" />
 <span className={"font-label-sm text-[10px] text-outline font-bold uppercase tracking-wider"}>DEFEATED</span>
 </div>
 <span className={"font-label-md text-label-md text-on-surface-variant font-medium uppercase truncate"}>LORD CINDERS</span>
@@ -219,7 +219,7 @@ function ArchiveChronicle() {
 <div className={"flex items-center justify-between pt-1"}>
 <div className={"flex items-center gap-2"}>
 <div className={"w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shadow-[0_0_8px_rgba(230,57,70,0.5)]"}>
-<GameIcon name="archive-token" className="h-5 w-5" />
+<UiIcon name="token" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col"}>
 <span className={"font-label-sm text-[9px] text-on-surface font-mono tracking-wider"}>FIDE #8492-CHESS</span>
@@ -228,7 +228,7 @@ function ArchiveChronicle() {
 </div>
 
 <div className={"flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high/90"}>
-<GameIcon name="archive-qr" className="h-5 w-5" />
+<UiIcon name="qr-replay" className="h-5 w-5" />
 <span className={"font-label-sm text-[9px] text-on-surface-variant font-mono tracking-widest"}>SCAN REPLAY</span>
 </div>
 </div>
@@ -246,41 +246,41 @@ function ArchiveChronicle() {
 
 <label className={"flex items-center justify-between p-space-xs rounded bg-surface-container cursor-pointer select-none"}>
 <div className={"flex items-center gap-1.5"}>
-<GameIcon name="archive-signature" className="h-5 w-5" />
+<UiIcon name="signature" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm text-on-surface"}>步法棋谱 (Notation)</span>
 </div>
 <div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 </div>
 </label>
 
 <label className={"flex items-center justify-between p-space-xs rounded bg-surface-container cursor-pointer select-none"}>
 <div className={"flex items-center gap-1.5"}>
-<GameIcon name="status-verified" className="h-5 w-5" />
+<UiIcon name="seal" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm text-on-surface"}>火漆印章 (Royal Seal)</span>
 </div>
 <div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 </div>
 </label>
 
 <label className={"flex items-center justify-between p-space-xs rounded bg-surface-container cursor-pointer select-none"}>
 <div className={"flex items-center gap-1.5"}>
-<GameIcon name="archive-opponent" className="h-5 w-5" />
+<UiIcon name="skull" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm text-on-surface"}>败者铭牌 (Opponent)</span>
 </div>
 <div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 </div>
 </label>
 
 <label className={"flex items-center justify-between p-space-xs rounded bg-surface-container cursor-pointer select-none"}>
 <div className={"flex items-center gap-1.5"}>
-<GameIcon name="archive-signature" className="h-5 w-5" />
+<UiIcon name="signature" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm text-on-surface"}>签名水印 (Signature)</span>
 </div>
 <div className={"w-4 h-4 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 </div>
 </label>
 </div>
@@ -290,9 +290,9 @@ function ArchiveChronicle() {
 
 <button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"exportPosterBtn"}>
 <div className={"absolute inset-0 bg-gradient-to-r from-secondary/0 via-secondary/20 to-secondary/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"}></div>
-<GameIcon name="archive-export" className="h-5 w-5" />
+<UiIcon name="download" className="h-5 w-5" />
 <span>生成高清典藏海报 (EXPORT 4K POSTER)</span>
-<GameIcon name="action-forward" className="h-5 w-5" />
+<UiIcon name="send" className="h-5 w-5" />
 </button>
 
 <div className={"flex flex-col gap-space-xs"}>
@@ -301,28 +301,28 @@ function ArchiveChronicle() {
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-center group"}>
 <div className={"w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center mb-1 group-hover:text-secondary text-on-surface transition-colors"}>
-<GameIcon name="archive-camera" className="h-5 w-5" />
+<UiIcon name="camera" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface"}>朋友圈/快拍</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-center group"}>
 <div className={"w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center mb-1 group-hover:text-secondary text-on-surface transition-colors"}>
-<GameIcon name="archive-forum" className="h-5 w-5" />
+<UiIcon name="forum" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface"}>公会殿堂</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-center group"}>
 <div className={"w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center mb-1 group-hover:text-secondary text-on-surface transition-colors"}>
-<GameIcon name="archive-wallpaper" className="h-5 w-5" />
+<UiIcon name="wallpaper" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface"}>动态壁纸</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-center group"} id={"copyHashBtn"}>
 <div className={"w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center mb-1 group-hover:text-secondary text-on-surface transition-colors"}>
-<GameIcon name="archive-link" className="h-5 w-5" />
+<UiIcon name="link" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[10px] text-on-surface-variant group-hover:text-on-surface"}>链上凭证</span>
 </button>
@@ -331,7 +331,7 @@ function ArchiveChronicle() {
 </section>
 
 <div className={"fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-space-md py-2 rounded bg-surface-container-highest text-secondary shadow-[0_8px_24px_rgba(0,0,0,0.8)] flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2"} id={"toastNotification"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 <span className={"font-label-sm text-label-sm font-semibold tracking-wider"} id={"toastMessage"}>战报海报已渲染就绪并存入相册</span>
 </div>
 </div>
@@ -357,7 +357,7 @@ function ArchiveChronicle() {
           </h3>
 </div>
 <button aria-label={"Close modal"} className={"w-8 h-8 rounded bg-surface-container-high text-on-surface-variant hover:text-secondary hover:bg-surface-container-highest flex items-center justify-center transition-colors"} id={"closeModalBtn"}>
-<GameIcon name="action-close" className="h-5 w-5" />
+<UiIcon name="action-close" className="h-5 w-5" />
 </button>
 </div>
 </div>
@@ -374,14 +374,14 @@ function ArchiveChronicle() {
 </div>
 <div className={"absolute bottom-1 left-1 right-1 flex items-center justify-between"}>
 <span className={"font-label-sm text-[8px] text-secondary font-mono tracking-tighter"}>Qf7#</span>
-<GameIcon name="status-verified" className="h-5 w-5" />
+<UiIcon name="seal" className="h-5 w-5" />
 </div>
 </div>
 
 <div className={"flex flex-col justify-between flex-1 h-28 py-0.5"}>
 <div className={"flex flex-col"}>
 <div className={"flex items-center gap-1"}>
-<GameIcon name="archive-victor" className="h-5 w-5" />
+<UiIcon name="medal-laurel" className="h-5 w-5" />
 <span className={"font-label-md text-label-md text-on-surface font-semibold truncate"}>THE QUEEN’S REIGN 绝杀王牌</span>
 </div>
 <span className={"font-label-sm text-[10px] text-on-surface-variant font-mono mt-0.5"}>GM VANE vs LORD CINDERS (#8492)</span>
@@ -389,15 +389,15 @@ function ArchiveChronicle() {
 
 <div className={"flex items-center gap-1.5 flex-wrap"}>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary text-label-sm font-medium transition-colors"}>
-<GameIcon name="archive-download" className="h-5 w-5" />
+<UiIcon name="archive-download" className="h-5 w-5" />
 <span>保存到相册</span>
 </button>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-sm font-medium transition-colors"}>
-<GameIcon name="archive-wallpaper" className="h-5 w-5" />
+<UiIcon name="wallpaper" className="h-5 w-5" />
 <span>动态壁纸</span>
 </button>
 <button className={"flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant text-label-sm transition-colors"}>
-<GameIcon name="action-copy" className="h-5 w-5" />
+<UiIcon name="action-copy" className="h-5 w-5" />
 <span>复制4K链接</span>
 </button>
 </div>
@@ -413,28 +413,28 @@ function ArchiveChronicle() {
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-secondary transition-colors shadow-sm"}>
-<GameIcon name="archive-share" className="h-5 w-5" />
+<UiIcon name="archive-share" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>微信好友</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-secondary transition-colors shadow-sm"}>
-<GameIcon name="archive-camera" className="h-5 w-5" />
+<UiIcon name="camera" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>朋友圈/快拍</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-primary transition-colors shadow-sm"}>
-<GameIcon name="arsenal-vfx-style" className="h-5 w-5" />
+<UiIcon name="arsenal-vfx-style" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>小红书/微博</span>
 </button>
 
 <button className={"flex flex-col items-center justify-center p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-center"}>
 <div className={"w-10 h-10 rounded-full bg-surface-container-high group-hover:bg-surface-container-highest flex items-center justify-center mb-1 text-on-surface transition-colors shadow-sm"}>
-<GameIcon name="archive-airdrop" className="h-5 w-5" />
+<UiIcon name="archive-airdrop" className="h-5 w-5" />
 </div>
 <span className={"font-label-sm text-[11px] text-on-surface group-hover:text-secondary"}>隔空投送</span>
 </button>
@@ -450,7 +450,7 @@ function ArchiveChronicle() {
 
 <button className={"flex items-center gap-2 p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-left"}>
 <div className={"w-8 h-8 rounded bg-primary-container flex items-center justify-center text-secondary shrink-0 shadow-sm"}>
-<GameIcon name="arsenal-shield" className="h-5 w-5" />
+<UiIcon name="arsenal-shield" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col min-w-0 leading-tight"}>
 <span className={"cjk font-label-sm text-[11px] text-on-surface font-semibold whitespace-nowrap group-hover:text-secondary"}>血誓公会殿堂</span>
@@ -460,7 +460,7 @@ function ArchiveChronicle() {
 
 <button className={"flex items-center gap-2 p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-left"}>
 <div className={"w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-secondary shrink-0 shadow-sm"}>
-<GameIcon name="archive-forum" className="h-5 w-5" />
+<UiIcon name="forum" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col min-w-0 leading-tight"}>
 <span className={"font-label-sm text-[11px] text-on-surface font-semibold truncate group-hover:text-secondary"}>Discord / X</span>
@@ -470,7 +470,7 @@ function ArchiveChronicle() {
 
 <button className={"flex items-center gap-2 p-2 rounded bg-surface-container hover:bg-surface-container-high transition-colors group text-left"}>
 <div className={"w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary shrink-0 shadow-sm"}>
-<GameIcon name="archive-notation" className="h-5 w-5" />
+<UiIcon name="scroll" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col min-w-0 leading-tight"}>
 <span className={"font-label-sm text-[11px] text-on-surface font-semibold truncate group-hover:text-secondary"}>对局名局录</span>
@@ -483,7 +483,7 @@ function ArchiveChronicle() {
 <div className={"flex items-center justify-between p-2 rounded bg-surface-container-lowest border border-primary-container/40 shadow-sm"}>
 <div className={"flex items-center gap-2 min-w-0"}>
 <div className={"w-7 h-7 rounded-full bg-primary-container flex items-center justify-center text-secondary shrink-0"}>
-<GameIcon name="archive-token" className="h-5 w-5" />
+<UiIcon name="token" className="h-5 w-5" />
 </div>
 <div className={"flex flex-col min-w-0"}>
 <span className={"font-label-sm text-[11px] text-on-surface font-semibold truncate"}>铸造为链上对局永恒圣物 (Relic #8492)</span>
@@ -493,20 +493,20 @@ function ArchiveChronicle() {
 <label className={"flex items-center cursor-pointer"}>
 <input defaultChecked className={"hidden"} type={"checkbox"} />
 <div className={"w-5 h-5 rounded bg-primary-container flex items-center justify-center text-on-primary-container"}>
-<GameIcon name="status-check" className="h-5 w-5" />
+<UiIcon name="medal-star" className="h-5 w-5" />
 </div>
 </label>
 </div>
 
 <div className={"pt-1 flex flex-col gap-1.5"}>
 <button className={"relative group w-full py-3 px-space-md rounded bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-[0.14em] font-bold shadow-[0_8px_30px_rgba(139,30,30,0.6)] flex items-center justify-center gap-2 hover:bg-inverse-primary active:scale-[0.99] transition-all overflow-hidden"} id={"dispatchNowBtn"}>
-<GameIcon name="archive-send" className="h-5 w-5" />
+<UiIcon name="archive-send" className="h-5 w-5" />
 <span>一键全网分发 (SHARE IMMEDIATELY)</span>
-<GameIcon name="action-forward" className="h-5 w-5" />
+<UiIcon name="send" className="h-5 w-5" />
 </button>
 <div className={"flex items-center justify-between px-1"}>
 <button className={"font-label-sm text-[10px] text-outline hover:text-secondary uppercase tracking-wider flex items-center gap-1"}>
-<GameIcon name="archive-tune" className="h-5 w-5" />
+<UiIcon name="sliders" className="h-5 w-5" />
 <span>调整海报水印/边框样式</span>
 </button>
 <button className={"font-label-sm text-[10px] text-outline hover:text-on-surface uppercase tracking-wider"}>

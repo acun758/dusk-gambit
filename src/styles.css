@@ -63,18 +63,18 @@
   --spacing-space-xs: 0.25rem;
   --font-cjk-sans: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-cjk-serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  --font-body-lg: "IBM Plex Sans", var(--font-cjk-sans);
-  --font-body-md: "IBM Plex Sans", var(--font-cjk-sans);
-  --font-body-sm: "IBM Plex Sans", var(--font-cjk-sans);
-  --font-headline-lg: "Libre Baskerville", var(--font-cjk-serif);
-  --font-headline-lg-mobile: "Libre Baskerville", var(--font-cjk-serif);
-  --font-headline-md: "Libre Baskerville", var(--font-cjk-serif);
-  --font-headline-sm: "Libre Baskerville", var(--font-cjk-serif);
-  --font-headline-xl: "Libre Baskerville", var(--font-cjk-serif);
-  --font-headline-xl-mobile: "Libre Baskerville", var(--font-cjk-serif);
-  --font-label-lg: "IBM Plex Sans", var(--font-cjk-sans);
-  --font-label-md: "IBM Plex Sans", var(--font-cjk-sans);
-  --font-label-sm: "IBM Plex Sans", var(--font-cjk-sans);
+  --font-body-lg: "Fira Sans", var(--font-cjk-sans);
+  --font-body-md: "Fira Sans", var(--font-cjk-sans);
+  --font-body-sm: "Fira Sans", var(--font-cjk-sans);
+  --font-headline-lg: "DM Serif Display", var(--font-cjk-serif);
+  --font-headline-lg-mobile: "DM Serif Display", var(--font-cjk-serif);
+  --font-headline-md: "DM Serif Display", var(--font-cjk-serif);
+  --font-headline-sm: "DM Serif Display", var(--font-cjk-serif);
+  --font-headline-xl: "DM Serif Display", var(--font-cjk-serif);
+  --font-headline-xl-mobile: "DM Serif Display", var(--font-cjk-serif);
+  --font-label-lg: "Fira Sans", var(--font-cjk-sans);
+  --font-label-md: "Fira Sans", var(--font-cjk-sans);
+  --font-label-sm: "Fira Sans", var(--font-cjk-sans);
   --text-body-lg: 16px;
   --text-body-lg--line-height: 27px;
   --text-body-lg--font-weight: 400;
@@ -86,27 +86,27 @@
   --text-body-sm--font-weight: 400;
   --text-headline-lg: 36px;
   --text-headline-lg--line-height: 44px;
-  --text-headline-lg--letter-spacing: 0.04em;
+  --text-headline-lg--letter-spacing: 0;
   --text-headline-lg--font-weight: 600;
   --text-headline-lg-mobile: 26px;
   --text-headline-lg-mobile--line-height: 34px;
-  --text-headline-lg-mobile--letter-spacing: 0.05em;
+  --text-headline-lg-mobile--letter-spacing: 0;
   --text-headline-lg-mobile--font-weight: 600;
   --text-headline-md: 24px;
   --text-headline-md--line-height: 32px;
-  --text-headline-md--letter-spacing: 0.04em;
+  --text-headline-md--letter-spacing: 0;
   --text-headline-md--font-weight: 600;
   --text-headline-sm: 18px;
   --text-headline-sm--line-height: 26px;
-  --text-headline-sm--letter-spacing: 0.03em;
+  --text-headline-sm--letter-spacing: 0;
   --text-headline-sm--font-weight: 500;
   --text-headline-xl: 48px;
   --text-headline-xl--line-height: 56px;
-  --text-headline-xl--letter-spacing: 0.05em;
+  --text-headline-xl--letter-spacing: 0;
   --text-headline-xl--font-weight: 700;
   --text-headline-xl-mobile: 32px;
   --text-headline-xl-mobile--line-height: 40px;
-  --text-headline-xl-mobile--letter-spacing: 0.06em;
+  --text-headline-xl-mobile--letter-spacing: 0;
   --text-headline-xl-mobile--font-weight: 700;
   --text-label-lg: 13px;
   --text-label-lg--line-height: 19px;
@@ -137,8 +137,8 @@
   --color-board-frame-highlight: #b98a45;
   --color-board-light-highlight: #c49a68;
   --color-board-dark-highlight: #592326;
-  --font-serifTitle: "Cinzel", "Playfair Display", Didot, STSong, SimSun, serif;
-  --font-sansUI: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-serifTitle: "DM Serif Display", "Noto Serif SC", STSong, SimSun, serif;
+  --font-sansUI: "Fira Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 @layer base {
@@ -205,7 +205,7 @@
      optical trim so 中文 in a tracked label doesn't read as scattered. */
   :lang(zh),
   .cjk {
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     font-family: var(--font-cjk-sans);
   }
 }
@@ -233,7 +233,19 @@
   flex: none;
   object-fit: contain;
   image-rendering: auto;
-  filter: drop-shadow(0 1px 2px color-mix(in oklab, var(--color-surface) 65%, transparent));
+  filter: drop-shadow(0 1px 1px color-mix(in oklab, var(--color-surface) 62%, transparent));
+  shape-rendering: geometricPrecision;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.rank-hero-mark {
+  border: 1px solid color-mix(in oklab, var(--color-secondary) 42%, transparent);
+  box-shadow:
+    inset 0 0 0 2px var(--color-surface-container-lowest),
+    0 0 22px color-mix(in oklab, var(--color-secondary) 12%, transparent);
 }
 
 .player-mark {
@@ -314,6 +326,73 @@
     background:
       linear-gradient(90deg, color-mix(in oklab, var(--color-surface) 88%, transparent) 0%, color-mix(in oklab, var(--color-surface) 58%, transparent) 38%, color-mix(in oklab, var(--color-surface) 34%, transparent) 100%),
       linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 58%, transparent), color-mix(in oklab, var(--color-surface) 82%, transparent));
+  }
+}
+
+/* Desktop-only immersive stage. Phone and iPad geometry remains unchanged. */
+@media (min-width: 1280px) {
+  .app-shell {
+    padding-left: 10rem;
+  }
+
+  .sovereign-rail {
+    width: 10rem;
+    background: color-mix(in oklab, var(--color-surface-container-lowest) 92%, transparent);
+  }
+
+  .rail-brand {
+    padding-inline: 1rem;
+  }
+
+  .rail-brand-title {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .rail-brand-subtitle,
+  .rail-account {
+    display: none;
+  }
+
+  .rail-label {
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+
+  .app-shell [class*="fixed"][class*="top-0"],
+  .app-shell [class*="fixed"][class*="bottom-0"],
+  .desktop-page-header {
+    left: 10rem;
+    width: calc(100% - 10rem);
+  }
+
+  .desktop-page-container,
+  .desktop-content-flow {
+    width: min(100%, 1440px);
+  }
+
+  .battle-stage {
+    min-height: calc(100dvh - 4rem);
+    align-content: start;
+    padding-top: 1rem;
+    gap: 1.5rem;
+  }
+
+  .battle-stage .battle-column {
+    --battle-core-width: min(66vw, 720px, calc(100dvh - 7rem));
+    max-width: var(--battle-core-width);
+  }
+
+  .duel-live-panel {
+    width: min(23vw, 360px);
+    top: 5rem;
+  }
+
+  .stage-panel {
+    background: color-mix(in oklab, var(--color-surface-container-lowest) 78%, transparent);
+    border-left: 1px solid color-mix(in oklab, var(--color-secondary) 24%, transparent);
+    backdrop-filter: blur(18px);
+    box-shadow: -18px 0 46px color-mix(in oklab, var(--color-surface-dim) 46%, transparent);
   }
 }
 
@@ -882,7 +961,7 @@
 /* Explicit bilingual helpers for mixed lines: <span class="cjk">中文</span> */
 @utility cjk-serif {
   font-family: var(--font-cjk-serif);
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   font-weight: 600;
 }
 
@@ -933,20 +1012,3 @@
   }
 }
 
-.material-symbols-outlined {
-  font-family: "Material Symbols Outlined";
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
-}
