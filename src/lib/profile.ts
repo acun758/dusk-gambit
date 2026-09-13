@@ -83,15 +83,21 @@ interface CloudRow {
   training_points: number;
   real_name?: string;
   avatar_key?: string;
+  avatar_url?: string;
+  verify_status?: string;
+  id_tail?: string;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, real_name, avatar_key, ...profile } = row;
+  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, ...profile } = row;
   return {
     ...profile,
     trainingPoints: training_points,
     realName: real_name ?? "",
     avatarKey: avatar_key || "knight-azure",
+    avatarPath: avatar_url ?? "",
+    verifyStatus: (verify_status as PlayerProfile["verifyStatus"]) || "none",
+    idTail: id_tail ?? "",
     ...tierFor(row.elo),
   };
 }
