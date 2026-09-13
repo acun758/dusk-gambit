@@ -626,3 +626,79 @@ export const getLobbyStats = createServerFn({ method: "GET" }).handler(async ():
     })),
   };
 });
+
+/* ----------------------------- promotion series ---------------------------- */
+
+export interface PromotionSeries {
+  id: string;
+  fromFloor: number;
+  toFloor: number;
+  wins: number;
+  losses: number;
+  requiredWins: number;
+  maxLosses: number;
+  status: string;
+  createdAt: string;
+}
+
+export interface PromotionRival {
+  id: string;
+  name: string;
+  handle: string;
+  elo: number;
+  toFloor: number;
+  wins: number;
+  losses: number;
+}
+
+/** 我的晋升挑战赛状态（三局两胜）与最近一次结果。 */
+export const getPromotionSeries = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ active: PromotionSeries | null; last: PromotionSeries | null }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("promotion_series")
+      .select("*")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(5);
+    const shape = (r: Record<string, unknown>): PromotionSeries => ({
+      id: r['id'] as string,
+      fromFloor: r['from_floor'] as number,
+      toFloor: r['to_floor'] as number,
+      wins: r['wins'] as number,
+      losses: r['losses'] as number,
+      requiredWins: r['required_wins'] as number,
+      maxLosses: r['max_losses'] as number,
+      status: r['status'] as string,
+      createdAt: r['created_at'] as string,
+    });
+    const rows = (data ?? []).map(shape);
+    return {
+      active: rows.find((r) => r.status === "active") ?? null,
+      last: rows.find((r) => r.status !== "active") ?? null,
+    };
+  });
+
+/** 正在争夺晋升资格的段位相近者，可直接点名约战。 */
+export const listPromotionRivals = createServerFn({ method: "GET" }).handler(async (): Promise<PromotionRival[]> => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin
+    .from("promotion_series")
+    .select("user_id,to_floor,wins,losses")
+    .eq("status", "active")
+    .order("created_at", { ascending: false })
+    .limit(20);
+  const rows = data ?? [];
+  if (!rows.length) return [];
+  const { data: profiles } = await supabaseAdmin
+    .from("profiles")
+    .select("id,name,handle,elo")
+    .in("id", rows.map((r) => r.user_id));
+  return rows
+    .map((r) => {
+      const p = (profiles ?? []).find((x) => x.id === r.user_id);
+      return p ? { id: p.id, name: p.name, handle: p.handle, elo: p.elo, toFloor: r.to_floor, wins: r.wins, losses: r.losses } : null;
+    })
+    .filter(Boolean) as PromotionRival[];
+});
