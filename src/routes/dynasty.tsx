@@ -248,6 +248,96 @@ function Dynasty() {
             )}
           </section>
 
+          {/* 晋升挑战赛 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="段位晋升挑战赛" en="Promotion Series" />
+              </h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest shrink-0">
+                {t("三局两胜", "Best of three")}
+              </span>
+            </div>
+
+            {series ? (
+              <div className="bg-surface-container-lowest p-space-sm flex flex-col gap-space-xs">
+                <div className="flex items-center justify-between gap-space-sm">
+                  <span className="cjk font-label-md text-label-md text-primary truncate">
+                    {t(`冲击 ${series.toFloor}+ 段位`, `Pushing for ${series.toFloor}+`)}
+                  </span>
+                  <span className="font-label-md text-label-md text-secondary tabular-nums shrink-0">
+                    {series.wins} / {series.requiredWins}
+                  </span>
+                </div>
+                <div className="flex gap-space-xs" aria-hidden="true">
+                  {Array.from({ length: series.requiredWins + series.maxLosses - 1 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-2 flex-1 ${
+                        i < series.wins ? "bg-secondary" : i < series.wins + series.losses ? "bg-primary/70" : "bg-surface-container-high"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                  {t(
+                    `已胜 ${series.wins} 场、负 ${series.losses} 场。再胜 ${Math.max(0, series.requiredWins - series.wins)} 场正式晋升；若累计 ${series.maxLosses} 负，积分回落 30 分重回原段位。`,
+                    `${series.wins}W ${series.losses}L. ${Math.max(0, series.requiredWins - series.wins)} more win(s) to promote; ${series.maxLosses} losses drop you 30 points.`,
+                  )}
+                </p>
+              </div>
+            ) : (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                {lastSeries
+                  ? t(
+                      lastSeries.status === "won"
+                        ? `上次晋升挑战赛告捷，已进入 ${lastSeries.toFloor}+ 段位。`
+                        : `上次冲击 ${lastSeries.toFloor}+ 未成功，积分达到门槛会自动重开挑战赛。`,
+                      lastSeries.status === "won" ? `Last series won at ${lastSeries.toFloor}+.` : `Last series lost; it reopens at ${lastSeries.toFloor}.`,
+                    )
+                  : t(
+                      `积分达到 ${nextTier ? nextTier.floor : current.floor} 时自动开启晋升挑战赛，与段位相近者争夺晋升资格。`,
+                      `Reach ${nextTier ? nextTier.floor : current.floor} to trigger a promotion series against nearby rivals.`,
+                    )}
+              </p>
+            )}
+
+            <div className="grid gap-space-xs">
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                {t("正在争夺晋升资格的相近段位对手", "Rivals currently in a promotion series")}
+              </span>
+              {rivals.length === 0 && (
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                  {t("当前没有段位相近的晋升挑战者。", "No nearby challengers right now.")}
+                </p>
+              )}
+              {rivals.map((r) => (
+                <div key={r.id} className="flex items-center justify-between gap-space-sm bg-surface-container-lowest p-space-sm">
+                  <div className="flex flex-col min-w-0">
+                    <span className="cjk font-label-md text-label-md truncate">{r.name}</span>
+                    <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                      {r.elo} ELO · {t(`冲击 ${r.toFloor}+`, `to ${r.toFloor}+`)} · {r.wins}W {r.losses}L
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => challenge(r.id)}
+                    disabled={!signedIn}
+                    className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
+                  >
+                    {t("发起挑战", "Challenge")}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              {t(
+                "积分规则：2200 分以下每局 ±32，2200–2500 为 ±24，2500 以上为 ±16；连胜额外加分最多 +6；失利有保级缓冲，一局最多掉到段位门槛下 25 分。",
+                "Rating: ±32 below 2200, ±24 to 2500, ±16 above; up to +6 streak bonus; a loss never drops you more than 25 below your tier floor.",
+              )}
+            </p>
+          </section>
+
           {/* 战绩 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <h2 className="font-headline-sm text-headline-sm tracking-wider">
