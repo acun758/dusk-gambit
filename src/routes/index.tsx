@@ -63,7 +63,7 @@ function Index() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 flex items-center justify-center shrink-0 overflow-hidden">
-              <PlayerAvatar className="h-10 w-10" label={t("玩家头像", "Player avatar")} />
+              <GameIcon name="brand-emblem" className="h-10 w-10" label={t("王座殿堂徽章", "Throne court emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
