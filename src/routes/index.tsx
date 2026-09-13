@@ -75,7 +75,7 @@ function Index() {
                   {t(profile.tierZh, profile.tier)}
                 </span>
               </div>
-              <span className="font-headline-lg text-headline-lg sm:font-display-lg sm:text-display-lg text-on-surface tracking-[0.12em] leading-tight truncate">
+              <span className="font-headline-lg text-headline-lg text-on-surface tracking-[0.12em] leading-tight truncate">
                 <Bi zh="王座殿堂" en="Throne Court" />
               </span>
               <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
@@ -98,7 +98,7 @@ function Index() {
         </div>
       </header>
 
-      <main className="page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen">
+      <main className="page-main-hero flex flex-col relative w-full bg-surface min-h-screen">
         <div className="desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
           <div>
             <InvitePoster />
