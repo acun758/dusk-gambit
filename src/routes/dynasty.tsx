@@ -120,9 +120,37 @@ function Dynasty() {
   const ladder = ladderQ.data ?? [];
   const myRank = ladder.findIndex((row) => row.name === profile.name && row.elo === profile.elo) + 1;
 
+  const series = seriesQ.data?.active ?? null;
+  const lastSeries = seriesQ.data?.last ?? null;
+  const rivals = (rivalsQ.data ?? []).filter((r) => Math.abs(r.elo - profile.elo) <= 120);
+
+  const ceremony = usePromotionCeremony(
+    { key: current.en, zh: current.zh, en: current.en, art: current.art, floor: current.floor },
+    signedIn,
+  );
+
+  const challenge = (rivalId: string) => {
+    void createDuelInvite({ data: { invitedId: rivalId } }).then(() => navigate({ to: "/battle" }));
+  };
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    for (const k of ["bs.profile.v1", "bs.tier.v1", "bs.realname.v1"]) {
+      try {
+        window.localStorage.removeItem(k);
+      } catch {
+        /* storage unavailable */
+      }
+    }
+    await supabase.auth.signOut();
+    void navigate({ to: "/auth", replace: true });
+  };
+
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
       <ThemeBackdrop theme="blackGold" />
+      <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
