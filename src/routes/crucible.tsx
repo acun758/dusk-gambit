@@ -145,6 +145,8 @@ function Crucible() {
               <Bi zh="残局试炼" en="Endgame Crucible" />
             </h1>
           </div>
+          <div className="flex shrink-0 items-center gap-space-xs">
+            <LangToggle />
           <button
             onClick={() => setBlind((b) => !b)}
             className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
