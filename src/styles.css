@@ -329,6 +329,11 @@
   padding-top: calc(5rem + env(safe-area-inset-top, 0px));
 }
 
+/* Home court header is a grander brand block. */
+.page-main-hero {
+  padding-top: calc(6rem + env(safe-area-inset-top, 0px));
+}
+
 .page-main-compact {
   padding-top: calc(4rem + env(safe-area-inset-top, 0px));
 }

@@ -60,24 +60,25 @@ function Index() {
       <ThemeBackdrop theme="storm" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
-        <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
-          <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 flex items-center justify-center shrink-0 overflow-hidden">
-              <GameIcon name="brand-emblem" className="h-10 w-10" label={t("王座殿堂徽章", "Throne court emblem")} />
+        <div className="h-24 px-margin-mobile flex items-center justify-between gap-space-sm">
+          <div className="flex items-center gap-space-md min-w-0">
+            <div className="w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden rounded-sm gold-hairline bg-surface-container/40">
+              <GameIcon name="brand-emblem" className="h-14 w-14 sm:h-16 sm:w-16" label={t("王座殿堂徽章", "Throne court emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
-                <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest tabular-nums">
+                <span className="font-label-md text-label-md uppercase text-secondary tracking-widest tabular-nums">
                   {profile.elo} ELO
                 </span>
-                <span className="w-1 h-1 rounded-full bg-primary" />
-                <span className="cjk font-label-sm text-label-sm text-primary-fixed truncate">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="cjk font-label-md text-label-md text-primary-fixed truncate">
                   {t(profile.tierZh, profile.tier)}
                 </span>
               </div>
-              <span className="font-headline-sm text-headline-sm text-on-surface tracking-wider truncate">
+              <span className="font-headline-lg text-headline-lg text-on-surface tracking-[0.12em] leading-tight truncate">
                 <Bi zh="王座殿堂" en="Throne Court" />
               </span>
+              <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
@@ -97,7 +98,7 @@ function Index() {
         </div>
       </header>
 
-      <main className="page-main-dashboard flex flex-col relative w-full bg-surface min-h-screen">
+      <main className="page-main-hero flex flex-col relative w-full bg-surface min-h-screen">
         <div className="desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
           <div>
             <InvitePoster />
