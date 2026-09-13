@@ -219,7 +219,8 @@ function Battle() {
 
           <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
         </section>
-        <DuelPanel session={session} />
+        )}
+        {tab === "duel" && <DuelPanel session={session} />}
       </main>
     </div>
   );
