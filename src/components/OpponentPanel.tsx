@@ -54,17 +54,16 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     setVerifyStatus(profileQ.data?.verify_status ?? "none");
   }, [profileQ.data?.real_name, profileQ.data?.verify_status]);
 
-  // 实名完成后从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
+  // 从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
   const [autoQueued, setAutoQueued] = useState(false);
   useEffect(() => {
     if (autoQueued || signedIn !== true) return;
     if (!new URLSearchParams(window.location.search).has("lobby")) return;
-    if (profileQ.data?.verify_status !== "verified") return;
     setAutoQueued(true);
     setTab("auto");
-    setNotice("实名已确认，正在为你匹配段位相近的对手…");
+    setNotice("正在为你匹配段位相近的对手…");
     if (!ranked) onStartRanked();
-  }, [autoQueued, signedIn, profileQ.data?.real_name, ranked, onStartRanked]);
+  }, [autoQueued, signedIn, ranked, onStartRanked]);
 
   const invitesQ = useQuery({
     queryKey: ["duel-invites", signedIn],
@@ -95,14 +94,10 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
+  // 实名认证改为可选：不再限制约战与匹配
   const verified = verifyStatus === "verified" && realNameSaved.length >= 2;
-  const requireName = () => {
-    setNotice("请先完成实名认证，再发起或接受约战。");
-    setTab("invite");
-  };
 
   const accept = (inviteCode: string) => {
-    if (!verified) return requireName();
     setNotice(null);
     void joinDuelInvite({ data: { code: inviteCode } })
       .then(() => {
@@ -113,7 +108,6 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   };
 
   const makeInvite = (invitedId?: string) => {
-    if (!verified) return requireName();
     setNotice(null);
     void createDuelInvite({ data: invitedId ? { invitedId } : {} })
       .then((r) => {
