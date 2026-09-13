@@ -145,7 +145,7 @@ function Index() {
 
           {/* 仪表盘 */}
           <section className="mt-space-lg flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between gap-space-sm">
+            <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 <Bi zh="天梯征伐" en="Ranked Conquest" />
               </h2>
@@ -244,7 +244,7 @@ function Index() {
           </section>
 
           <section className="mt-space-lg flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between gap-space-sm">
+            <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm"><Bi zh="真人约战" en="Ranked Challenges" /></h2>
               <span className="font-label-sm text-label-sm text-secondary">3+2</span>
             </div>
@@ -280,7 +280,7 @@ function Index() {
 
           {/* 军械库 */}
           <section className="mt-space-lg flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between gap-space-sm">
+            <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm text-on-surface"><Bi zh="军械典藏" en="Arsenal Collection" /></h2>
               <Link to="/arsenal" className="cjk min-h-11 flex items-center text-secondary font-label-sm text-label-sm">{t("查看全部 →", "View all →")}</Link>
             </div>

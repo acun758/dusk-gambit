@@ -13,7 +13,7 @@ const PRIMARY = [
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
   const { lang } = useLang();
-  return <span className={lang === "zh" ? "cjk tracking-[0.08em]" : ""}>{lang === "zh" ? zh : en}</span>;
+  return <span className={lang === "zh" ? "cjk" : ""}>{lang === "zh" ? zh : en}</span>;
 }
 
 function LangToggle({ className = "" }: { className?: string }) {
@@ -52,7 +52,7 @@ export function SovereignNav() {
               <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
                 <UiIcon name={item.icon} className={`h-7 w-7 transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-60 grayscale-[25%]"}`} />
               </span>
-              <span className="font-label-sm text-label-sm tracking-widest uppercase">
+              <span className="font-label-sm text-label-sm uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
             </Link>

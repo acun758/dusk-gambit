@@ -10,3 +10,6 @@
 - [x] Complete promotion challenge UI and ceremony
 - [x] Normalize top spacing across entry pages
 - [x] Validate end-to-end flows and responsive layouts
+- [x] 统一全站字体层级、中文间距与内容左右基线
+- [x] 重排对弈页实名、搜索与对战码表单
+- [ ] 验证八个页面四类视口的字号、边线与表单

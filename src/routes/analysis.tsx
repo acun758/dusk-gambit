@@ -147,12 +147,12 @@ function Analysis() {
       <ThemeBackdrop theme="fallen" />
       <SovereignPageHeader icon="nav-review" titleZh="对局复盘" titleEn="Match Review" />
 
-      <main className="page-main-dashboard px-margin-mobile md:px-0">
+      <main className="page-main-dashboard">
         <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
           <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-space-sm">
+            <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
-                <h2 className="cjk font-label-lg text-label-lg">对局历史</h2>
+                 <h2 className="cjk font-headline-sm text-headline-sm">对局历史</h2>
                 {activeMatch ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
                     对手 {activeMatch.opponent} · {matchResult(activeMatch)} · {activeMatch.ply} 手 · {new Date(activeMatch.playedAt).toLocaleDateString("zh-CN")}

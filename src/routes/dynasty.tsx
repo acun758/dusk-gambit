@@ -252,7 +252,7 @@ function Dynasty() {
 
           {/* 晋升挑战赛 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between gap-space-sm">
+            <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="段位晋升挑战赛" en="Promotion Series" />
               </h2>
@@ -376,7 +376,7 @@ function Dynasty() {
 
           {/* 段位榜 */}
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
-            <div className="flex items-center justify-between gap-space-sm">
+            <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="段位榜" en="Leaderboard" />
               </h2>
@@ -432,7 +432,7 @@ function Dynasty() {
         {/* 九重王座 + 试炼联动 */}
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0 lg:sticky lg:top-24">
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-xs">
-            <div className="flex items-center justify-between mb-space-xs">
+             <div className="section-heading-row mb-space-xs">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="天梯王座" en="Ladder" />
               </h2>
