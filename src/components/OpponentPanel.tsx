@@ -59,7 +59,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   useEffect(() => {
     if (autoQueued || signedIn !== true) return;
     if (!new URLSearchParams(window.location.search).has("lobby")) return;
-    if ((profileQ.data?.real_name ?? "").length < 2) return;
+    if (profileQ.data?.verify_status !== "verified") return;
     setAutoQueued(true);
     setTab("auto");
     setNotice("实名已确认，正在为你匹配段位相近的对手…");
