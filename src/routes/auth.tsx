@@ -6,6 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
+import { saveRealName } from "@/lib/game.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
