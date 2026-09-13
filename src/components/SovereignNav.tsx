@@ -18,10 +18,9 @@ function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { profile, signedIn } = useProfile();
-  // 实名认证通过前隐藏天梯入口：未认证只能对弈与训练
-  const hideLadder = signedIn && profile.verifyStatus !== "verified";
-  const items = PRIMARY.filter((item) => !(hideLadder && item.to === "/dynasty"));
+  const { signedIn } = useProfile();
+  // 实名认证为可选项，不再限制天梯入口
+  const items = PRIMARY;
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
 
