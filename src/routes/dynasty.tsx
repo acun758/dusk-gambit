@@ -156,8 +156,8 @@ function Dynasty() {
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0">
-              <UiIcon name="medal-laurel" className="h-9 w-9" />
+            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-surface-container-high flex items-center justify-center shrink-0">
+              <UiIcon name="medal-laurel" className="h-9 w-9 sm:h-11 sm:w-11" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -200,8 +200,8 @@ function Dynasty() {
           <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
             <div className="flex items-start justify-between gap-space-sm">
               <div className="flex items-center gap-space-md min-w-0">
-                <div className="rank-hero-mark w-20 h-20 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
-                  <GameIcon name={current.art} className="h-[4.5rem] w-[4.5rem]" />
+                <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-lg">
+                  <GameIcon name={current.art} className="h-20 w-20 sm:h-24 sm:w-24" />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="cjk font-headline-sm text-headline-sm truncate">{t(current.zh, current.en)}</span>
