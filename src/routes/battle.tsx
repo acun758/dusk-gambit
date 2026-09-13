@@ -8,6 +8,8 @@ import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
+import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import { useProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -27,6 +29,7 @@ const PHASE: Record<string, string> = { idle: "待命", connecting: "连接中",
 
 function Battle() {
   const session = useDuelSession();
+  const { profile, signedIn } = useProfile();
   const waiting = session.state.status === "waiting";
   const myTurn = session.state.turn === session.state.you && session.state.status === "live" && !session.movePending;
   const opponent = session.state.you === "w" ? session.state.players.b : session.state.players.w;
@@ -38,9 +41,16 @@ function Battle() {
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
   const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
+  const rankArt = profile.elo >= 2600 ? "rank-sovereign" : profile.elo >= 2500 ? "rank-apex" : profile.elo >= 2400 ? "rank-grandmaster" : profile.elo >= 2200 ? "rank-master" : "rank-knight";
+  const ceremony = usePromotionCeremony(
+    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: profile.elo >= 2600 ? 2600 : profile.elo >= 2500 ? 2500 : profile.elo >= 2400 ? 2400 : profile.elo >= 2200 ? 2200 : 0 },
+    signedIn && ranked,
+  );
+  const ratingDelta = session.ratings?.ratingDelta ?? 0;
   return (
     <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
+      <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
           <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
@@ -119,6 +129,20 @@ function Battle() {
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>
               {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="h-11 rounded-none bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
             </div>
+          )}
+
+          {ranked && session.state.status === "over" && (
+            <section role="status" aria-live="polite" className="battle-core-width bg-surface-container p-space-md gold-hairline text-center">
+              <p className="cjk font-label-sm text-label-sm text-secondary">天梯结算完成</p>
+              <p className="cjk mt-1 font-headline-md text-headline-md text-on-surface">
+                {session.state.outcome === "1/2-1/2" ? "和棋" : session.state.outcome === (session.state.you === "w" ? "1-0" : "0-1") ? "胜利" : "败北"}
+              </p>
+              <p className={`mt-1 font-label-lg text-label-lg tabular-nums ${ratingDelta >= 0 ? "text-secondary" : "text-primary"}`}>
+                {ratingDelta >= 0 ? "+" : ""}{ratingDelta} ELO · 当前 {myElo}
+              </p>
+              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">积分、段位徽章与战绩已同步到首页和天梯榜。</p>
+              <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">查看段位变化 →</Link>
+            </section>
           )}
 
           <section aria-label="棋局教练" className="battle-core-width bg-surface-container p-space-sm gold-hairline flex items-start gap-space-sm">
