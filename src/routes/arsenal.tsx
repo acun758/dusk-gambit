@@ -24,11 +24,13 @@ export const Route = createFileRoute("/arsenal")({
 import { PIECE_SET_EVENT, PIECE_SET_STORAGE_KEY } from "@/components/PlayableBoard";
 import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp.asset.json";
+import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp.asset.json";
 
 const SETS = [
   { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "骑士", image: GAME_ART.sets.shadow, floor: 0, price: 0, pieceSetId: "sovereign" },
   { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "骑士", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
   { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "骑士", image: demonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "demon-gold" },
+  { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "骑士", image: darkDragonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
   { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "女王", image: GAME_ART.sets.classic, floor: 2400, price: 1200, pieceSetId: null },
   { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "主教", image: GAME_ART.sets.gilded, floor: 2500, price: 1800, pieceSetId: null },
 ] as const;
