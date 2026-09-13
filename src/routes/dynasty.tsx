@@ -413,7 +413,15 @@ function Dynasty() {
               ))}
             </div>
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              {t(`本赛季共 ${total} 局天梯对局。`, `${total} ranked games this season.`)}
+              {total === 0
+                ? t(
+                    "还没有真人天梯对局，胜率与段位会在第一局结算后开始变化。",
+                    "No ranked games yet — your win rate and tier start moving after your first result.",
+                  )
+                : t(
+                    `本赛季共 ${total} 局天梯对局，真实胜率 ${winRate}%，当前连胜 ${profile.streak}。`,
+                    `${total} ranked games this season · ${winRate}% real win rate · ${profile.streak} win streak.`,
+                  )}
             </p>
             <Link
               to="/battle"
