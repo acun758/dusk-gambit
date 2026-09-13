@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
+import { useProfile } from "@/lib/profile";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 const PRIMARY = [
@@ -30,6 +31,7 @@ function LangToggle({ className = "" }: { className?: string }) {
 
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { signedIn } = useProfile();
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
   return (
@@ -70,10 +72,10 @@ export function SovereignNav() {
           <div className="rail-account flex flex-wrap items-center gap-space-xs mt-1">
             <LangToggle />
             <Link
-              to="/auth"
+               to={signedIn ? "/dynasty" : "/auth"}
               className="shrink-0 h-9 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center cjk"
             >
-              账号
+               {signedIn ? "档案" : "登录"}
             </Link>
           </div>
         </div>
@@ -107,6 +109,14 @@ export function SovereignNav() {
             }`}
           >
             <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">军械典藏</span>
+          </Link>
+          <Link
+            to="/archive"
+            className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
+              isActive("/archive") ? "text-secondary bg-surface-container/60" : "text-on-surface-variant hover:text-secondary"
+            }`}
+          >
+            <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">绝杀典藏</span>
           </Link>
         </div>
       </aside>

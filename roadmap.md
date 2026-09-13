@@ -1,6 +1,10 @@
 ## Current tasks
 - [x] 增大天梯页当前段位图标（宗师徽章）尺寸
-- [ ] 确认用户是否想用皇冠棋子徽章替换/补充账户安全图标
+- [x] 统一天梯页页眉、当前段位和段位榜层级
+- [x] 统一全站名称、页面页眉与内容边线
+- [x] 收拢首页重复约战入口并补齐军械典藏入口
+- [x] 修复军械库、典藏的旧英文页眉和无效控件
+- [x] 验证八个页面四类视口与关键交互链路
 - [x] Verify real-name login/logout and live profile synchronization
 - [x] Verify closest-rank matchmaking and ranked settlement
 - [x] Complete promotion challenge UI and ceremony
