@@ -128,6 +128,19 @@ function AuthPage() {
               className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
             />
           </label>
+          <label className="relative block">
+            <UiIcon name="signature" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="text"
+              value={realName}
+              onChange={(e) => setRealName(e.target.value)}
+              placeholder={t("实名（约战必填）", "Real name (required for duels)")}
+              className="cjk h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+            />
+          </label>
+          <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+            {t("填好实名后登录即自动保存，下次进入自动带出；退出登录会清除本机实名与段位缓存。", "Your real name is saved on sign-in and restored next time; signing out clears it on this device.")}
+          </p>
           <button
             type="submit"
             disabled={busy}
