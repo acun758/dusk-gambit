@@ -76,16 +76,24 @@ function AuthPage() {
       } catch {
         /* storage unavailable */
       }
-      await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
+      if (avatarFile) {
+        const path = await uploadAvatar(avatarFile).catch(() => null);
+        if (path) await saveAvatarImage({ data: { path } }).catch(() => null);
+      } else {
+        await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
+      }
       const name = realName.trim();
       let verified = false;
-      if (name.length >= 2) {
+      if (name.length >= 2 && idNumber.trim().length === 18) {
         try {
           window.localStorage.setItem(REAL_NAME_KEY, name);
         } catch {
           /* storage unavailable */
         }
-        const saved = await saveRealName({ data: { realName: name } }).catch(() => null);
+        const saved = await submitVerification({ data: { realName: name, idNumber } }).catch((e: unknown) => {
+          setMsg(e instanceof Error ? e.message : t("实名认证失败。", "Verification failed."));
+          return null;
+        });
         verified = Boolean(saved);
       }
       // 实名完成后直接进入约战大厅并自动按段位就近排队
