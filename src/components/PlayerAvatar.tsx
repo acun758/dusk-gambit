@@ -10,10 +10,10 @@ export function PlayerAvatar({
   avatarKey,
   seed,
 }: {
-  className?: string;
-  label?: string;
-  avatarKey?: string | null;
-  seed?: string;
+  className?: string | undefined;
+  label?: string | undefined;
+  avatarKey?: string | null | undefined;
+  seed?: string | undefined;
 }) {
   const known = avatarKey && AVATAR_OPTIONS.some((a) => a.key === avatarKey) ? avatarKey : null;
   const key = known ?? (seed ? avatarKeyForSeed(seed) : null);
