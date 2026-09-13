@@ -474,9 +474,14 @@ function Dynasty() {
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-lg text-label-lg truncate">{row.name}</span>
                         <span className="cjk font-label-md text-label-md text-on-surface-variant truncate">
-                          {t(tier.zh, tier.en)} · {row.wins}
-                          {t("胜", "W")} {row.losses}
-                          {t("负", "L")}
+                          {(() => {
+                            const games = row.wins + row.losses + row.draws;
+                            const rate = games === 0 ? 0 : Math.round((row.wins / games) * 1000) / 10;
+                            return t(
+                              `${tier.zh} · ${row.wins}胜 ${row.losses}负 ${row.draws}和 · ${games} 局 · 胜率 ${rate}%`,
+                              `${tier.en} · ${row.wins}W ${row.losses}L ${row.draws}D · ${games} games · ${rate}%`,
+                            );
+                          })()}
                         </span>
                       </div>
                     </div>
