@@ -74,3 +74,20 @@ export function Bi({
 export function useT() {
   return useLang().t;
 }
+
+/** 双语切换开关：中文主标题 / 英文主标题互换，页眉始终中英并列。 */
+export function LangToggle({ className = "" }: { className?: string }) {
+  const { lang, setLang } = useLang();
+  return (
+    <button
+      type="button"
+      onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+      aria-label="切换语言 / Switch language"
+      title="中英文页眉切换 / Switch header language"
+      className={`shrink-0 h-9 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
+    >
+      {lang === "zh" ? "中 / EN" : "EN / 中"}
+    </button>
+  );
+}
+
