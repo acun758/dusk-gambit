@@ -6,6 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
+import { saveRealName } from "@/lib/game.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -21,16 +22,24 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const REAL_NAME_KEY = "bs.realname.v1";
+
 function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [realName, setRealName] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    try {
+      setRealName(window.localStorage.getItem(REAL_NAME_KEY) ?? "");
+    } catch {
+      /* storage unavailable */
+    }
     void supabase.auth.getSession().then(({ data }) => {
       if (data.session) void navigate({ to: "/" });
     });
@@ -53,8 +62,18 @@ function AuthPage() {
       setMsg(res.error.message);
       return;
     }
-    if (res.data.session) void navigate({ to: "/" });
-    else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
+    if (res.data.session) {
+      const name = realName.trim();
+      if (name.length >= 2) {
+        try {
+          window.localStorage.setItem(REAL_NAME_KEY, name);
+        } catch {
+          /* storage unavailable */
+        }
+        await saveRealName({ data: { realName: name } }).catch(() => null);
+      }
+      void navigate({ to: "/" });
+    } else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
   }
 
   async function google() {
@@ -109,6 +128,19 @@ function AuthPage() {
               className="h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
             />
           </label>
+          <label className="relative block">
+            <UiIcon name="signature" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="text"
+              value={realName}
+              onChange={(e) => setRealName(e.target.value)}
+              placeholder={t("实名（约战必填）", "Real name (required for duels)")}
+              className="cjk h-11 w-full pl-11 pr-3 bg-surface-container text-on-surface font-body-md text-body-md outline-none focus:ring-1 focus:ring-secondary"
+            />
+          </label>
+          <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+            {t("填好实名后登录即自动保存，下次进入自动带出；退出登录会清除本机实名与段位缓存。", "Your real name is saved on sign-in and restored next time; signing out clears it on this device.")}
+          </p>
           <button
             type="submit"
             disabled={busy}

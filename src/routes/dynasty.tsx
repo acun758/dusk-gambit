@@ -1,9 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { listEndgameLevels, listLadder, loadEndgameProgress, type LadderRow } from "@/lib/game.functions";
+import { useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import {
+  createDuelInvite,
+  getPromotionSeries,
+  listEndgameLevels,
+  listLadder,
+  listPromotionRivals,
+  loadEndgameProgress,
+  type LadderRow,
+} from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
@@ -53,6 +63,8 @@ function tierOf(elo: number) {
 
 function Dynasty() {
   const t = useT();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { profile, winRate, signedIn } = useProfile();
 
   const levelsQ = useQuery({
@@ -68,7 +80,31 @@ function Dynasty() {
     queryFn: () => listLadder() as Promise<LadderRow[]>,
     refetchInterval: 30_000,
   });
+  const seriesQ = useQuery({
+    queryKey: ["promotion-series", signedIn],
+    queryFn: () => (signedIn ? getPromotionSeries() : Promise.resolve(null)),
+    refetchInterval: 20_000,
+  });
+  const rivalsQ = useQuery({
+    queryKey: ["promotion-rivals"],
+    queryFn: () => listPromotionRivals(),
+    refetchInterval: 30_000,
+  });
 
+  // 段位榜实时刷新：任何玩家积分写入数据库后，榜单与晋升赛进度立即更新
+  useEffect(() => {
+    const channel = supabase
+      .channel(`ladder-live-${Math.random().toString(36).slice(2)}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => {
+        void queryClient.invalidateQueries({ queryKey: ["ladder-board"] });
+        void queryClient.invalidateQueries({ queryKey: ["promotion-rivals"] });
+        void queryClient.invalidateQueries({ queryKey: ["promotion-series"] });
+      })
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const levels = levelsQ.data ?? [];
   const solvedIds = useMemo(
@@ -84,9 +120,37 @@ function Dynasty() {
   const ladder = ladderQ.data ?? [];
   const myRank = ladder.findIndex((row) => row.name === profile.name && row.elo === profile.elo) + 1;
 
+  const series = seriesQ.data?.active ?? null;
+  const lastSeries = seriesQ.data?.last ?? null;
+  const rivals = (rivalsQ.data ?? []).filter((r) => Math.abs(r.elo - profile.elo) <= 120);
+
+  const ceremony = usePromotionCeremony(
+    { key: current.en, zh: current.zh, en: current.en, art: current.art, floor: current.floor },
+    signedIn,
+  );
+
+  const challenge = (rivalId: string) => {
+    void createDuelInvite({ data: { invitedId: rivalId } }).then(() => navigate({ to: "/battle" }));
+  };
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    for (const k of ["bs.profile.v1", "bs.tier.v1", "bs.realname.v1"]) {
+      try {
+        window.localStorage.removeItem(k);
+      } catch {
+        /* storage unavailable */
+      }
+    }
+    await supabase.auth.signOut();
+    void navigate({ to: "/auth", replace: true });
+  };
+
   return (
     <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
       <ThemeBackdrop theme="blackGold" />
+      <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
@@ -115,6 +179,14 @@ function Dynasty() {
                 {profile.diamonds.toLocaleString()}
               </span>
             </div>
+            {signedIn && (
+              <button
+                onClick={() => void signOut()}
+                className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+              >
+                {t("退出登录", "Sign out")}
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -174,6 +246,96 @@ function Dynasty() {
                 {t("当前为本地演示数据，登录后段位与钻石由服务端结算 →", "Demo data — sign in for server-settled rating →")}
               </Link>
             )}
+          </section>
+
+          {/* 晋升挑战赛 */}
+          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+            <div className="flex items-center justify-between gap-space-sm">
+              <h2 className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="段位晋升挑战赛" en="Promotion Series" />
+              </h2>
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest shrink-0">
+                {t("三局两胜", "Best of three")}
+              </span>
+            </div>
+
+            {series ? (
+              <div className="bg-surface-container-lowest p-space-sm flex flex-col gap-space-xs">
+                <div className="flex items-center justify-between gap-space-sm">
+                  <span className="cjk font-label-md text-label-md text-primary truncate">
+                    {t(`冲击 ${series.toFloor}+ 段位`, `Pushing for ${series.toFloor}+`)}
+                  </span>
+                  <span className="font-label-md text-label-md text-secondary tabular-nums shrink-0">
+                    {series.wins} / {series.requiredWins}
+                  </span>
+                </div>
+                <div className="flex gap-space-xs" aria-hidden="true">
+                  {Array.from({ length: series.requiredWins + series.maxLosses - 1 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-2 flex-1 ${
+                        i < series.wins ? "bg-secondary" : i < series.wins + series.losses ? "bg-primary/70" : "bg-surface-container-high"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                  {t(
+                    `已胜 ${series.wins} 场、负 ${series.losses} 场。再胜 ${Math.max(0, series.requiredWins - series.wins)} 场正式晋升；若累计 ${series.maxLosses} 负，积分回落 30 分重回原段位。`,
+                    `${series.wins}W ${series.losses}L. ${Math.max(0, series.requiredWins - series.wins)} more win(s) to promote; ${series.maxLosses} losses drop you 30 points.`,
+                  )}
+                </p>
+              </div>
+            ) : (
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                {lastSeries
+                  ? t(
+                      lastSeries.status === "won"
+                        ? `上次晋升挑战赛告捷，已进入 ${lastSeries.toFloor}+ 段位。`
+                        : `上次冲击 ${lastSeries.toFloor}+ 未成功，积分达到门槛会自动重开挑战赛。`,
+                      lastSeries.status === "won" ? `Last series won at ${lastSeries.toFloor}+.` : `Last series lost; it reopens at ${lastSeries.toFloor}.`,
+                    )
+                  : t(
+                      `积分达到 ${nextTier ? nextTier.floor : current.floor} 时自动开启晋升挑战赛，与段位相近者争夺晋升资格。`,
+                      `Reach ${nextTier ? nextTier.floor : current.floor} to trigger a promotion series against nearby rivals.`,
+                    )}
+              </p>
+            )}
+
+            <div className="grid gap-space-xs">
+              <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
+                {t("正在争夺晋升资格的相近段位对手", "Rivals currently in a promotion series")}
+              </span>
+              {rivals.length === 0 && (
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                  {t("当前没有段位相近的晋升挑战者。", "No nearby challengers right now.")}
+                </p>
+              )}
+              {rivals.map((r) => (
+                <div key={r.id} className="flex items-center justify-between gap-space-sm bg-surface-container-lowest p-space-sm">
+                  <div className="flex flex-col min-w-0">
+                    <span className="cjk font-label-md text-label-md truncate">{r.name}</span>
+                    <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                      {r.elo} ELO · {t(`冲击 ${r.toFloor}+`, `to ${r.toFloor}+`)} · {r.wins}W {r.losses}L
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => challenge(r.id)}
+                    disabled={!signedIn}
+                    className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
+                  >
+                    {t("发起挑战", "Challenge")}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              {t(
+                "积分规则：2200 分以下每局 ±32，2200–2500 为 ±24，2500 以上为 ±16；连胜额外加分最多 +6；失利有保级缓冲，一局最多掉到段位门槛下 25 分。",
+                "Rating: ±32 below 2200, ±24 to 2500, ±16 above; up to +6 streak bonus; a loss never drops you more than 25 below your tier floor.",
+              )}
+            </p>
           </section>
 
           {/* 战绩 */}
