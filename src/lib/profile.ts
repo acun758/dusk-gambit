@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { loadProfile, renameProfile, saveAvatar } from "@/lib/game.functions";
+import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { uploadAvatar } from "@/lib/avatar-upload";
 
 export interface PlayerProfile {
   name: string;
@@ -159,6 +160,19 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
+  /** 上传自定义头像图片，成功后立即刷新档案（对弈页玩家条同步更新）。 */
+  const setAvatarImage = useCallback(async (file: File) => {
+    const path = await uploadAvatar(file);
+    const row = (await saveAvatarImage({ data: { path } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
+  /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。 */
+  const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
+    const row = (await submitVerification({ data: { realName, idNumber } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
   /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
   const recordResult = useCallback((outcome: "win" | "loss" | "draw", eloDelta = 8) => {
     const cur = read();
@@ -178,5 +192,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, setAvatar, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, verifyIdentity, recordResult, winRate: winRate(profile) };
 }
