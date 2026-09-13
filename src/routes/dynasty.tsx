@@ -78,7 +78,31 @@ function Dynasty() {
     queryFn: () => listLadder() as Promise<LadderRow[]>,
     refetchInterval: 30_000,
   });
+  const seriesQ = useQuery({
+    queryKey: ["promotion-series", signedIn],
+    queryFn: () => (signedIn ? getPromotionSeries() : Promise.resolve(null)),
+    refetchInterval: 20_000,
+  });
+  const rivalsQ = useQuery({
+    queryKey: ["promotion-rivals"],
+    queryFn: () => listPromotionRivals(),
+    refetchInterval: 30_000,
+  });
 
+  // 段位榜实时刷新：任何玩家积分写入数据库后，榜单与晋升赛进度立即更新
+  useEffect(() => {
+    const channel = supabase
+      .channel(`ladder-live-${Math.random().toString(36).slice(2)}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => {
+        void queryClient.invalidateQueries({ queryKey: ["ladder-board"] });
+        void queryClient.invalidateQueries({ queryKey: ["promotion-rivals"] });
+        void queryClient.invalidateQueries({ queryKey: ["promotion-series"] });
+      })
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const levels = levelsQ.data ?? [];
   const solvedIds = useMemo(
