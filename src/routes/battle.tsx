@@ -10,6 +10,7 @@ import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { useProfile } from "@/lib/profile";
+import knightAzureAsset from "@/assets/avatars/knight-azure.png.asset.json";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({
@@ -192,7 +193,7 @@ function Battle() {
 function PlayerBar({ name, elo, clock, active, dark = false }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean }) {
   return (
     <div className={`battle-core-width min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${dark ? "bg-surface-container-lowest" : "bg-surface-container"} ${active ? "gold-hairline" : ""}`}>
-      <div className="flex items-center gap-3 min-w-0"><span className="player-mark" aria-hidden="true"><UiIcon name={dark ? "chip-king" : "crown"} className="h-8 w-8" /></span><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
+      <div className="flex items-center gap-3 min-w-0"><span className="player-mark overflow-hidden" aria-hidden="true"><img src={knightAzureAsset.url} alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]" /></span><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
       <span className={`font-headline-md text-headline-md tabular-nums ${active ? "text-secondary" : "text-on-surface-variant"}`}>{clock}</span>
     </div>
   );
