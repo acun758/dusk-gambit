@@ -142,7 +142,7 @@ function Crucible() {
               {profile.trainingPoints} {t("训练积分", "Training points")} · {t(profile.tierZh, profile.tier)}
             </span>
             <h1 className="font-headline-md text-headline-md leading-tight truncate">
-              <Bi zh="残局试炼" en="Endgame Crucible" subClassName="hidden sm:inline" />
+              <Bi zh="残局试炼" en="Endgame Crucible" />
             </h1>
           </div>
           <button

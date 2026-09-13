@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { loadProfile, renameProfile, saveAvatar } from "@/lib/game.functions";
+import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { uploadAvatar } from "@/lib/avatar-upload";
 
 export interface PlayerProfile {
   name: string;
@@ -15,6 +16,9 @@ export interface PlayerProfile {
   trainingPoints: number;
   realName: string;
   avatarKey: string;
+  avatarPath: string;
+  verifyStatus: "none" | "pending" | "verified" | "rejected";
+  idTail: string;
 }
 
 export const DEFAULT_PROFILE: PlayerProfile = {
@@ -30,6 +34,9 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   trainingPoints: 0,
   realName: "",
   avatarKey: "knight-azure",
+  avatarPath: "",
+  verifyStatus: "none",
+  idTail: "",
 };
 
 const KEY = "bs.profile.v1";
@@ -77,15 +84,21 @@ interface CloudRow {
   training_points: number;
   real_name?: string;
   avatar_key?: string;
+  avatar_url?: string;
+  verify_status?: string;
+  id_tail?: string;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, real_name, avatar_key, ...profile } = row;
+  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, ...profile } = row;
   return {
     ...profile,
     trainingPoints: training_points,
     realName: real_name ?? "",
     avatarKey: avatar_key || "knight-azure",
+    avatarPath: avatar_url ?? "",
+    verifyStatus: (verify_status as PlayerProfile["verifyStatus"]) || "none",
+    idTail: id_tail ?? "",
     ...tierFor(row.elo),
   };
 }
@@ -147,6 +160,19 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
+  /** 上传自定义头像图片，成功后立即刷新档案（对弈页玩家条同步更新）。 */
+  const setAvatarImage = useCallback(async (file: File) => {
+    const path = await uploadAvatar(file);
+    const row = (await saveAvatarImage({ data: { path } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
+  /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。 */
+  const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
+    const row = (await submitVerification({ data: { realName, idNumber } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
   /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
   const recordResult = useCallback((outcome: "win" | "loss" | "draw", eloDelta = 8) => {
     const cur = read();
@@ -166,5 +192,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, setAvatar, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, verifyIdentity, recordResult, winRate: winRate(profile) };
 }

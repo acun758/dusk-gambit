@@ -1,28 +1,32 @@
 import { AVATAR_OPTIONS, avatarKeyForSeed, avatarUrl } from "@/lib/avatar-assets";
+import { useAvatarImage } from "@/lib/avatar-upload";
 
 /**
- * 玩家头像：尺寸与位置由本组件统一约束，图案来自玩家注册时自选的头像。
- * 未设置时按 seed（玩家名/ID）稳定派生，保证同屏两位玩家不会重复。
+ * 玩家头像：尺寸与位置由本组件统一约束。
+ * 优先显示玩家上传的自定义图片，其次是注册时自选的图案，最后按 seed 稳定派生。
  */
 export function PlayerAvatar({
   className = "h-9 w-9",
   label,
   avatarKey,
+  avatarPath,
   seed,
 }: {
   className?: string | undefined;
   label?: string | undefined;
   avatarKey?: string | null | undefined;
+  avatarPath?: string | null | undefined;
   seed?: string | undefined;
 }) {
+  const uploaded = useAvatarImage(avatarPath);
   const known = avatarKey && AVATAR_OPTIONS.some((a) => a.key === avatarKey) ? avatarKey : null;
   const key = known ?? (seed ? avatarKeyForSeed(seed) : null);
   return (
     <span className="inline-flex items-center justify-center overflow-hidden shrink-0" aria-hidden={label ? undefined : true}>
       <img
-        src={avatarUrl(key)}
+        src={uploaded ?? avatarUrl(key)}
         alt={label ?? ""}
-        className={`${className} object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]`}
+        className={`${className} ${uploaded ? "object-cover rounded-full" : "object-contain"} drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]`}
       />
     </span>
   );

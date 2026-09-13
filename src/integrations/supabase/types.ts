@@ -389,50 +389,62 @@ export type Database = {
       profiles: {
         Row: {
           avatar_key: string
+          avatar_url: string
           created_at: string
           diamonds: number
           draws: number
           elo: number
           handle: string
           id: string
+          id_tail: string
           losses: number
           name: string
           real_name: string
           streak: number
           training_points: number
           updated_at: string
+          verified_at: string | null
+          verify_status: string
           wins: number
         }
         Insert: {
           avatar_key?: string
+          avatar_url?: string
           created_at?: string
           diamonds?: number
           draws?: number
           elo?: number
           handle: string
           id: string
+          id_tail?: string
           losses?: number
           name?: string
           real_name?: string
           streak?: number
           training_points?: number
           updated_at?: string
+          verified_at?: string | null
+          verify_status?: string
           wins?: number
         }
         Update: {
           avatar_key?: string
+          avatar_url?: string
           created_at?: string
           diamonds?: number
           draws?: number
           elo?: number
           handle?: string
           id?: string
+          id_tail?: string
           losses?: number
           name?: string
           real_name?: string
           streak?: number
           training_points?: number
           updated_at?: string
+          verified_at?: string | null
+          verify_status?: string
           wins?: number
         }
         Relationships: []

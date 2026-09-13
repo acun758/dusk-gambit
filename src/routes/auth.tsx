@@ -6,8 +6,10 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatar, saveRealName } from "@/lib/game.functions";
-import { AVATAR_OPTIONS, DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
+import { saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
+import { AvatarPicker } from "@/components/AvatarPicker";
+import { uploadAvatar } from "@/lib/avatar-upload";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -33,7 +35,9 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [realName, setRealName] = useState("");
+  const [idNumber, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState(DEFAULT_AVATAR_KEY);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -72,16 +76,24 @@ function AuthPage() {
       } catch {
         /* storage unavailable */
       }
-      await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
+      if (avatarFile) {
+        const path = await uploadAvatar(avatarFile).catch(() => null);
+        if (path) await saveAvatarImage({ data: { path } }).catch(() => null);
+      } else {
+        await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
+      }
       const name = realName.trim();
       let verified = false;
-      if (name.length >= 2) {
+      if (name.length >= 2 && idNumber.trim().length === 18) {
         try {
           window.localStorage.setItem(REAL_NAME_KEY, name);
         } catch {
           /* storage unavailable */
         }
-        const saved = await saveRealName({ data: { realName: name } }).catch(() => null);
+        const saved = await submitVerification({ data: { realName: name, idNumber } }).catch((e: unknown) => {
+          setMsg(e instanceof Error ? e.message : t("实名认证失败。", "Verification failed."));
+          return null;
+        });
         verified = Boolean(saved);
       }
       // 实名完成后直接进入约战大厅并自动按段位就近排队
@@ -148,31 +160,32 @@ function AuthPage() {
               type="text"
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
-              placeholder={t("实名（约战必填）", "Real name (required for duels)")}
+              placeholder={t("真实姓名（实名认证）", "Real name (verification)")}
               className="field-control cjk h-12 w-full pl-11 pr-3"
             />
           </label>
-          <div className="flex flex-col gap-2">
-            <span className="cjk font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
-              {t("选择头像（对局中显示）", "Choose your avatar")}
-            </span>
-            <div className="grid grid-cols-6 gap-2">
-              {AVATAR_OPTIONS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => setAvatar(option.key)}
-                  aria-label={t(option.zh, option.en)}
-                  aria-pressed={avatar === option.key}
-                  className={`aspect-square flex items-center justify-center bg-surface-container p-1 ${avatar === option.key ? "gold-hairline opacity-100" : "opacity-60 hover:opacity-90"}`}
-                >
-                  <img src={option.url} alt="" className="h-full w-full object-contain" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <label className="relative block">
+            <UiIcon name="badge-hex" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="text"
+              maxLength={18}
+              value={idNumber}
+              onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
+              placeholder={t("身份证号（18 位，用于实名认证）", "ID number (18 digits)")}
+              className="field-control h-12 w-full pl-11 pr-3"
+            />
+          </label>
+          <AvatarPicker
+            value={avatarFile ? "upload" : avatar}
+            onSelect={(key) => {
+              if (key === "upload") return;
+              setAvatarFile(null);
+              setAvatar(key);
+            }}
+            onUpload={(file) => setAvatarFile(file)}
+          />
           <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-            {t("填好实名后登录即自动保存，下次进入自动带出；退出登录会清除本机实名与段位缓存。", "Your real name is saved on sign-in and restored next time; signing out clears it on this device.")}
+            {t("姓名与身份证号校验通过后即完成实名认证，账户安全页会显示认证徽章；证件号只保留后四位。", "Once your name and ID pass validation you are verified; only the last four digits are stored.")}
           </p>
           <button
             type="submit"
