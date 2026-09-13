@@ -14,9 +14,8 @@ import { useProfile } from "@/lib/profile";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 export const Route = createFileRoute("/battle")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    drill: typeof search['drill'] === "string" ? (search['drill'] as string) : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { drill?: string } =>
+    typeof search['drill'] === "string" ? { drill: search['drill'] as string } : {},
   head: () => ({
     meta: [
       { title: "3+2 实时对弈 · 血誓王权" },
