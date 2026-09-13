@@ -11,7 +11,6 @@ import { GameIcon } from "@/components/GameIcon";
 
 const HERO_PORTRAIT = GAME_ART.heroPortrait;
 const HERO_VIDEO = GAME_ART.heroVideo;
-const EMBLEM = GAME_ART.emblem;
 const HERO = GAME_ART.hero;
 const RELIC_A = GAME_ART.matchArena;
 const RELIC_B = GAME_ART.reviewBoard;
@@ -55,7 +54,7 @@ function Index() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 bg-surface-container-high flex items-center justify-center shrink-0 overflow-hidden">
-              <img src={EMBLEM} alt={t("血誓王权徽章", "Blood Sovereign emblem")} className="w-full h-full object-contain" width={44} height={44} />
+              <GameIcon name="brand-emblem" label={t("血誓王权徽章", "Blood Sovereign emblem")} className="w-full h-full" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
