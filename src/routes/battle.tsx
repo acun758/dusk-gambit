@@ -10,7 +10,7 @@ import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { useProfile } from "@/lib/profile";
-import knightAzureAsset from "@/assets/avatars/knight-azure.png.asset.json";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 export const Route = createFileRoute("/battle")({
   head: () => ({

@@ -1,3 +1,4 @@
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useProfile } from "@/lib/profile";
 import { Bi, useT } from "@/lib/i18n";
