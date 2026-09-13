@@ -6,8 +6,10 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatar, saveRealName } from "@/lib/game.functions";
-import { AVATAR_OPTIONS, DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
+import { saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
+import { AvatarPicker } from "@/components/AvatarPicker";
+import { uploadAvatar } from "@/lib/avatar-upload";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
