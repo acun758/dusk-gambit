@@ -154,6 +154,7 @@ function Crucible() {
             <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6" />
             <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
           </button>
+          </div>
         </div>
       </header>
 
