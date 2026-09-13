@@ -218,6 +218,8 @@ function Dynasty() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
+            <LangToggle />
+
             <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
