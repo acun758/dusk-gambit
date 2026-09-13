@@ -28,9 +28,6 @@ export function usePromotionCeremony(tier: TierMark | null, enabled: boolean) {
     } catch {
       prev = null;
     }
-    if (prev && prev.key !== tier.key && ready.current !== false) {
-      /* noop */
-    }
     if (prev && prev.key !== tier.key) {
       setEvent({ tier, kind: tier.floor > prev.floor ? "up" : "down" });
     }
