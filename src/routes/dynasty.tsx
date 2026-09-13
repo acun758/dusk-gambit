@@ -63,6 +63,8 @@ function tierOf(elo: number) {
 
 function Dynasty() {
   const t = useT();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { profile, winRate, signedIn } = useProfile();
 
   const levelsQ = useQuery({
