@@ -434,6 +434,51 @@ export type Database = {
         }
         Relationships: []
       }
+      promotion_series: {
+        Row: {
+          created_at: string
+          from_floor: number
+          id: string
+          losses: number
+          max_losses: number
+          required_wins: number
+          resolved_at: string | null
+          status: string
+          to_floor: number
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          created_at?: string
+          from_floor: number
+          id?: string
+          losses?: number
+          max_losses?: number
+          required_wins?: number
+          resolved_at?: string | null
+          status?: string
+          to_floor: number
+          updated_at?: string
+          user_id: string
+          wins?: number
+        }
+        Update: {
+          created_at?: string
+          from_floor?: number
+          id?: string
+          losses?: number
+          max_losses?: number
+          required_wins?: number
+          resolved_at?: string | null
+          status?: string
+          to_floor?: number
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       endgame_levels_public: {
@@ -504,6 +549,10 @@ export type Database = {
       }
     }
     Functions: {
+      apply_match_result: {
+        Args: { p_opp_elo: number; p_score: number; p_user: string }
+        Returns: Json
+      }
       apply_ranked_move: {
         Args: {
           p_cp: number
@@ -542,6 +591,9 @@ export type Database = {
         Args: { p_code: string; p_user_id: string }
         Returns: string
       }
+      rank_floor: { Args: { p_elo: number }; Returns: number }
+      rank_k: { Args: { p_elo: number }; Returns: number }
+      rank_next_floor: { Args: { p_elo: number }; Returns: number }
       record_endgame_result: {
         Args: {
           p_correct: boolean
