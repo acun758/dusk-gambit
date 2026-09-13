@@ -15,6 +15,9 @@ export interface PlayerProfile {
   trainingPoints: number;
   realName: string;
   avatarKey: string;
+  avatarPath: string;
+  verifyStatus: "none" | "pending" | "verified" | "rejected";
+  idTail: string;
 }
 
 export const DEFAULT_PROFILE: PlayerProfile = {
