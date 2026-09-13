@@ -1,0 +1,11 @@
+<!-- skull / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M7 14 C7 10 9 7 12 7 C15 7 17 10 17 14 C17 16 16 17.5 14.5 18 L14.5 20 L9.5 20 L9.5 18 C8 17.5 7 16 7 14Z"/>
+<circle fill="currentColor" stroke="none" cx="9.5" cy="13" r="1.5"/>
+<circle fill="currentColor" stroke="none" cx="14.5" cy="13" r="1.5"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M10 16 L10 17"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M12 16 L12 17"/>
+<path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M14 16 L14 17"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="9.5" y1="20" x2="14.5" y2="20"/>
+</svg>

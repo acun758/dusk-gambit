@@ -1,0 +1,11 @@
+<!-- forge / default / 血誓王权 Blood Sovereign -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" style="color:#B0812B">
+
+<rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="4" y="16" width="10" height="4" rx="1"/>
+<rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="9" y="12" width="7" height="4" rx="1" transform="rotate(-30,12.5,14)"/>
+<line stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x1="13" y1="10" x2="18" y2="5"/>
+<rect stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" x="16" y="3" width="5" height="3" rx="0.5" transform="rotate(-30,18.5,4.5)"/>
+<circle fill="currentColor" stroke="none" cx="6" cy="14" r="0.8"/>
+<circle fill="currentColor" stroke="none" cx="8" cy="12" r="0.8"/>
+<circle fill="currentColor" stroke="none" cx="5" cy="12" r="0.8"/>
+</svg>
