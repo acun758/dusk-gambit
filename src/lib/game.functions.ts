@@ -114,6 +114,62 @@ export const saveAvatar = createServerFn({ method: "POST" })
     return row as ProfileRow;
   });
 
+/** 自定义头像图片：客户端压缩后上传到私有桶，这里只记录对象路径。 */
+export const saveAvatarImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { path: string }) => ({ path: input.path.trim().slice(0, 200) }))
+  .handler(async ({ data, context }) => {
+    if (data.path && !data.path.startsWith(`${context.userId}/`)) throw new Error("invalid avatar path");
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ avatar_url: data.path, updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
+  });
+
+/* --------------------------- real-name verification ------------------------- */
+
+const ID_WEIGHTS = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+const ID_CHECK = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
+
+function validChineseId(id: string): boolean {
+  const value = id.toUpperCase();
+  if (!/^\d{17}[\dX]$/.test(value)) return false;
+  const sum = ID_WEIGHTS.reduce((acc, w, i) => acc + Number(value[i]) * w, 0);
+  return ID_CHECK[sum % 11] === value[17];
+}
+
+/** 实名认证：校验姓名与身份证格式，通过后写入认证状态与时间。 */
+export const submitVerification = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { realName: string; idNumber: string }) => ({
+    realName: input.realName.trim().slice(0, 24),
+    idNumber: input.idNumber.trim().toUpperCase().slice(0, 18),
+  }))
+  .handler(async ({ data, context }) => {
+    if (data.realName.length < 2) throw new Error("请填写真实姓名（至少 2 个字）");
+    if (!/^[\u4e00-\u9fa5·]{2,24}$|^[A-Za-z .'-]{2,24}$/.test(data.realName)) throw new Error("姓名格式不正确");
+    if (!validChineseId(data.idNumber)) throw new Error("身份证号格式或校验位不正确");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("profiles")
+      .update({
+        real_name: data.realName,
+        id_tail: data.idNumber.slice(-4),
+        verify_status: "verified",
+        verified_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
+  });
+
 /* ---------------------------------- match ---------------------------------- */
 
 export const findMatch = createServerFn({ method: "POST" })
