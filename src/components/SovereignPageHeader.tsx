@@ -38,7 +38,7 @@ export function SovereignPageHeader({
               <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(profile.tierZh, profile.tier)}</span>
             </div>
             <h1 className="truncate font-headline-md text-headline-md leading-tight text-on-surface">
-              <Bi zh={titleZh} en={titleEn} />
+              <Bi zh={titleZh} en={titleEn} subClassName="hidden sm:inline" />
             </h1>
           </div>
         </div>

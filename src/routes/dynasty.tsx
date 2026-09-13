@@ -169,9 +169,9 @@ function Dynasty() {
                   {t(current.zh, current.en)}
                 </span>
               </div>
-              <span className="font-headline-md text-headline-md leading-tight truncate">
-                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
-              </span>
+              <h1 className="font-headline-md text-headline-md leading-tight truncate">
+                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" subClassName="hidden sm:inline" />
+              </h1>
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">

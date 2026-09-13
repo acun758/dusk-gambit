@@ -141,9 +141,9 @@ function Crucible() {
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
               {profile.trainingPoints} {t("训练积分", "Training points")} · {t(profile.tierZh, profile.tier)}
             </span>
-            <span className="font-headline-sm text-headline-sm tracking-wider truncate">
-              <Bi zh="盲棋心算" en="Blindfold Crucible" />
-            </span>
+            <h1 className="font-headline-md text-headline-md leading-tight truncate">
+              <Bi zh="残局试炼" en="Endgame Crucible" subClassName="hidden sm:inline" />
+            </h1>
           </div>
           <button
             onClick={() => setBlind((b) => !b)}

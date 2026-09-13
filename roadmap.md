@@ -4,7 +4,7 @@
 - [x] 统一全站名称、页面页眉与内容边线
 - [x] 收拢首页重复约战入口并补齐军械典藏入口
 - [x] 修复军械库、典藏的旧英文页眉和无效控件
-- [ ] 验证八个页面四类视口与关键交互链路
+- [x] 验证八个页面四类视口与关键交互链路
 - [x] Verify real-name login/logout and live profile synchronization
 - [x] Verify closest-rank matchmaking and ranked settlement
 - [x] Complete promotion challenge UI and ceremony
