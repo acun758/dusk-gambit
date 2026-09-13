@@ -95,9 +95,9 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
-  const verified = realNameSaved.length >= 2;
+  const verified = verifyStatus === "verified" && realNameSaved.length >= 2;
   const requireName = () => {
-    setNotice("请先完成实名填写，再发起或接受约战。");
+    setNotice("请先完成实名认证，再发起或接受约战。");
     setTab("invite");
   };
 
