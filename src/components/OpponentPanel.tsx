@@ -51,6 +51,18 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     if (saved) setRealNameSaved(saved);
   }, [profileQ.data?.real_name]);
 
+  // 实名完成后从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
+  const [autoQueued, setAutoQueued] = useState(false);
+  useEffect(() => {
+    if (autoQueued || signedIn !== true) return;
+    if (!new URLSearchParams(window.location.search).has("lobby")) return;
+    if ((profileQ.data?.real_name ?? "").length < 2) return;
+    setAutoQueued(true);
+    setTab("auto");
+    setNotice("实名已确认，正在为你匹配段位相近的对手…");
+    if (!ranked) onStartRanked();
+  }, [autoQueued, signedIn, profileQ.data?.real_name, ranked, onStartRanked]);
+
   const invitesQ = useQuery({
     queryKey: ["duel-invites", signedIn],
     queryFn: () => (signedIn ? listDuelInvites() : Promise.resolve(null)),
