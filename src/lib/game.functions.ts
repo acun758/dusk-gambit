@@ -47,6 +47,10 @@ export interface ProfileRow {
   training_points: number;
   real_name?: string;
   avatar_key?: string;
+  avatar_url?: string;
+  verify_status?: string;
+  id_tail?: string;
+  verified_at?: string | null;
 }
 
 export interface FriendProfile extends ProfileRow {
