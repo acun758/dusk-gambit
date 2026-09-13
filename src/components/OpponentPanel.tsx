@@ -9,7 +9,7 @@ import {
   listDuelInvites,
   loadProfile,
   loadFriends,
-  saveRealName,
+  submitVerification,
   searchPlayers,
 } from "@/lib/game.functions";
 import { supabase } from "@/integrations/supabase/client";
