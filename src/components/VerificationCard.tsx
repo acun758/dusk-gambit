@@ -26,7 +26,7 @@ export function VerificationCard({
   onVerify,
 }: {
   profile: PlayerProfile;
-  onVerify: (realName: string, idNumber: string) => Promise<void>;
+  onVerify: (realName: string, idNumber: string) => Promise<"checksum" | "provider" | void>;
 }) {
   const t = useT();
   const [name, setName] = useState(profile.realName);
@@ -39,14 +39,22 @@ export function VerificationCard({
     setBusy(true);
     setMsg(null);
     try {
-      await onVerify(name, id);
+      const mode = await onVerify(name, id);
       setId("");
-      setMsg(t("认证已通过。", "Verification complete."));
+      setMsg(
+        mode === "checksum"
+          ? t(
+              "姓名与身份证号格式校验通过，已开放天梯。公安二要素核验接口尚未接入，接入后将改为实名核验。",
+              "Format check passed. The official ID verification service is not connected yet.",
+            )
+          : t("实名核验通过。", "Verification complete."),
+      );
     } catch (e) {
       setMsg(e instanceof Error ? e.message : t("认证失败，请稍后重试。", "Verification failed, try again."));
     }
     setBusy(false);
   }
+
 
   return (
     <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
