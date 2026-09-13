@@ -1,13 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
-import { GameIcon } from "@/components/GameIcon";
+import { UiIcon, type UiIconName } from "@/components/UiIcon";
 
 const PRIMARY = [
-  { to: "/", icon: "nav-throne", label: "Court", zh: "王座" },
-  { to: "/battle", icon: "nav-duel", label: "Duel", zh: "对弈" },
-  { to: "/crucible", icon: "nav-crucible", label: "Trials", zh: "残局" },
-  { to: "/analysis", icon: "nav-review", label: "Review", zh: "复盘" },
-  { to: "/dynasty", icon: "nav-ladder", label: "Ladder", zh: "天梯" },
+  { to: "/", icon: "crown" as UiIconName, label: "Court", zh: "王座" },
+  { to: "/battle", icon: "shield" as UiIconName, label: "Duel", zh: "对弈" },
+  { to: "/crucible", icon: "flame" as UiIconName, label: "Trials", zh: "残局" },
+  { to: "/analysis", icon: "quill" as UiIconName, label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "medal-laurel" as UiIconName, label: "Ladder", zh: "天梯" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -48,7 +48,7 @@ export function SovereignNav() {
               }`}
             >
               <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
-                <GameIcon name={item.icon} className={`h-full w-full transition-[opacity,filter] duration-200 ${isActive(item.to) ? "opacity-100" : "opacity-55 grayscale-[35%]"}`} />
+                <UiIcon name={item.icon} className={`h-7 w-7 transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-60 grayscale-[25%]"}`} />
               </span>
               <span className="font-label-sm text-label-sm tracking-widest uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
@@ -89,7 +89,7 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
-              <GameIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter] ${isActive(item.to) ? "opacity-100" : "opacity-60 grayscale-[35%]"}`} />
+              <UiIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-65 grayscale-[25%]"}`} />
               <span className="font-label-lg text-label-lg uppercase tracking-widest">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
@@ -106,7 +106,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <GameIcon name="nav-arsenal" className="h-7 w-7" />军械典藏
+            <UiIcon name="forge" className="h-7 w-7" />军械典藏
           </Link>
         </div>
       </aside>
