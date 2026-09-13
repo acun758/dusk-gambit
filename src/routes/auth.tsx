@@ -160,31 +160,32 @@ function AuthPage() {
               type="text"
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
-              placeholder={t("实名（约战必填）", "Real name (required for duels)")}
+              placeholder={t("真实姓名（实名认证）", "Real name (verification)")}
               className="field-control cjk h-12 w-full pl-11 pr-3"
             />
           </label>
-          <div className="flex flex-col gap-2">
-            <span className="cjk font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
-              {t("选择头像（对局中显示）", "Choose your avatar")}
-            </span>
-            <div className="grid grid-cols-6 gap-2">
-              {AVATAR_OPTIONS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => setAvatar(option.key)}
-                  aria-label={t(option.zh, option.en)}
-                  aria-pressed={avatar === option.key}
-                  className={`aspect-square flex items-center justify-center bg-surface-container p-1 ${avatar === option.key ? "gold-hairline opacity-100" : "opacity-60 hover:opacity-90"}`}
-                >
-                  <img src={option.url} alt="" className="h-full w-full object-contain" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <label className="relative block">
+            <UiIcon name="badge-hex" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <input
+              type="text"
+              maxLength={18}
+              value={idNumber}
+              onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
+              placeholder={t("身份证号（18 位，用于实名认证）", "ID number (18 digits)")}
+              className="field-control h-12 w-full pl-11 pr-3"
+            />
+          </label>
+          <AvatarPicker
+            value={avatarFile ? "upload" : avatar}
+            onSelect={(key) => {
+              if (key === "upload") return;
+              setAvatarFile(null);
+              setAvatar(key);
+            }}
+            onUpload={(file) => setAvatarFile(file)}
+          />
           <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-            {t("填好实名后登录即自动保存，下次进入自动带出；退出登录会清除本机实名与段位缓存。", "Your real name is saved on sign-in and restored next time; signing out clears it on this device.")}
+            {t("姓名与身份证号校验通过后即完成实名认证，账户安全页会显示认证徽章；证件号只保留后四位。", "Once your name and ID pass validation you are verified; only the last four digits are stored.")}
           </p>
           <button
             type="submit"
