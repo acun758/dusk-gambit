@@ -21,16 +21,17 @@ export interface PlayerProfile {
   idTail: string;
 }
 
+/** 访客占位档案：战绩全为 0，段位只在真实对局结算后才会变化。 */
 export const DEFAULT_PROFILE: PlayerProfile = {
   name: "Adiamond",
   diamonds: 1280,
-  elo: 2480,
+  elo: 2400,
   tier: "Grandmaster",
   tierZh: "宗师",
-  wins: 148,
-  losses: 62,
-  draws: 19,
-  streak: 5,
+  wins: 0,
+  losses: 0,
+  draws: 0,
+  streak: 0,
   trainingPoints: 0,
   realName: "",
   avatarKey: "knight-azure",
