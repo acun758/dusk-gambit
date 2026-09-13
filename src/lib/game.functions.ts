@@ -46,6 +46,7 @@ export interface ProfileRow {
   streak: number;
   training_points: number;
   real_name?: string;
+  avatar_key?: string;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -87,6 +88,21 @@ export const renameProfile = createServerFn({ method: "POST" })
     const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ name: data.name, updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
+  });
+
+/** 玩家自选头像：注册时选定，之后可随时更换。 */
+export const saveAvatar = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { avatarKey: string }) => ({ avatarKey: input.avatarKey.trim().slice(0, 32) }))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ avatar_key: data.avatarKey, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();

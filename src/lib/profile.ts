@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { loadProfile, renameProfile } from "@/lib/game.functions";
+import { loadProfile, renameProfile, saveAvatar } from "@/lib/game.functions";
 
 export interface PlayerProfile {
   name: string;
@@ -14,6 +14,7 @@ export interface PlayerProfile {
   streak: number;
   trainingPoints: number;
   realName: string;
+  avatarKey: string;
 }
 
 export const DEFAULT_PROFILE: PlayerProfile = {
@@ -28,6 +29,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   streak: 5,
   trainingPoints: 0,
   realName: "",
+  avatarKey: "knight-azure",
 };
 
 const KEY = "bs.profile.v1";
@@ -74,11 +76,18 @@ interface CloudRow {
   streak: number;
   training_points: number;
   real_name?: string;
+  avatar_key?: string;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, real_name, ...profile } = row;
-  return { ...profile, trainingPoints: training_points, realName: real_name ?? "", ...tierFor(row.elo) };
+  const { training_points, real_name, avatar_key, ...profile } = row;
+  return {
+    ...profile,
+    trainingPoints: training_points,
+    realName: real_name ?? "",
+    avatarKey: avatar_key || "knight-azure",
+    ...tierFor(row.elo),
+  };
 }
 
 /**
@@ -133,6 +142,11 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
+  const setAvatar = useCallback(async (avatarKey: string) => {
+    const row = (await saveAvatar({ data: { avatarKey } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
   /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
   const recordResult = useCallback((outcome: "win" | "loss" | "draw", eloDelta = 8) => {
     const cur = read();
@@ -152,5 +166,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, recordResult, winRate: winRate(profile) };
 }
