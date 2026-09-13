@@ -22,6 +22,18 @@ import stellarNightBishop from "@/assets/chess-next/optimized/stellar-night-b.we
 import stellarNightRook from "@/assets/chess-next/optimized/stellar-night-r.webp";
 import stellarNightQueen from "@/assets/chess-next/optimized/stellar-night-q.webp";
 import stellarNightKing from "@/assets/chess-next/optimized/stellar-night-k.webp";
+import demonWhitePawnAsset from "@/assets/chess/demon-gold/demon-wp.webp.asset.json";
+import demonWhiteKnightAsset from "@/assets/chess/demon-gold/demon-wn.webp.asset.json";
+import demonWhiteBishopAsset from "@/assets/chess/demon-gold/demon-wb.webp.asset.json";
+import demonWhiteRookAsset from "@/assets/chess/demon-gold/demon-wr.webp.asset.json";
+import demonWhiteQueenAsset from "@/assets/chess/demon-gold/demon-wq.webp.asset.json";
+import demonWhiteKingAsset from "@/assets/chess/demon-gold/demon-wk.webp.asset.json";
+import demonBlackPawnAsset from "@/assets/chess/demon-gold/demon-bp.webp.asset.json";
+import demonBlackKnightAsset from "@/assets/chess/demon-gold/demon-bn.webp.asset.json";
+import demonBlackBishopAsset from "@/assets/chess/demon-gold/demon-bb.webp.asset.json";
+import demonBlackRookAsset from "@/assets/chess/demon-gold/demon-br.webp.asset.json";
+import demonBlackQueenAsset from "@/assets/chess/demon-gold/demon-bq.webp.asset.json";
+import demonBlackKingAsset from "@/assets/chess/demon-gold/demon-bk.webp.asset.json";
 
 export const CHESS_PIECE_ASSETS: Record<string, string> = {
   wp: platinumPawn,
@@ -55,4 +67,20 @@ export const STELLAR_PIECE_ASSETS: Record<string, string> = {
   br: stellarNightRook,
   bq: stellarNightQueen,
   bk: stellarNightKing,
+};
+
+/** 魔皇古金：祖母绿古金原版（白方）+ 暗红黑金变体（黑方）。 */
+export const DEMON_GOLD_PIECE_ASSETS: Record<string, string> = {
+  wp: demonWhitePawnAsset.url,
+  wn: demonWhiteKnightAsset.url,
+  wb: demonWhiteBishopAsset.url,
+  wr: demonWhiteRookAsset.url,
+  wq: demonWhiteQueenAsset.url,
+  wk: demonWhiteKingAsset.url,
+  bp: demonBlackPawnAsset.url,
+  bn: demonBlackKnightAsset.url,
+  bb: demonBlackBishopAsset.url,
+  br: demonBlackRookAsset.url,
+  bq: demonBlackQueenAsset.url,
+  bk: demonBlackKingAsset.url,
 };
