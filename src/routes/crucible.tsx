@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
-import { Bi, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/crucible")({
