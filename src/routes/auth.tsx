@@ -64,15 +64,19 @@ function AuthPage() {
     }
     if (res.data.session) {
       const name = realName.trim();
+      let verified = false;
       if (name.length >= 2) {
         try {
           window.localStorage.setItem(REAL_NAME_KEY, name);
         } catch {
           /* storage unavailable */
         }
-        await saveRealName({ data: { realName: name } }).catch(() => null);
+        const saved = await saveRealName({ data: { realName: name } }).catch(() => null);
+        verified = Boolean(saved);
       }
-      void navigate({ to: "/" });
+      // 实名完成后直接进入约战大厅并自动按段位就近排队
+      if (verified) window.location.assign("/battle?lobby=1");
+      else void navigate({ to: "/" });
     } else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
   }
 
