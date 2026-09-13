@@ -155,7 +155,7 @@ function Crucible() {
         </div>
       </header>
 
-      <main className="desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile pt-20 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
+      <main className="page-main-dashboard desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
         {/* 关卡列表 */}
         <section className="crucible-levels flex min-w-0 flex-col gap-space-xs mt-space-sm lg:mt-space-sm lg:sticky lg:top-24">
           <h2 className="font-headline-sm text-headline-sm">
@@ -197,7 +197,7 @@ function Crucible() {
         </section>
 
         {/* 当前关卡 */}
-        <section className="crucible-column flex w-full min-w-0 flex-col items-center gap-space-sm mt-space-md">
+        <section className="crucible-column flex w-full min-w-0 flex-col items-center gap-space-sm mt-space-sm">
           {levelsQ.isLoading && (
             <div className="grid gap-space-sm" aria-hidden="true">
               <div className="h-32 bg-surface-container-low animate-pulse" />

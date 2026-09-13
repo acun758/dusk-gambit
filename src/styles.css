@@ -321,6 +321,15 @@
   background-color: color-mix(in oklab, var(--color-surface) 58%, transparent);
 }
 
+/* Fixed headers and first-screen content share one safe-area-aware vertical rhythm. */
+.page-main-dashboard {
+  padding-top: calc(5rem + env(safe-area-inset-top, 0px));
+}
+
+.page-main-compact {
+  padding-top: calc(4rem + env(safe-area-inset-top, 0px));
+}
+
 @media (min-width: 1024px) {
   .theme-backdrop img {
     object-position: center right;
