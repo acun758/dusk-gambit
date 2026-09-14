@@ -51,6 +51,7 @@ export interface ProfileRow {
   verify_status?: string;
   id_tail?: string;
   verified_at?: string | null;
+  equipped_piece_set?: string;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -123,6 +124,24 @@ export const saveAvatarImage = createServerFn({ method: "POST" })
     const { data: row, error } = await context.supabase
       .from("profiles")
       .update({ avatar_url: data.path, updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return row as ProfileRow;
+  });
+
+const PIECE_SET_IDS = new Set(["sovereign", "stellar", "demon-gold", "dark-dragon"]);
+
+/** 已登录玩家的装备以云端档案为准，保证换设备登录后仍保留。 */
+export const saveEquipment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { pieceSetId: string }) => ({ pieceSetId: input.pieceSetId.trim().slice(0, 32) }))
+  .handler(async ({ data, context }) => {
+    if (!PIECE_SET_IDS.has(data.pieceSetId)) throw new Error("invalid piece set");
+    const { data: row, error } = await context.supabase
+      .from("profiles")
+      .update({ equipped_piece_set: data.pieceSetId, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
@@ -666,6 +685,24 @@ async function matchAvatars(
   };
 }
 
+async function matchPieceSets(
+  admin: AdminClient,
+  match: { id: string; white_id: string | null; black_id: string | null; status: string; white_piece_set?: string; black_piece_set?: string },
+): Promise<{ w: string; b: string }> {
+  let w = match.white_piece_set || "sovereign";
+  let b = match.black_piece_set || "sovereign";
+  if (match.status !== "over") {
+    const ids = [match.white_id, match.black_id].filter(Boolean) as string[];
+    const { data: profiles } = ids.length
+      ? await admin.from("profiles").select("id,equipped_piece_set").in("id", ids)
+      : { data: [] as { id: string; equipped_piece_set: string }[] };
+    w = profiles?.find((p) => p.id === match.white_id)?.equipped_piece_set || w;
+    b = profiles?.find((p) => p.id === match.black_id)?.equipped_piece_set || b;
+    await admin.from("matches").update({ white_piece_set: w, black_piece_set: b }).eq("id", match.id);
+  }
+  return { w, b };
+}
+
 /** 对局双方的实时积分、战绩与头像，用于每一步同步显示。 */
 export const getMatchRatings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -674,7 +711,7 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin
       .from("matches")
-      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path")
+      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path,white_piece_set,black_piece_set")
       .eq("id", data.matchId)
       .maybeSingle();
     if (!row) throw new Error("match not found");
@@ -682,13 +719,14 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const ids = [row.white_id, row.black_id].filter(Boolean) as string[];
     const { data: profiles } = await supabaseAdmin
       .from("profiles")
-      .select("id,elo,wins,losses,draws,streak,diamonds")
+      .select("id,elo,wins,losses,draws,streak,diamonds,equipped_piece_set")
       .in("id", ids);
     const avatars = await matchAvatars(supabaseAdmin, row);
+    const pieceSets = await matchPieceSets(supabaseAdmin, row);
     const pick = (id: string | null, side: "w" | "b") => {
       const p = (profiles ?? []).find((x) => x.id === id);
       if (!p) return null;
-      return { ...p, avatarKey: avatars[side].key, avatarUrl: avatars[side].url };
+      return { ...p, avatarKey: avatars[side].key, avatarUrl: avatars[side].url, pieceSetId: pieceSets[side] };
     };
     return {
       w: pick(row.white_id, "w"),

@@ -34,17 +34,23 @@ export function PlayableBoard({
   lastMove,
   lastMoveWasCapture = false,
   onMove,
+  whitePieceSetId,
+  blackPieceSetId,
 }: {
   fen: string;
   disabled?: boolean;
   lastMove?: string | undefined;
   lastMoveWasCapture?: boolean;
   onMove: (uci: string) => void;
+  whitePieceSetId?: string | undefined;
+  blackPieceSetId?: string | undefined;
 }) {
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
-  const pieceAssets = usePieceAssets();
+  const localAssets = usePieceAssets();
+  const whiteAssets = whitePieceSetId ? pieceSet(whitePieceSetId).assets : localAssets;
+  const blackAssets = blackPieceSetId ? pieceSet(blackPieceSetId).assets : localAssets;
   const [selected, setSelected] = useState<Square | null>(null);
   const legalMoves = useMemo(() => selected ? chess.moves({ square: selected, verbose: true }) : [], [chess, selected]);
   const targets = useMemo(() => legalMoves.map((m) => m.to), [legalMoves]);
@@ -129,7 +135,7 @@ export function PlayableBoard({
                 >
                   <span className="board-piece-fallback" aria-hidden="true">{GLYPH[`${piece.color}${piece.type}`]}</span>
                   <img
-                    src={pieceAssets[`${piece.color}${piece.type}`]}
+                    src={(piece.color === "w" ? whiteAssets : blackAssets)[`${piece.color}${piece.type}`]}
                     alt=""
                     draggable={false}
                     onError={(event) => { event.currentTarget.hidden = true; }}

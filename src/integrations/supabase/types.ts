@@ -90,7 +90,9 @@ export type Database = {
         Row: {
           attempts: number
           best_ms: number | null
+          best_score: number | null
           id: string
+          last_review: Json
           level_id: number
           reward_granted: boolean
           solved: boolean
@@ -101,7 +103,9 @@ export type Database = {
         Insert: {
           attempts?: number
           best_ms?: number | null
+          best_score?: number | null
           id?: string
+          last_review?: Json
           level_id: number
           reward_granted?: boolean
           solved?: boolean
@@ -112,7 +116,9 @@ export type Database = {
         Update: {
           attempts?: number
           best_ms?: number | null
+          best_score?: number | null
           id?: string
+          last_review?: Json
           level_id?: number
           reward_granted?: boolean
           solved?: boolean
@@ -307,6 +313,7 @@ export type Database = {
           black_elo: number
           black_id: string | null
           black_name: string
+          black_piece_set: string
           clock_b: number
           clock_w: number
           cp: number
@@ -329,6 +336,7 @@ export type Database = {
           white_elo: number
           white_id: string | null
           white_name: string
+          white_piece_set: string
         }
         Insert: {
           black_avatar_key?: string
@@ -336,6 +344,7 @@ export type Database = {
           black_elo?: number
           black_id?: string | null
           black_name?: string
+          black_piece_set?: string
           clock_b?: number
           clock_w?: number
           cp?: number
@@ -358,6 +367,7 @@ export type Database = {
           white_elo?: number
           white_id?: string | null
           white_name?: string
+          white_piece_set?: string
         }
         Update: {
           black_avatar_key?: string
@@ -365,6 +375,7 @@ export type Database = {
           black_elo?: number
           black_id?: string | null
           black_name?: string
+          black_piece_set?: string
           clock_b?: number
           clock_w?: number
           cp?: number
@@ -387,6 +398,7 @@ export type Database = {
           white_elo?: number
           white_id?: string | null
           white_name?: string
+          white_piece_set?: string
         }
         Relationships: [
           {
@@ -406,6 +418,7 @@ export type Database = {
           diamonds: number
           draws: number
           elo: number
+          equipped_piece_set: string
           handle: string
           id: string
           id_tail: string
@@ -426,6 +439,7 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          equipped_piece_set?: string
           handle: string
           id: string
           id_tail?: string
@@ -446,6 +460,7 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          equipped_piece_set?: string
           handle?: string
           id?: string
           id_tail?: string

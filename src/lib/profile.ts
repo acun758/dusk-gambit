@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, saveEquipment, submitVerification } from "@/lib/game.functions";
 import { uploadAvatar } from "@/lib/avatar-upload";
 
 export interface PlayerProfile {
@@ -20,6 +20,7 @@ export interface PlayerProfile {
   avatarPath: string;
   verifyStatus: "none" | "pending" | "verified" | "rejected";
   idTail: string;
+  equippedPieceSet: string;
 }
 
 /** 访客占位档案：战绩全为 0，段位只在真实对局结算后才会变化。 */
@@ -39,6 +40,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   avatarPath: "",
   verifyStatus: "none",
   idTail: "",
+  equippedPieceSet: "sovereign",
 };
 
 const KEY = "bs.profile.v1";
@@ -89,10 +91,11 @@ interface CloudRow {
   avatar_url?: string;
   verify_status?: string;
   id_tail?: string;
+  equipped_piece_set?: string;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, ...profile } = row;
+  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, equipped_piece_set, ...profile } = row;
   return {
     ...profile,
     trainingPoints: training_points,
@@ -101,6 +104,7 @@ function fromCloud(row: CloudRow): PlayerProfile {
     avatarPath: avatar_url ?? "",
     verifyStatus: (verify_status as PlayerProfile["verifyStatus"]) || "none",
     idTail: id_tail ?? "",
+    equippedPieceSet: equipped_piece_set || "sovereign",
     ...tierFor(row.elo),
   };
 }
@@ -200,6 +204,13 @@ export function useProfile() {
     [applyAvatar],
   );
 
+  const setEquipment = useCallback(async (pieceSetId: string) => {
+    const row = (await saveEquipment({ data: { pieceSetId } })) as CloudRow;
+    const next = fromCloud(row);
+    setProfile(next);
+    write(next);
+  }, []);
+
   /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
   const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
     const res = await submitVerification({ data: { realName, idNumber } });
@@ -227,5 +238,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, verifyIdentity, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, setEquipment, verifyIdentity, recordResult, winRate: winRate(profile) };
 }

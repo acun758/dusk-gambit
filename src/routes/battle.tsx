@@ -121,6 +121,8 @@ function Battle() {
               lastMoveWasCapture={session.moves.at(-1)?.san.includes("x") ?? false}
               disabled={!myTurn}
               onMove={session.playMove}
+              whitePieceSetId={session.ratings?.w?.pieceSetId ?? (session.state.you === "w" ? profile.equippedPieceSet : undefined)}
+              blackPieceSetId={session.ratings?.b?.pieceSetId ?? (session.state.you === "b" ? profile.equippedPieceSet : undefined)}
             />
           </div>
 
