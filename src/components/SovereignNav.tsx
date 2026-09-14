@@ -80,7 +80,7 @@ export function SovereignNav() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-space-sm h-13 px-space-sm transition-colors ${
+              className={`flex items-center gap-space-sm h-14 px-space-sm transition-colors ${
                 isActive(item.to)
                   ? "text-secondary gold-hairline"
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
