@@ -148,7 +148,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       const sign = mySide === "w" ? 1 : -1;
       const swing = Math.round(sign * (evaluateDeep(board.fen(), 2) - before));
       const scoredMove: ReviewStep = {
-          no: r.length + 1,
+          no: review.length + 1,
           san,
           bestSan: best?.san ?? san,
           swing,
