@@ -7,7 +7,7 @@ import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
 import { listEndgameLevels } from "@/lib/game.functions";
 import { aiLevel } from "@/lib/local-engine";
-import { chooseMove } from "@/lib/local-engine";
+import { chooseMove, evaluateDeep } from "@/lib/local-engine";
 import { useT } from "@/lib/i18n";
 
 export interface DrillLevel {
@@ -32,6 +32,31 @@ export interface DrillLevel {
 
 type Status = "playing" | "solved" | "failed";
 
+/** 玩家每一步的评分记录：实际走法、引擎最佳走法与得失。 */
+interface ReviewStep {
+  no: number;
+  san: string;
+  bestSan: string;
+  swing: number;
+  tag: "best" | "good" | "inaccuracy" | "mistake" | "blunder";
+}
+
+function tagFor(swing: number, matched: boolean): ReviewStep["tag"] {
+  if (matched || swing >= -20) return "best";
+  if (swing >= -60) return "good";
+  if (swing >= -150) return "inaccuracy";
+  if (swing >= -350) return "mistake";
+  return "blunder";
+}
+
+const TAG_TEXT: Record<ReviewStep["tag"], { zh: string; en: string; tone: string }> = {
+  best: { zh: "最佳", en: "Best", tone: "text-secondary" },
+  good: { zh: "不错", en: "Good", tone: "text-on-surface-variant" },
+  inaccuracy: { zh: "不准确", en: "Inaccuracy", tone: "text-secondary-fixed" },
+  mistake: { zh: "失误", en: "Mistake", tone: "text-primary" },
+  blunder: { zh: "漏着", en: "Blunder", tone: "text-primary" },
+};
+
 /**
  * 对弈页的残局试炼模式：从残局卡片开局，玩家执先手方，
  * 引擎以深度 4~6 顽强防守，将死即通关，随后进入讲解与复盘。
@@ -49,6 +74,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const [lastMove, setLastMove] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<Status>("playing");
   const [thinking, setThinking] = useState(false);
+  const [review, setReview] = useState<ReviewStep[]>([]);
 
   const active = levels.find((l) => l.id === activeId) ?? null;
   const mySide = useMemo(() => (active ? (active.fen.split(" ")[1] === "b" ? "b" : "w") : "w"), [active]);
@@ -60,6 +86,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
     setLastMove(undefined);
     setStatus("playing");
     setThinking(false);
+    setReview([]);
   }, []);
 
   useEffect(() => {
@@ -83,6 +110,9 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const onMove = useCallback(
     (uci: string) => {
       if (!active || status !== "playing" || thinking) return;
+      // 落子前先记下引擎的最佳走法与局面评分，用于结束后的逐步点评
+      const best = chooseMove(fen, aiLevel("master"));
+      const before = evaluateDeep(fen, 2);
       const board = new Chess(fen);
       const promotion = uci[4];
       try {
@@ -91,6 +121,18 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
         return;
       }
       const san = board.history().at(-1) ?? uci;
+      const sign = mySide === "w" ? 1 : -1;
+      const swing = Math.round(sign * (evaluateDeep(board.fen(), 2) - before));
+      setReview((r) => [
+        ...r,
+        {
+          no: r.length + 1,
+          san,
+          bestSan: best?.san ?? san,
+          swing,
+          tag: tagFor(swing, !!best && best.uci === uci),
+        },
+      ]);
       setFen(board.fen());
       setHistory((h) => [...h, san]);
       setLastMove(uci);
@@ -175,6 +217,32 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
                   {t(active.explanation_zh || active.hint_zh, active.explanation_en || active.hint_en)}
                 </p>
+              )}
+
+              {review.length > 0 && (
+                <div className="grid gap-1">
+                  <h3 className="cjk font-label-lg text-label-lg">{t("逐步点评", "Move-by-move review")}</h3>
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                    {t("对比你的每一手与引擎最佳走法，负分表示这一手丢掉的优势（单位：兵）。", "Your move versus the engine's best; a negative score is the advantage lost, in pawns.")}
+                  </p>
+                  <div className="grid gap-1 max-h-[32vh] overflow-y-auto overscroll-contain">
+                    {review.map((s) => (
+                      <div key={s.no} className="bg-surface-container px-2 py-2 flex items-center justify-between gap-2 min-h-11">
+                        <span className="font-label-md text-label-md tabular-nums">
+                          {s.no}. {s.san}
+                          {s.bestSan !== s.san && (
+                            <span className="cjk ml-2 font-label-sm text-label-sm text-on-surface-variant">
+                              {t(`最佳 ${s.bestSan}`, `best ${s.bestSan}`)}
+                            </span>
+                          )}
+                        </span>
+                        <span className={`cjk font-label-sm text-label-sm tabular-nums shrink-0 ${TAG_TEXT[s.tag].tone}`}>
+                          {t(TAG_TEXT[s.tag].zh, TAG_TEXT[s.tag].en)} {(s.swing / 100).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
               <div className="flex flex-wrap gap-2">
                 <Button type="button" onClick={() => load(active)} className="h-11 rounded-none bg-surface-container text-on-surface">

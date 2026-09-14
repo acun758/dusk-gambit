@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -112,6 +113,7 @@ export function useProfile() {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   const refresh = useCallback(async () => {
     const { data } = await supabase.auth.getSession();
@@ -156,23 +158,47 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
-  const setAvatar = useCallback(async (avatarKey: string) => {
-    const row = (await saveAvatar({ data: { avatarKey } })) as CloudRow;
-    setProfile(fromCloud(row));
-  }, []);
+  /** 头像变更后广播给全站：对弈玩家条、复盘、段位榜立即换成新头像。 */
+  const applyAvatar = useCallback(
+    (row: CloudRow) => {
+      const next = fromCloud(row);
+      setProfile(next);
+      try {
+        window.dispatchEvent(new CustomEvent("bs:profile", { detail: next }));
+      } catch {
+        /* SSR */
+      }
+      void queryClient.invalidateQueries({ queryKey: ["ladder-board"] });
+      void queryClient.invalidateQueries({ queryKey: ["promotion-rivals"] });
+      void queryClient.invalidateQueries({ queryKey: ["match-review"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-matches"] });
+    },
+    [queryClient],
+  );
+
+  const setAvatar = useCallback(
+    async (avatarKey: string) => {
+      applyAvatar((await saveAvatar({ data: { avatarKey } })) as CloudRow);
+    },
+    [applyAvatar],
+  );
 
   /** 上传自定义头像图片，成功后立即刷新档案（对弈页玩家条同步更新）。 */
-  const setAvatarImage = useCallback(async (file: File) => {
-    const path = await uploadAvatar(file);
-    const row = (await saveAvatarImage({ data: { path } })) as CloudRow;
-    setProfile(fromCloud(row));
-  }, []);
+  const setAvatarImage = useCallback(
+    async (file: File) => {
+      const path = await uploadAvatar(file);
+      applyAvatar((await saveAvatarImage({ data: { path } })) as CloudRow);
+    },
+    [applyAvatar],
+  );
 
   /** 清除自定义头像图片，回到徽章头像。 */
-  const clearAvatarImage = useCallback(async () => {
-    const row = (await saveAvatarImage({ data: { path: "" } })) as CloudRow;
-    setProfile(fromCloud(row));
-  }, []);
+  const clearAvatarImage = useCallback(
+    async () => {
+      applyAvatar((await saveAvatarImage({ data: { path: "" } })) as CloudRow);
+    },
+    [applyAvatar],
+  );
 
   /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
   const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {

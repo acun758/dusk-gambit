@@ -224,6 +224,14 @@ export function useDuelSession(): DuelSession {
     };
   }, [matchmakingKey]);
 
+  // 头像更换后立刻重新拉取双方资料（与棋子换装一样即时生效）
+  const [avatarTick, setAvatarTick] = useState(0);
+  useEffect(() => {
+    const bump = () => setAvatarTick((n) => n + 1);
+    window.addEventListener("bs:profile", bump);
+    return () => window.removeEventListener("bs:profile", bump);
+  }, []);
+
   // 每一步、每次状态变化都同步双方实时积分
   useEffect(() => {
     const matchId = cloud?.match.id;
@@ -237,7 +245,7 @@ export function useDuelSession(): DuelSession {
     return () => {
       cancelled = true;
     };
-  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode]);
+  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode, avatarTick]);
 
 
   // realtime：对手落子与对局状态
