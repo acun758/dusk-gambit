@@ -72,7 +72,8 @@ function Arsenal() {
 
   useEffect(() => {
     try {
-      setEquippedId(signedIn ? profile.equippedPieceSet : (window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow"));
+      const stored = window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow";
+      setEquippedId(signedIn ? (SETS.find((item) => item.pieceSetId === profile.equippedPieceSet)?.id ?? "shadow") : stored);
     } catch {
       /* storage unavailable */
     }

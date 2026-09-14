@@ -32,6 +32,8 @@ export type MatchRow = {
   reason: string | null;
   rating_delta: number | null;
   last_move_at: string;
+  white_piece_set: string;
+  black_piece_set: string;
 };
 
 export interface ProfileRow {
@@ -267,6 +269,7 @@ export const getMatch = createServerFn({ method: "POST" })
       .gt("seq", data.lastSeq ?? 0)
       .order("seq", { ascending: true });
     const avatars = await matchAvatars(supabaseAdmin, match as unknown as Parameters<typeof matchAvatars>[1]);
+    await matchPieceSets(supabaseAdmin, match as unknown as Parameters<typeof matchPieceSets>[1]);
     return {
       match: m,
       moves: moves ?? [],
