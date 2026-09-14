@@ -262,6 +262,7 @@
 .home-glass-media,
 .home-glass-control,
 .home-glass-action {
+  position: relative;
   border: 1px solid var(--home-glass-line-soft);
   background:
     linear-gradient(135deg, color-mix(in oklab, white 8%, transparent), transparent 32%),
@@ -269,6 +270,27 @@
     var(--home-glass-fill);
   backdrop-filter: blur(10px) saturate(138%) brightness(114%) contrast(106%);
 }
+
+.home-glass-panel::after,
+.home-glass-tile::after,
+.home-glass-chip::after,
+.home-glass-media::after,
+.home-glass-control::after,
+.home-glass-action::after,
+.home-glass-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: soft-light;
+  background-image: var(--home-glass-paper);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 
 .home-glass-panel {
   border-radius: 1rem;
