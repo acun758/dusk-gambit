@@ -47,7 +47,7 @@ function Index() {
   );
 
   return (
-    <div className="themed-page text-on-surface flex flex-col min-h-screen">
+    <div className="themed-page home-glass-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="storm" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="home-glass-scope home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
