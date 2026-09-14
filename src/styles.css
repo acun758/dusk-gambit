@@ -237,8 +237,8 @@
   --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 6%, transparent);
   --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 3%, transparent);
   --home-glass-line-base: color-mix(in oklab, white 72%, var(--color-voidAsh) 28%);
-  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 12%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 6%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 6%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 3%, transparent);
 }
 
 .home-glass-page .theme-backdrop img {
