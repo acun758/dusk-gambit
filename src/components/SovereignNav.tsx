@@ -80,16 +80,16 @@ export function SovereignNav() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-space-sm h-12 px-space-sm transition-colors ${
+              className={`flex items-center gap-space-sm h-13 px-space-sm transition-colors ${
                 isActive(item.to)
-                  ? "bg-surface-container-high text-secondary gold-hairline"
+                  ? "text-secondary gold-hairline"
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
               <img
                 src={NAV_ICONS[item.icon]}
                 alt={item.label}
-                className={`h-8 w-8 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_8px_rgba(212,175,55,0.55)]" : "opacity-65 grayscale-[25%]"}`}
+                className={`h-10 w-10 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_10px_rgba(212,175,55,0.6)]" : "opacity-60 brightness-90"}`}
               />
               <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
