@@ -236,8 +236,9 @@
 .home-glass-scope {
   --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 10%, transparent);
   --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 6%, transparent);
-  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 76%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 46%, transparent);
+  --home-glass-line-base: color-mix(in oklab, white 72%, var(--color-voidAsh) 28%);
+  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 58%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 32%, transparent);
 }
 
 .home-glass-page .theme-backdrop img {
@@ -262,58 +263,60 @@
 .home-glass-action {
   border: 1px solid var(--home-glass-line-soft);
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--color-home-glass-warm) 9%, transparent), transparent 32%),
-    linear-gradient(315deg, color-mix(in oklab, var(--color-home-glass-gold) 5%, transparent), transparent 48%),
+    linear-gradient(135deg, color-mix(in oklab, white 8%, transparent), transparent 32%),
+    linear-gradient(315deg, color-mix(in oklab, var(--color-voidAsh) 6%, transparent), transparent 48%),
     var(--home-glass-fill);
-  backdrop-filter: blur(30px) saturate(138%) brightness(114%) contrast(106%);
+  backdrop-filter: blur(18px) saturate(138%) brightness(114%) contrast(106%);
 }
 
 .home-glass-panel {
   border-radius: 1rem;
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 44%, transparent),
-    inset 1px 0 0 color-mix(in oklab, var(--color-home-glass-warm) 18%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, var(--color-home-glass-deep) 34%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 46%, transparent),
+    inset 1px 0 0 color-mix(in oklab, white 18%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--color-voidAsh) 26%, transparent),
     0 24px 54px color-mix(in oklab, var(--color-surface-dim) 38%, transparent),
-    0 0 34px color-mix(in oklab, var(--color-home-glass-gold) 14%, transparent);
+    0 0 34px color-mix(in oklab, white 10%, transparent);
 }
 
 .home-glass-tile {
   border-radius: 0.75rem;
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--color-home-glass-warm) 8%, transparent), transparent 36%),
+    linear-gradient(135deg, color-mix(in oklab, white 7%, transparent), transparent 36%),
     var(--home-glass-fill-soft);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 36%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, var(--color-home-glass-deep) 30%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 38%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--color-voidAsh) 22%, transparent),
     0 14px 30px color-mix(in oklab, var(--color-surface-dim) 28%, transparent);
 }
 
 .home-glass-tile-active {
   border-color: var(--home-glass-line);
-  background: linear-gradient(145deg, color-mix(in oklab, var(--color-home-glass-gold) 12%, transparent), transparent 58%), var(--home-glass-fill);
+  background: linear-gradient(145deg, color-mix(in oklab, white 12%, transparent), transparent 58%), var(--home-glass-fill);
 }
 
 .home-glass-chip {
   border-radius: 0.625rem;
   background-color: color-mix(in oklab, var(--color-home-glass-deep) 8%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 38%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 34%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--color-voidAsh) 14%, transparent);
 }
 
 .home-glass-media {
   border-radius: 0.75rem;
   background-color: color-mix(in oklab, var(--color-home-glass-deep) 16%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 24%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--color-home-glass-gold) 16%, transparent);
+    inset 0 1px 0 color-mix(in oklab, white 24%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 14%, transparent);
 }
 
 .home-glass-header {
   background: color-mix(in oklab, var(--color-home-glass-deep) 10%, transparent);
-  border-bottom: 1px solid color-mix(in oklab, var(--color-home-glass-gold) 32%, transparent);
-  backdrop-filter: blur(30px) saturate(138%) brightness(114%) contrast(106%);
+  border-bottom: 1px solid var(--home-glass-line-soft);
+  backdrop-filter: blur(18px) saturate(138%) brightness(114%) contrast(106%);
   box-shadow:
-    inset 0 -1px 0 color-mix(in oklab, var(--color-home-glass-warm) 10%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, white 12%, transparent),
     0 16px 42px color-mix(in oklab, var(--color-surface-dim) 32%, transparent);
 }
 
@@ -321,19 +324,20 @@
   border-radius: 0.75rem;
   background-color: color-mix(in oklab, var(--color-home-glass) 8%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 44%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 44%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--color-voidAsh) 16%, transparent),
     0 8px 22px color-mix(in oklab, var(--color-surface-dim) 24%, transparent);
 }
 
 .home-glass-action {
   border-radius: 0.75rem;
-  border-color: color-mix(in oklab, var(--color-primary) 58%, transparent);
+  border-color: var(--home-glass-line-soft);
   background:
     linear-gradient(135deg, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 42%),
     color-mix(in oklab, var(--color-primary-container) 38%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-primary-fixed) 32%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, var(--color-on-primary) 28%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 32%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--color-voidAsh) 18%, transparent),
     0 14px 34px color-mix(in oklab, var(--color-primary-container) 22%, transparent);
 }
 
@@ -341,9 +345,9 @@
 .home-glass-tile:is(a):hover {
   border-color: var(--home-glass-line);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 18%, transparent),
+    inset 0 1px 0 color-mix(in oklab, white 22%, transparent),
     0 18px 40px color-mix(in oklab, var(--color-surface-dim) 48%, transparent),
-    0 0 28px color-mix(in oklab, var(--color-home-glass-gold) 12%, transparent);
+    0 0 28px color-mix(in oklab, white 10%, transparent);
 }
 
 @media (prefers-reduced-motion: no-preference) {
