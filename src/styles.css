@@ -335,6 +335,7 @@
 }
 
 .home-glass-header {
+  position: relative;
   background: color-mix(in oklab, var(--color-home-glass-deep) 10%, transparent);
   border-bottom: 1px solid var(--home-glass-line-soft);
   backdrop-filter: blur(10px) saturate(138%) brightness(114%) contrast(106%);
