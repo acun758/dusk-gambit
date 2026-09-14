@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -112,6 +113,7 @@ export function useProfile() {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   const refresh = useCallback(async () => {
     const { data } = await supabase.auth.getSession();
