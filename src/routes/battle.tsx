@@ -99,7 +99,16 @@ function Battle() {
               {t("残局试炼", "Endgame drill")}
             </Button>
           </div>
-          <PlayerBar name={opponent.name} seed={opponent.name} elo={oppElo} clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])} active={session.state.turn !== session.state.you} dark />
+          <PlayerBar
+            name={opponent.name}
+            seed={opponent.name}
+            avatarKey={session.ratings?.[oppSide]?.avatarKey ?? ""}
+            avatarSrc={session.ratings?.[oppSide]?.avatarUrl ?? null}
+            elo={oppElo}
+            clock={fmtClock(session.clock[session.state.you === "w" ? "b" : "w"])}
+            active={session.state.turn !== session.state.you}
+            dark
+          />
 
           <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
             <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title="实时评估">
@@ -115,7 +124,16 @@ function Battle() {
             />
           </div>
 
-          <PlayerBar name={me.name} seed={me.name} avatarKey={profile.avatarKey} avatarPath={profile.avatarPath} elo={myElo} clock={fmtClock(session.clock[session.state.you])} active={myTurn} />
+          <PlayerBar
+            name={me.name}
+            seed={me.name}
+            avatarKey={session.ratings?.[session.state.you]?.avatarKey || profile.avatarKey}
+            avatarPath={profile.avatarPath}
+            avatarSrc={session.ratings?.[session.state.you]?.avatarUrl ?? null}
+            elo={myElo}
+            clock={fmtClock(session.clock[session.state.you])}
+            active={myTurn}
+          />
           <div className="battle-core-width bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
             <div className="min-w-0">
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
@@ -226,10 +244,10 @@ function Battle() {
   );
 }
 
-function PlayerBar({ name, elo, clock, active, dark = false, seed, avatarKey, avatarPath }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean; seed?: string; avatarKey?: string; avatarPath?: string }) {
+function PlayerBar({ name, elo, clock, active, dark = false, seed, avatarKey, avatarPath, avatarSrc }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean; seed?: string; avatarKey?: string; avatarPath?: string; avatarSrc?: string | null }) {
   return (
     <div className={`battle-core-width min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${dark ? "bg-surface-container-lowest" : "bg-surface-container"} ${active ? "gold-hairline" : ""}`}>
-      <div className="flex items-center gap-3 min-w-0"><PlayerAvatar className="h-10 w-10" seed={seed} avatarKey={avatarKey} avatarPath={avatarPath} /><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
+      <div className="flex items-center gap-3 min-w-0"><PlayerAvatar className="h-10 w-10" seed={seed} avatarKey={avatarKey} avatarPath={avatarPath} avatarSrc={avatarSrc} /><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
       <span className={`font-headline-md text-headline-md tabular-nums ${active ? "text-secondary" : "text-on-surface-variant"}`}>{clock}</span>
     </div>
   );

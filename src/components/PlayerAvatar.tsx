@@ -10,15 +10,19 @@ export function PlayerAvatar({
   label,
   avatarKey,
   avatarPath,
+  avatarSrc,
   seed,
 }: {
   className?: string | undefined;
   label?: string | undefined;
   avatarKey?: string | null | undefined;
   avatarPath?: string | null | undefined;
+  /** 已解析好的图片地址（服务端签名，用于对手 / 榜单 / 复盘头像） */
+  avatarSrc?: string | null | undefined;
   seed?: string | undefined;
 }) {
-  const uploaded = useAvatarImage(avatarPath);
+  const fromPath = useAvatarImage(avatarPath);
+  const uploaded = avatarSrc ?? fromPath;
   const known = avatarKey && AVATAR_OPTIONS.some((a) => a.key === avatarKey) ? avatarKey : null;
   const key = known ?? (seed ? avatarKeyForSeed(seed) : null);
   return (
