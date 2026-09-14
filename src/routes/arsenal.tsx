@@ -26,9 +26,12 @@ export const Route = createFileRoute("/arsenal")({
 });
 
 import { PIECE_SET_EVENT, PIECE_SET_STORAGE_KEY } from "@/components/PlayableBoard";
+import obsidianKnightPreview from "@/assets/chess-next/optimized/obsidian-n.webp";
+import platinumQueenPreview from "@/assets/chess-next/optimized/platinum-q.webp";
 import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp.asset.json";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp.asset.json";
+import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp.asset.json";
 
 const KINDS = [
   { id: "all", zh: "全部", en: "All" },
@@ -38,12 +41,12 @@ const KINDS = [
 ] as const;
 
 const SETS = [
-  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "knight", image: GAME_ART.sets.shadow, floor: 0, price: 0, pieceSetId: "sovereign" },
+  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "knight", image: obsidianKnightPreview, floor: 0, price: 0, pieceSetId: "sovereign" },
   { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "knight", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
   { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "knight", image: demonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "demon-gold" },
   { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
-  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: GAME_ART.sets.classic, floor: 2400, price: 1200, pieceSetId: null },
-  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: GAME_ART.sets.gilded, floor: 2500, price: 1800, pieceSetId: null },
+  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: platinumQueenPreview, floor: 2400, price: 1200, pieceSetId: null },
+  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset.url, floor: 2500, price: 1800, pieceSetId: null },
 ] as const;
 
 function Arsenal() {
@@ -125,7 +128,7 @@ function Arsenal() {
                 return (
                   <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`grid min-w-0 gap-2 bg-surface-container-low p-space-sm text-left transition-colors ${active ? "gold-hairline bg-surface-container-high" : "hover:bg-surface-container"}`}>
                     <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-lowest">
-                      <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-cover" />
+                      <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-contain p-2" />
                       <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
                     <div className="min-w-0">
@@ -185,7 +188,7 @@ function Arsenal() {
 
           <aside className="stage-panel grid gap-space-sm bg-surface-container-low p-space-md gold-hairline lg:sticky lg:top-24">
             <div className="relative aspect-square overflow-hidden bg-surface-container-lowest">
-              <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-cover" />
+              <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-contain p-space-sm" />
             </div>
             <div>
               <p className="cjk font-label-sm text-label-sm text-primary">{kindLabel(selected.kind)} · {unlocked ? t("已解锁", "Unlocked") : t("段位锁定", "Tier locked")}</p>
