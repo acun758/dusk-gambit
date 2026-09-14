@@ -234,24 +234,24 @@
 /* Home-only Ancient Gold Frosted treatment. Other routes intentionally keep
    their established surfaces until this direction is approved app-wide. */
 .home-glass-scope {
-  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 27%, transparent);
-  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 20%, transparent);
-  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 58%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 34%, transparent);
+  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 14%, transparent);
+  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 10%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 72%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 42%, transparent);
 }
 
 .home-glass-page .theme-backdrop img {
-  filter: saturate(0.7) brightness(0.66) contrast(1.06);
+  filter: saturate(0.75) brightness(0.72) contrast(1.05);
 }
 
 .home-glass-page .theme-backdrop-shade {
   background:
-    linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 46%, transparent) 0%, color-mix(in oklab, var(--color-surface) 18%, transparent) 38%, color-mix(in oklab, var(--color-surface) 58%, transparent) 100%),
-    radial-gradient(circle at 50% 45%, transparent 28%, color-mix(in oklab, var(--color-surface) 46%, transparent) 100%);
+    linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 32%, transparent) 0%, color-mix(in oklab, var(--color-surface) 8%, transparent) 42%, color-mix(in oklab, var(--color-surface) 40%, transparent) 100%),
+    radial-gradient(circle at 50% 45%, transparent 22%, color-mix(in oklab, var(--color-surface) 34%, transparent) 100%);
 }
 
 .home-glass-page main.bg-surface {
-  background-color: color-mix(in oklab, var(--color-surface) 22%, transparent);
+  background-color: color-mix(in oklab, var(--color-surface) 10%, transparent);
 }
 
 .home-glass-panel,
@@ -262,10 +262,10 @@
 .home-glass-action {
   border: 1px solid var(--home-glass-line-soft);
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--color-home-glass-warm) 13%, transparent), transparent 32%),
-    linear-gradient(315deg, color-mix(in oklab, var(--color-home-glass-gold) 7%, transparent), transparent 48%),
+    linear-gradient(135deg, color-mix(in oklab, var(--color-home-glass-warm) 9%, transparent), transparent 32%),
+    linear-gradient(315deg, color-mix(in oklab, var(--color-home-glass-gold) 5%, transparent), transparent 48%),
     var(--home-glass-fill);
-  backdrop-filter: blur(20px) saturate(132%) brightness(112%) contrast(108%);
+  backdrop-filter: blur(30px) saturate(138%) brightness(114%) contrast(106%);
 }
 
 .home-glass-panel {
