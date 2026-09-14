@@ -1,5 +1,15 @@
-import knightAzure from "@/assets/avatars/knight-azure.png.asset.json";
-import { CHESS_PIECE_ASSETS } from "@/lib/chess-piece-assets";
+import amethystCrown from "@/assets/avatars/registration/amethyst-crown.webp.asset.json";
+import azurePhoenix from "@/assets/avatars/registration/azure-phoenix.webp.asset.json";
+import azureTaotie from "@/assets/avatars/registration/azure-taotie.webp.asset.json";
+import azureWolf from "@/assets/avatars/registration/azure-wolf.webp.asset.json";
+import crimsonGeneral from "@/assets/avatars/registration/crimson-general.webp.asset.json";
+import crimsonSpartan from "@/assets/avatars/registration/crimson-spartan.webp.asset.json";
+import crossedAxes from "@/assets/avatars/registration/crossed-axes.webp.asset.json";
+import crownedEagle from "@/assets/avatars/registration/crowned-eagle.webp.asset.json";
+import crownedLion from "@/assets/avatars/registration/crowned-lion.webp.asset.json";
+import laurelStar from "@/assets/avatars/registration/laurel-star.webp.asset.json";
+import violetDragon from "@/assets/avatars/registration/violet-dragon.webp.asset.json";
+import violetTemplar from "@/assets/avatars/registration/violet-templar.webp.asset.json";
 
 export interface AvatarOption {
   key: string;
@@ -8,31 +18,31 @@ export interface AvatarOption {
   en: string;
 }
 
-/** 可选头像：默认水晶骑士 + 白金/黑曜棋子套装，注册时自选，尺寸与位置由组件统一约束。 */
+/** 注册头像徽章：统一透明底、统一画布与视觉比例。 */
 export const AVATAR_OPTIONS: AvatarOption[] = [
-  { key: "knight-azure", url: knightAzure.url, zh: "水晶骑士", en: "Crystal Knight" },
-  { key: "platinum-king", url: CHESS_PIECE_ASSETS["wk"]!, zh: "白金王", en: "Platinum King" },
-  { key: "platinum-queen", url: CHESS_PIECE_ASSETS["wq"]!, zh: "白金后", en: "Platinum Queen" },
-  { key: "platinum-knight", url: CHESS_PIECE_ASSETS["wn"]!, zh: "白金骑士", en: "Platinum Knight" },
-  { key: "platinum-rook", url: CHESS_PIECE_ASSETS["wr"]!, zh: "白金堡垒", en: "Platinum Rook" },
-  { key: "platinum-bishop", url: CHESS_PIECE_ASSETS["wb"]!, zh: "白金主教", en: "Platinum Bishop" },
-  { key: "obsidian-king", url: CHESS_PIECE_ASSETS["bk"]!, zh: "黑曜王", en: "Obsidian King" },
-  { key: "obsidian-queen", url: CHESS_PIECE_ASSETS["bq"]!, zh: "黑曜后", en: "Obsidian Queen" },
-  { key: "obsidian-knight", url: CHESS_PIECE_ASSETS["bn"]!, zh: "黑曜骑士", en: "Obsidian Knight" },
-  { key: "obsidian-rook", url: CHESS_PIECE_ASSETS["br"]!, zh: "黑曜堡垒", en: "Obsidian Rook" },
-  { key: "obsidian-bishop", url: CHESS_PIECE_ASSETS["bb"]!, zh: "黑曜主教", en: "Obsidian Bishop" },
-  { key: "obsidian-pawn", url: CHESS_PIECE_ASSETS["bp"]!, zh: "黑曜兵", en: "Obsidian Pawn" },
+  { key: "azure-taotie", url: azureTaotie.url, zh: "蓝瞳饕餮", en: "Azure Taotie" },
+  { key: "crimson-general", url: crimsonGeneral.url, zh: "红缨双剑将", en: "Crimson General" },
+  { key: "violet-dragon", url: violetDragon.url, zh: "紫瞳蟠龙", en: "Violet Dragon" },
+  { key: "azure-phoenix", url: azurePhoenix.url, zh: "蓝焰朱雀", en: "Azure Phoenix" },
+  { key: "crossed-axes", url: crossedAxes.url, zh: "剑斧军牌", en: "Crossed Arms" },
+  { key: "laurel-star", url: laurelStar.url, zh: "月桂翼星", en: "Laurel Star" },
+  { key: "violet-templar", url: violetTemplar.url, zh: "紫瞳圣殿骑士", en: "Violet Templar" },
+  { key: "crimson-spartan", url: crimsonSpartan.url, zh: "紫缨斯巴达盔", en: "Crimson Spartan" },
+  { key: "crowned-eagle", url: crownedEagle.url, zh: "冠冕皇鹰", en: "Crowned Eagle" },
+  { key: "crowned-lion", url: crownedLion.url, zh: "王冠雄狮", en: "Crowned Lion" },
+  { key: "amethyst-crown", url: amethystCrown.url, zh: "紫晶王冠双剑", en: "Amethyst Crown" },
+  { key: "azure-wolf", url: azureWolf.url, zh: "蓝瞳狼首", en: "Azure Wolf" },
 ];
 
-export const DEFAULT_AVATAR_KEY = "knight-azure";
+export const DEFAULT_AVATAR_KEY = "azure-taotie";
 
 export function avatarUrl(key?: string | null): string {
-  return AVATAR_OPTIONS.find((a) => a.key === key)?.url ?? AVATAR_OPTIONS[0]!.url;
+  return AVATAR_OPTIONS.find((a) => a.key === key)?.url ?? azureTaotie.url;
 }
 
 /** 未设置头像时按名字稳定派生一枚，确保对局双方的头像不会撞在一起。 */
 export function avatarKeyForSeed(seed: string): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i += 1) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  return AVATAR_OPTIONS[hash % AVATAR_OPTIONS.length]!.key;
+  return AVATAR_OPTIONS[hash % AVATAR_OPTIONS.length]?.key ?? DEFAULT_AVATAR_KEY;
 }

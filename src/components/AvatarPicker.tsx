@@ -35,7 +35,7 @@ export function AvatarPicker({
       <span className="cjk font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
         {t("选择头像（对局中显示）", "Choose your avatar")}
       </span>
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-6 gap-2 md:gap-3">
         {AVATAR_OPTIONS.map((option) => (
           <button
             key={option.key}
@@ -43,9 +43,9 @@ export function AvatarPicker({
             onClick={() => onSelect(option.key)}
             aria-label={t(option.zh, option.en)}
             aria-pressed={value === option.key}
-            className={`aspect-square flex items-center justify-center bg-surface-container p-1 ${value === option.key ? "gold-hairline opacity-100" : "opacity-60 hover:opacity-90"}`}
+            className={`aspect-square flex items-center justify-center bg-surface-container p-0.5 md:p-1 ${value === option.key ? "gold-hairline opacity-100" : "opacity-70 hover:opacity-100"}`}
           >
-            <img src={option.url} alt="" className="h-full w-full object-contain" />
+            <img src={option.url} alt="" className="h-full w-full scale-110 object-contain" />
           </button>
         ))}
         <button
