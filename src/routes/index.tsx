@@ -53,7 +53,7 @@ function Index() {
       <header className="home-glass-scope home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-24 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-md min-w-0">
-            <div className="w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden rounded-sm gold-hairline bg-surface-container/40">
+            <div className="home-glass-control w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
               <GameIcon name="brand-emblem" className="h-14 w-14 sm:h-16 sm:w-16" label={t("王座殿堂徽章", "Throne court emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
@@ -73,7 +73,7 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
-            <LangToggle />
+            <LangToggle className="home-glass-control" />
             <div className="home-glass-control hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
