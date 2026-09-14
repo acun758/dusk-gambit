@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { VerificationCard } from "@/components/VerificationCard";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
@@ -69,9 +69,24 @@ function Dynasty() {
   const t = useT();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile, winRate, signedIn, setAvatar, setAvatarImage, verifyIdentity } = useProfile();
+  const { profile, winRate, signedIn, setAvatar, setAvatarImage, clearAvatarImage, verifyIdentity } = useProfile();
   const [avatarBusy, setAvatarBusy] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const uploadInput = useRef<HTMLInputElement>(null);
+
+  const uploadAvatarFile = useCallback(
+    async (file: File) => {
+      setAvatarBusy(true);
+      setAvatarError(null);
+      try {
+        await setAvatarImage(file);
+      } catch (e) {
+        setAvatarError(e instanceof Error ? e.message : "头像上传失败");
+      }
+      setAvatarBusy(false);
+    },
+    [setAvatarImage],
+  );
 
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
@@ -272,9 +287,46 @@ function Dynasty() {
                 </div>
                 <div className="flex items-center gap-space-md">
                   <PlayerAvatar className="h-16 w-16" avatarKey={profile.avatarKey} avatarPath={profile.avatarPath} seed={profile.name} label={profile.name} />
-                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-                    {t("换头像后，对弈页的玩家条与段位榜会实时更新。", "Changing your avatar updates the duel player bar and ladder instantly.")}
-                  </p>
+                  <div className="flex min-w-0 flex-col gap-space-xs">
+                    <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                      {t("换头像后，对弈页的玩家条与段位榜会实时更新。", "Changing your avatar updates the duel player bar and ladder instantly.")}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-space-xs">
+                      <button
+                        type="button"
+                        onClick={() => uploadInput.current?.click()}
+                        disabled={avatarBusy}
+                        className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm disabled:opacity-50"
+                      >
+                        {avatarBusy ? t("上传中…", "Uploading…") : t("上传我的头像", "Upload my photo")}
+                      </button>
+                      {profile.avatarPath && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAvatarError(null);
+                            void clearAvatarImage().catch((e: unknown) =>
+                              setAvatarError(e instanceof Error ? e.message : "恢复徽章头像失败"),
+                            );
+                          }}
+                          className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+                        >
+                          {t("改回徽章头像", "Use a badge avatar")}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <input
+                    ref={uploadInput}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      e.target.value = "";
+                      if (file) void uploadAvatarFile(file);
+                    }}
+                  />
                 </div>
                 <AvatarPicker
                   value={profile.avatarPath ? "upload" : profile.avatarKey}
@@ -286,16 +338,7 @@ function Dynasty() {
                     setAvatarError(null);
                     void setAvatar(key).catch((e: unknown) => setAvatarError(e instanceof Error ? e.message : "更换头像失败"));
                   }}
-                  onUpload={async (file) => {
-                    setAvatarBusy(true);
-                    setAvatarError(null);
-                    try {
-                      await setAvatarImage(file);
-                    } catch (e) {
-                      setAvatarError(e instanceof Error ? e.message : "头像上传失败");
-                    }
-                    setAvatarBusy(false);
-                  }}
+                  onUpload={(file) => void uploadAvatarFile(file)}
                 />
               </section>
               <VerificationCard profile={profile} onVerify={verifyIdentity} />
@@ -441,7 +484,7 @@ function Dynasty() {
                 <Bi zh="段位榜" en="Leaderboard" />
               </h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest shrink-0">
-                {myRank > 0 ? t(`我的名次 #${myRank}`, `Rank #${myRank}`) : t("按积分排序", "By rating")}
+                {myRank > 0 ? t(`我的名次 #${myRank}`, `Rank #${myRank}`) : t("按真实胜率与局数排序", "By real win rate & games")}
               </span>
             </div>
             {ladderQ.isLoading && (
@@ -465,8 +508,14 @@ function Dynasty() {
                   >
                     <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
                     <div className="flex items-center gap-space-sm min-w-0">
+                      <PlayerAvatar
+                        className="h-11 w-11"
+                        avatarKey={row.avatarKey}
+                        avatarSrc={row.avatarUrl}
+                        seed={row.name}
+                      />
                       <span
-                        className={`w-11 h-11 shrink-0 flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
+                        className={`w-11 h-11 shrink-0 hidden sm:flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
                         <UiIcon name={tier.icon} className="h-10 w-10" />
@@ -474,14 +523,10 @@ function Dynasty() {
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-lg text-label-lg truncate">{row.name}</span>
                         <span className="cjk font-label-md text-label-md text-on-surface-variant truncate">
-                          {(() => {
-                            const games = row.wins + row.losses + row.draws;
-                            const rate = games === 0 ? 0 : Math.round((row.wins / games) * 1000) / 10;
-                            return t(
-                              `${tier.zh} · ${row.wins}胜 ${row.losses}负 ${row.draws}和 · ${games} 局 · 胜率 ${rate}%`,
-                              `${tier.en} · ${row.wins}W ${row.losses}L ${row.draws}D · ${games} games · ${rate}%`,
-                            );
-                          })()}
+                          {t(
+                            `${tier.zh} · ${row.wins}胜 ${row.losses}负 ${row.draws}和 · ${row.games} 局 · 胜率 ${row.winRate}%`,
+                            `${tier.en} · ${row.wins}W ${row.losses}L ${row.draws}D · ${row.games} games · ${row.winRate}%`,
+                          )}
                         </span>
                       </div>
                     </div>

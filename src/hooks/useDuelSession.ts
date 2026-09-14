@@ -22,6 +22,9 @@ export interface LiveRating {
   losses: number;
   draws: number;
   streak: number;
+  /** 对局中的头像快照，换装后双方棋盘上实时同步 */
+  avatarKey?: string;
+  avatarUrl?: string | null;
 }
 
 export interface DuelRatings {

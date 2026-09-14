@@ -302,6 +302,8 @@ export type Database = {
       }
       matches: {
         Row: {
+          black_avatar_key: string
+          black_avatar_path: string
           black_elo: number
           black_id: string | null
           black_name: string
@@ -322,11 +324,15 @@ export type Database = {
           tc_base: number
           tc_inc: number
           turn: string
+          white_avatar_key: string
+          white_avatar_path: string
           white_elo: number
           white_id: string | null
           white_name: string
         }
         Insert: {
+          black_avatar_key?: string
+          black_avatar_path?: string
           black_elo?: number
           black_id?: string | null
           black_name?: string
@@ -347,11 +353,15 @@ export type Database = {
           tc_base?: number
           tc_inc?: number
           turn?: string
+          white_avatar_key?: string
+          white_avatar_path?: string
           white_elo?: number
           white_id?: string | null
           white_name?: string
         }
         Update: {
+          black_avatar_key?: string
+          black_avatar_path?: string
           black_elo?: number
           black_id?: string | null
           black_name?: string
@@ -372,6 +382,8 @@ export type Database = {
           tc_base?: number
           tc_inc?: number
           turn?: string
+          white_avatar_key?: string
+          white_avatar_path?: string
           white_elo?: number
           white_id?: string | null
           white_name?: string

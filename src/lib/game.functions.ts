@@ -247,7 +247,13 @@ export const getMatch = createServerFn({ method: "POST" })
       .eq("match_id", data.matchId)
       .gt("seq", data.lastSeq ?? 0)
       .order("seq", { ascending: true });
-    return { match: m, moves: moves ?? [], you: m.white_id === context.userId ? ("w" as const) : ("b" as const) };
+    const avatars = await matchAvatars(supabaseAdmin, match as unknown as Parameters<typeof matchAvatars>[1]);
+    return {
+      match: m,
+      moves: moves ?? [],
+      you: m.white_id === context.userId ? ("w" as const) : ("b" as const),
+      avatars,
+    };
   });
 
 async function settle(
@@ -543,6 +549,20 @@ export const listMyMatches = createServerFn({ method: "POST" })
 
 /* ------------------------------ ladder & live ------------------------------ */
 
+type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
+
+/** 私有头像桶里的对象路径换成可直接显示的签名链接（对手 / 榜单也能看到）。 */
+async function signAvatars(admin: AdminClient, paths: (string | null | undefined)[]): Promise<Map<string, string>> {
+  const unique = [...new Set(paths.filter((p): p is string => Boolean(p)))];
+  const out = new Map<string, string>();
+  if (!unique.length) return out;
+  const { data } = await admin.storage.from("avatars").createSignedUrls(unique, 60 * 60);
+  for (const item of data ?? []) {
+    if (item.path && item.signedUrl) out.set(item.path, item.signedUrl);
+  }
+  return out;
+}
+
 export interface LadderRow {
   id: string;
   handle: string;
@@ -552,21 +572,101 @@ export interface LadderRow {
   losses: number;
   draws: number;
   streak: number;
+  games: number;
+  winRate: number;
+  avatarKey: string;
+  avatarUrl: string | null;
 }
 
-/** 天梯榜：按等级分排序的前 50 名，仅返回公开战绩字段。 */
-export const listLadder = createServerFn({ method: "GET" }).handler(async () => {
+/**
+ * 天梯榜：名次由真实对局数据决定 —— 胜率（含和棋半分，局数少时向 50% 回归）为主，
+ * 局数与积分依次做后手排序；没有任何对局的玩家排在最后。每次结算后榜单即时变化。
+ */
+export const listLadder = createServerFn({ method: "GET" }).handler(async (): Promise<LadderRow[]> => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("profiles")
-    .select("id,handle,name,elo,wins,losses,draws,streak")
+    .select("id,handle,name,elo,wins,losses,draws,streak,avatar_key,avatar_url")
     .order("elo", { ascending: false })
-    .limit(50);
+    .limit(200);
   if (error) throw new Error(error.message);
-  return (data ?? []) as LadderRow[];
+  const rows = data ?? [];
+  const signed = await signAvatars(supabaseAdmin, rows.map((r) => r.avatar_url));
+
+  const score = (r: { wins: number; losses: number; draws: number }) => {
+    const games = r.wins + r.losses + r.draws;
+    if (games === 0) return -1;
+    // 拉普拉斯平滑：局数少时胜率向 50% 回归，打满局数后真实胜率才完全体现
+    return (r.wins + r.draws * 0.5 + 2) / (games + 4);
+  };
+
+  return rows
+    .map((r) => {
+      const games = r.wins + r.losses + r.draws;
+      return {
+        id: r.id,
+        handle: r.handle,
+        name: r.name,
+        elo: r.elo,
+        wins: r.wins,
+        losses: r.losses,
+        draws: r.draws,
+        streak: r.streak,
+        games,
+        winRate: games === 0 ? 0 : Math.round((r.wins / games) * 1000) / 10,
+        avatarKey: r.avatar_key ?? "",
+        avatarUrl: signed.get(r.avatar_url ?? "") ?? null,
+      };
+    })
+    .sort((a, b) => score(b) - score(a) || b.games - a.games || b.elo - a.elo)
+    .slice(0, 50);
 });
 
-/** 对局双方的实时积分与战绩，用于每一步同步显示。 */
+export interface MatchAvatar {
+  key: string;
+  url: string | null;
+}
+
+/**
+ * 对局头像快照：开局后第一次读取时把双方当时的头像写进对局记录，
+ * 之后即使玩家换了头像，这一局的复盘仍然显示当时的头像。
+ */
+async function matchAvatars(
+  admin: AdminClient,
+  match: { id: string; white_id: string | null; black_id: string | null; status: string;
+    white_avatar_key?: string; black_avatar_key?: string; white_avatar_path?: string; black_avatar_path?: string },
+): Promise<{ w: MatchAvatar; b: MatchAvatar }> {
+  let wKey = match.white_avatar_key ?? "";
+  let bKey = match.black_avatar_key ?? "";
+  let wPath = match.white_avatar_path ?? "";
+  let bPath = match.black_avatar_path ?? "";
+
+  if (match.status !== "over" || (!wKey && !wPath) || (!bKey && !bPath)) {
+    const ids = [match.white_id, match.black_id].filter(Boolean) as string[];
+    if (ids.length) {
+      const { data: profiles } = await admin.from("profiles").select("id,avatar_key,avatar_url").in("id", ids);
+      const pick = (id: string | null) => (profiles ?? []).find((p) => p.id === id) ?? null;
+      const w = pick(match.white_id);
+      const b = pick(match.black_id);
+      wKey = w?.avatar_key ?? wKey;
+      wPath = w?.avatar_url ?? wPath;
+      bKey = b?.avatar_key ?? bKey;
+      bPath = b?.avatar_url ?? bPath;
+      await admin
+        .from("matches")
+        .update({ white_avatar_key: wKey, black_avatar_key: bKey, white_avatar_path: wPath, black_avatar_path: bPath })
+        .eq("id", match.id);
+    }
+  }
+
+  const signed = await signAvatars(admin, [wPath, bPath]);
+  return {
+    w: { key: wKey, url: signed.get(wPath) ?? null },
+    b: { key: bKey, url: signed.get(bPath) ?? null },
+  };
+}
+
+/** 对局双方的实时积分、战绩与头像，用于每一步同步显示。 */
 export const getMatchRatings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { matchId: string }) => input)
@@ -574,7 +674,7 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin
       .from("matches")
-      .select("white_id,black_id,rating_delta,status,outcome")
+      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path")
       .eq("id", data.matchId)
       .maybeSingle();
     if (!row) throw new Error("match not found");
@@ -584,15 +684,21 @@ export const getMatchRatings = createServerFn({ method: "POST" })
       .from("profiles")
       .select("id,elo,wins,losses,draws,streak,diamonds")
       .in("id", ids);
-    const pick = (id: string | null) => (profiles ?? []).find((p) => p.id === id) ?? null;
+    const avatars = await matchAvatars(supabaseAdmin, row);
+    const pick = (id: string | null, side: "w" | "b") => {
+      const p = (profiles ?? []).find((x) => x.id === id);
+      if (!p) return null;
+      return { ...p, avatarKey: avatars[side].key, avatarUrl: avatars[side].url };
+    };
     return {
-      w: pick(row.white_id),
-      b: pick(row.black_id),
+      w: pick(row.white_id, "w"),
+      b: pick(row.black_id, "b"),
       ratingDelta: row.rating_delta,
       status: row.status,
       outcome: row.outcome,
     };
   });
+
 
 /** 重连恢复：返回我当前未结束的天梯对局（含全部着法），积分不会因断线丢失。 */
 export const getActiveMatch = createServerFn({ method: "POST" })

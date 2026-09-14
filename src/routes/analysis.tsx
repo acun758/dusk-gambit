@@ -11,6 +11,7 @@ import { getMatch, listMyMatches } from "@/lib/game.functions";
 import { explainMatch } from "@/lib/ai-review.functions";
 import { evaluateDeep } from "@/lib/local-engine";
 import { UiIcon } from "@/components/UiIcon";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
@@ -218,9 +219,34 @@ function Analysis() {
 
           <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,640px)_minmax(320px,1fr)] xl:items-start">
             <div className="review-playback grid gap-space-sm min-w-0">
+              {detailQ.data && (
+                <div className="bg-surface-container-low gold-hairline p-space-sm grid grid-cols-2 gap-space-sm">
+                  {(["w", "b"] as const).map((side) => {
+                    const m = detailQ.data.match as unknown as { white_name: string; black_name: string; white_elo: number; black_elo: number };
+                    const name = side === "w" ? m.white_name : m.black_name;
+                    const elo = side === "w" ? m.white_elo : m.black_elo;
+                    const av = detailQ.data.avatars?.[side];
+                    return (
+                      <div key={side} className="flex items-center gap-space-sm min-w-0">
+                        <PlayerAvatar className="h-10 w-10" avatarKey={av?.key ?? ""} avatarSrc={av?.url ?? null} seed={name} />
+                        <div className="min-w-0">
+                          <p className="cjk font-label-md text-label-md truncate">
+                            {name}
+                            {side === detailQ.data.you ? "（你）" : ""}
+                          </p>
+                          <p className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                            {side === "w" ? "白方" : "黑方"} · {elo} ELO
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <div className="review-board flex justify-center">
                 <PlayableBoard fen={fen} lastMove={undefined} disabled onMove={() => {}} />
               </div>
+
 
               <div className="review-controls bg-surface-container-low p-space-sm gold-hairline grid gap-2">
               <div className="flex items-center justify-between gap-2">

@@ -168,6 +168,12 @@ export function useProfile() {
     setProfile(fromCloud(row));
   }, []);
 
+  /** 清除自定义头像图片，回到徽章头像。 */
+  const clearAvatarImage = useCallback(async () => {
+    const row = (await saveAvatarImage({ data: { path: "" } })) as CloudRow;
+    setProfile(fromCloud(row));
+  }, []);
+
   /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
   const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
     const res = await submitVerification({ data: { realName, idNumber } });
@@ -195,5 +201,5 @@ export function useProfile() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, verifyIdentity, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, verifyIdentity, recordResult, winRate: winRate(profile) };
 }
