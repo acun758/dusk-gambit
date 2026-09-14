@@ -91,20 +91,20 @@ function Index() {
       </header>
 
       <main className="page-main-hero flex flex-col relative w-full bg-surface min-h-screen">
-        <div className="desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
+        <div className="home-glass-scope desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
           <div>
-            <InvitePoster />
+            <InvitePoster className="home-glass-panel" />
           </div>
           {/* 誓约横幅 */}
-          <section className="relative w-full mt-space-md bg-surface-container-lowest p-space-xs shadow-[0_20px_48px_rgba(0,0,0,0.95)]">
-            <div className="relative w-full bg-surface-container-low p-space-md overflow-hidden">
+          <section className="home-glass-panel relative w-full mt-space-md p-space-xs">
+            <div className="relative w-full p-space-md overflow-hidden rounded-[0.75rem]">
               <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-surface-container-lowest/60 to-surface-container-lowest pointer-events-none" />
               <div className="flex items-center justify-between gap-space-sm relative z-10">
                 <div className="flex items-center gap-space-xs min-w-0">
                   <PlayerAvatar className="h-7 w-7" avatarKey={profile.avatarKey} avatarPath={profile.avatarPath} seed={profile.name} />
                   <span className="font-label-md text-label-md text-on-surface tracking-widest truncate">{profile.name}</span>
                 </div>
-                <div className="flex items-center gap-space-xs px-space-sm py-0.5 bg-surface-container-highest shrink-0">
+                <div className="home-glass-chip flex items-center gap-space-xs px-space-sm py-0.5 shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
                   <span className="cjk font-label-sm text-label-sm text-secondary tracking-widest whitespace-nowrap">
                     {t("君主敕令", "The Sovereign's Decree")}
@@ -113,7 +113,7 @@ function Index() {
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center mt-space-md mb-space-sm">
-                <div className="relative w-full h-56 lg:h-72 overflow-hidden bg-surface-container-lowest mb-space-md shadow-2xl">
+                <div className="home-glass-media relative w-full h-56 lg:h-72 overflow-hidden mb-space-md">
                   <img
                     className="w-full h-full object-cover object-center sm:hidden"
                     src={HERO_PORTRAIT}
@@ -155,7 +155,7 @@ function Index() {
               </span>
             </div>
 
-            <div className="bg-surface-container-low p-space-sm">
+            <div className="home-glass-panel p-space-sm">
               <div className="flex justify-between items-center mb-space-xs gap-space-sm">
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
                   {t(`距离 ${nextTier} 分`, `To ${nextTier} rating`)}
@@ -186,7 +186,7 @@ function Index() {
                 { zh: "胜率", en: "Win rate", v: `${winRate}%` },
                 { zh: "训练分", en: "Training", v: profile.trainingPoints.toLocaleString() },
               ].map((s) => (
-                <div key={s.en} className="bg-surface-container-low p-space-sm flex flex-col gap-0.5 gold-hairline min-w-0">
+                <div key={s.en} className="home-glass-tile p-space-sm flex flex-col gap-0.5 min-w-0">
                   <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t(s.zh, s.en)}</span>
                   <span className="font-headline-sm text-headline-sm text-secondary tabular-nums truncate">{s.v}</span>
                   <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest truncate">
@@ -199,7 +199,7 @@ function Index() {
             {!signedIn && !loading && (
               <Link
                 to="/auth"
-                className="bg-surface-container p-space-sm flex items-center justify-between gap-space-sm hover:bg-surface-container-high transition-colors"
+                className="home-glass-panel p-space-sm flex items-center justify-between gap-space-sm transition-colors"
               >
                 <GameIcon name="auth-google" className="h-8 w-8 shrink-0" />
                 <span className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed min-w-0">
@@ -220,7 +220,7 @@ function Index() {
                   to={m.live ? "/battle" : "/"}
                   aria-disabled={!m.live}
                   onClick={(event) => { if (!m.live) event.preventDefault(); }}
-                  className={`min-h-20 p-space-sm flex flex-col items-center justify-center gap-1 ${m.live ? "bg-surface-container-high" : "bg-surface-container"}`}
+                  className={`home-glass-tile min-h-20 p-space-sm flex flex-col items-center justify-center gap-1 ${m.live ? "home-glass-tile-active" : ""}`}
                 >
                   <span className={`font-label-sm text-label-sm tracking-widest ${m.live ? "text-primary" : "text-secondary"}`}>
                     {t(m.zh, m.en)}
@@ -249,7 +249,7 @@ function Index() {
               <h2 className="font-headline-sm text-headline-sm"><Bi zh="真人约战" en="Ranked Challenges" /></h2>
               <span className="font-label-sm text-label-sm text-secondary">3+2</span>
             </div>
-            <Link to={signedIn ? "/battle" : "/auth"} className="min-h-20 bg-surface-container-low p-space-md grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md gold-hairline">
+            <Link to={signedIn ? "/battle" : "/auth"} className="home-glass-panel min-h-20 p-space-md grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <span className="min-w-0">
                 <strong className="cjk block font-label-lg text-label-lg text-on-surface">{t("系统匹配、好友点名与对战码", "Matchmaking, friends and invite codes")}</strong>
                 <small className="cjk mt-1 block font-body-sm text-body-sm text-on-surface-variant">{t("完整约战操作集中在对弈页，段位相近者优先匹配。", "All challenge tools live on the duel page, with nearby ratings prioritized.")}</small>
@@ -265,7 +265,7 @@ function Index() {
             </h2>
             <Link
               to="/crucible"
-              className="bg-surface-container p-space-md flex items-center justify-between gap-space-md hover:bg-surface-container-high transition-colors"
+              className="home-glass-panel p-space-md flex items-center justify-between gap-space-md transition-colors"
             >
               <div className="flex flex-col gap-1 min-w-0">
                 <span className="cjk font-label-sm text-label-sm text-primary tracking-widest">
@@ -290,8 +290,8 @@ function Index() {
                 { img: RELIC_A, zh: "黑曜骑士", en: "Obsidian Knight", tagZh: "已装备", tagEn: "Equipped", locked: false },
                 { img: RELIC_B, zh: "猩红王后", en: "Crimson Queen", tagZh: "2500 分解锁", tagEn: "Unlock at 2500", locked: true },
               ].map((r) => (
-                <div key={r.en} className="bg-surface-container p-space-sm flex flex-col">
-                  <div className="relative w-full h-36 bg-surface-container-lowest mb-space-sm overflow-hidden">
+                <div key={r.en} className="home-glass-tile p-space-sm flex flex-col">
+                  <div className="home-glass-media relative w-full h-36 mb-space-sm overflow-hidden">
                     <img className="w-full h-full object-cover object-center" src={r.img} alt={t(r.zh, r.en)} loading="lazy" />
                   </div>
                   <span className="font-headline-sm text-headline-sm text-on-surface truncate">{t(r.zh, r.en)}</span>

@@ -50,6 +50,10 @@
   --color-tertiary-container: #6b4a14;
   --color-tertiary-fixed: #ffdad8;
   --color-tertiary-fixed-dim: #ffb3b1;
+  --color-home-glass: oklch(0.105 0.008 80);
+  --color-home-glass-deep: oklch(0.075 0.006 80);
+  --color-home-glass-gold: oklch(0.68 0.105 82);
+  --color-home-glass-warm: oklch(0.91 0.035 83);
   --spacing-gutter: 1rem;
   --spacing-gutter-desktop: 1.5rem;
   --spacing-gutter-mobile: 0.5rem;
@@ -225,6 +229,71 @@
 .section-heading-row > :last-child:not(:first-child) {
   flex-shrink: 0;
   text-align: right;
+}
+
+/* Home-only Ancient Gold Frosted treatment. Other routes intentionally keep
+   their established surfaces until this direction is approved app-wide. */
+.home-glass-scope {
+  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 74%, transparent);
+  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 62%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 30%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 15%, transparent);
+}
+
+.home-glass-panel,
+.home-glass-tile,
+.home-glass-chip,
+.home-glass-media {
+  border: 1px solid var(--home-glass-line-soft);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--color-home-glass-warm) 4%, transparent), transparent 42%), var(--home-glass-fill);
+  backdrop-filter: blur(22px) saturate(118%);
+}
+
+.home-glass-panel {
+  border-radius: 1rem;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 11%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--color-home-glass-gold) 5%, transparent),
+    0 20px 48px color-mix(in oklab, var(--color-surface-dim) 76%, transparent),
+    0 0 32px color-mix(in oklab, var(--color-home-glass-gold) 5%, transparent);
+}
+
+.home-glass-tile {
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--color-home-glass-warm) 3%, transparent), transparent 52%), var(--home-glass-fill-soft);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 8%, transparent);
+}
+
+.home-glass-tile-active {
+  border-color: var(--home-glass-line);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--color-home-glass-gold) 10%, transparent), transparent 58%), var(--home-glass-fill);
+}
+
+.home-glass-chip {
+  border-radius: 0.625rem;
+  background-color: color-mix(in oklab, var(--color-home-glass-deep) 72%, transparent);
+}
+
+.home-glass-media {
+  border-radius: 0.75rem;
+  background-color: color-mix(in oklab, var(--color-home-glass-deep) 78%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-home-glass-gold) 8%, transparent);
+}
+
+.home-glass-panel:is(a):hover,
+.home-glass-tile:is(a):hover {
+  border-color: var(--home-glass-line);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--color-home-glass-warm) 14%, transparent),
+    0 18px 40px color-mix(in oklab, var(--color-surface-dim) 68%, transparent),
+    0 0 24px color-mix(in oklab, var(--color-home-glass-gold) 8%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-glass-panel:is(a),
+  .home-glass-tile:is(a) {
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
 }
 
 .field-row {
