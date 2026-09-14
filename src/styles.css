@@ -234,24 +234,24 @@
 /* Home-only Ancient Gold Frosted treatment. Other routes intentionally keep
    their established surfaces until this direction is approved app-wide. */
 .home-glass-scope {
-  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 14%, transparent);
-  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 10%, transparent);
-  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 72%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 42%, transparent);
+  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 10%, transparent);
+  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 6%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--color-home-glass-gold) 76%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--color-home-glass-gold) 46%, transparent);
 }
 
 .home-glass-page .theme-backdrop img {
-  filter: saturate(0.75) brightness(0.72) contrast(1.05);
+  filter: saturate(0.78) brightness(0.74) contrast(1.04);
 }
 
 .home-glass-page .theme-backdrop-shade {
   background:
-    linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 32%, transparent) 0%, color-mix(in oklab, var(--color-surface) 8%, transparent) 42%, color-mix(in oklab, var(--color-surface) 40%, transparent) 100%),
-    radial-gradient(circle at 50% 45%, transparent 22%, color-mix(in oklab, var(--color-surface) 34%, transparent) 100%);
+    linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 24%, transparent) 0%, color-mix(in oklab, var(--color-surface) 5%, transparent) 42%, color-mix(in oklab, var(--color-surface) 30%, transparent) 100%),
+    radial-gradient(circle at 50% 45%, transparent 18%, color-mix(in oklab, var(--color-surface) 24%, transparent) 100%);
 }
 
 .home-glass-page main.bg-surface {
-  background-color: color-mix(in oklab, var(--color-surface) 10%, transparent);
+  background-color: color-mix(in oklab, var(--color-surface) 6%, transparent);
 }
 
 .home-glass-panel,
