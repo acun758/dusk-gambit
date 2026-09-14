@@ -234,11 +234,11 @@
 /* Home-only Ancient Gold Frosted treatment. Other routes intentionally keep
    their established surfaces until this direction is approved app-wide. */
 .home-glass-scope {
-  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 10%, transparent);
-  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 6%, transparent);
+  --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 6%, transparent);
+  --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 3%, transparent);
   --home-glass-line-base: color-mix(in oklab, white 72%, var(--color-voidAsh) 28%);
-  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 40%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 22%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 12%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 6%, transparent);
 }
 
 .home-glass-page .theme-backdrop img {
