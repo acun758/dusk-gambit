@@ -84,7 +84,7 @@ export function LangToggle({ className = "" }: { className?: string }) {
       onClick={() => setLang(lang === "zh" ? "en" : "zh")}
       aria-label="切换语言 / Switch language"
       title="中英文页眉切换 / Switch header language"
-      className={`shrink-0 h-9 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
+      className={`inline-flex h-11 shrink-0 items-center justify-center px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm tracking-widest uppercase hover:bg-surface-container-highest transition-colors ${className}`}
     >
       {lang === "zh" ? "中 / EN" : "EN / 中"}
     </button>

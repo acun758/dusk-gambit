@@ -163,13 +163,13 @@ function Crucible() {
           </div>
           <div className="flex shrink-0 items-center gap-space-xs">
             <LangToggle />
-          <button
-            onClick={() => setBlind((b) => !b)}
-            className="h-11 px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-space-xs shrink-0"
-          >
-            <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6" />
-            <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
-          </button>
+            <button
+              onClick={() => setBlind((b) => !b)}
+              className="flex h-11 shrink-0 items-center justify-center gap-space-xs px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest"
+            >
+              <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6 shrink-0" />
+              <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
+            </button>
           </div>
         </div>
       </header>

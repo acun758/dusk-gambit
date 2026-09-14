@@ -200,7 +200,7 @@ function Dynasty() {
           <div className="flex items-center gap-space-xs shrink-0">
             <LangToggle />
 
-            <div className="hidden sm:flex items-center px-space-sm py-space-xs bg-surface-container-high">
+            <div className="hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex bg-surface-container-high">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
@@ -209,7 +209,7 @@ function Dynasty() {
             {signedIn && (
               <button
                 onClick={() => void signOut()}
-                className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+                className="cjk inline-flex h-11 shrink-0 items-center justify-center px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
               >
                 {t("退出登录", "Sign out")}
               </button>
