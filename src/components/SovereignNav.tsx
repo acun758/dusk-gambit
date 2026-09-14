@@ -44,7 +44,7 @@ export function SovereignNav() {
                 <img
                   src={NAV_ICONS[item.icon]}
                   alt={item.label}
-                  className={`h-9 w-9 object-contain transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" : "opacity-55 brightness-90"}`}
+                  className={`h-9 w-9 object-contain transition-[opacity,filter,transform] duration-200 drop-shadow-[0_0_1.5px_rgba(0,0,0,0.9)] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_1.5px_rgba(0,0,0,0.9),0_0_8px_rgba(212,175,55,0.65)]" : "opacity-70 contrast-110"}`}
                 />
               </span>
               <span className="font-label-sm text-label-sm uppercase">
