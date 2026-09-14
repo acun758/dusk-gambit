@@ -32,6 +32,31 @@ export interface DrillLevel {
 
 type Status = "playing" | "solved" | "failed";
 
+/** 玩家每一步的评分记录：实际走法、引擎最佳走法与得失。 */
+interface ReviewStep {
+  no: number;
+  san: string;
+  bestSan: string;
+  swing: number;
+  tag: "best" | "good" | "inaccuracy" | "mistake" | "blunder";
+}
+
+function tagFor(swing: number, matched: boolean): ReviewStep["tag"] {
+  if (matched || swing >= -20) return "best";
+  if (swing >= -60) return "good";
+  if (swing >= -150) return "inaccuracy";
+  if (swing >= -350) return "mistake";
+  return "blunder";
+}
+
+const TAG_TEXT: Record<ReviewStep["tag"], { zh: string; en: string; tone: string }> = {
+  best: { zh: "最佳", en: "Best", tone: "text-secondary" },
+  good: { zh: "不错", en: "Good", tone: "text-on-surface-variant" },
+  inaccuracy: { zh: "不准确", en: "Inaccuracy", tone: "text-secondary-fixed" },
+  mistake: { zh: "失误", en: "Mistake", tone: "text-primary" },
+  blunder: { zh: "漏着", en: "Blunder", tone: "text-primary" },
+};
+
 /**
  * 对弈页的残局试炼模式：从残局卡片开局，玩家执先手方，
  * 引擎以深度 4~6 顽强防守，将死即通关，随后进入讲解与复盘。
