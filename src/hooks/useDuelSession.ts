@@ -245,7 +245,7 @@ export function useDuelSession(): DuelSession {
     return () => {
       cancelled = true;
     };
-  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode]);
+  }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode, avatarTick]);
 
 
   // realtime：对手落子与对局状态
