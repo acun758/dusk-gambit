@@ -1,14 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LangToggle, useLang } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
-import { UiIcon, type UiIconName } from "@/components/UiIcon";
+import { UiIcon } from "@/components/UiIcon";
+import { NAV_ICONS, type NavIconKey } from "@/lib/nav-assets";
 
 const PRIMARY = [
-  { to: "/", icon: "crown" as UiIconName, label: "Court", zh: "王座" },
-  { to: "/battle", icon: "shield" as UiIconName, label: "Duel", zh: "对弈" },
-  { to: "/crucible", icon: "flame" as UiIconName, label: "Trials", zh: "残局" },
-  { to: "/analysis", icon: "quill" as UiIconName, label: "Review", zh: "复盘" },
-  { to: "/dynasty", icon: "medal-laurel" as UiIconName, label: "Ladder", zh: "天梯" },
+  { to: "/", icon: "court" as NavIconKey, label: "Court", zh: "王座" },
+  { to: "/battle", icon: "battle" as NavIconKey, label: "Duel", zh: "对弈" },
+  { to: "/crucible", icon: "crucible" as NavIconKey, label: "Trials", zh: "残局" },
+  { to: "/analysis", icon: "analysis" as NavIconKey, label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "dynasty" as NavIconKey, label: "Ladder", zh: "天梯" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
