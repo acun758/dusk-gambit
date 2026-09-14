@@ -44,7 +44,7 @@ export function InvitePoster({ compact = false, className = "" }: { compact?: bo
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant">系统按段位就近匹配，段位相近者优先。</p>
         <Link
           to="/battle"
-          className="cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 bg-primary-container px-4 text-on-primary-container font-label-sm text-label-sm"
+          className="home-glass-action cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 px-4 text-on-primary-container font-label-sm text-label-sm"
         >
           发起 3+2 约战
           <UiIcon name="shield" className="h-6 w-6" />

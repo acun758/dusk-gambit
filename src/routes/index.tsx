@@ -50,10 +50,10 @@ function Index() {
     <div className="themed-page text-on-surface flex flex-col min-h-screen">
       <ThemeBackdrop theme="storm" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
-      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+      <header className="home-glass-scope home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-24 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-md min-w-0">
-            <div className="w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden rounded-sm gold-hairline bg-surface-container/40">
+            <div className="home-glass-control w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
               <GameIcon name="brand-emblem" className="h-14 w-14 sm:h-16 sm:w-16" label={t("王座殿堂徽章", "Throne court emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
@@ -73,8 +73,8 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
-            <LangToggle />
-            <div className="hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex bg-surface-container-high">
+            <LangToggle className="home-glass-control" />
+            <div className="home-glass-control hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
@@ -82,7 +82,7 @@ function Index() {
             </div>
             <Link
                to={signedIn ? "/dynasty" : "/auth"}
-              className="flex h-11 shrink-0 items-center justify-center px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest"
+              className="home-glass-action flex h-11 shrink-0 items-center justify-center px-3 text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest"
             >
                {signedIn ? t("我的档案", "Profile") : t("登录", "Sign in")}
             </Link>
@@ -235,7 +235,7 @@ function Index() {
 
             <Link
               to="/battle"
-              className="w-full py-space-md bg-primary-container hover:bg-inverse-primary text-on-primary-container active:scale-[0.99] transition-all flex items-center justify-center gap-space-sm shadow-[0_8px_24px_rgba(139,30,30,0.45)]"
+              className="home-glass-action w-full py-space-md text-on-primary-container active:scale-[0.99] transition-all flex items-center justify-center gap-space-sm"
             >
               <UiIcon name="shield" className="h-6 w-6" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
