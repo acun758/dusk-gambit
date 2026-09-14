@@ -29,22 +29,22 @@ export function SovereignNav() {
     <>
       {/* Phones & iPad portrait: single bottom bar */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
-        <nav className="h-[4.5rem] px-gutter-mobile grid items-center" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
+        <nav className="h-[4.75rem] px-gutter-mobile grid items-center" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
           {items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className={`flex flex-col items-center justify-center w-full h-14 gap-0.5 transition-colors ${
+              className={`flex flex-col items-center justify-center w-full h-[4.75rem] gap-1 transition-colors ${
                 isActive(item.to)
-                  ? "text-secondary bg-surface-container-high/60"
+                  ? "text-secondary"
                   : "text-on-surface-variant hover:text-secondary"
               }`}
             >
-              <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
+              <span className="grid h-10 w-10 shrink-0 place-items-center" aria-hidden="true">
                 <img
                   src={NAV_ICONS[item.icon]}
                   alt={item.label}
-                  className={`h-7 w-7 object-contain transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_6px_rgba(212,175,55,0.55)]" : "opacity-60 grayscale-[25%]"}`}
+                  className={`h-9 w-9 object-contain transition-[opacity,filter,transform] duration-200 drop-shadow-[0_0_2px_rgba(0,0,0,0.95),0_0_4px_rgba(0,0,0,0.8)] ${isActive(item.to) ? "scale-110 opacity-100 brightness-110" : "opacity-75 contrast-110"}`}
                 />
               </span>
               <span className="font-label-sm text-label-sm uppercase">
@@ -80,16 +80,16 @@ export function SovereignNav() {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-space-sm h-12 px-space-sm transition-colors ${
+              className={`flex items-center gap-space-sm h-14 px-space-sm transition-colors ${
                 isActive(item.to)
-                  ? "bg-surface-container-high text-secondary gold-hairline"
+                  ? "text-secondary gold-hairline"
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
               <img
                 src={NAV_ICONS[item.icon]}
                 alt={item.label}
-                className={`h-8 w-8 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_8px_rgba(212,175,55,0.55)]" : "opacity-65 grayscale-[25%]"}`}
+                className={`h-10 w-10 object-contain transition-[opacity,filter,transform] drop-shadow-[0_0_2px_rgba(0,0,0,0.95),0_0_5px_rgba(0,0,0,0.8)] ${isActive(item.to) ? "scale-110 opacity-100 brightness-110" : "opacity-75 contrast-110"}`}
               />
               <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
