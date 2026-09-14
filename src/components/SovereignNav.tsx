@@ -44,7 +44,7 @@ export function SovereignNav() {
                 <img
                   src={NAV_ICONS[item.icon]}
                   alt={item.label}
-                  className={`h-9 w-9 object-contain transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100 brightness-110" : "opacity-75"}`}
+                  className={`h-9 w-9 object-contain transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-95 brightness-110" : "opacity-90"}`}
                 />
               </span>
               <span className="font-label-sm text-label-sm uppercase">
@@ -89,7 +89,7 @@ export function SovereignNav() {
               <img
                 src={NAV_ICONS[item.icon]}
                 alt={item.label}
-                className={`h-10 w-10 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 brightness-110" : "opacity-75"}`}
+                className={`h-10 w-10 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-95 brightness-110" : "opacity-90"}`}
               />
               <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
