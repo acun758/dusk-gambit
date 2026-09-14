@@ -237,8 +237,9 @@
   --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 6%, transparent);
   --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 3%, transparent);
   --home-glass-line-base: color-mix(in oklab, white 72%, var(--color-voidAsh) 28%);
-  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 6%, transparent);
-  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 3%, transparent);
+  --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 2%, transparent);
+  --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 1%, transparent);
+  --home-glass-paper: url("/__l5e/assets-v1/3ecccb14-c307-4bd6-bca8-640f961a2792/glass-paper-texture.jpg");
 }
 
 .home-glass-page .theme-backdrop img {
@@ -261,6 +262,7 @@
 .home-glass-media,
 .home-glass-control,
 .home-glass-action {
+  position: relative;
   border: 1px solid var(--home-glass-line-soft);
   background:
     linear-gradient(135deg, color-mix(in oklab, white 8%, transparent), transparent 32%),
@@ -268,6 +270,27 @@
     var(--home-glass-fill);
   backdrop-filter: blur(10px) saturate(138%) brightness(114%) contrast(106%);
 }
+
+.home-glass-panel::after,
+.home-glass-tile::after,
+.home-glass-chip::after,
+.home-glass-media::after,
+.home-glass-control::after,
+.home-glass-action::after,
+.home-glass-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: soft-light;
+  background-image: var(--home-glass-paper);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 
 .home-glass-panel {
   border-radius: 1rem;
@@ -312,6 +335,7 @@
 }
 
 .home-glass-header {
+  position: relative;
   background: color-mix(in oklab, var(--color-home-glass-deep) 10%, transparent);
   border-bottom: 1px solid var(--home-glass-line-soft);
   backdrop-filter: blur(10px) saturate(138%) brightness(114%) contrast(106%);
