@@ -424,13 +424,53 @@ export const submitEndgame = createServerFn({ method: "POST" })
     };
   });
 
+/** 可视残局：服务端验证最终确为将死，再持久化逐手评分与通关状态。 */
+export const submitEndgameDrill = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { levelId: number; moves: string[]; ms: number; score: number; review: unknown[] }) => ({
+    levelId: input.levelId,
+    moves: input.moves.slice(0, 80),
+    ms: Math.max(0, input.ms),
+    score: Math.max(0, Math.min(100, Math.round(input.score))),
+    review: input.review.slice(0, 40),
+  }))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: level } = await supabaseAdmin.from("endgame_levels").select("fen").eq("id", data.levelId).maybeSingle();
+    if (!level) throw new Error("level not found");
+    const chess = new Chess(level.fen);
+    const startingSide = chess.turn();
+    try {
+      for (const uci of data.moves) {
+        const promotion = uci[4];
+        chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
+      }
+    } catch {
+      throw new Error("illegal drill line");
+    }
+    const correct = chess.isCheckmate() && chess.turn() !== startingSide;
+    const { data: recorded, error } = await supabaseAdmin.rpc("record_endgame_result", {
+      p_user_id: context.userId, p_level_id: data.levelId, p_correct: correct, p_ms: data.ms,
+    });
+    if (error) throw new Error(error.message);
+    if (correct) {
+      const { data: current } = await supabaseAdmin.from("endgame_progress")
+        .select("best_score").eq("user_id", context.userId).eq("level_id", data.levelId).single();
+      await supabaseAdmin.from("endgame_progress").update({
+        best_score: Math.max(current?.best_score ?? 0, data.score),
+        last_review: data.review,
+      }).eq("user_id", context.userId).eq("level_id", data.levelId);
+    }
+    return { correct, ...(recorded as Record<string, unknown> | null) };
+  });
+
 export const loadEndgameProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data } = await supabaseAdmin
       .from("endgame_progress")
-      .select("level_id, solved, attempts, best_ms")
+      .select("level_id, solved, attempts, best_ms, best_score, last_review")
       .eq("user_id", context.userId);
     return data ?? [];
   });

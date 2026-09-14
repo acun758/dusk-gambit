@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Chess } from "chess.js";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
-import { listEndgameLevels } from "@/lib/game.functions";
+import { listEndgameLevels, submitEndgameDrill } from "@/lib/game.functions";
 import { aiLevel } from "@/lib/local-engine";
 import { chooseMove, evaluateDeep } from "@/lib/local-engine";
 import { useT } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface DrillLevel {
   id: number;
@@ -63,6 +64,7 @@ const TAG_TEXT: Record<ReviewStep["tag"], { zh: string; en: string; tone: string
  */
 export function EndgameDrill({ initialCode }: { initialCode?: string | undefined }) {
   const t = useT();
+  const queryClient = useQueryClient();
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
     queryFn: () => listEndgameLevels() as Promise<DrillLevel[]>,
@@ -75,6 +77,9 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const [status, setStatus] = useState<Status>("playing");
   const [thinking, setThinking] = useState(false);
   const [review, setReview] = useState<ReviewStep[]>([]);
+  const [moves, setMoves] = useState<string[]>([]);
+  const [startedAt, setStartedAt] = useState(Date.now());
+  const [saveNote, setSaveNote] = useState("");
 
   const active = levels.find((l) => l.id === activeId) ?? null;
   const mySide = useMemo(() => (active ? (active.fen.split(" ")[1] === "b" ? "b" : "w") : "w"), [active]);
@@ -87,6 +92,9 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
     setStatus("playing");
     setThinking(false);
     setReview([]);
+    setMoves([]);
+    setStartedAt(Date.now());
+    setSaveNote("");
   }, []);
 
   useEffect(() => {
@@ -95,9 +103,25 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
     load(byCode ?? levels[0]!);
   }, [levels, activeId, initialCode, load]);
 
-  const settle = useCallback((board: Chess, side: "w" | "b") => {
+  const settle = useCallback((board: Chess, side: "w" | "b", line: string[]) => {
     if (board.isCheckmate()) {
-      setStatus(board.turn() === side ? "failed" : "solved");
+      const solved = board.turn() !== side;
+      setStatus(solved ? "solved" : "failed");
+      if (solved && active) {
+        const score = Math.max(0, Math.round(100 - review.reduce((sum, step) => sum + Math.max(0, -step.swing) / 12, 0)));
+        void supabase.auth.getSession().then(({ data }) => {
+          if (!data.session) {
+            setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
+            return;
+          }
+          void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review } })
+            .then(() => {
+              setSaveNote(t(`评分 ${score} 已保存，难度解锁进度已更新。`, `Score ${score} saved; tier progress updated.`));
+              void queryClient.invalidateQueries({ queryKey: ["endgame-progress"] });
+            })
+            .catch(() => setSaveNote(t("通关已完成，但云端保存失败，请重试。", "Cleared, but cloud save failed. Please retry.")));
+        });
+      }
       return true;
     }
     if (board.isDraw() || board.isStalemate()) {
@@ -105,7 +129,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       return true;
     }
     return false;
-  }, []);
+  }, [active, queryClient, review, startedAt, t]);
 
   const onMove = useCallback(
     (uci: string) => {
@@ -136,25 +160,29 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       setFen(board.fen());
       setHistory((h) => [...h, san]);
       setLastMove(uci);
-      if (settle(board, mySide)) return;
+      const playerLine = [...moves, uci];
+      setMoves(playerLine);
+      if (settle(board, mySide, playerLine)) return;
 
       setThinking(true);
       window.setTimeout(() => {
         const reply = chooseMove(board.fen(), aiLevel("master"));
         if (!reply) {
           setThinking(false);
-          settle(board, mySide);
+          settle(board, mySide, playerLine);
           return;
         }
         board.move(reply.san);
         setFen(board.fen());
         setHistory((h) => [...h, reply.san]);
         setLastMove(reply.uci);
+        const fullLine = [...playerLine, reply.uci];
+        setMoves(fullLine);
         setThinking(false);
-        settle(board, mySide);
+        settle(board, mySide, fullLine);
       }, 260);
     },
-    [active, fen, mySide, status, thinking, settle],
+    [active, fen, moves, mySide, status, thinking, settle],
   );
 
   const myMoves = Math.ceil(history.length / 2);
@@ -244,6 +272,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
                   </div>
                 </div>
               )}
+              {saveNote && <p role="status" className="cjk font-body-sm text-body-sm text-secondary">{saveNote}</p>}
               <div className="flex flex-wrap gap-2">
                 <Button type="button" onClick={() => load(active)} className="h-11 rounded-none bg-surface-container text-on-surface">
                   <UiIcon name="spinner" className="h-5 w-5" />
