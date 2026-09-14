@@ -25,6 +25,7 @@ export interface LiveRating {
   /** 对局中的头像快照，换装后双方棋盘上实时同步 */
   avatarKey?: string;
   avatarUrl?: string | null;
+  pieceSetId?: string;
 }
 
 export interface DuelRatings {
@@ -224,12 +225,16 @@ export function useDuelSession(): DuelSession {
     };
   }, [matchmakingKey]);
 
-  // 头像更换后立刻重新拉取双方资料（与棋子换装一样即时生效）
+  // 头像或装备更换后立刻重新拉取双方资料
   const [avatarTick, setAvatarTick] = useState(0);
   useEffect(() => {
     const bump = () => setAvatarTick((n) => n + 1);
     window.addEventListener("bs:profile", bump);
-    return () => window.removeEventListener("bs:profile", bump);
+    window.addEventListener("bs:piece-set", bump);
+    return () => {
+      window.removeEventListener("bs:profile", bump);
+      window.removeEventListener("bs:piece-set", bump);
+    };
   }, []);
 
   // 每一步、每次状态变化都同步双方实时积分
@@ -263,6 +268,11 @@ export function useDuelSession(): DuelSession {
           setCloud((prev) => (prev ? { ...prev, match: row } : prev));
           setPhase(row.status === "waiting" ? "connecting" : "live");
         },
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "profiles" },
+        () => setAvatarTick((n) => n + 1),
       )
       .on(
         "postgres_changes",

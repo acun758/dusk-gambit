@@ -244,7 +244,14 @@ function Analysis() {
                 </div>
               )}
               <div className="review-board flex justify-center">
-                <PlayableBoard fen={fen} lastMove={undefined} disabled onMove={() => {}} />
+                <PlayableBoard
+                  fen={fen}
+                  lastMove={undefined}
+                  disabled
+                  onMove={() => {}}
+                  whitePieceSetId={(detailQ.data?.match as unknown as { white_piece_set?: string } | undefined)?.white_piece_set}
+                  blackPieceSetId={(detailQ.data?.match as unknown as { black_piece_set?: string } | undefined)?.black_piece_set}
+                />
               </div>
 
 

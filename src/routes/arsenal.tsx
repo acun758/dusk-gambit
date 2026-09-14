@@ -51,7 +51,7 @@ const SETS = [
 
 function Arsenal() {
   const t = useT();
-  const { profile } = useProfile();
+  const { profile, signedIn, setEquipment } = useProfile();
   const [filter, setFilter] = useState<string>("all");
   const [selectedId, setSelectedId] = useState("shadow");
   const [equippedId, setEquippedId] = useState("shadow");
@@ -72,13 +72,14 @@ function Arsenal() {
 
   useEffect(() => {
     try {
-      setEquippedId(window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow");
+      const stored = window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow";
+      setEquippedId(signedIn ? (SETS.find((item) => item.pieceSetId === profile.equippedPieceSet)?.id ?? "shadow") : stored);
     } catch {
       /* storage unavailable */
     }
-  }, []);
+  }, [profile.equippedPieceSet, signedIn]);
 
-  const equip = () => {
+  const equip = async () => {
     if (!unlocked) {
       setNotice(t(`达到 ${selected.floor} ELO 后解锁此套装。`, `Reach ${selected.floor} ELO to unlock this set.`));
       return;
@@ -89,6 +90,7 @@ function Arsenal() {
       if (selected.pieceSetId) {
         window.localStorage.setItem(PIECE_SET_STORAGE_KEY, selected.pieceSetId);
         window.dispatchEvent(new Event(PIECE_SET_EVENT));
+        if (signedIn) await setEquipment(selected.pieceSetId);
       }
     } catch {
       /* storage unavailable */

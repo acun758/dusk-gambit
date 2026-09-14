@@ -32,6 +32,8 @@ export type MatchRow = {
   reason: string | null;
   rating_delta: number | null;
   last_move_at: string;
+  white_piece_set: string;
+  black_piece_set: string;
 };
 
 export interface ProfileRow {
@@ -51,6 +53,7 @@ export interface ProfileRow {
   verify_status?: string;
   id_tail?: string;
   verified_at?: string | null;
+  equipped_piece_set?: string;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -104,13 +107,18 @@ export const saveAvatar = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { avatarKey: string }) => ({ avatarKey: input.avatarKey.trim().slice(0, 32) }))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ avatar_key: data.avatarKey, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_avatar_key: data.avatarKey }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_avatar_key: data.avatarKey }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
     return row as ProfileRow;
   });
 
@@ -120,13 +128,41 @@ export const saveAvatarImage = createServerFn({ method: "POST" })
   .inputValidator((input: { path: string }) => ({ path: input.path.trim().slice(0, 200) }))
   .handler(async ({ data, context }) => {
     if (data.path && !data.path.startsWith(`${context.userId}/`)) throw new Error("invalid avatar path");
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ avatar_url: data.path, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_avatar_path: data.path }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_avatar_path: data.path }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
+    return row as ProfileRow;
+  });
+
+const PIECE_SET_IDS = new Set(["sovereign", "stellar", "demon-gold", "dark-dragon"]);
+
+/** 已登录玩家的装备以云端档案为准，保证换设备登录后仍保留。 */
+export const saveEquipment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { pieceSetId: string }) => ({ pieceSetId: input.pieceSetId.trim().slice(0, 32) }))
+  .handler(async ({ data, context }) => {
+    if (!PIECE_SET_IDS.has(data.pieceSetId)) throw new Error("invalid piece set");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("profiles")
+      .update({ equipped_piece_set: data.pieceSetId, updated_at: new Date().toISOString() })
+      .eq("id", context.userId)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_piece_set: data.pieceSetId }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_piece_set: data.pieceSetId }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
     return row as ProfileRow;
   });
 
@@ -248,8 +284,9 @@ export const getMatch = createServerFn({ method: "POST" })
       .gt("seq", data.lastSeq ?? 0)
       .order("seq", { ascending: true });
     const avatars = await matchAvatars(supabaseAdmin, match as unknown as Parameters<typeof matchAvatars>[1]);
+    const pieceSets = await matchPieceSets(supabaseAdmin, match as unknown as Parameters<typeof matchPieceSets>[1]);
     return {
-      match: m,
+      match: { ...m, white_piece_set: pieceSets.w, black_piece_set: pieceSets.b },
       moves: moves ?? [],
       you: m.white_id === context.userId ? ("w" as const) : ("b" as const),
       avatars,
@@ -405,13 +442,53 @@ export const submitEndgame = createServerFn({ method: "POST" })
     };
   });
 
+/** 可视残局：服务端验证最终确为将死，再持久化逐手评分与通关状态。 */
+export const submitEndgameDrill = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { levelId: number; moves: string[]; ms: number; score: number; review: Record<string, string | number>[] }) => ({
+    levelId: input.levelId,
+    moves: input.moves.slice(0, 80),
+    ms: Math.max(0, input.ms),
+    score: Math.max(0, Math.min(100, Math.round(input.score))),
+    review: input.review.slice(0, 40),
+  }))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: level } = await supabaseAdmin.from("endgame_levels").select("fen").eq("id", data.levelId).maybeSingle();
+    if (!level) throw new Error("level not found");
+    const chess = new Chess(level.fen);
+    const startingSide = chess.turn();
+    try {
+      for (const uci of data.moves) {
+        const promotion = uci[4];
+        chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
+      }
+    } catch {
+      throw new Error("illegal drill line");
+    }
+    const correct = chess.isCheckmate() && chess.turn() !== startingSide;
+    const { data: recorded, error } = await supabaseAdmin.rpc("record_endgame_result", {
+      p_user_id: context.userId, p_level_id: data.levelId, p_correct: correct, p_ms: data.ms,
+    });
+    if (error) throw new Error(error.message);
+    if (correct) {
+      const { data: current } = await supabaseAdmin.from("endgame_progress")
+        .select("best_score").eq("user_id", context.userId).eq("level_id", data.levelId).single();
+      await supabaseAdmin.from("endgame_progress").update({
+        best_score: Math.max(current?.best_score ?? 0, data.score),
+        last_review: data.review,
+      }).eq("user_id", context.userId).eq("level_id", data.levelId);
+    }
+    return { correct, ...(recorded as Record<string, unknown> | null) };
+  });
+
 export const loadEndgameProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data } = await supabaseAdmin
       .from("endgame_progress")
-      .select("level_id, solved, attempts, best_ms")
+      .select("level_id, solved, attempts, best_ms, best_score, last_review")
       .eq("user_id", context.userId);
     return data ?? [];
   });
@@ -666,6 +743,24 @@ async function matchAvatars(
   };
 }
 
+async function matchPieceSets(
+  admin: AdminClient,
+  match: { id: string; white_id: string | null; black_id: string | null; status: string; white_piece_set?: string; black_piece_set?: string },
+): Promise<{ w: string; b: string }> {
+  let w = match.white_piece_set || "sovereign";
+  let b = match.black_piece_set || "sovereign";
+  if (match.status !== "over") {
+    const ids = [match.white_id, match.black_id].filter(Boolean) as string[];
+    const { data: profiles } = ids.length
+      ? await admin.from("profiles").select("id,equipped_piece_set").in("id", ids)
+      : { data: [] as { id: string; equipped_piece_set: string }[] };
+    w = profiles?.find((p) => p.id === match.white_id)?.equipped_piece_set || w;
+    b = profiles?.find((p) => p.id === match.black_id)?.equipped_piece_set || b;
+    await admin.from("matches").update({ white_piece_set: w, black_piece_set: b }).eq("id", match.id);
+  }
+  return { w, b };
+}
+
 /** 对局双方的实时积分、战绩与头像，用于每一步同步显示。 */
 export const getMatchRatings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -674,7 +769,7 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin
       .from("matches")
-      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path")
+      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path,white_piece_set,black_piece_set")
       .eq("id", data.matchId)
       .maybeSingle();
     if (!row) throw new Error("match not found");
@@ -682,13 +777,14 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const ids = [row.white_id, row.black_id].filter(Boolean) as string[];
     const { data: profiles } = await supabaseAdmin
       .from("profiles")
-      .select("id,elo,wins,losses,draws,streak,diamonds")
+      .select("id,elo,wins,losses,draws,streak,diamonds,equipped_piece_set")
       .in("id", ids);
     const avatars = await matchAvatars(supabaseAdmin, row);
+    const pieceSets = await matchPieceSets(supabaseAdmin, row);
     const pick = (id: string | null, side: "w" | "b") => {
       const p = (profiles ?? []).find((x) => x.id === id);
       if (!p) return null;
-      return { ...p, avatarKey: avatars[side].key, avatarUrl: avatars[side].url };
+      return { ...p, avatarKey: avatars[side].key, avatarUrl: avatars[side].url, pieceSetId: pieceSets[side] };
     };
     return {
       w: pick(row.white_id, "w"),
