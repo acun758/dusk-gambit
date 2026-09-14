@@ -11,6 +11,7 @@ import { getMatch, listMyMatches } from "@/lib/game.functions";
 import { explainMatch } from "@/lib/ai-review.functions";
 import { evaluateDeep } from "@/lib/local-engine";
 import { UiIcon } from "@/components/UiIcon";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
