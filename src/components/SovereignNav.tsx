@@ -1,14 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LangToggle, useLang } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
-import { UiIcon, type UiIconName } from "@/components/UiIcon";
+import { UiIcon } from "@/components/UiIcon";
+import { NAV_ICONS, type NavIconKey } from "@/lib/nav-assets";
 
 const PRIMARY = [
-  { to: "/", icon: "crown" as UiIconName, label: "Court", zh: "王座" },
-  { to: "/battle", icon: "shield" as UiIconName, label: "Duel", zh: "对弈" },
-  { to: "/crucible", icon: "flame" as UiIconName, label: "Trials", zh: "残局" },
-  { to: "/analysis", icon: "quill" as UiIconName, label: "Review", zh: "复盘" },
-  { to: "/dynasty", icon: "medal-laurel" as UiIconName, label: "Ladder", zh: "天梯" },
+  { to: "/", icon: "court" as NavIconKey, label: "Court", zh: "王座" },
+  { to: "/battle", icon: "battle" as NavIconKey, label: "Duel", zh: "对弈" },
+  { to: "/crucible", icon: "crucible" as NavIconKey, label: "Trials", zh: "残局" },
+  { to: "/analysis", icon: "analysis" as NavIconKey, label: "Review", zh: "复盘" },
+  { to: "/dynasty", icon: "dynasty" as NavIconKey, label: "Ladder", zh: "天梯" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -40,7 +41,11 @@ export function SovereignNav() {
               }`}
             >
               <span className="grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
-                <UiIcon name={item.icon} className={`h-7 w-7 transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-60 grayscale-[25%]"}`} />
+                <img
+                  src={NAV_ICONS[item.icon]}
+                  alt={item.label}
+                  className={`h-7 w-7 object-contain transition-[opacity,filter,transform] duration-200 ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_6px_rgba(212,175,55,0.55)]" : "opacity-60 grayscale-[25%]"}`}
+                />
               </span>
               <span className="font-label-sm text-label-sm uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
@@ -81,7 +86,11 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
-              <UiIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-65 grayscale-[25%]"}`} />
+              <img
+                src={NAV_ICONS[item.icon]}
+                alt={item.label}
+                className={`h-8 w-8 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_8px_rgba(212,175,55,0.55)]" : "opacity-65 grayscale-[25%]"}`}
+              />
               <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
