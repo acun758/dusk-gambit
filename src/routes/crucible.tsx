@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
 import { useProfile } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
+import { groupByTier } from "@/lib/endgame-tiers";
 import { UiIcon } from "@/components/UiIcon";
 
 export const Route = createFileRoute("/crucible")({
@@ -97,11 +98,26 @@ function Crucible() {
   }, [progressQ.data]);
 
   useEffect(() => {
-    if (activeId === null && levels.length) setActiveId(levels[0]!.id);
+    if (activeId === null && levels.length) {
+      const first = [...levels].sort((a, b) => a.depth - b.depth)[0]!;
+      setActiveId(first.id);
+    }
   }, [levels, activeId]);
 
+  const solvedIds = useMemo(() => {
+    const set = new Set<number>();
+    for (const p of progressQ.data ?? []) if (p.solved) set.add(p.level_id);
+    return set;
+  }, [progressQ.data]);
+  const tierGroups = useMemo(() => groupByTier(levels, solvedIds), [levels, solvedIds]);
+  const tierLocked = useMemo(() => {
+    const map = new Map<number, boolean>();
+    for (const g of tierGroups) for (const l of g.levels) map.set(l.id, !g.unlocked);
+    return map;
+  }, [tierGroups]);
+
   const active = levels.find((l) => l.id === activeId) ?? null;
-  const locked = active ? profile.trainingPoints < active.elo_required : false;
+  const locked = active ? profile.trainingPoints < active.elo_required || (tierLocked.get(active.id) ?? false) : false;
   const board = useMemo(() => (active ? boardFromFen(active.fen) : boardFromFen("8/8/8/8/8/8/8/8")), [active]);
 
   const select = useCallback((id: number) => {
@@ -171,31 +187,56 @@ function Crucible() {
               ))}
             </div>
           )}
-          <div className="crucible-level-list grid gap-space-xs">
-            {levels.map((l) => {
-              const p = progress.get(l.id);
-              const lock = profile.trainingPoints < l.elo_required;
-              const on = l.id === activeId;
-              return (
-                <button
-                  key={l.id}
-                  onClick={() => select(l.id)}
-                  className={`text-left p-space-sm flex items-start justify-between gap-space-sm transition-colors ${
-                    on ? "bg-surface-container-high gold-hairline" : "bg-surface-container hover:bg-surface-container-high"
-                  }`}
-                >
-                  <span className="flex flex-col min-w-0 gap-0.5">
-                    <span className="font-label-md text-label-md text-on-surface truncate">
-                      {t(l.name_zh, l.name_en)}
-                    </span>
-                    <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
-                      {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} {t("训练分", "TP")}
-                    </span>
+          <div className="crucible-level-list grid gap-space-sm">
+            {tierGroups.map((g) => (
+              <div key={g.tier.id} className="grid gap-space-xs">
+                <div className="flex items-center justify-between gap-space-xs">
+                  <span className="cjk font-label-md text-label-md text-secondary uppercase tracking-widest">
+                    {t(g.tier.zh, g.tier.en)}
                   </span>
-                  <UiIcon name={p?.solved ? "medal-star" : lock ? "seal" : "pawn-up"} className="h-6 w-6 shrink-0" />
-                </button>
-              );
-            })}
+                  <span className="cjk font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                    {g.unlocked
+                      ? t(`${g.solved}/${g.total} 通关`, `${g.solved}/${g.total} solved`)
+                      : t("未解锁", "Locked")}
+                  </span>
+                </div>
+                {!g.unlocked && (
+                  <p className="cjk font-label-sm text-label-sm text-on-surface-variant">
+                    {t("先通关上一级 60% 的残局即可解锁。", "Solve 60% of the previous tier to unlock.")}
+                  </p>
+                )}
+                {g.unlocked && g.needed > 0 && (
+                  <p className="cjk font-label-sm text-label-sm text-on-surface-variant">
+                    {t(`再通关 ${g.needed} 关解锁下一级`, `${g.needed} more to unlock the next tier`)}
+                  </p>
+                )}
+                {g.levels.map((l) => {
+                  const p = progress.get(l.id);
+                  const lock = !g.unlocked || profile.trainingPoints < l.elo_required;
+                  const on = l.id === activeId;
+                  return (
+                    <button
+                      key={l.id}
+                      onClick={() => select(l.id)}
+                      disabled={!g.unlocked}
+                      className={`text-left p-space-sm flex items-start justify-between gap-space-sm transition-colors ${
+                        on ? "bg-surface-container-high gold-hairline" : "bg-surface-container hover:bg-surface-container-high"
+                      } ${g.unlocked ? "" : "opacity-50 cursor-not-allowed"}`}
+                    >
+                      <span className="flex flex-col min-w-0 gap-0.5">
+                        <span className="font-label-md text-label-md text-on-surface truncate">
+                          {t(l.name_zh, l.name_en)}
+                        </span>
+                        <span className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">
+                          {t(l.theme_zh, l.theme_en)} · D{l.depth} · +{l.elo_reward} {t("训练分", "TP")}
+                        </span>
+                      </span>
+                      <UiIcon name={p?.solved ? "medal-star" : lock ? "seal" : "pawn-up"} className="h-6 w-6 shrink-0" />
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </section>
 
