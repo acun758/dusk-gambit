@@ -86,7 +86,11 @@ export function SovereignNav() {
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
-              <UiIcon name={item.icon} className={`h-8 w-8 transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100" : "opacity-65 grayscale-[25%]"}`} />
+              <img
+                src={NAV_ICONS[item.icon]}
+                alt={item.label}
+                className={`h-8 w-8 object-contain transition-[opacity,filter,transform] ${isActive(item.to) ? "scale-110 opacity-100 drop-shadow-[0_0_8px_rgba(212,175,55,0.55)]" : "opacity-65 grayscale-[25%]"}`}
+              />
               <span className="rail-label font-label-lg text-label-lg uppercase">
                 <PrimaryLabel en={item.label} zh={item.zh} />
               </span>
