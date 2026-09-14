@@ -7,7 +7,7 @@ import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
 import { listEndgameLevels } from "@/lib/game.functions";
 import { aiLevel } from "@/lib/local-engine";
-import { chooseMove } from "@/lib/local-engine";
+import { chooseMove, evaluateDeep } from "@/lib/local-engine";
 import { useT } from "@/lib/i18n";
 
 export interface DrillLevel {
