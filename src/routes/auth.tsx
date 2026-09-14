@@ -115,9 +115,9 @@ function AuthPage() {
   }
 
   return (
-    <div className="themed-page text-on-surface min-h-screen flex items-center justify-center px-margin-mobile py-space-lg">
+    <div className="themed-page text-on-surface min-h-screen flex items-center justify-center px-margin-mobile py-space-lg md:py-space-xl lg:pl-[calc(var(--nav-rail-width)+var(--space-lg))]">
       <ThemeBackdrop theme="gothic" />
-      <div className="w-full max-w-sm bg-surface-container-low p-space-lg flex flex-col gap-space-md gold-hairline">
+      <div className="flex w-full max-w-sm flex-col gap-space-md bg-surface-container-low p-space-lg gold-hairline md:min-h-[calc(100dvh-8rem)] md:max-w-3xl md:justify-center md:p-space-xl lg:max-w-4xl">
         <div className="flex flex-col gap-1">
           <span className="font-label-sm text-label-sm uppercase tracking-[0.25em] text-on-surface-variant">
             Blood Sovereign
