@@ -103,18 +103,18 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
     load(byCode ?? levels[0]!);
   }, [levels, activeId, initialCode, load]);
 
-  const settle = useCallback((board: Chess, side: "w" | "b", line: string[]) => {
+  const settle = useCallback((board: Chess, side: "w" | "b", line: string[], scored: ReviewStep[]) => {
     if (board.isCheckmate()) {
       const solved = board.turn() !== side;
       setStatus(solved ? "solved" : "failed");
       if (solved && active) {
-        const score = Math.max(0, Math.round(100 - review.reduce((sum, step) => sum + Math.max(0, -step.swing) / 12, 0)));
+        const score = Math.max(0, Math.round(100 - scored.reduce((sum, step) => sum + Math.max(0, -step.swing) / 12, 0)));
         void supabase.auth.getSession().then(({ data }) => {
           if (!data.session) {
             setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
             return;
           }
-          void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review: review.map((step) => ({ ...step })) } })
+          void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review: scored.map((step) => ({ ...step })) } })
             .then(() => {
               setSaveNote(t(`评分 ${score} 已保存，难度解锁进度已更新。`, `Score ${score} saved; tier progress updated.`));
               void queryClient.invalidateQueries({ queryKey: ["endgame-progress"], exact: false });
@@ -129,7 +129,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       return true;
     }
     return false;
-  }, [active, queryClient, review, startedAt, t]);
+  }, [active, queryClient, startedAt, t]);
 
   const onMove = useCallback(
     (uci: string) => {
@@ -147,29 +147,28 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       const san = board.history().at(-1) ?? uci;
       const sign = mySide === "w" ? 1 : -1;
       const swing = Math.round(sign * (evaluateDeep(board.fen(), 2) - before));
-      setReview((r) => [
-        ...r,
-        {
+      const scoredMove: ReviewStep = {
           no: r.length + 1,
           san,
           bestSan: best?.san ?? san,
           swing,
           tag: tagFor(swing, !!best && best.uci === uci),
-        },
-      ]);
+        };
+      const nextReview = [...review, scoredMove];
+      setReview(nextReview);
       setFen(board.fen());
       setHistory((h) => [...h, san]);
       setLastMove(uci);
       const playerLine = [...moves, uci];
       setMoves(playerLine);
-      if (settle(board, mySide, playerLine)) return;
+      if (settle(board, mySide, playerLine, nextReview)) return;
 
       setThinking(true);
       window.setTimeout(() => {
         const reply = chooseMove(board.fen(), aiLevel("master"));
         if (!reply) {
           setThinking(false);
-          settle(board, mySide, playerLine);
+          settle(board, mySide, playerLine, nextReview);
           return;
         }
         board.move(reply.san);
@@ -179,10 +178,10 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
         const fullLine = [...playerLine, reply.uci];
         setMoves(fullLine);
         setThinking(false);
-        settle(board, mySide, fullLine);
+        settle(board, mySide, fullLine, nextReview);
       }, 260);
     },
-    [active, fen, moves, mySide, status, thinking, settle],
+    [active, fen, moves, mySide, review, status, thinking, settle],
   );
 
   const myMoves = Math.ceil(history.length / 2);

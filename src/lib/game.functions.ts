@@ -107,13 +107,18 @@ export const saveAvatar = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { avatarKey: string }) => ({ avatarKey: input.avatarKey.trim().slice(0, 32) }))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ avatar_key: data.avatarKey, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_avatar_key: data.avatarKey }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_avatar_key: data.avatarKey }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
     return row as ProfileRow;
   });
 
@@ -123,13 +128,18 @@ export const saveAvatarImage = createServerFn({ method: "POST" })
   .inputValidator((input: { path: string }) => ({ path: input.path.trim().slice(0, 200) }))
   .handler(async ({ data, context }) => {
     if (data.path && !data.path.startsWith(`${context.userId}/`)) throw new Error("invalid avatar path");
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ avatar_url: data.path, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_avatar_path: data.path }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_avatar_path: data.path }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
     return row as ProfileRow;
   });
 
@@ -141,13 +151,18 @@ export const saveEquipment = createServerFn({ method: "POST" })
   .inputValidator((input: { pieceSetId: string }) => ({ pieceSetId: input.pieceSetId.trim().slice(0, 32) }))
   .handler(async ({ data, context }) => {
     if (!PIECE_SET_IDS.has(data.pieceSetId)) throw new Error("invalid piece set");
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
       .from("profiles")
       .update({ equipped_piece_set: data.pieceSetId, updated_at: new Date().toISOString() })
       .eq("id", context.userId)
       .select("*")
       .single();
     if (error) throw new Error(error.message);
+    await Promise.all([
+      supabaseAdmin.from("matches").update({ white_piece_set: data.pieceSetId }).eq("white_id", context.userId).in("status", ["waiting", "live"]),
+      supabaseAdmin.from("matches").update({ black_piece_set: data.pieceSetId }).eq("black_id", context.userId).in("status", ["waiting", "live"]),
+    ]);
     return row as ProfileRow;
   });
 
@@ -269,9 +284,9 @@ export const getMatch = createServerFn({ method: "POST" })
       .gt("seq", data.lastSeq ?? 0)
       .order("seq", { ascending: true });
     const avatars = await matchAvatars(supabaseAdmin, match as unknown as Parameters<typeof matchAvatars>[1]);
-    await matchPieceSets(supabaseAdmin, match as unknown as Parameters<typeof matchPieceSets>[1]);
+    const pieceSets = await matchPieceSets(supabaseAdmin, match as unknown as Parameters<typeof matchPieceSets>[1]);
     return {
-      match: m,
+      match: { ...m, white_piece_set: pieceSets.w, black_piece_set: pieceSets.b },
       moves: moves ?? [],
       you: m.white_id === context.userId ? ("w" as const) : ("b" as const),
       avatars,

@@ -4,7 +4,7 @@
  */
 
 export interface EndgameTier {
-  id: "novice" | "adept" | "master";
+  id: "novice" | "adept" | "master" | "grandmaster";
   zh: string;
   en: string;
   minDepth: number;
@@ -14,7 +14,8 @@ export interface EndgameTier {
 export const ENDGAME_TIERS: EndgameTier[] = [
   { id: "novice", zh: "入门试炼", en: "Novice Trials", minDepth: 0, maxDepth: 2 },
   { id: "adept", zh: "进阶试炼", en: "Adept Trials", minDepth: 3, maxDepth: 4 },
-  { id: "master", zh: "精通试炼", en: "Master Trials", minDepth: 5, maxDepth: 99 },
+  { id: "master", zh: "精通试炼", en: "Master Trials", minDepth: 5, maxDepth: 7 },
+  { id: "grandmaster", zh: "宗师试炼", en: "Grandmaster Trials", minDepth: 8, maxDepth: 99 },
 ];
 
 /** 解锁下一级所需的通关比例 */
