@@ -74,6 +74,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const [lastMove, setLastMove] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<Status>("playing");
   const [thinking, setThinking] = useState(false);
+  const [review, setReview] = useState<ReviewStep[]>([]);
 
   const active = levels.find((l) => l.id === activeId) ?? null;
   const mySide = useMemo(() => (active ? (active.fen.split(" ")[1] === "b" ? "b" : "w") : "w"), [active]);
@@ -85,6 +86,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
     setLastMove(undefined);
     setStatus("playing");
     setThinking(false);
+    setReview([]);
   }, []);
 
   useEffect(() => {
@@ -108,6 +110,9 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const onMove = useCallback(
     (uci: string) => {
       if (!active || status !== "playing" || thinking) return;
+      // 落子前先记下引擎的最佳走法与局面评分，用于结束后的逐步点评
+      const best = chooseMove(fen, aiLevel("master"));
+      const before = evaluateDeep(fen, 2);
       const board = new Chess(fen);
       const promotion = uci[4];
       try {
@@ -116,6 +121,18 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
         return;
       }
       const san = board.history().at(-1) ?? uci;
+      const sign = mySide === "w" ? 1 : -1;
+      const swing = Math.round(sign * (evaluateDeep(board.fen(), 2) - before));
+      setReview((r) => [
+        ...r,
+        {
+          no: r.length + 1,
+          san,
+          bestSan: best?.san ?? san,
+          swing,
+          tag: tagFor(swing, !!best && best.uci === uci),
+        },
+      ]);
       setFen(board.fen());
       setHistory((h) => [...h, san]);
       setLastMove(uci);
