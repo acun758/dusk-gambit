@@ -427,7 +427,7 @@ export const submitEndgame = createServerFn({ method: "POST" })
 /** 可视残局：服务端验证最终确为将死，再持久化逐手评分与通关状态。 */
 export const submitEndgameDrill = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { levelId: number; moves: string[]; ms: number; score: number; review: unknown[] }) => ({
+  .inputValidator((input: { levelId: number; moves: string[]; ms: number; score: number; review: Record<string, string | number>[] }) => ({
     levelId: input.levelId,
     moves: input.moves.slice(0, 80),
     ms: Math.max(0, input.ms),
