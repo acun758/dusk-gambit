@@ -218,6 +218,32 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
                   {t(active.explanation_zh || active.hint_zh, active.explanation_en || active.hint_en)}
                 </p>
               )}
+
+              {review.length > 0 && (
+                <div className="grid gap-1">
+                  <h3 className="cjk font-label-lg text-label-lg">{t("逐步点评", "Move-by-move review")}</h3>
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                    {t("对比你的每一手与引擎最佳走法，负分表示这一手丢掉的优势（单位：兵）。", "Your move versus the engine's best; a negative score is the advantage lost, in pawns.")}
+                  </p>
+                  <div className="grid gap-1 max-h-[32vh] overflow-y-auto overscroll-contain">
+                    {review.map((s) => (
+                      <div key={s.no} className="bg-surface-container px-2 py-2 flex items-center justify-between gap-2 min-h-11">
+                        <span className="font-label-md text-label-md tabular-nums">
+                          {s.no}. {s.san}
+                          {s.bestSan !== s.san && (
+                            <span className="cjk ml-2 font-label-sm text-label-sm text-on-surface-variant">
+                              {t(`最佳 ${s.bestSan}`, `best ${s.bestSan}`)}
+                            </span>
+                          )}
+                        </span>
+                        <span className={`cjk font-label-sm text-label-sm tabular-nums shrink-0 ${TAG_TEXT[s.tag].tone}`}>
+                          {t(TAG_TEXT[s.tag].zh, TAG_TEXT[s.tag].en)} {(s.swing / 100).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="flex flex-wrap gap-2">
                 <Button type="button" onClick={() => load(active)} className="h-11 rounded-none bg-surface-container text-on-surface">
                   <UiIcon name="spinner" className="h-5 w-5" />
