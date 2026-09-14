@@ -114,7 +114,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
             setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
             return;
           }
-          void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review } })
+          void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review: review.map((step) => ({ ...step })) } })
             .then(() => {
               setSaveNote(t(`评分 ${score} 已保存，难度解锁进度已更新。`, `Score ${score} saved; tier progress updated.`));
               void queryClient.invalidateQueries({ queryKey: ["endgame-progress"] });
