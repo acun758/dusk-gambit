@@ -117,7 +117,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
           void submitEndgameDrill({ data: { levelId: active.id, moves: line, ms: Date.now() - startedAt, score, review: review.map((step) => ({ ...step })) } })
             .then(() => {
               setSaveNote(t(`评分 ${score} 已保存，难度解锁进度已更新。`, `Score ${score} saved; tier progress updated.`));
-              void queryClient.invalidateQueries({ queryKey: ["endgame-progress"] });
+              void queryClient.invalidateQueries({ queryKey: ["endgame-progress"], exact: false });
             })
             .catch(() => setSaveNote(t("通关已完成，但云端保存失败，请重试。", "Cleared, but cloud save failed. Please retry.")));
         });
