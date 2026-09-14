@@ -209,7 +209,15 @@ export function useProfile() {
     const next = fromCloud(row);
     setProfile(next);
     write(next);
-  }, []);
+    try {
+      window.dispatchEvent(new CustomEvent("bs:profile", { detail: next }));
+      window.dispatchEvent(new CustomEvent("bs:piece-set", { detail: pieceSetId }));
+    } catch {
+      /* SSR */
+    }
+    void queryClient.invalidateQueries({ queryKey: ["match-review"] });
+    void queryClient.invalidateQueries({ queryKey: ["my-matches"] });
+  }, [queryClient]);
 
   /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
   const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
