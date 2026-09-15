@@ -6,8 +6,8 @@ import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
 import { listEndgameLevels, submitEndgameDrill } from "@/lib/game.functions";
-import { aiLevel } from "@/lib/local-engine";
-import { chooseMove, evaluateDeep } from "@/lib/local-engine";
+import { aiLevel, chooseMove, evaluatePosition } from "@/core/ai";
+import { drillScore, tagForSwing } from "@/core/score";
 import { useT } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -42,13 +42,8 @@ interface ReviewStep {
   tag: "best" | "good" | "inaccuracy" | "mistake" | "blunder";
 }
 
-function tagFor(swing: number, matched: boolean): ReviewStep["tag"] {
-  if (matched || swing >= -20) return "best";
-  if (swing >= -60) return "good";
-  if (swing >= -150) return "inaccuracy";
-  if (swing >= -350) return "mistake";
-  return "blunder";
-}
+/** 评级口径统一在 core/score.ts，页面不再内置规则数字。 */
+const tagFor = tagForSwing;
 
 const TAG_TEXT: Record<ReviewStep["tag"], { zh: string; en: string; tone: string }> = {
   best: { zh: "最佳", en: "Best", tone: "text-secondary" },
