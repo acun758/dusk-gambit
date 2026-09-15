@@ -22,10 +22,10 @@ export interface AiLevel {
 }
 
 export const AI_LEVELS: AiLevel[] = [
-  { id: "novice", elo: 1000, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4 },
-  { id: "club", elo: 1400, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9 },
-  { id: "expert", elo: 1800, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 5, skill: 14 },
-  { id: "master", elo: 2200, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 5, skill: 20 },
+  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4 },
+  { id: "club", elo: 1100, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9 },
+  { id: "expert", elo: 1400, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 5, skill: 14 },
+  { id: "master", elo: 1700, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 5, skill: 20 },
 ];
 
 export const MAX_MOVETIME_MS = 600;
