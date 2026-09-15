@@ -421,7 +421,7 @@
   --home-glass-line-base: color-mix(in oklab, white 72%, var(--color-voidAsh) 28%);
   --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 0.4%, transparent);
   --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 0.2%, transparent);
-  --home-glass-paper: url("/__l5e/assets-v1/3ecccb14-c307-4bd6-bca8-640f961a2792/glass-paper-texture.jpg");
+  --home-glass-paper: url("/assets/textures-glass-paper.jpg");
 }
 
 .home-glass-page .theme-backdrop img,

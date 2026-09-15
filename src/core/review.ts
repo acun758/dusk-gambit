@@ -91,7 +91,9 @@ export async function reviewGame(uciLine: string[], options: ReviewOptions = {})
       cp: Math.max(-2000, Math.min(2000, Math.round(cpWhite))),
       loss,
       bestUci: best.uci,
-      tag: best.uci === applied.uci ? "best" : tagForLoss(loss),
+      // Classification is derived from centipawn loss only. Equal-score engine
+      // candidates can vary in order, but must never change the review label.
+      tag: tagForLoss(loss),
     });
 
     fen = applied.fen;

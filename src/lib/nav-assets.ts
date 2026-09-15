@@ -1,15 +1,15 @@
-import courtNav from "@/assets/nav/court-nav.webp.asset.json";
-import battleNav from "@/assets/nav/battle-nav.webp.asset.json";
-import crucibleNav from "@/assets/nav/crucible-nav.webp.asset.json";
-import analysisNav from "@/assets/nav/analysis-nav.webp.asset.json";
-import dynastyNav from "@/assets/nav/dynasty-nav.webp.asset.json";
+import courtNav from "@/assets/nav/court-nav.webp";
+import battleNav from "@/assets/nav/battle-nav.webp";
+import crucibleNav from "@/assets/nav/crucible-nav.webp";
+import analysisNav from "@/assets/nav/analysis-nav.webp";
+import dynastyNav from "@/assets/nav/dynasty-nav.webp";
 
 export const NAV_ICONS = {
-  court: courtNav.url,
-  battle: battleNav.url,
-  crucible: crucibleNav.url,
-  analysis: analysisNav.url,
-  dynasty: dynastyNav.url,
+  court: courtNav,
+  battle: battleNav,
+  crucible: crucibleNav,
+  analysis: analysisNav,
+  dynasty: dynastyNav,
 } as const;
 
 export type NavIconKey = keyof typeof NAV_ICONS;

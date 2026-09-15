@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import tarotKingAsset from "@/assets/tarot-king.jpg.asset.json";
+import tarotKingAsset from "@/assets/tarot-king.jpg";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
@@ -45,7 +45,7 @@ function ArchiveChronicle() {
 
   const exportPoster = () => {
     const a = document.createElement("a");
-    a.href = tarotKingAsset.url;
+    a.href = tarotKingAsset;
     a.download = `blood-sovereign-${profile.name}-archive.jpg`;
     a.click();
     setNotice(t("典藏图已准备下载；完整战报数据仍保留在对局复盘中。", "Your archive image is downloading; the full report stays in match review."));
@@ -67,7 +67,7 @@ function ArchiveChronicle() {
             </div>
 
             <div className={`home-glass-media aged-print-frame relative mx-auto w-full overflow-hidden ${ratio === "1:1" ? "aspect-square max-w-[560px]" : ratio === "9:16" ? "aspect-[9/16] max-w-[390px]" : "aspect-[4/5] max-w-[520px]"}`}>
-              <img src={tarotKingAsset.url} alt={t("黑曜王棋典藏海报", "Obsidian king archive poster")} className="absolute inset-0 h-full w-full object-cover" />
+              <img src={tarotKingAsset} alt={t("黑曜王棋典藏海报", "Obsidian king archive poster")} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80" />
               <div className="absolute inset-0 flex flex-col justify-between p-space-md text-center">
                 <div>

@@ -5,11 +5,13 @@ export function ThemeBackdrop({ theme }: { theme: ThemeBackgroundName }) {
 
   return (
     <div className="theme-backdrop" aria-hidden="true">
-      <picture>
-        <source media="(min-width: 1024px)" srcSet={artwork.desktop} />
-        <source media="(min-width: 768px)" srcSet={artwork.ipad} />
-        <img src={artwork.iphone} alt="" decoding="async" />
-      </picture>
+      {artwork.desktop && artwork.ipad && artwork.iphone ? (
+        <picture>
+          <source media="(min-width: 1024px)" srcSet={artwork.desktop} />
+          <source media="(min-width: 768px)" srcSet={artwork.ipad} />
+          <img src={artwork.iphone} alt="" decoding="async" />
+        </picture>
+      ) : null}
       <div className="theme-backdrop-shade" />
       <div className="theme-backdrop-grid" />
     </div>
