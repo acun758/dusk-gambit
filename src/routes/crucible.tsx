@@ -11,6 +11,7 @@ import { useProfile } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";
 import { UiIcon } from "@/components/UiIcon";
+import { SoundToggle } from "@/components/SoundToggle";
 
 export const Route = createFileRoute("/crucible")({
   head: () => ({
@@ -166,6 +167,7 @@ function Crucible() {
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-space-xs">
+            <SoundToggle />
             <LangToggle className="home-glass-control" />
             <button
               onClick={() => setBlind((b) => !b)}
