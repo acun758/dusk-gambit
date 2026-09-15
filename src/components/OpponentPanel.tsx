@@ -174,13 +174,13 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                   ? "正在按积分就近排队，段位相近者优先，匹配成功自动开局，无需手动点名。"
                   : "系统按积分就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
               </p>
-              <Button onClick={onStartRanked} disabled={ranked} className="h-12 rounded-none bg-primary-container text-on-primary-container px-space-md shrink-0">
+              <Button onClick={onStartRanked} disabled={ranked} className="home-glass-action h-12 text-on-primary-container px-space-md shrink-0">
                 <UiIcon name="shield" className="h-7 w-7" />
                 {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
               </Button>
             </div>
             {ranked && waiting && (
-              <div role="status" className="px-3 py-2 bg-surface-container gold-hairline flex items-center justify-between gap-3">
+              <div role="status" className="home-glass-tile px-3 py-2 flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2 min-w-0">
                   <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0" />
                   <span className="cjk font-label-sm text-label-sm text-on-surface truncate">
@@ -198,7 +198,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
         {tab === "invite" && (
           <div className="space-y-space-sm">
-            <div className="p-3 bg-surface-container gold-hairline">
+            <div className="home-glass-tile p-3">
               <p className="cjk font-label-md text-label-md text-on-surface">
                 实名认证（可选）{verified && <span className="text-secondary"> · 已认证</span>}
               </p>
@@ -293,7 +293,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
               </div>
             </div>
 
-            <div className="p-3 bg-surface-container gold-hairline">
+            <div className="home-glass-tile p-3">
               <p className="cjk font-label-sm text-label-sm text-on-surface">段位分布</p>
               <ul className="mt-2 space-y-1.5">
                 {(statsQ.data?.tiers ?? []).map((t) => {

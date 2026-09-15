@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { SovereignNav } from "../components/SovereignNav";
 import { GameEntrance } from "../components/GameEntrance";
 import { LangProvider } from "../lib/i18n";
+import { ProfileProvider } from "../lib/profile";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -151,14 +152,16 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LangProvider>
-        <div className="home-glass-scope">
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <div className="app-shell">
-            <Outlet />
+        <ProfileProvider>
+          <div className="home-glass-scope">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <div className="app-shell">
+              <Outlet />
+            </div>
+            {!showEntrance && <SovereignNav />}
+            {showEntrance && <GameEntrance onEntered={enterGame} />}
           </div>
-          {!showEntrance && <SovereignNav />}
-          {showEntrance && <GameEntrance onEntered={enterGame} />}
-        </div>
+        </ProfileProvider>
       </LangProvider>
     </QueryClientProvider>
   );

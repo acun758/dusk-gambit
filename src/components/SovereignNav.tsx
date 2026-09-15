@@ -65,10 +65,10 @@ export function SovereignNav() {
             猩红王权 · 王座殿堂
           </div>
           <div className="rail-account flex flex-wrap items-center gap-space-xs mt-1">
-            <LangToggle />
+            <LangToggle className="home-glass-control" />
             <Link
                to={signedIn ? "/dynasty" : "/auth"}
-              className="shrink-0 h-9 px-space-sm bg-primary-container text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center cjk"
+              className="home-glass-action shrink-0 h-9 px-space-sm text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center cjk"
             >
                {signedIn ? "档案" : "登录"}
             </Link>
@@ -82,7 +82,7 @@ export function SovereignNav() {
               to={item.to}
               className={`flex items-center gap-space-sm h-14 px-space-sm transition-colors ${
                 isActive(item.to)
-                  ? "text-secondary gold-hairline"
+                  ? "home-glass-tile-active text-secondary"
                   : "text-on-surface-variant hover:text-secondary hover:bg-surface-container/60"
               }`}
             >
@@ -103,7 +103,7 @@ export function SovereignNav() {
             to="/arsenal"
             className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
               isActive("/arsenal")
-                ? "text-secondary bg-surface-container/60"
+                ? "home-glass-tile-active text-secondary"
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
@@ -112,7 +112,7 @@ export function SovereignNav() {
           <Link
             to="/archive"
             className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
-              isActive("/archive") ? "text-secondary bg-surface-container/60" : "text-on-surface-variant hover:text-secondary"
+               isActive("/archive") ? "home-glass-tile-active text-secondary" : "text-on-surface-variant hover:text-secondary"
             }`}
           >
             <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">绝杀典藏</span>

@@ -268,7 +268,7 @@ function Dynasty() {
             </div>
 
             {!signedIn && (
-              <Link to="/auth" className="cjk min-h-11 px-3 bg-surface-container-high font-body-sm text-body-sm text-secondary flex items-center gap-2">
+              <Link to="/auth" className="home-glass-action cjk min-h-11 px-3 font-body-sm text-body-sm text-secondary flex items-center gap-2">
                 <GameIcon name="auth-google" className="h-7 w-7 shrink-0" />
                 {t("当前为本地演示数据，登录后段位与钻石由服务端结算 →", "Demo data — sign in for server-settled rating →")}
               </Link>
@@ -296,7 +296,7 @@ function Dynasty() {
                         type="button"
                         onClick={() => uploadInput.current?.click()}
                         disabled={avatarBusy}
-                        className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm disabled:opacity-50"
+                        className="home-glass-action cjk min-h-11 px-3 text-on-primary-container font-label-sm text-label-sm disabled:opacity-50"
                       >
                         {avatarBusy ? t("上传中…", "Uploading…") : t("上传我的头像", "Upload my photo")}
                       </button>
@@ -309,7 +309,7 @@ function Dynasty() {
                               setAvatarError(e instanceof Error ? e.message : "恢复徽章头像失败"),
                             );
                           }}
-                          className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+                           className="home-glass-control cjk min-h-11 px-3 font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
                         >
                           {t("改回徽章头像", "Use a badge avatar")}
                         </button>
@@ -419,7 +419,7 @@ function Dynasty() {
                   <button
                     onClick={() => challenge(r.id)}
                     disabled={!signedIn}
-                    className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
+                    className="home-glass-action cjk min-h-11 px-3 text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
                   >
                     {t("发起挑战", "Challenge")}
                   </button>
@@ -468,7 +468,7 @@ function Dynasty() {
             </p>
             <Link
               to="/battle"
-              className="w-full py-space-md bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
+              className="home-glass-action w-full py-space-md text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
             >
               <UiIcon name="shield" className="h-6 w-6" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
@@ -502,8 +502,8 @@ function Dynasty() {
                 return (
                   <li
                     key={row.id}
-                    className={`grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
-                      mine ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                    className={`home-glass-tile grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
+                      mine ? "home-glass-tile-active" : ""
                     }`}
                   >
                     <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
@@ -556,8 +556,8 @@ function Dynasty() {
               return (
                 <div
                   key={tier.en}
-                  className={`p-space-sm flex items-center justify-between gap-space-sm ${
-                    active ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                  className={`home-glass-tile p-space-sm flex items-center justify-between gap-space-sm ${
+                    active ? "home-glass-tile-active" : ""
                   }`}
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
@@ -606,7 +606,7 @@ function Dynasty() {
             </div>
             <Link
               to="/crucible"
-              className="w-full py-space-sm bg-surface-container-high text-on-surface flex items-center justify-center gap-space-xs"
+              className="home-glass-control w-full py-space-sm text-on-surface flex items-center justify-center gap-space-xs"
             >
               <UiIcon name="lotus" className="h-6 w-6" />
               <span className="cjk font-label-md text-label-md">{t("前往盲棋试炼", "Go to trials")}</span>
