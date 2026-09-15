@@ -510,6 +510,9 @@
 @media (max-width: 639px) {
   .sovereign-decree-frame {
     min-height: 6.5rem;
+  }
+
+  .sovereign-decree-frame::before {
     border-width: 1.125rem;
     border-image-width: 1.125rem;
   }
