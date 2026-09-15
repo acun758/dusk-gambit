@@ -310,6 +310,7 @@ export type Database = {
         Row: {
           black_avatar_key: string
           black_avatar_path: string
+          black_delta: number | null
           black_elo: number
           black_id: string | null
           black_name: string
@@ -342,6 +343,7 @@ export type Database = {
         Insert: {
           black_avatar_key?: string
           black_avatar_path?: string
+          black_delta?: number | null
           black_elo?: number
           black_id?: string | null
           black_name?: string
@@ -374,6 +376,7 @@ export type Database = {
         Update: {
           black_avatar_key?: string
           black_avatar_path?: string
+          black_delta?: number | null
           black_elo?: number
           black_id?: string | null
           black_name?: string
