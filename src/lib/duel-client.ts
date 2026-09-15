@@ -8,7 +8,8 @@ import {
   type ServerMessage,
 } from "./duel-protocol";
 import { Chess } from "chess.js";
-import { AI_LEVELS, aiLevel, chooseMove, evaluate, type AiLevelId } from "./local-engine";
+import { AI_LEVELS, aiLevel, chooseMove, evaluatePosition, type AiLevelId } from "@/core/ai";
+import { mindIndex } from "@/core/score";
 
 /**
  * Transport-agnostic duel client.
@@ -282,7 +283,7 @@ export class DuelClient {
       played = chess.move(fallback.san);
     }
     if (!played) return;
-    const evaluated = engine?.cp ?? evaluate(chess);
+    const evaluated = engine?.cp ?? evaluatePosition(chess.fen(), 2);
     const s = {
       uci: `${played.from}${played.to}${played.promotion ?? ""}`,
       san: played.san,
@@ -304,12 +305,7 @@ export class DuelClient {
     this.state.fen = chess.fen();
     this.state.turn = by === "w" ? "b" : "w";
     this.state.cp = s.cp;
-    this.state.mind = {
-      load: Math.min(98, 40 + idx * 5),
-      anxiety: Math.min(96, 18 + idx * 6),
-      structure: Math.max(38, 74 - idx * 2),
-      instinct: Math.min(97, 55 + idx * 4),
-    };
+    this.state.mind = { ...mindIndex(idx), instinct: Math.min(97, 55 + idx * 4) };
     this.emit({ t: "move", seq: ++this.seq, move, turn: this.state.turn, serverTs: Date.now() }, "live");
     this.emit({ t: "eval", seq: ++this.seq, cp: s.cp, depth: 6, mind: this.state.mind }, "live");
   }

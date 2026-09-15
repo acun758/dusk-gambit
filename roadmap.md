@@ -32,8 +32,12 @@
 
 ## 小游戏移植准备
 - [x] 接入军师端内引擎到 src/core/engine/ 并跑通 15 项回归测试
-- [ ] 对弈 AI 与复盘 review 改用统一引擎（ACPL / 失误标记 / 准确率）
-- [ ] 逻辑与画面分离：core/rules(chess.js 薄封装)、clock、settle（仅显示计算）、review、score
+- [x] Worker 分包就位（Vite 独立 chunk + 降级分批让出主线程 + “复盘计算中 x%” 进度）
+- [x] 对弈 AI 与复盘 review 改用统一引擎（ACPL / 失误标记 / 准确率）
+- [x] 逻辑分离验收：core 内 0 React/0 DOM/0 硬编码规则数（已 grep 验证）
+- [ ] 图片动工前先交 160 张外链图资产清单（来源/授权/建议处理，按版权风险排序）
+- [ ] 四步完成后交军师终验（core 纯净性、复盘一致性、断网与外域请求）
+- [x] 逻辑与画面分离：core/rules(chess.js 薄封装)、clock、settle（仅显示计算）、review、score
 - [ ] 数据访问收敛到 src/lib/db.ts（领域名词、无 supabase 字样），实时帧独立 realtime.ts
 - [ ] 字体砍到 2 套并自托管：Cinzel 标题 + 思源 3500 常用字子集，昵称走系统字体
 - [ ] 外链图片分批本地化，按页面分包

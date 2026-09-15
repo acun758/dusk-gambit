@@ -2,17 +2,23 @@
  * 端内引擎单例（军师交付的 Dusk/Ashborn 引擎 v0.1）。
  * 对弈 AI 与复盘逐手评估共用这一处实例，页面不要自行 new。
  *
- * 当前默认走主线程降级路径（单次搜索 ≤600ms，实测 depth 5 ≈ 120~460ms）。
- * 接入独立 worker chunk 后，只需把打包出的 worker URL 传进 EngineClient，
- * 上层调用零改动；小游戏端把 Worker 构造换成 wx.createWorker 即可。
+ * 浏览器端走 Vite 打包出的独立 worker chunk（复盘批量搜索的硬性前置）；
+ * 构造失败或非浏览器环境自动降级主线程。
+ * 小游戏端把 workerFactory 换成 wx.createWorker 即可，上层零改动。
  */
 import { EngineClient } from './engineClient';
 
 let client: EngineClient | null = null;
 
+function browserWorkerFactory(): (() => Worker) | undefined {
+  if (typeof window === 'undefined' || typeof Worker === 'undefined') return undefined;
+  return () => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
+}
+
 export function getEngine(): EngineClient {
-  if (!client) client = new EngineClient();
+  if (!client) client = new EngineClient(browserWorkerFactory());
   return client;
 }
 
+export { EngineClient };
 export type { SearchOptions, SearchResult } from './engine';
