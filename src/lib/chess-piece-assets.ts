@@ -22,30 +22,30 @@ import stellarNightBishop from "@/assets/chess-next/optimized/stellar-night-b.we
 import stellarNightRook from "@/assets/chess-next/optimized/stellar-night-r.webp";
 import stellarNightQueen from "@/assets/chess-next/optimized/stellar-night-q.webp";
 import stellarNightKing from "@/assets/chess-next/optimized/stellar-night-k.webp";
-import demonWhitePawnAsset from "@/assets/chess/demon-gold/demon-wp.webp.asset.json";
-import demonWhiteKnightAsset from "@/assets/chess/demon-gold/demon-wn.webp.asset.json";
-import demonWhiteBishopAsset from "@/assets/chess/demon-gold/demon-wb.webp.asset.json";
-import demonWhiteRookAsset from "@/assets/chess/demon-gold/demon-wr.webp.asset.json";
-import demonWhiteQueenAsset from "@/assets/chess/demon-gold/demon-wq.webp.asset.json";
-import demonWhiteKingAsset from "@/assets/chess/demon-gold/demon-wk.webp.asset.json";
-import demonBlackPawnAsset from "@/assets/chess/demon-gold/demon-bp.webp.asset.json";
-import demonBlackKnightAsset from "@/assets/chess/demon-gold/demon-bn.webp.asset.json";
-import demonBlackBishopAsset from "@/assets/chess/demon-gold/demon-bb.webp.asset.json";
-import demonBlackRookAsset from "@/assets/chess/demon-gold/demon-br.webp.asset.json";
-import demonBlackQueenAsset from "@/assets/chess/demon-gold/demon-bq.webp.asset.json";
-import demonBlackKingAsset from "@/assets/chess/demon-gold/demon-bk.webp.asset.json";
-import darkDragonWhitePawnAsset from "@/assets/chess/dark-dragon/dark-dragon-wp.webp.asset.json";
-import darkDragonWhiteKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-wn.webp.asset.json";
-import darkDragonWhiteBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-wb.webp.asset.json";
-import darkDragonWhiteRookAsset from "@/assets/chess/dark-dragon/dark-dragon-wr.webp.asset.json";
-import darkDragonWhiteQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-wq.webp.asset.json";
-import darkDragonWhiteKingAsset from "@/assets/chess/dark-dragon/dark-dragon-wk.webp.asset.json";
-import darkDragonBlackPawnAsset from "@/assets/chess/dark-dragon/dark-dragon-bp.webp.asset.json";
-import darkDragonBlackKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp.asset.json";
-import darkDragonBlackBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-bb.webp.asset.json";
-import darkDragonBlackRookAsset from "@/assets/chess/dark-dragon/dark-dragon-br.webp.asset.json";
-import darkDragonBlackQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-bq.webp.asset.json";
-import darkDragonBlackKingAsset from "@/assets/chess/dark-dragon/dark-dragon-bk.webp.asset.json";
+import demonWhitePawnAsset from "@/assets/chess/demon-gold/demon-wp.webp";
+import demonWhiteKnightAsset from "@/assets/chess/demon-gold/demon-wn.webp";
+import demonWhiteBishopAsset from "@/assets/chess/demon-gold/demon-wb.webp";
+import demonWhiteRookAsset from "@/assets/chess/demon-gold/demon-wr.webp";
+import demonWhiteQueenAsset from "@/assets/chess/demon-gold/demon-wq.webp";
+import demonWhiteKingAsset from "@/assets/chess/demon-gold/demon-wk.webp";
+import demonBlackPawnAsset from "@/assets/chess/demon-gold/demon-bp.webp";
+import demonBlackKnightAsset from "@/assets/chess/demon-gold/demon-bn.webp";
+import demonBlackBishopAsset from "@/assets/chess/demon-gold/demon-bb.webp";
+import demonBlackRookAsset from "@/assets/chess/demon-gold/demon-br.webp";
+import demonBlackQueenAsset from "@/assets/chess/demon-gold/demon-bq.webp";
+import demonBlackKingAsset from "@/assets/chess/demon-gold/demon-bk.webp";
+import darkDragonWhitePawnAsset from "@/assets/chess/dark-dragon/dark-dragon-wp.webp";
+import darkDragonWhiteKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-wn.webp";
+import darkDragonWhiteBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-wb.webp";
+import darkDragonWhiteRookAsset from "@/assets/chess/dark-dragon/dark-dragon-wr.webp";
+import darkDragonWhiteQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-wq.webp";
+import darkDragonWhiteKingAsset from "@/assets/chess/dark-dragon/dark-dragon-wk.webp";
+import darkDragonBlackPawnAsset from "@/assets/chess/dark-dragon/dark-dragon-bp.webp";
+import darkDragonBlackKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
+import darkDragonBlackBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-bb.webp";
+import darkDragonBlackRookAsset from "@/assets/chess/dark-dragon/dark-dragon-br.webp";
+import darkDragonBlackQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-bq.webp";
+import darkDragonBlackKingAsset from "@/assets/chess/dark-dragon/dark-dragon-bk.webp";
 
 export const CHESS_PIECE_ASSETS: Record<string, string> = {
   wp: platinumPawn,
@@ -83,32 +83,32 @@ export const STELLAR_PIECE_ASSETS: Record<string, string> = {
 
 /** 魔皇古金：祖母绿古金原版（白方）+ 暗红黑金变体（黑方）。 */
 export const DEMON_GOLD_PIECE_ASSETS: Record<string, string> = {
-  wp: demonWhitePawnAsset.url,
-  wn: demonWhiteKnightAsset.url,
-  wb: demonWhiteBishopAsset.url,
-  wr: demonWhiteRookAsset.url,
-  wq: demonWhiteQueenAsset.url,
-  wk: demonWhiteKingAsset.url,
-  bp: demonBlackPawnAsset.url,
-  bn: demonBlackKnightAsset.url,
-  bb: demonBlackBishopAsset.url,
-  br: demonBlackRookAsset.url,
-  bq: demonBlackQueenAsset.url,
-  bk: demonBlackKingAsset.url,
+  wp: demonWhitePawnAsset,
+  wn: demonWhiteKnightAsset,
+  wb: demonWhiteBishopAsset,
+  wr: demonWhiteRookAsset,
+  wq: demonWhiteQueenAsset,
+  wk: demonWhiteKingAsset,
+  bp: demonBlackPawnAsset,
+  bn: demonBlackKnightAsset,
+  bb: demonBlackBishopAsset,
+  br: demonBlackRookAsset,
+  bq: demonBlackQueenAsset,
+  bk: demonBlackKingAsset,
 };
 
 /** 暗黑龙语：冷银龙铠（白方）+ 暗黑龙甲原色（黑方）。 */
 export const DARK_DRAGON_PIECE_ASSETS: Record<string, string> = {
-  wp: darkDragonWhitePawnAsset.url,
-  wn: darkDragonWhiteKnightAsset.url,
-  wb: darkDragonWhiteBishopAsset.url,
-  wr: darkDragonWhiteRookAsset.url,
-  wq: darkDragonWhiteQueenAsset.url,
-  wk: darkDragonWhiteKingAsset.url,
-  bp: darkDragonBlackPawnAsset.url,
-  bn: darkDragonBlackKnightAsset.url,
-  bb: darkDragonBlackBishopAsset.url,
-  br: darkDragonBlackRookAsset.url,
-  bq: darkDragonBlackQueenAsset.url,
-  bk: darkDragonBlackKingAsset.url,
+  wp: darkDragonWhitePawnAsset,
+  wn: darkDragonWhiteKnightAsset,
+  wb: darkDragonWhiteBishopAsset,
+  wr: darkDragonWhiteRookAsset,
+  wq: darkDragonWhiteQueenAsset,
+  wk: darkDragonWhiteKingAsset,
+  bp: darkDragonBlackPawnAsset,
+  bn: darkDragonBlackKnightAsset,
+  bb: darkDragonBlackBishopAsset,
+  br: darkDragonBlackRookAsset,
+  bq: darkDragonBlackQueenAsset,
+  bk: darkDragonBlackKingAsset,
 };
