@@ -1,7 +1,43 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import entranceArtwork from "@/assets/game-entry-grid.png";
+import entranceDesktop from "@/assets/entrance/entrance-desktop-2560x1440.png.asset.json";
+import entranceIpadLandscape from "@/assets/entrance/entrance-ipad-landscape-2732x2048.png.asset.json";
+import entranceIpadPortrait from "@/assets/entrance/entrance-ipad-portrait-2048x2732.png.asset.json";
+import entranceIphoneLandscape from "@/assets/entrance/entrance-iphone-landscape-2796x1290.png.asset.json";
+import entranceIphonePortrait from "@/assets/entrance/entrance-iphone-portrait-1290x2796.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
+
+function EntrancePicture({
+  className,
+  alt,
+  ariaHidden,
+}: {
+  className?: string;
+  alt: string;
+  ariaHidden?: boolean;
+}) {
+  return (
+    <picture className={className} aria-hidden={ariaHidden ? "true" : undefined}>
+      <source media="(min-width: 1280px)" srcSet={entranceDesktop.url} />
+      <source
+        media="(orientation: landscape) and (min-width: 900px)"
+        srcSet={entranceIpadLandscape.url}
+      />
+      <source media="(orientation: landscape)" srcSet={entranceIphoneLandscape.url} />
+      <source
+        media="(orientation: portrait) and (min-width: 700px)"
+        srcSet={entranceIpadPortrait.url}
+      />
+      <img
+        className="game-entrance-artwork"
+        src={entranceIphonePortrait.url}
+        alt={alt}
+        loading="eager"
+        decoding="async"
+      />
+    </picture>
+  );
+}
 
 export function GameEntrance({ onEntered }: { onEntered: () => void }) {
   const [leaving, setLeaving] = useState(false);
@@ -29,12 +65,17 @@ export function GameEntrance({ onEntered }: { onEntered: () => void }) {
       aria-label={t("进入血誓王权", "Enter Blood Sovereign")}
       onClick={enter}
     >
-      <img className="game-entrance-backdrop" src={entranceArtwork} alt="" aria-hidden="true" />
+      <EntrancePicture
+        className="game-entrance-backdrop"
+        alt=""
+        ariaHidden
+      />
       <div className="game-entrance-photo-frame">
-        <img
-          className="game-entrance-artwork"
-          src={entranceArtwork}
-          alt={t("玄弈棋局海报：雄狮、城堡与黑金国王棋子", "Dusk Gambit poster with a lion, castle and black-gold king")}
+        <EntrancePicture
+          alt={t(
+            "玄弈棋局海报：雄狮、城堡与黑金国王棋子",
+            "Dusk Gambit poster with a lion, castle and black-gold king"
+          )}
         />
       </div>
       <div className="game-entrance-vignette" aria-hidden="true" />
