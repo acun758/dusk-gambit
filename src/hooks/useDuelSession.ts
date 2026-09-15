@@ -13,7 +13,7 @@ import {
   submitMove,
 } from "@/lib/game.functions";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
-import { aiLevel, type AiLevelId } from "@/lib/local-engine";
+import { aiLevel, type AiLevelId } from "@/core/ai";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
 
 export interface LiveRating {

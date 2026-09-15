@@ -103,7 +103,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       const solved = board.turn() !== side;
       setStatus(solved ? "solved" : "failed");
       if (solved && active) {
-        const score = Math.max(0, Math.round(100 - scored.reduce((sum, step) => sum + Math.max(0, -step.swing) / 12, 0)));
+        const score = drillScore(scored);
         void supabase.auth.getSession().then(({ data }) => {
           if (!data.session) {
             setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
@@ -131,7 +131,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       if (!active || status !== "playing" || thinking) return;
       // 落子前先记下引擎的最佳走法与局面评分，用于结束后的逐步点评
       const best = chooseMove(fen, aiLevel("master"));
-      const before = evaluateDeep(fen, 2);
+      const before = evaluatePosition(fen, 2);
       const board = new Chess(fen);
       const promotion = uci[4];
       try {
@@ -141,7 +141,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       }
       const san = board.history().at(-1) ?? uci;
       const sign = mySide === "w" ? 1 : -1;
-      const swing = Math.round(sign * (evaluateDeep(board.fen(), 2) - before));
+      const swing = Math.round(sign * (evaluatePosition(board.fen(), 2) - before));
       const scoredMove: ReviewStep = {
         no: review.length + 1,
         san,

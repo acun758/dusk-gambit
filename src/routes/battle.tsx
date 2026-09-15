@@ -5,7 +5,7 @@ import { DuelPanel } from "@/components/DuelPanel";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { useDuelSession, fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
-import { AI_LEVELS, aiLevel } from "@/lib/local-engine";
+import { AI_LEVELS, aiLevel } from "@/core/ai";
 import { getCoachInsight } from "@/lib/chess-coach";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
