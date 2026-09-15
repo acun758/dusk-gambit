@@ -1,3 +1,6 @@
+## Current request
+- [ ] Unify highlighted controls with the global button corner-radius standard.
+- [ ] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
 ## Current tasks
 - [x] 将首页污渍纸浮窗标准统一到其余全部页面与共享面板
 - [x] 统一全站页眉、按钮、媒体框、卡片圆角与浮层层级
