@@ -30,6 +30,10 @@ export interface PlayerProfile {
   verifyStatus: "none" | "pending" | "verified" | "rejected";
   idTail: string;
   equippedPieceSet: string;
+  /** 定级赛剩余局数；>0 时段位暂不公开 */
+  provisionalGames: number;
+  /** 是否仍在定级赛中 */
+  inPlacement: boolean;
 }
 
 /** 访客占位档案：战绩全为 0，段位只在真实对局结算后才会变化。 */
@@ -50,7 +54,15 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   verifyStatus: "none",
   idTail: "",
   equippedPieceSet: "sovereign",
+  provisionalGames: 10,
+  inPlacement: true,
 };
+
+/** 定级赛文案：未定级前不公开段位，只显示已完成的定级局数。 */
+export function placementLabel(p: PlayerProfile): { zh: string; en: string } {
+  const played = Math.max(0, 10 - p.provisionalGames);
+  return { zh: `定级赛 ${played}/10`, en: `Placement ${played}/10` };
+}
 
 const KEY = "bs.profile.v1";
 
@@ -101,10 +113,12 @@ interface CloudRow {
   verify_status?: string;
   id_tail?: string;
   equipped_piece_set?: string;
+  provisional_games?: number;
 }
 
 function fromCloud(row: CloudRow): PlayerProfile {
-  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, equipped_piece_set, ...profile } = row;
+  const { training_points, real_name, avatar_key, avatar_url, verify_status, id_tail, equipped_piece_set, provisional_games, ...profile } = row;
+  const pending = Math.max(0, provisional_games ?? 0);
   return {
     ...profile,
     trainingPoints: training_points,
@@ -114,6 +128,8 @@ function fromCloud(row: CloudRow): PlayerProfile {
     verifyStatus: (verify_status as PlayerProfile["verifyStatus"]) || "none",
     idTail: id_tail ?? "",
     equippedPieceSet: equipped_piece_set || "sovereign",
+    provisionalGames: pending,
+    inPlacement: pending > 0,
     ...tierFor(row.elo),
   };
 }

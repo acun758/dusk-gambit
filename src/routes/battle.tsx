@@ -153,6 +153,8 @@ function Battle() {
               lastMove={session.moves.at(-1)?.uci}
               lastMoveWasCapture={session.moves.at(-1)?.san.includes("x") ?? false}
               disabled={!myTurn}
+              premove={ranked && session.state.status === "live"}
+              myColor={session.state.you}
               onMove={session.playMove}
               whitePieceSetId={session.ratings?.w?.pieceSetId ?? (session.state.you === "w" ? profile.equippedPieceSet : undefined)}
               blackPieceSetId={session.ratings?.b?.pieceSetId ?? (session.state.you === "b" ? profile.equippedPieceSet : undefined)}

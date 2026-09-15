@@ -185,6 +185,44 @@ export class DuelClient {
     this.send({ t: "resign", matchId: this.matchId });
   }
 
+  /**
+   * 悔棋：仅本地 AI 陪练可用（真人天梯由服务端仲裁，不提供悔棋）。
+   * 退回到自己上一次落子之前的局面，时钟不返还。
+   */
+  takeback(): boolean {
+    if (this.url) return false;
+    if (this.state.status !== "live") return false;
+    const moves = [...this.state.moves];
+    if (!moves.length) return false;
+    // 至少退一手，并一直退到重新轮到自己
+    let popped = 0;
+    while (moves.length && (popped === 0 || this.turnAfter(moves) !== this.you)) {
+      moves.pop();
+      popped += 1;
+    }
+    const chess = new Chess();
+    for (const m of moves) {
+      const promotion = m.uci[4];
+      try {
+        chess.move({ from: m.uci.slice(0, 2), to: m.uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
+      } catch {
+        return false;
+      }
+    }
+    this.state.moves = moves;
+    this.state.fen = chess.fen();
+    this.state.turn = chess.turn() as Color;
+    this.state.clock = moves.at(-1)?.clock ? { ...(moves.at(-1) as MoveFrame).clock } : { w: this.state.tc.base, b: this.state.tc.base };
+    this.state.cp = moves.at(-1)?.cp ?? 0;
+    this.lastTs = Date.now();
+    this.emit({ t: "state", seq: ++this.seq, ...this.state }, "live");
+    return true;
+  }
+
+  private turnAfter(moves: MoveFrame[]): Color {
+    return moves.length % 2 === 0 ? "w" : "b";
+  }
+
   /* ------------------------------ local arbiter ------------------------------ */
 
   private startLocalArbiter(lastSeq: number) {
