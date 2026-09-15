@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import entranceArtwork from "@/assets/game-entry-grid.png.asset.json";
+import entranceArtwork from "@/assets/game-entry-grid.png";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
 
