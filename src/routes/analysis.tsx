@@ -65,7 +65,7 @@ function Analysis() {
   const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    void fetchSession().then((s) => setSignedIn(!!s));
   }, []);
 
   const listQ = useQuery({

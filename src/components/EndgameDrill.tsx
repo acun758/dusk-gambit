@@ -104,8 +104,8 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       setStatus(solved ? "solved" : "failed");
       if (solved && active) {
         const score = drillScore(scored);
-        void supabase.auth.getSession().then(({ data }) => {
-          if (!data.session) {
+        void fetchSession().then((session) => {
+          if (!session) {
             setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
             return;
           }
