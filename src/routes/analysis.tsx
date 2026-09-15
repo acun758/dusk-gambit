@@ -288,7 +288,11 @@ function Analysis() {
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
                   {steps.length === 0 && (
                     <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-                      {activeMatch ? "这局没有着法记录，换一局或先去对弈一局。" : "选择一局对局后显示棋谱。"}
+                      {reviewPct > 0
+                        ? `复盘计算中 ${reviewPct}%`
+                        : activeMatch
+                          ? "这局没有着法记录，换一局或先去对弈一局。"
+                          : "选择一局对局后显示棋谱。"}
                     </p>
                   )}
                   {steps.map((s) => (
