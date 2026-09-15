@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getMatch, listMyMatches } from "@/lib/game.functions";
 import { explainMatch } from "@/lib/ai-review.functions";
-import { evaluateDeep } from "@/lib/local-engine";
+import { reviewGame, type ReviewTag } from "@/core/review";
 import { UiIcon } from "@/components/UiIcon";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 
@@ -35,46 +35,18 @@ interface Step {
   by: "w" | "b";
   fen: string;
   cp: number;
-  /** 相对走子方的得失（厘兵） */
+  /** 相对走子方的得失（厘兵），负值为损失 */
   swing: number;
-  tag: "brilliant" | "good" | "inaccuracy" | "mistake" | "blunder";
+  tag: ReviewTag;
 }
 
-const TAG_META: Record<Step["tag"], { zh: string; mark: string; tone: string }> = {
-  brilliant: { zh: "妙着", mark: "!!", tone: "text-secondary" },
+const TAG_META: Record<ReviewTag, { zh: string; mark: string; tone: string }> = {
+  best: { zh: "最佳", mark: "!", tone: "text-secondary" },
   good: { zh: "正着", mark: "", tone: "text-on-surface-variant" },
   inaccuracy: { zh: "不准确", mark: "?!", tone: "text-secondary-fixed" },
   mistake: { zh: "失误", mark: "?", tone: "text-primary" },
   blunder: { zh: "漏着", mark: "??", tone: "text-primary" },
 };
-
-function classify(swing: number): Step["tag"] {
-  if (swing >= 120) return "brilliant";
-  if (swing >= -40) return "good";
-  if (swing >= -120) return "inaccuracy";
-  if (swing >= -300) return "mistake";
-  return "blunder";
-}
-
-function buildSteps(moves: { uci: string; san: string; by: string }[]): Step[] {
-  const chess = new Chess();
-  const steps: Step[] = [];
-  let before = evaluateDeep(chess.fen(), 2);
-  moves.forEach((m, i) => {
-    try {
-      const promotion = m.uci[4];
-      chess.move({ from: m.uci.slice(0, 2), to: m.uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
-    } catch {
-      return;
-    }
-    const after = evaluateDeep(chess.fen(), 2);
-    const by = (m.by === "b" ? "b" : "w") as "w" | "b";
-    const swing = by === "w" ? after - before : before - after;
-    steps.push({ ply: i + 1, san: m.san, by, fen: chess.fen(), cp: after, swing: Math.round(swing), tag: classify(swing) });
-    before = after;
-  });
-  return steps;
-}
 
 function cpText(cp: number) {
   const v = cp / 100;
