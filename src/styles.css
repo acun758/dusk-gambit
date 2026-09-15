@@ -247,15 +247,41 @@
   transform: scale(1.08);
 }
 
-.game-entrance-artwork {
+.game-entrance-photo-frame {
   position: absolute;
   inset: 0;
   z-index: -2;
+  overflow: hidden;
+  animation: entrance-breathe 9s ease-in-out infinite alternate;
+}
+
+.game-entrance-artwork {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center;
-  animation: entrance-breathe 9s ease-in-out infinite alternate;
+  filter: sepia(0.24) contrast(1.05) saturate(0.82) brightness(0.98);
+}
+
+.game-entrance-photo-frame::before,
+.game-entrance-photo-frame::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.game-entrance-photo-frame::before {
+  background: linear-gradient(160deg, rgb(233 209 150 / 18%), rgb(120 88 40 / 10%));
+  mix-blend-mode: multiply;
+}
+
+.game-entrance-photo-frame::after {
+  background-image: radial-gradient(rgb(42 33 22 / 60%) 1px, transparent 1.15px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: 0.16;
 }
 
 .game-entrance-vignette {
@@ -288,11 +314,15 @@
 }
 
 @keyframes entrance-breathe {
-  from { transform: scale(1); filter: brightness(0.92); }
-  to { transform: scale(1.012); filter: brightness(1.02); }
+  from { transform: scale(1); }
+  to { transform: scale(1.012); }
 }
 
 @media (max-width: 600px) {
+  .game-entrance-photo-frame {
+    inset: 0;
+  }
+
   .game-entrance-artwork {
     object-fit: cover;
   }
@@ -304,7 +334,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .game-entrance,
-  .game-entrance-artwork {
+  .game-entrance-photo-frame {
     animation: none;
     transition-duration: 1ms;
   }
