@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { currentUserId, fetchAvatarUrl, putAvatarFile } from "@/lib/db";
 
 /**
  * 自定义头像：本地裁成正方形并压到 512×512 后上传到私有桶，
  * 档案里只保存对象路径，显示时换取签名链接（带内存缓存）。
  */
 
-const BUCKET = "avatars";
 const cache = new Map<string, string>();
 
 export async function compressSquare(file: File, size = 512): Promise<Blob> {
