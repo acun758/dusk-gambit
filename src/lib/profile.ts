@@ -1,7 +1,16 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, saveEquipment, submitVerification } from "@/lib/game.functions";
+import {
+  fetchProfile as loadProfile,
+  fetchSession,
+  onSessionChange,
+  renameProfile,
+  saveAvatarKey as saveAvatar,
+  saveAvatarPath as saveAvatarImage,
+  saveEquipment,
+  submitVerification,
+} from "@/lib/db";
+import { subscribeMyProfile } from "@/lib/realtime";
 import { uploadAvatar } from "@/lib/avatar-upload";
 
 export interface PlayerProfile {
