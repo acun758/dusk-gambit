@@ -338,6 +338,12 @@ function Battle() {
               <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">积分、段位徽章与战绩已同步到首页和天梯榜。</p>
               <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">查看段位变化 →</Link>
               <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">复盘本局 →</Link>
+              <div className="mt-3">
+                <Button onClick={session.rematch} className="home-glass-action h-12 bg-secondary text-on-secondary px-5 cjk font-label-sm text-label-sm">
+                  <UiIcon name="spinner" className="h-6 w-6" />
+                  再战一局
+                </Button>
+              </div>
             </section>
           )}
 
