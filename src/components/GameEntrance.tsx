@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import entranceDesktop from "@/assets/entrance/entrance-desktop-2560x1440.png";
-import entranceIpadLandscape from "@/assets/entrance/entrance-ipad-landscape-2732x2048.png";
-import entranceIpadPortrait from "@/assets/entrance/entrance-ipad-portrait-2048x2732.png";
-import entranceIphoneLandscape from "@/assets/entrance/entrance-iphone-landscape-2796x1290.png";
-import entranceIphonePortrait from "@/assets/entrance/entrance-iphone-portrait-1290x2796.png";
+import entranceDesktop from "@/assets/entrance/entrance-desktop-2560x1440.webp";
+import entranceIpadLandscape from "@/assets/entrance/entrance-ipad-landscape-2732x2048.webp";
+import entranceIpadPortrait from "@/assets/entrance/entrance-ipad-portrait-2048x2732.webp";
+import entranceIphoneLandscape from "@/assets/entrance/entrance-iphone-landscape-2796x1290.webp";
+import entranceIphonePortrait from "@/assets/entrance/entrance-iphone-portrait-1290x2796.webp";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
 
