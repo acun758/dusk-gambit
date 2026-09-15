@@ -1,7 +1,9 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Chess, type Square } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_PIECE_SET_ID, pieceSet } from "@/lib/piece-sets";
+import { playSound } from "@/lib/sound";
+
 
 export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
 export const PIECE_SET_EVENT = "bs:piece-set";
@@ -73,6 +75,20 @@ function PlayableBoardComponent({
     }
     return null;
   }, [chess]);
+
+  // 音效：仅根据已落子的局面变化播放，不参与任何走子判定
+  const soundRef = useRef<{ move?: string; pieces: number } | null>(null);
+  useEffect(() => {
+    const pieces = (fen.split(" ")[0] ?? "").replace(/[^a-zA-Z]/g, "").length;
+    const prev = soundRef.current;
+    soundRef.current = { ...(lastMove ? { move: lastMove } : {}), pieces };
+    if (!prev) return;
+    if (!lastMove || lastMove === prev.move) return;
+    playSound(lastMoveWasCapture || pieces < prev.pieces ? "capture" : "move");
+    if (chess.inCheck()) window.setTimeout(() => playSound("check"), 160);
+  }, [fen, lastMove, lastMoveWasCapture, chess]);
+
+
 
   const click = (square: Square) => {
     if (disabled) return;

@@ -23,6 +23,7 @@ import { useProfile } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
+import { SoundToggle } from "@/components/SoundToggle";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
@@ -200,6 +201,7 @@ function Dynasty() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
+            <SoundToggle />
             <LangToggle className="home-glass-control" />
 
             <div className="home-glass-control hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex">

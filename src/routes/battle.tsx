@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { playSound, primeSounds } from "@/lib/sound";
+
 import { EndgameDrill } from "@/components/EndgameDrill";
 import { DuelPanel } from "@/components/DuelPanel";
 import { PlayableBoard } from "@/components/PlayableBoard";
@@ -14,6 +16,7 @@ import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOv
 import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
+import { SoundToggle } from "@/components/SoundToggle";
 
 export const Route = createFileRoute("/battle")({
   validateSearch: (search: Record<string, unknown>): { drill?: string } =>
@@ -39,6 +42,12 @@ function Battle() {
   useEffect(() => {
     if (drill) setTab("drill");
   }, [drill]);
+  useEffect(() => {
+    const prime = () => primeSounds();
+    window.addEventListener("pointerdown", prime, { once: true });
+    return () => window.removeEventListener("pointerdown", prime);
+  }, []);
+
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
   const t = useT();
@@ -54,6 +63,29 @@ function Battle() {
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
   const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
+  // 读秒提示：自己剩余 10 秒内每整秒轻响一次
+  const tickedRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (session.state.status !== "live" || session.state.turn !== session.state.you) {
+      tickedRef.current = null;
+      return;
+    }
+    const second = Math.ceil(myClock / 1000);
+    if (second > 10 || second <= 0) return;
+    if (tickedRef.current === second) return;
+    tickedRef.current = second;
+    playSound("tick");
+  }, [myClock, session.state.status, session.state.turn, session.state.you]);
+  // 终局一声
+  const endedRef = useRef(false);
+  useEffect(() => {
+    if (session.state.status === "over" && !endedRef.current) {
+      endedRef.current = true;
+      playSound("end");
+    }
+    if (session.state.status === "live") endedRef.current = false;
+  }, [session.state.status]);
+
   const rankArt = profile.elo >= 2600 ? "rank-sovereign" : profile.elo >= 2500 ? "rank-apex" : profile.elo >= 2400 ? "rank-grandmaster" : profile.elo >= 2200 ? "rank-master" : "rank-knight";
   const ceremony = usePromotionCeremony(
     { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: profile.elo >= 2600 ? 2600 : profile.elo >= 2500 ? 2500 : profile.elo >= 2400 ? 2400 : profile.elo >= 2200 ? 2200 : 0 },
@@ -71,7 +103,8 @@ function Battle() {
             <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("3+2 对弈", "3+2 Duel")}</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</p>
           </div>
-           <LangToggle className="home-glass-control" />
+           <SoundToggle />
+            <LangToggle className="home-glass-control" />
           <span className={`w-2.5 h-2.5 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
         </div>
       </header>

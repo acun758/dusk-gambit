@@ -8,6 +8,7 @@ import { InvitePoster } from "@/components/InvitePoster";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import { SoundToggle } from "@/components/SoundToggle";
 
 const HERO_PORTRAIT = GAME_ART.heroPortrait;
 const HERO_VIDEO = GAME_ART.heroVideo;
@@ -78,6 +79,7 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
+            <SoundToggle />
             <LangToggle className="home-glass-control" />
             <div className="home-glass-control hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex">
               <UiIcon name="crystal" className="h-6 w-6" />

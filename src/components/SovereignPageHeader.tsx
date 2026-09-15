@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
+import { SoundToggle } from "@/components/SoundToggle";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
+
+
 
 export function SovereignPageHeader({
   icon,
@@ -18,6 +21,7 @@ export function SovereignPageHeader({
   const { profile, signedIn } = useProfile();
   const t = useT();
   const { lang } = useLang();
+
 
   return (
     <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
@@ -45,7 +49,10 @@ export function SovereignPageHeader({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-space-xs">
+          <SoundToggle />
+
           <LangToggle className="home-glass-control" />
+
           <Link
             to={signedIn ? "/dynasty" : "/auth"}
             className="home-glass-control flex h-11 shrink-0 items-center gap-2 px-3 text-secondary"
