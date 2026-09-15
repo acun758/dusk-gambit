@@ -30,7 +30,7 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-surface-container-lowest/55 via-surface-container-lowest/85 to-surface-container-lowest/95 sm:bg-gradient-to-r sm:from-surface-container-lowest/95 sm:via-surface-container-lowest/75 sm:to-transparent" />
-      <div className="relative flex min-h-52 flex-col justify-center gap-1.5 p-space-md sm:min-h-64 sm:max-w-[68%]">
+      <div className="relative flex h-full min-h-52 flex-col justify-center gap-1.5 p-space-md sm:min-h-64 sm:max-w-[68%]">
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0">
           <GameIcon name={icon} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
