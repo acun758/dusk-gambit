@@ -183,8 +183,8 @@
   --color-board-frame-highlight: #b98a45;
   --color-board-light-highlight: #c49a68;
   --color-board-dark-highlight: #592326;
-  --font-serifTitle: "DM Serif Display", "Noto Serif SC", STSong, SimSun, serif;
-  --font-sansUI: "Fira Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serifTitle: "Cinzel", "Noto Serif SC", STSong, SimSun, serif;
+  --font-sansUI: var(--font-system-sans), "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 @layer base {
