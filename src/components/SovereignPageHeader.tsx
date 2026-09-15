@@ -3,7 +3,7 @@ import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 
 
 
@@ -40,7 +40,7 @@ export function SovereignPageHeader({
             <div className="flex min-w-0 items-center gap-space-xs">
               <span className="font-label-md text-label-md text-secondary tabular-nums">{profile.elo} ELO</span>
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-              <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(profile.tierZh, profile.tier)}</span>
+              <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
             </div>
             {/* 页眉随语言开关实时切换中/英文，单行截断保持布局不变 */}
             <h1 className={`truncate font-headline-md text-headline-md leading-tight text-on-surface ${lang === "zh" ? "cjk" : ""}`}>

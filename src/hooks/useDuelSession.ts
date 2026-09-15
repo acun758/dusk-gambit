@@ -9,8 +9,10 @@ import {
   fetchMatchRatings as getMatchRatings,
   fetchSession,
   findMatch,
+  offerDraw as offerDrawRemote,
   pendingMoves,
   resignMatch,
+  respondDraw as respondDrawRemote,
   submitMove,
 } from "@/lib/db";
 import { subscribeDuel, watchLink, type LinkPhase } from "@/lib/realtime";
@@ -62,6 +64,18 @@ export interface DuelSession {
   resign: () => void;
   simulateDrop: () => void;
   useLocalPractice: () => void;
+  /** 求和状态："none" 无 / "mine" 我已提出 / "theirs" 对手求和待回应 */
+  drawOffer: "none" | "mine" | "theirs";
+  /** 真人局才有求和；AI 陪练直接结束本局即可 */
+  canOfferDraw: boolean;
+  offerDraw: () => void;
+  cancelDrawOffer: () => void;
+  answerDraw: (accept: boolean) => void;
+  /** 悔棋仅在 AI 陪练可用；真人天梯不提供 */
+  canTakeback: boolean;
+  takeback: () => void;
+  /** 再战一局：真人局重新匹配，陪练重开一盘 */
+  rematch: () => void;
 }
 
 export function fmtClock(ms: number): string {
@@ -90,6 +104,7 @@ interface MatchRowLite {
   status: string;
   outcome: string | null;
   reason: string | null;
+  draw_offer_by?: string | null;
   last_move_at: string;
 }
 
@@ -522,7 +537,60 @@ export function useDuelSession(): DuelSession {
     }, 2400);
   }, [mode]);
 
+  /* ----------------------------- 求和 / 悔棋 / 再战 ----------------------------- */
+
+  const refreshMatch = useCallback(async (matchId: string) => {
+    const fresh = await getMatch({ data: { matchId, lastSeq: 0 } });
+    matchRef.current = fresh.match as unknown as MatchRowLite;
+    setCloud((prev) => (prev ? { ...prev, match: fresh.match as unknown as MatchRowLite } : prev));
+    setMoves(fresh.moves as unknown as MoveRowLite[]);
+  }, []);
+
+  const offerDraw = useCallback(() => {
+    const m = matchRef.current;
+    if (!m || mode !== "cloud" || m.status !== "live") return;
+    setNotice("已向对手提出和棋，等待回应。");
+    void offerDrawRemote({ data: { matchId: m.id } })
+      .then((res) => {
+        if (res.code === "agreed") setNotice("双方同意和棋，本局已按和棋结算。");
+        void refreshMatch(m.id);
+      })
+      .catch(() => setNotice("求和发送失败，请检查网络后重试。"));
+  }, [mode, refreshMatch]);
+
+  const cancelDrawOffer = useCallback(() => {
+    const m = matchRef.current;
+    if (!m || mode !== "cloud") return;
+    setNotice(null);
+    void offerDrawRemote({ data: { matchId: m.id, cancel: true } })
+      .then(() => refreshMatch(m.id))
+      .catch(() => {});
+  }, [mode, refreshMatch]);
+
+  const answerDraw = useCallback(
+    (accept: boolean) => {
+      const m = matchRef.current;
+      if (!m || mode !== "cloud") return;
+      void respondDrawRemote({ data: { matchId: m.id, accept } })
+        .then((res) => {
+          setNotice(res.code === "agreed" ? "双方同意和棋，本局已按和棋结算。" : "已拒绝对手的和棋请求，继续对局。");
+          void refreshMatch(m.id);
+        })
+        .catch(() => setNotice("回应发送失败，请检查网络后重试。"));
+    },
+    [mode, refreshMatch],
+  );
+
+  /** 悔棋：只在 AI 陪练局生效 */
+  const takeback = useCallback(() => {
+    if (mode !== "local") return;
+    const ok = clientRef.current?.takeback();
+    setNotice(ok ? "已退回上一手，继续思考。" : "现在没有可以悔的棋。");
+    setLocalState(clientRef.current?.snapshot ? { ...clientRef.current.snapshot } : null);
+  }, [mode]);
+
   /* ------------------------------- derived state ------------------------------ */
+
 
   return useMemo<DuelSession>(() => {
     if (mode === "cloud" && cloud) {
@@ -557,8 +625,21 @@ export function useDuelSession(): DuelSession {
         resign,
         simulateDrop,
         useLocalPractice,
+        drawOffer: (cloud.match.draw_offer_by === cloud.you
+          ? "mine"
+          : cloud.match.draw_offer_by
+            ? "theirs"
+            : "none") as "none" | "mine" | "theirs",
+        canOfferDraw: state.status === "live",
+        offerDraw,
+        cancelDrawOffer,
+        answerDraw,
+        canTakeback: false,
+        takeback,
+        rematch: startRanked,
       };
     }
+
 
     const fallback: DuelState = localState ?? {
       matchId: "blitz-3-2-demo",
@@ -597,7 +678,15 @@ export function useDuelSession(): DuelSession {
       resign,
       simulateDrop,
       useLocalPractice,
+      drawOffer: "none",
+      canOfferDraw: false,
+      offerDraw,
+      cancelDrawOffer,
+      answerDraw,
+      canTakeback: mode === "local" && fallback.status === "live" && fallback.moves.length > 0,
+      takeback,
+      rematch: restart,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed, paused, togglePause, restart]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed, paused, togglePause, restart, offerDraw, cancelDrawOffer, answerDraw, takeback]);
 }

@@ -1,0 +1,1 @@
+ALTER TABLE public.matches ADD COLUMN IF NOT EXISTS draw_offer_by text;

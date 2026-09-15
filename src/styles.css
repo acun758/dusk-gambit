@@ -1271,6 +1271,12 @@
   animation: boardCheck 1.3s ease-in-out infinite;
 }
 
+/* 预走子：对手思考时先摆好的一手 */
+.board-square.is-premove {
+  z-index: 11;
+  box-shadow: inset 0 0 0 3px color-mix(in oklab, var(--color-primary) 72%, transparent);
+}
+
 .board-piece {
   display: block;
   width: 94%;

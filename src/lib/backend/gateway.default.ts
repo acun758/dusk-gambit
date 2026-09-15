@@ -77,6 +77,8 @@ export const defaultGateway = {
   fetchActiveMatch: remote.getActiveMatch,
   submitMove: remote.submitMove,
   resignMatch: remote.resignMatch,
+  offerDraw: remote.offerDraw,
+  respondDraw: remote.respondDraw,
   claimTimeout: remote.claimTimeout,
   fetchMyMatches: remote.listMyMatches,
   fetchMatchRatings: remote.getMatchRatings,

@@ -31,6 +31,7 @@ export type MatchRow = {
   outcome: string | null;
   reason: string | null;
   rating_delta: number | null;
+  draw_offer_by: string | null;
   last_move_at: string;
   white_piece_set: string;
   black_piece_set: string;
@@ -54,6 +55,8 @@ export interface ProfileRow {
   id_tail?: string;
   verified_at?: string | null;
   equipped_piece_set?: string;
+  /** 定级赛剩余局数：>0 表示仍在定级，段位暂不公开 */
+  provisional_games?: number;
 }
 
 export interface FriendProfile extends ProfileRow {
@@ -371,6 +374,54 @@ export const resignMatch = createServerFn({ method: "POST" })
     const delta = await settle(supabaseAdmin, m, outcome, "resign");
     return { outcome, ratingDelta: delta };
   });
+
+/**
+ * 求和：提出 / 撤回。服务端只记录“谁在求和”，是否成立由对手回应决定。
+ * 和棋结算仍然只走 settle_ranked_match，前端无权自行判和。
+ */
+export const offerDraw = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string; cancel?: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("matches").select("*").eq("id", data.matchId).maybeSingle();
+    if (!row) throw new Error("match not found");
+    const m = row as MatchRow;
+    const you = m.white_id === context.userId ? "w" : m.black_id === context.userId ? "b" : null;
+    if (!you) throw new Error("forbidden");
+    if (m.status !== "live") return { code: "stale" as const };
+    const next = data.cancel ? null : you;
+    if (!data.cancel && m.draw_offer_by && m.draw_offer_by !== you) {
+      // 对手已在求和，这一次视为接受
+      const delta = await settle(supabaseAdmin, m, "draw", "agreement");
+      return { code: "agreed" as const, ratingDelta: delta };
+    }
+    await supabaseAdmin.from("matches").update({ draw_offer_by: next }).eq("id", m.id);
+    return { code: data.cancel ? ("cancelled" as const) : ("offered" as const) };
+  });
+
+/** 回应求和：同意则按和棋结算，拒绝只清除请求。 */
+export const respondDraw = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string; accept: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin.from("matches").select("*").eq("id", data.matchId).maybeSingle();
+    if (!row) throw new Error("match not found");
+    const m = row as MatchRow;
+    const you = m.white_id === context.userId ? "w" : m.black_id === context.userId ? "b" : null;
+    if (!you) throw new Error("forbidden");
+    if (m.status !== "live") return { code: "stale" as const };
+    if (!m.draw_offer_by || m.draw_offer_by === you) return { code: "no_offer" as const };
+    if (!data.accept) {
+      await supabaseAdmin.from("matches").update({ draw_offer_by: null }).eq("id", m.id);
+      return { code: "declined" as const };
+    }
+    const delta = await settle(supabaseAdmin, m, "draw", "agreement");
+    await supabaseAdmin.from("matches").update({ draw_offer_by: null }).eq("id", m.id);
+    return { code: "agreed" as const, ratingDelta: delta };
+  });
+
 
 /** 客户端心跳：让服务端在超时时判负，无需常驻进程。 */
 export const claimTimeout = createServerFn({ method: "POST" })

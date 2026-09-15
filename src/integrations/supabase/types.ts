@@ -318,6 +318,7 @@ export type Database = {
           clock_w: number
           cp: number
           created_at: string
+          draw_offer_by: string | null
           fen: string
           id: string
           invite_id: string | null
@@ -349,6 +350,7 @@ export type Database = {
           clock_w?: number
           cp?: number
           created_at?: string
+          draw_offer_by?: string | null
           fen?: string
           id?: string
           invite_id?: string | null
@@ -380,6 +382,7 @@ export type Database = {
           clock_w?: number
           cp?: number
           created_at?: string
+          draw_offer_by?: string | null
           fen?: string
           id?: string
           invite_id?: string | null

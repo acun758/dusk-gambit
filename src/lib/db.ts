@@ -51,6 +51,10 @@ export const cancelWaitingMatch = gateway.cancelWaitingMatch;
 export const fetchMatch = gateway.fetchMatch;
 export const fetchActiveMatch = gateway.fetchActiveMatch;
 export const resignMatch = gateway.resignMatch;
+/** 求和：提出或撤回；对手已在求和时视为接受。 */
+export const offerDraw = gateway.offerDraw;
+/** 回应对手的求和：同意即按和棋结算。 */
+export const respondDraw = gateway.respondDraw;
 export const claimTimeout = gateway.claimTimeout;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;

@@ -14,7 +14,19 @@ import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
-import { useProfile } from "@/lib/profile";
+import { useProfile, placementLabel } from "@/lib/profile";
+import { toPgn, resultTag, type Outcome } from "@/core/pgn";
+import { downloadPgn } from "@/lib/share-game";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SoundToggle } from "@/components/SoundToggle";
 
@@ -62,6 +74,22 @@ function Battle() {
   const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
+  // 求和 / 认输前的二次确认
+  const [confirmAction, setConfirm] = useState<"draw" | "resign" | null>(null);
+  const exportPgn = () => {
+    const pgn = toPgn(
+      session.moves.map((m) => ({ san: m.san, uci: m.uci })),
+      {
+        white: session.state.players.w.name,
+        black: session.state.players.b.name,
+        whiteElo: session.state.players.w.elo,
+        blackElo: session.state.players.b.elo,
+        timeControl: "180+2",
+        result: resultTag(session.state.outcome as Outcome),
+      },
+    );
+    downloadPgn(pgn);
+  };
   const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
   // 读秒提示：自己剩余 10 秒内每整秒轻响一次
   const tickedRef = useRef<number | null>(null);
@@ -153,6 +181,8 @@ function Battle() {
               lastMove={session.moves.at(-1)?.uci}
               lastMoveWasCapture={session.moves.at(-1)?.san.includes("x") ?? false}
               disabled={!myTurn}
+              premove={ranked && session.state.status === "live"}
+              myColor={session.state.you}
               onMove={session.playMove}
               whitePieceSetId={session.ratings?.w?.pieceSetId ?? (session.state.you === "w" ? profile.equippedPieceSet : undefined)}
               blackPieceSetId={session.ratings?.b?.pieceSetId ?? (session.state.you === "b" ? profile.equippedPieceSet : undefined)}
@@ -196,7 +226,7 @@ function Battle() {
               {session.paused ? "继续" : "暂停"}
             </Button>
             <Button
-              onClick={session.resign}
+              onClick={() => setConfirm("resign")}
               disabled={waiting || session.state.status !== "live"}
               variant="ghost"
                className="home-glass-control h-12 text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
@@ -209,6 +239,83 @@ function Battle() {
               重新开始
             </Button>
           </div>
+          <div className="battle-core-width grid grid-cols-3 gap-2">
+            <Button
+              onClick={() => (session.drawOffer === "mine" ? session.cancelDrawOffer() : setConfirm("draw"))}
+              disabled={!session.canOfferDraw || session.state.status !== "live"}
+              variant="ghost"
+              className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <UiIcon name="laurel" className="h-6 w-6" />
+              {session.drawOffer === "mine" ? "撤回求和" : "提和"}
+            </Button>
+            <Button
+              onClick={session.takeback}
+              disabled={!session.canTakeback}
+              variant="ghost"
+              className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+              title={session.canTakeback ? "陪练局可悔棋" : "天梯对局不可悔棋"}
+            >
+              <UiIcon name="spinner" className="h-6 w-6" />
+              悔棋
+            </Button>
+            <Button
+              onClick={exportPgn}
+              disabled={session.moves.length === 0}
+              variant="ghost"
+              className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <UiIcon name="scroll" className="h-6 w-6" />
+              导出棋谱
+            </Button>
+          </div>
+
+          <AlertDialog open={confirmAction !== null} onOpenChange={(open) => !open && setConfirm(null)}>
+            <AlertDialogContent className="home-glass-panel">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="cjk">{confirmAction === "resign" ? "确认认输？" : "向对手提和？"}</AlertDialogTitle>
+                <AlertDialogDescription className="cjk">
+                  {confirmAction === "resign"
+                    ? "认输后本局立即结束，并按天梯规则结算扣分。"
+                    : "对手接受后本局按和棋结算；在对手回应前你可以随时撤回。"}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="cjk">再想想</AlertDialogCancel>
+                <AlertDialogAction
+                  className="cjk"
+                  onClick={() => {
+                    if (confirmAction === "resign") session.resign();
+                    else session.offerDraw();
+                    setConfirm(null);
+                  }}
+                >
+                  {confirmAction === "resign" ? "确认认输" : "发出提和"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {session.drawOffer === "theirs" && (
+            <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
+              <p className="cjk font-body-sm text-body-sm text-on-surface">对手提出和棋，是否接受？</p>
+              <div className="flex gap-2 shrink-0">
+                <Button onClick={() => session.answerDraw(true)} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 cjk">接受</Button>
+                <Button onClick={() => session.answerDraw(false)} variant="ghost" className="home-glass-control h-11 px-3 cjk">拒绝</Button>
+              </div>
+            </div>
+          )}
+
+          {session.drawOffer === "mine" && (
+            <p role="status" className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">已提出和棋，等待对手回应。</p>
+          )}
+
+          {signedIn && profile.inPlacement && (
+            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">
+              {placementLabel(profile).zh} · 定级赛期间涨跌分加倍，打满 10 局后公布段位。
+            </p>
+          )}
+
           {!session.canPause && (
             <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。</p>
           )}
@@ -231,6 +338,12 @@ function Battle() {
               <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">积分、段位徽章与战绩已同步到首页和天梯榜。</p>
               <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">查看段位变化 →</Link>
               <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">复盘本局 →</Link>
+              <div className="mt-3">
+                <Button onClick={session.rematch} className="home-glass-action h-12 bg-secondary text-on-secondary px-5 cjk font-label-sm text-label-sm">
+                  <UiIcon name="spinner" className="h-6 w-6" />
+                  再战一局
+                </Button>
+              </div>
             </section>
           )}
 
