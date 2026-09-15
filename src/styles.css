@@ -276,15 +276,37 @@
 .home-glass-header::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -2%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.13;
+  mix-blend-mode: overlay;
+  background-image: var(--home-glass-paper);
+  background-size: 180%;
+  background-position: 42% 38%;
+  background-repeat: no-repeat;
+  transform: rotate(0.8deg);
+}
+
+.home-glass-panel::before,
+.home-glass-tile::before,
+.home-glass-chip::before,
+.home-glass-media::before,
+.home-glass-control::before,
+.home-glass-action::before,
+.home-glass-header::before {
+  content: "";
+  position: absolute;
+  inset: -1%;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.06;
   mix-blend-mode: soft-light;
   background-image: var(--home-glass-paper);
-  background-size: cover;
-  background-position: center;
+  background-size: 240%;
+  background-position: 62% 55%;
   background-repeat: no-repeat;
+  transform: rotate(-1.2deg) scaleX(-1);
 }
 
 
