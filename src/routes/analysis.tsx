@@ -90,9 +90,42 @@ function Analysis() {
     enabled: !!activeId,
   });
 
-  const steps = useMemo(() => {
+  // 逐手评估交给独立线程的引擎，边算边回报进度，界面不会卡住
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [reviewPct, setReviewPct] = useState(0);
+
+  useEffect(() => {
     const moves = (detailQ.data?.moves ?? []) as { uci: string; san: string; by: string }[];
-    return buildSteps(moves);
+    setSteps([]);
+    setReviewPct(0);
+    if (!moves.length) return;
+    const signal = { aborted: false };
+    void reviewGame(
+      moves.map((m) => m.uci),
+      {
+        signal,
+        onProgress: (done, total) => {
+          if (!signal.aborted) setReviewPct(Math.round((done / total) * 100));
+        },
+      },
+    ).then((summary) => {
+      if (signal.aborted) return;
+      setSteps(
+        summary.moves.map((m) => ({
+          ply: m.ply,
+          san: m.san,
+          by: m.by,
+          fen: m.fen,
+          cp: m.cp,
+          swing: -m.loss,
+          tag: m.tag,
+        })),
+      );
+      setReviewPct(100);
+    });
+    return () => {
+      signal.aborted = true;
+    };
   }, [detailQ.data]);
 
   useEffect(() => setIndex(0), [activeId]);
