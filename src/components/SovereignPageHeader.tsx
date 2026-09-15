@@ -21,7 +21,6 @@ export function SovereignPageHeader({
   const { profile, signedIn } = useProfile();
   const t = useT();
   const { lang } = useLang();
-  const sound = useSound();
 
 
   return (
