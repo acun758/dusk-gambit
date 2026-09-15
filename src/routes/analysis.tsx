@@ -173,7 +173,7 @@ function Analysis() {
                   aria-expanded={historyOpen}
                   aria-controls="match-history-list"
                   onClick={() => setHistoryOpen((open) => !open)}
-                  className="h-11 rounded-none px-3 text-secondary shrink-0"
+                  className="home-glass-control h-11 px-3 text-secondary shrink-0"
                 >
                   <UiIcon name={historyOpen ? "eye" : "scroll"} className="h-5 w-5" />
                   <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
@@ -183,14 +183,14 @@ function Analysis() {
             {signedIn === false && (
               <div className="grid gap-2 px-space-sm pb-space-sm">
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant">登录后这里会列出你的每一局天梯对局，可逐手回放并查看点评。</p>
-                <Link to="/auth" className="h-11 flex items-center justify-center bg-secondary text-on-secondary cjk font-label-md text-label-md">去登录</Link>
+                <Link to="/auth" className="home-glass-action h-11 flex items-center justify-center bg-secondary text-on-secondary cjk font-label-md text-label-md">去登录</Link>
               </div>
             )}
             {signedIn === true && listQ.isLoading && <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">正在读取…</p>}
             {signedIn === true && !listQ.isLoading && matches.length === 0 && (
               <div className="grid gap-2 px-space-sm pb-space-sm">
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先完成一局 AI 陪练或真人对弈。</p>
-                <Link to="/battle" className="flex h-11 items-center justify-center bg-primary-container text-on-primary-container cjk font-label-md text-label-md">开始对弈</Link>
+                <Link to="/battle" className="home-glass-action flex h-11 items-center justify-center bg-primary-container text-on-primary-container cjk font-label-md text-label-md">开始对弈</Link>
               </div>
             )}
             <div
@@ -273,10 +273,10 @@ function Analysis() {
                 </p>
               )}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <Button onClick={() => setIndex(0)} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />起始</Button>
-                <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />上一手</Button>
-                <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="h-12 rounded-none bg-secondary text-on-secondary"><UiIcon name="play-motion" className="h-5 w-5" />下一手</Button>
-                <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="h-12 rounded-none bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />终局</Button>
+                 <Button onClick={() => setIndex(0)} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />起始</Button>
+                 <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />上一手</Button>
+                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="home-glass-action h-12 bg-secondary text-on-secondary"><UiIcon name="play-motion" className="h-5 w-5" />下一手</Button>
+                 <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />终局</Button>
               </div>
               </div>
             </div>
@@ -331,7 +331,7 @@ function Analysis() {
                     type="button"
                     onClick={() => narrative.mutate()}
                     disabled={steps.length === 0 || narrative.isPending}
-                    className="h-11 rounded-none bg-secondary text-on-secondary cjk shrink-0"
+                    className="home-glass-action h-11 bg-secondary text-on-secondary cjk shrink-0"
                   >
                     {narrative.isPending ? "生成中…" : narrative.data ? "重新生成" : "生成讲解"}
                   </Button>

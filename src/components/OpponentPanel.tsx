@@ -145,7 +145,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                 <strong className="cjk block truncate font-label-md text-label-md text-on-surface">{i.hostName} 向你约战</strong>
                 <small className="block font-label-sm text-label-sm text-on-surface-variant">{i.hostElo} ELO · 对战码 {i.code}</small>
               </span>
-              <Button onClick={() => accept(i.code)} className="h-11 rounded-none bg-secondary text-on-secondary px-4 shrink-0 cjk">应战</Button>
+              <Button onClick={() => accept(i.code)} className="home-glass-action h-11 bg-secondary text-on-secondary px-4 shrink-0 cjk">应战</Button>
             </li>
           ))}
         </ul>
@@ -158,7 +158,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
             role="tab"
             aria-selected={tab === id}
             onClick={() => setTab(id)}
-            className={`cjk min-h-11 px-2 font-label-sm text-label-sm transition-colors ${tab === id ? "bg-primary-container text-on-primary-container" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
+            className={`home-glass-control cjk min-h-11 px-2 font-label-sm text-label-sm transition-colors ${tab === id ? "home-glass-tile-active bg-primary-container text-on-primary-container" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
           >
             {label}
           </button>
@@ -232,7 +232,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
                           setNotice("实名认证通过，档案中将显示认证徽章。");
                         })
                         .catch(() => setNotice("认证失败，请核对姓名与 18 位身份证号"))}
-                      className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
+                       className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
                     >
                       认证
                     </Button>
@@ -250,7 +250,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
               <Button
                 type="button"
                 onClick={() => void searchPlayers({ data: { query } }).then((r) => { setResults(r as typeof results); if (!r.length) setNotice("没有找到该玩家"); }).catch(() => setNotice("搜索失败"))}
-                className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md"
+                 className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
               >
                 搜索
               </Button>
@@ -268,10 +268,10 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
               </div>
             ))}
             <div className="grid gap-2 sm:grid-cols-2">
-              <Button type="button" onClick={() => makeInvite()} className="cjk h-12 rounded-none bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码</Button>
+               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码</Button>
               <div className="field-row">
                 <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="field-control uppercase" />
-                <Button type="button" onClick={() => accept(code)} className="field-action rounded-none bg-secondary text-on-secondary cjk font-label-md text-label-md">加入</Button>
+                 <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">加入</Button>
               </div>
             </div>
             {(myCode || mine) && (

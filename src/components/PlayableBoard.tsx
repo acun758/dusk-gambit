@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Chess, type Square } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_PIECE_SET_ID, pieceSet } from "@/lib/piece-sets";
@@ -28,7 +28,7 @@ const GLYPH: Record<string, string> = {
   bk: "♚", bq: "♛", br: "♜", bb: "♝", bn: "♞", bp: "♟",
 };
 
-export function PlayableBoard({
+function PlayableBoardComponent({
   fen,
   disabled = false,
   lastMove,
@@ -149,3 +149,5 @@ export function PlayableBoard({
     </div>
   );
 }
+
+export const PlayableBoard = memo(PlayableBoardComponent);

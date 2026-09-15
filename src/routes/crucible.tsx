@@ -322,7 +322,7 @@ function Crucible() {
                   onChange={(e) => setEntry(e.target.value)}
                   placeholder="e1e2 h5h8"
                   spellCheck={false}
-                  className="h-12 px-space-sm bg-surface-container-highest text-on-surface font-label-lg text-label-lg tracking-widest outline-none focus:ring-1 focus:ring-secondary"
+                  className="field-control h-12 px-space-sm bg-surface-container-highest text-on-surface font-label-lg text-label-lg tracking-widest outline-none focus:ring-1 focus:ring-secondary"
                 />
                 <button
                   disabled={!signedIn || locked || busy}

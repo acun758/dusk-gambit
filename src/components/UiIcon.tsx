@@ -85,5 +85,5 @@ export const UI_ICONS = {
 export type UiIconName = keyof typeof UI_ICONS;
 
 export function UiIcon({ name, className = "h-6 w-6", label }: { name: UiIconName; className?: string; label?: string }) {
-  return <img src={UI_ICONS[name]} alt={label ?? ""} aria-hidden={label ? undefined : true} className={`ui-icon ${className}`} />;
+  return <img src={UI_ICONS[name]} alt={label ?? ""} aria-hidden={label ? undefined : true} decoding="async" className={`ui-icon ${className}`} />;
 }

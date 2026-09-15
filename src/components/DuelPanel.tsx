@@ -136,14 +136,14 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
             {import.meta.env.DEV && <Button
               onClick={session.simulateDrop}
               variant="ghost"
-              className="col-span-2 h-11 rounded-none bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform"
+              className="home-glass-control col-span-2 h-11 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest"
             >
               测试断线追帧
             </Button>}
             <Button
               onClick={session.resign}
               variant="ghost"
-              className={`${import.meta.env.DEV ? "" : "col-span-3"} h-11 rounded-none bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest active:scale-95 transition-transform`}
+              className={`home-glass-control ${import.meta.env.DEV ? "" : "col-span-3"} h-11 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest`}
             >
               认输
             </Button>

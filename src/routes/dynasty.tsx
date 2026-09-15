@@ -449,7 +449,7 @@ function Dynasty() {
                 { zh: "和棋", en: "Draws", v: String(profile.draws) },
                 { zh: "胜率", en: "Win rate", v: `${winRate}%` },
               ].map((s) => (
-                <div key={s.en} className="bg-surface-container-lowest p-space-sm flex flex-col">
+                <div key={s.en} className="home-glass-tile bg-surface-container-lowest p-space-sm flex flex-col">
                   <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{s.v}</span>
                   <span className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
                     {t(s.zh, s.en)}

@@ -15,6 +15,7 @@ import { GameEntrance } from "../components/GameEntrance";
 import { LangProvider } from "../lib/i18n";
 import { ProfileProvider } from "../lib/profile";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { THEME_BACKGROUNDS } from "../lib/theme-background-assets";
 
 function NotFoundComponent() {
   return (
@@ -132,6 +133,24 @@ function RootComponent() {
       /* storage unavailable */
     }
     setShowEntrance(false);
+  }, []);
+
+  useEffect(() => {
+    const warmThemeCache = () => {
+      const width = window.innerWidth;
+      const source = width >= 1024 ? "desktop" : width >= 768 ? "ipad" : "iphone";
+      Object.values(THEME_BACKGROUNDS).forEach((artwork) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = artwork[source];
+      });
+    };
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(warmThemeCache, { timeout: 2500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = globalThis.setTimeout(warmThemeCache, 500);
+    return () => globalThis.clearTimeout(id);
   }, []);
 
   useEffect(() => {
