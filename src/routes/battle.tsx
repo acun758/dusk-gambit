@@ -15,7 +15,7 @@ import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
-import { toPgn } from "@/core/pgn";
+import { toPgn, resultTag, type Outcome } from "@/core/pgn";
 import { downloadPgn } from "@/lib/share-game";
 import {
   AlertDialog,
