@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchSession, register, signIn } from "@/lib/db";
 import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatar, saveAvatarImage, submitVerification } from "@/lib/game.functions";
+import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage, submitVerification } from "@/lib/db";
 import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -48,8 +48,8 @@ function AuthPage() {
     } catch {
       /* storage unavailable */
     }
-    void supabase.auth.getSession().then(({ data }) => {
-      if (data.session) void navigate({ to: "/" });
+    void fetchSession().then((session) => {
+      if (session) void navigate({ to: "/" });
     });
   }, [navigate]);
 
@@ -59,18 +59,14 @@ function AuthPage() {
     setMsg(null);
     const res =
       mode === "in"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({
-            email,
-            password,
-            options: { emailRedirectTo: window.location.origin },
-          });
+        ? await signIn(email, password)
+        : await register(email, password, window.location.origin);
     setBusy(false);
     if (res.error) {
-      setMsg(res.error.message);
+      setMsg(res.error);
       return;
     }
-    if (res.data.session) {
+    if (res.signedIn) {
       try {
         window.localStorage.setItem(AVATAR_KEY, avatar);
       } catch {
