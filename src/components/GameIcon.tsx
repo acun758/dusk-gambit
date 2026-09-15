@@ -112,7 +112,7 @@ import icon111 from "@/assets/icons-unified/ICON-111_auth-hide-password.webp";
 import icon112 from "@/assets/icons-unified/ICON-112_auth-google.webp";
 import icon113 from "@/assets/icons-unified/ICON-113_auth-success.webp";
 
-export const ICONS = {
+const ICONS = {
   "brand-app": icon001,
   "brand-emblem": icon002,
   "avatar-default": icon003,
@@ -231,5 +231,5 @@ export const ICONS = {
 export type GameIconName = keyof typeof ICONS;
 
 export function GameIcon({ name, className = "h-6 w-6", label }: { name: GameIconName; className?: string; label?: string }) {
-  return <img src={ICONS[name]} alt={label ?? ""} aria-hidden={label ? undefined : true} className={`game-icon ${className}`} />;
+  return <img src={ICONS[name]} alt={label ?? ""} aria-hidden={label ? undefined : true} decoding="async" className={`game-icon ${className}`} />;
 }

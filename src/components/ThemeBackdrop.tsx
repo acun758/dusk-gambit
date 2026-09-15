@@ -8,7 +8,7 @@ export function ThemeBackdrop({ theme }: { theme: ThemeBackgroundName }) {
       <picture>
         <source media="(min-width: 1024px)" srcSet={artwork.desktop} />
         <source media="(min-width: 768px)" srcSet={artwork.ipad} />
-        <img src={artwork.iphone} alt="" decoding="async" />
+        <img src={artwork.iphone} alt="" decoding="async" fetchPriority="high" />
       </picture>
       <div className="theme-backdrop-shade" />
       <div className="theme-backdrop-grid" />
