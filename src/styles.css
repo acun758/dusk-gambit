@@ -463,66 +463,6 @@
   vertical-align: top;
 }
 
-/* The uploaded bronze artwork is nine-sliced so its corners remain crisp while
-   the double rules extend cleanly across every viewport width. */
-.sovereign-decree-frame {
-  position: relative;
-  min-height: 7rem;
-  display: grid;
-  place-items: center;
-  background: color-mix(in oklab, var(--color-surface-container-lowest) 18%, transparent);
-}
-
-.sovereign-decree-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  border: 1.5rem solid transparent;
-  border-image-source: url("/__l5e/assets-v1/899db613-98ff-4d7a-b865-b883030e3477/bronze-double-line-frame.png");
-  border-image-slice: 82;
-  border-image-width: 1.5rem;
-  border-image-repeat: stretch;
-  opacity: 0.55;
-}
-
-.sovereign-decree-copy {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 42rem);
-  min-height: 5.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.125rem;
-  padding: 0.35rem 2.25rem 0.45rem;
-}
-
-.sovereign-decree-copy h1,
-.sovereign-decree-copy p,
-.sovereign-decree-copy span {
-  margin: 0;
-  line-height: 1.25;
-}
-
-@media (max-width: 639px) {
-  .sovereign-decree-frame {
-    min-height: 6.5rem;
-  }
-
-  .sovereign-decree-frame::before {
-    border-width: 1.125rem;
-    border-image-width: 1.125rem;
-  }
-
-  .sovereign-decree-copy {
-    min-height: 4.75rem;
-    padding-inline: 1.25rem;
-  }
-}
-
 .home-glass-header {
   background-color: color-mix(in oklab, var(--color-surface) 80%, transparent);
   border-bottom: 1px solid var(--home-glass-line-soft);

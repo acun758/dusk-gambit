@@ -131,19 +131,15 @@ function Index() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-surface-container-low/40 pointer-events-none" />
                 </div>
-                <div className="sovereign-decree-frame w-full">
-                  <div className="sovereign-decree-copy">
-                    <span className="cjk font-label-md text-label-md text-on-surface-variant">
-                      {t("宗师之约", "Covenant of the Grandmaster")}
-                    </span>
-                    <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface drop-shadow-md">
-                      {t("棋盘从不说谎。", "The Board Never Lies.")}
-                    </h1>
-                    <p className="cjk font-label-sm text-label-sm text-secondary">
-                      {t("静默布局，血中落子。", "Plan in silence. Execute in blood.")}
-                    </p>
-                  </div>
-                </div>
+                <span className="cjk font-label-md text-label-md tracking-[0.25em] text-on-surface-variant mb-1">
+                  {t("宗师之约", "Covenant of the Grandmaster")}
+                </span>
+                <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-wider mb-1 drop-shadow-md">
+                  {t("棋盘从不说谎。", "The Board Never Lies.")}
+                </h1>
+                <p className="cjk font-label-sm text-label-sm text-secondary tracking-widest mb-2">
+                  {t("静默布局，血中落子。", "Plan in silence. Execute in blood.")}
+                </p>
               </div>
             </div>
           </section>
