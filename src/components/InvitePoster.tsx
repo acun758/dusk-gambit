@@ -17,7 +17,7 @@ export function InvitePoster({ compact = false, className = "" }: { compact?: bo
   const { profile, winRate } = useProfile();
   const icon = TIER_ICON[profile.tier] ?? "rank-knight";
   return (
-    <section aria-label="邀请对弈" className={`home-media-frame relative w-full overflow-hidden gold-hairline bg-surface-container-lowest ${className}`}>
+    <section aria-label="邀请对弈" className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest ${className}`}>
       <img
         src={poster}
         alt="血誓王权邀请对弈海报"

@@ -348,27 +348,29 @@
     inset 0 0 0 1px color-mix(in oklab, white 6%, transparent);
 }
 
-/* Keep media flush with its rounded frame while drawing the hairline above it. */
+/* One frame owns clipping and its hairline. Avoid pseudo-element and utility
+   borders here: those previously competed across responsive media states. */
 .home-media-frame {
   isolation: isolate;
-  border: 0;
-  background-clip: padding-box;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid var(--home-glass-line-soft);
+  background-clip: border-box;
 }
 
 .home-media-frame > :is(img, video) {
+  position: relative;
+  z-index: 0;
+  display: block;
   width: 100%;
+  max-width: 100%;
   border-radius: inherit;
+  vertical-align: top;
 }
 
-.home-media-frame::before {
-  content: "";
-  position: absolute;
-  z-index: 10;
-  inset: 0;
-  border: 1px solid var(--home-glass-line-soft);
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, white 4%, transparent);
-  pointer-events: none;
+.home-media-frame > video[hidden],
+.home-media-frame > img[hidden] {
+  display: none;
 }
 
 .home-glass-header {
