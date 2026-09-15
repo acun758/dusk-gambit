@@ -45,5 +45,6 @@
 - [x] realtime.ts 实装链路状态 + 落子发件箱：断网可继续下，恢复后按原序补传（已验证 2 条排队→恢复→清空）
 - [x] 后端适配层 src/lib/backend/：默认网关与云开发网关同签名，换云只改此目录，db.ts 接口（submitMove/claimTimeout/settle）不变
 - [x] 对弈 AI 搬进 Worker：chooseMove/evaluatePosition 异步化（offloaded=true，主线程不卡），保留同步兜底
+- [x] 用户提供的六套新画面已压缩为入口一套、内页五套，并适配电脑、iPad、iPhone 横竖屏
 
 

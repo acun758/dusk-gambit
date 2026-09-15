@@ -13,9 +13,6 @@ import fallenIphone from "@/assets/themes/fallen-iphone.webp";
 import gothicDesktop from "@/assets/themes/gothic-desktop.webp";
 import gothicIpad from "@/assets/themes/gothic-ipad.webp";
 import gothicIphone from "@/assets/themes/gothic-iphone.webp";
-import stormDesktop from "@/assets/themes/storm-desktop.webp";
-import stormIpad from "@/assets/themes/storm-ipad.webp";
-import stormIphone from "@/assets/themes/storm-iphone.webp";
 
 export type ThemeBackgroundName = "storm" | "fallen" | "dragon" | "blackGold" | "gothic" | "abyss";
 
@@ -26,7 +23,7 @@ type ThemeBackgroundSet = {
 };
 
 export const THEME_BACKGROUNDS: Record<ThemeBackgroundName, ThemeBackgroundSet> = {
-  storm: { desktop: stormDesktop, ipad: stormIpad, iphone: stormIphone },
+  storm: { desktop: blackGoldDesktop, ipad: blackGoldIpad, iphone: blackGoldIphone },
   fallen: { desktop: fallenDesktop, ipad: fallenIpad, iphone: fallenIphone },
   dragon: { desktop: dragonDesktop, ipad: dragonIpad, iphone: dragonIphone },
   blackGold: { desktop: blackGoldDesktop, ipad: blackGoldIpad, iphone: blackGoldIphone },
