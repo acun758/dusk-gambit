@@ -271,6 +271,7 @@
 .game-entrance-artwork {
   object-fit: contain;
   object-position: center;
+  filter: sepia(0.24) contrast(1.05) saturate(0.82) brightness(0.98);
 }
 
 .game-entrance-photo-frame::before,
@@ -282,15 +283,15 @@
 }
 
 .game-entrance-photo-frame::before {
-  background: linear-gradient(160deg, rgb(233 209 150 / 6%), rgb(120 88 40 / 2%));
+  background: linear-gradient(160deg, rgb(233 209 150 / 18%), rgb(120 88 40 / 10%));
   mix-blend-mode: multiply;
 }
 
 .game-entrance-photo-frame::after {
-  background-image: radial-gradient(rgb(54 42 28 / 42%) 0.75px, transparent 0.95px);
-  background-size: 3.5px 3.5px;
+  background-image: radial-gradient(rgb(42 33 22 / 60%) 1px, transparent 1.15px);
+  background-size: 3px 3px;
   mix-blend-mode: multiply;
-  opacity: 0.05;
+  opacity: 0.16;
 }
 
 .game-entrance-vignette {
@@ -337,8 +338,8 @@
   }
 
   .game-entrance-photo-frame::after {
-    background-size: 4px 4px;
-    opacity: 0.11;
+    background-size: 3px 3px;
+    opacity: 0.16;
   }
 
   .game-entrance-action {
