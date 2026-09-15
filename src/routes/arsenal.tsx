@@ -129,7 +129,7 @@ function Arsenal() {
                 const active = selected.id === item.id;
                 return (
                   <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`home-glass-tile grid min-w-0 gap-2 p-space-sm text-left transition-colors ${active ? "home-glass-tile-active" : ""}`}>
-                    <div className="home-glass-media relative aspect-[4/3] overflow-hidden">
+                    <div className="home-glass-media aged-print-frame relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-contain p-2" />
                       <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
@@ -189,7 +189,7 @@ function Arsenal() {
           </section>
 
           <aside className="stage-panel home-glass-panel grid gap-space-sm p-space-md lg:sticky lg:top-24">
-            <div className="home-glass-media relative aspect-square overflow-hidden">
+            <div className="home-glass-media aged-print-frame relative aspect-square overflow-hidden">
               <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-contain p-space-sm" />
             </div>
             <div>
