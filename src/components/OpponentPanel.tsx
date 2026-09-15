@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import {
   createDuelInvite,
-  getLobbyStats,
+  fetchDuelInvites as listDuelInvites,
+  fetchFriends as loadFriends,
+  fetchLobbyStats as getLobbyStats,
+  fetchProfile as loadProfile,
+  fetchSession,
   joinDuelInvite,
-  listDuelInvites,
-  loadProfile,
-  loadFriends,
-  submitVerification,
   searchPlayers,
-} from "@/lib/game.functions";
-import { supabase } from "@/integrations/supabase/client";
+  submitVerification,
+} from "@/lib/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
 
 function mmss(sec: number) {
