@@ -28,7 +28,7 @@ export function SovereignNav() {
   return (
     <>
       {/* Phones & iPad portrait: single bottom bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.85)] border-t border-outline-variant/40">
+      <div className="home-glass-header lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe">
         <nav className="h-[4.75rem] px-gutter-mobile grid items-center" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
           {items.map((item) => (
             <Link
@@ -56,7 +56,7 @@ export function SovereignNav() {
       </div>
 
       {/* iPad landscape and desktop: left rail */}
-      <aside className="sovereign-rail hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col bg-surface-container-lowest/95 backdrop-blur-xl border-r border-outline-variant/40 shadow-[8px_0_30px_rgba(0,0,0,0.7)]">
+      <aside className="home-glass-header sovereign-rail hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col">
         <div className="rail-brand px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="rail-brand-title font-headline-sm text-headline-sm uppercase text-secondary">
             Blood Sovereign

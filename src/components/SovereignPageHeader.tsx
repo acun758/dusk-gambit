@@ -20,11 +20,11 @@ export function SovereignPageHeader({
   const { lang } = useLang();
 
   return (
-    <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/88 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+    <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
       <div className="h-20 px-margin-mobile grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-sm">
         <div className="flex min-w-0 items-center gap-space-sm">
           {backTo ? (
-            <Link to={backTo} aria-label={t("返回", "Back")} className="grid h-11 w-11 shrink-0 place-items-center text-secondary">
+            <Link to={backTo} aria-label={t("返回", "Back")} className="home-glass-control grid h-11 w-11 shrink-0 place-items-center text-secondary">
               <GameIcon name="action-back" className="h-8 w-8" />
             </Link>
           ) : (
@@ -45,10 +45,10 @@ export function SovereignPageHeader({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-space-xs">
-          <LangToggle />
+          <LangToggle className="home-glass-control" />
           <Link
             to={signedIn ? "/dynasty" : "/auth"}
-            className="flex h-11 shrink-0 items-center gap-2 bg-surface-container-high px-3 text-secondary"
+            className="home-glass-control flex h-11 shrink-0 items-center gap-2 px-3 text-secondary"
           >
             <UiIcon name="crystal" className="h-6 w-6" />
             <span className="hidden font-label-md text-label-md tabular-nums sm:inline">{profile.diamonds.toLocaleString()}</span>
