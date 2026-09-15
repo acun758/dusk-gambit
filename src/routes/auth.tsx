@@ -128,18 +128,18 @@ function AuthPage() {
 
         <form onSubmit={submit} className="flex flex-col gap-space-sm">
           <label className="relative block">
-            <UiIcon name="send" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="send" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("邮箱 Email", "Email 邮箱")}
-              className="field-control h-12 w-full pl-11 pr-3"
+              className="field-control auth-field-control h-12 w-full"
             />
           </label>
           <label className="relative block">
-            <UiIcon name="seal" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="seal" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
             <input
               type="password"
               required
@@ -147,28 +147,28 @@ function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("密码 Password", "Password 密码")}
-              className="field-control h-12 w-full pl-11 pr-3"
+              className="field-control auth-field-control h-12 w-full"
             />
           </label>
           <label className="relative block">
-            <UiIcon name="signature" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="signature" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
             <input
               type="text"
               value={realName}
               onChange={(e) => setRealName(e.target.value)}
               placeholder={t("真实姓名（实名认证）", "Real name (verification)")}
-              className="field-control cjk h-12 w-full pl-11 pr-3"
+              className="field-control auth-field-control cjk h-12 w-full"
             />
           </label>
           <label className="relative block">
-            <UiIcon name="badge-hex" className="absolute left-3 top-2.5 h-6 w-6 opacity-80" />
+            <UiIcon name="badge-hex" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
             <input
               type="text"
               maxLength={18}
               value={idNumber}
               onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
               placeholder={t("身份证号（18 位，用于实名认证）", "ID number (18 digits)")}
-              className="field-control h-12 w-full pl-11 pr-3"
+              className="field-control auth-field-control h-12 w-full"
             />
           </label>
           <AvatarPicker

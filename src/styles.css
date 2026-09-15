@@ -701,6 +701,13 @@
   box-shadow: 0 0 0 1px var(--color-secondary);
 }
 
+/* Login fields reserve a stable icon column. This explicit rule wins over
+   the shared field padding at every viewport size. */
+.auth-field-control {
+  padding-left: 3rem;
+  padding-right: 0.875rem;
+}
+
 .field-action {
   min-width: 4.5rem;
   height: 3rem;
