@@ -41,6 +41,12 @@ function Battle() {
   useEffect(() => {
     if (drill) setTab("drill");
   }, [drill]);
+  useEffect(() => {
+    const prime = () => primeSounds();
+    window.addEventListener("pointerdown", prime, { once: true });
+    return () => window.removeEventListener("pointerdown", prime);
+  }, []);
+
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
   const t = useT();
