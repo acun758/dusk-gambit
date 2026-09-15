@@ -160,7 +160,7 @@ function Crucible() {
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
-              {profile.trainingPoints} {t("训练积分", "Training points")} · {t(profile.tierZh, profile.tier)}
+              {profile.trainingPoints} {t("训练积分", "Training points")} · {t(tierLabel(profile).zh, tierLabel(profile).en)}
             </span>
             <h1 className="font-headline-md text-headline-md leading-tight truncate">
               <Bi zh="残局试炼" en="Endgame Crucible" />

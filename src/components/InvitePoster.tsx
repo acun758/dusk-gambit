@@ -39,7 +39,7 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0">
           <GameIcon name={icon} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
-          <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate">{profile.tierZh}</h2>
+          <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate">{tierLabel(profile).zh}</h2>
         </div>
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums">
           {profile.elo} 分 · 胜率 {winRate}% · ♦ {profile.diamonds}

@@ -64,7 +64,7 @@ function Index() {
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 <span className="cjk font-label-md text-label-md text-primary-fixed truncate">
-                  {t(profile.tierZh, profile.tier)}
+                  {t(tierLabel(profile).zh, tierLabel(profile).en)}
                 </span>
               </div>
               {/* 品牌名与进入页一致：玄弈 · DUSK GAMBIT。手机竖排避免截断（英文折行时收缩到页眉内），桌面横排双语并列。 */}
@@ -188,7 +188,7 @@ function Index() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-space-xs">
               {[
-                { zh: "段位", en: "Tier", v: t(profile.tierZh, profile.tier) },
+                { zh: "段位", en: "Tier", v: t(tierLabel(profile).zh, tierLabel(profile).en) },
                 { zh: "胜场", en: "Wins", v: String(profile.wins) },
                 { zh: "胜率", en: "Win rate", v: `${winRate}%` },
                 { zh: "训练分", en: "Training", v: profile.trainingPoints.toLocaleString() },
