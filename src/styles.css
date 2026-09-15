@@ -240,11 +240,17 @@
   position: absolute;
   inset: -3rem;
   z-index: -3;
+  display: block;
   width: calc(100% + 6rem);
   height: calc(100% + 6rem);
+  transform: scale(1.08);
+}
+
+.game-entrance-backdrop img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   filter: blur(28px) brightness(0.34) saturate(0.62);
-  transform: scale(1.08);
 }
 
 .game-entrance-photo-frame {
@@ -255,13 +261,16 @@
   animation: entrance-breathe 9s ease-in-out infinite alternate;
 }
 
-.game-entrance-artwork {
+.game-entrance-photo-frame picture,
+.game-entrance-photo-frame img {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.game-entrance-artwork {
   object-fit: contain;
   object-position: center;
-  filter: sepia(0.18) contrast(1.04) saturate(0.86) brightness(1.02);
 }
 
 .game-entrance-photo-frame::before,
@@ -273,15 +282,15 @@
 }
 
 .game-entrance-photo-frame::before {
-  background: linear-gradient(160deg, rgb(233 209 150 / 12%), rgb(120 88 40 / 5%));
+  background: linear-gradient(160deg, rgb(233 209 150 / 6%), rgb(120 88 40 / 2%));
   mix-blend-mode: multiply;
 }
 
 .game-entrance-photo-frame::after {
-  background-image: radial-gradient(rgb(54 42 28 / 52%) 0.75px, transparent 0.95px);
+  background-image: radial-gradient(rgb(54 42 28 / 42%) 0.75px, transparent 0.95px);
   background-size: 3.5px 3.5px;
   mix-blend-mode: multiply;
-  opacity: 0.13;
+  opacity: 0.05;
 }
 
 .game-entrance-vignette {
