@@ -144,13 +144,13 @@ function Analysis() {
 
 
   return (
-    <div className="themed-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
+    <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
       <ThemeBackdrop theme="fallen" />
       <SovereignPageHeader icon="nav-review" titleZh="对局复盘" titleEn="Match Review" />
 
       <main className="page-main-dashboard">
         <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
-          <section aria-label="对局历史" className="review-history bg-surface-container-low gold-hairline">
+          <section aria-label="对局历史" className="review-history home-glass-panel">
             <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
                  <h2 className="cjk font-headline-sm text-headline-sm">对局历史</h2>
@@ -220,7 +220,7 @@ function Analysis() {
           <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,640px)_minmax(320px,1fr)] xl:items-start">
             <div className="review-playback grid gap-space-sm min-w-0">
               {detailQ.data && (
-                <div className="bg-surface-container-low gold-hairline p-space-sm grid grid-cols-2 gap-space-sm">
+                <div className="home-glass-panel p-space-sm grid grid-cols-2 gap-space-sm">
                   {(["w", "b"] as const).map((side) => {
                     const m = detailQ.data.match as unknown as { white_name: string; black_name: string; white_elo: number; black_elo: number };
                     const name = side === "w" ? m.white_name : m.black_name;
@@ -255,7 +255,7 @@ function Analysis() {
               </div>
 
 
-              <div className="review-controls bg-surface-container-low p-space-sm gold-hairline grid gap-2">
+              <div className="review-controls home-glass-panel p-space-sm grid gap-2">
               <div className="flex items-center justify-between gap-2">
                 <span className="cjk font-label-md text-label-md">
                   {current ? `第 ${current.ply} 手 ${current.san}` : "起始局面"}
@@ -278,7 +278,7 @@ function Analysis() {
             </div>
 
             <div className="review-insights grid gap-space-sm md:grid-cols-2 xl:grid-cols-1">
-              <div className="bg-surface-container-low p-space-sm gold-hairline">
+              <div className="home-glass-panel p-space-sm">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
                   {steps.length === 0 && (
@@ -299,7 +299,7 @@ function Analysis() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-low p-space-sm gold-hairline">
+              <div className="home-glass-panel p-space-sm">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">关键转折</h3>
                 {worst.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">本局没有明显失误，继续保持。</p>}
                 <div className="grid gap-2">
@@ -316,7 +316,7 @@ function Analysis() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-low p-space-sm gold-hairline grid gap-2 md:col-span-2 xl:col-span-1">
+              <div className="home-glass-panel p-space-sm grid gap-2 md:col-span-2 xl:col-span-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="cjk font-label-lg text-label-lg">AI 分段讲解</h3>
                   <Button
@@ -367,7 +367,7 @@ function Analysis() {
               </div>
 
               {steps.length > 0 && (
-                <Link to="/archive" className="min-h-12 bg-surface-container-high px-space-md flex items-center justify-between gap-space-sm text-secondary md:col-span-2 xl:col-span-1">
+                <Link to="/archive" className="home-glass-action min-h-12 px-space-md flex items-center justify-between gap-space-sm text-secondary md:col-span-2 xl:col-span-1">
                   <span className="cjk font-label-md text-label-md">将本局制作成绝杀典藏</span>
                   <UiIcon name="cards" className="h-7 w-7" />
                 </Link>

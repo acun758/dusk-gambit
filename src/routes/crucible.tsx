@@ -149,9 +149,9 @@ function Crucible() {
   }, [active, locked, busy, entry, startedAt, refresh, progressQ]);
 
   return (
-    <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
+    <div className="themed-page home-glass-page text-on-surface flex flex-col min-h-screen pb-32">
       <ThemeBackdrop theme="dragon" />
-      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+      <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
             <span className="font-label-sm text-label-sm uppercase text-secondary tracking-widest">
@@ -162,10 +162,10 @@ function Crucible() {
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-space-xs">
-            <LangToggle />
+            <LangToggle className="home-glass-control" />
             <button
               onClick={() => setBlind((b) => !b)}
-              className="flex h-11 shrink-0 items-center justify-center gap-space-xs px-space-sm bg-surface-container-high text-secondary font-label-sm text-label-sm uppercase tracking-widest"
+              className="home-glass-control flex h-11 shrink-0 items-center justify-center gap-space-xs px-space-sm text-secondary font-label-sm text-label-sm uppercase tracking-widest"
             >
               <UiIcon name={blind ? "eye" : "lotus"} className="h-6 w-6 shrink-0" />
               <span className="cjk">{blind ? t("盲视", "Blind") : t("明视", "Visible")}</span>
@@ -219,8 +219,8 @@ function Crucible() {
                       key={l.id}
                       onClick={() => select(l.id)}
                       disabled={!g.unlocked}
-                      className={`text-left p-space-sm flex items-start justify-between gap-space-sm transition-colors ${
-                        on ? "bg-surface-container-high gold-hairline" : "bg-surface-container hover:bg-surface-container-high"
+                      className={`home-glass-tile text-left p-space-sm flex items-start justify-between gap-space-sm transition-colors ${
+                        on ? "home-glass-tile-active" : ""
                       } ${g.unlocked ? "" : "opacity-50 cursor-not-allowed"}`}
                     >
                       <span className="flex flex-col min-w-0 gap-0.5">
@@ -250,7 +250,7 @@ function Crucible() {
           )}
           {active && (
             <>
-              <div className="crucible-core-width bg-surface-container-low p-space-md flex flex-col gap-space-xs">
+              <div className="crucible-core-width home-glass-panel p-space-md flex flex-col gap-space-xs">
                 <span className="cjk font-label-md text-label-md text-primary">
                   {t(active.objective_zh, active.objective_en)}
                 </span>
@@ -309,7 +309,7 @@ function Crucible() {
                 )}
               </div>
 
-              <div className="crucible-core-width bg-surface-container-low p-space-md flex flex-col gap-space-sm">
+              <div className="crucible-core-width home-glass-panel p-space-md flex flex-col gap-space-sm">
                 <label className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-widest">
                   {t("输入你方着法（UCI，如 e2e4 g1f3），以空格分隔", "Enter your moves in UCI (e.g. e2e4 g1f3), space separated")}
                 </label>
@@ -323,7 +323,7 @@ function Crucible() {
                 <button
                   disabled={!signedIn || locked || busy}
                   onClick={() => void submit()}
-                  className="w-full py-space-md bg-primary-container text-on-primary-container disabled:opacity-40 flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
+                    className="home-glass-action w-full py-space-md text-on-primary-container disabled:opacity-40 flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
                 >
                   <UiIcon name="flame" className="h-7 w-7" />
                   <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
