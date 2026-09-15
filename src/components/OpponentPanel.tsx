@@ -120,7 +120,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
   if (signedIn === false) {
     return (
-      <section aria-label="找对手" className="battle-core-width bg-surface-container-low p-space-sm gold-hairline">
+      <section aria-label="找对手" className="battle-core-width home-glass-panel p-space-sm">
         <h2 className="cjk font-label-md text-label-md text-on-surface">找对手</h2>
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-1">登录后即可系统匹配、点名邀请好友，或用对战码约战。当前为本地 AI 陪练。</p>
         <a href="/auth" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">去登录 →</a>
@@ -129,7 +129,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   }
 
   return (
-    <section aria-label="找对手" className="battle-core-width bg-surface-container-low p-space-sm gold-hairline">
+    <section aria-label="找对手" className="battle-core-width home-glass-panel p-space-sm">
       <div className="section-heading-row">
         <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">找对手</h2>
         <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
@@ -284,7 +284,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
         {tab === "lobby" && (
           <div className="space-y-space-sm">
-            <div className="relative overflow-hidden gold-hairline">
+            <div className="home-glass-media aged-print-frame relative overflow-hidden">
               <img src={lobbyBanner} alt="约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章" loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent" />
               <div className="absolute inset-0 p-3 flex flex-col justify-center">
