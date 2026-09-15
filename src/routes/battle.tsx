@@ -211,6 +211,57 @@ function Battle() {
               重新开始
             </Button>
           </div>
+          <div className="battle-core-width grid grid-cols-3 gap-2">
+            <Button
+              onClick={() => (session.drawOffer === "mine" ? session.cancelDrawOffer() : setConfirm("draw"))}
+              disabled={!session.canOfferDraw || session.state.status !== "live"}
+              variant="ghost"
+              className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <UiIcon name="handshake" className="h-6 w-6" />
+              {session.drawOffer === "mine" ? "撤回求和" : "提和"}
+            </Button>
+            <Button
+              onClick={session.takeback}
+              disabled={!session.canTakeback}
+              variant="ghost"
+              className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+              title={session.canTakeback ? "陪练局可悔棋" : "天梯对局不可悔棋"}
+            >
+              <UiIcon name="spinner" className="h-6 w-6" />
+              悔棋
+            </Button>
+            <Button
+              onClick={exportPgn}
+              disabled={session.moves.length === 0}
+              variant="ghost"
+              className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm disabled:opacity-40"
+            >
+              <UiIcon name="scroll" className="h-6 w-6" />
+              导出棋谱
+            </Button>
+          </div>
+
+          {session.drawOffer === "theirs" && (
+            <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
+              <p className="cjk font-body-sm text-body-sm text-on-surface">对手提出和棋，是否接受？</p>
+              <div className="flex gap-2 shrink-0">
+                <Button onClick={() => session.answerDraw(true)} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 cjk">接受</Button>
+                <Button onClick={() => session.answerDraw(false)} variant="ghost" className="home-glass-control h-11 px-3 cjk">拒绝</Button>
+              </div>
+            </div>
+          )}
+
+          {session.drawOffer === "mine" && (
+            <p role="status" className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">已提出和棋，等待对手回应。</p>
+          )}
+
+          {signedIn && profile.inPlacement && (
+            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">
+              {placementLabel(profile).zh} · 定级赛期间涨跌分加倍，打满 10 局后公布段位。
+            </p>
+          )}
+
           {!session.canPause && (
             <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。</p>
           )}
