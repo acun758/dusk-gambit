@@ -14,7 +14,19 @@ import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
-import { useProfile } from "@/lib/profile";
+import { useProfile, placementLabel } from "@/lib/profile";
+import { toPgn } from "@/core/pgn";
+import { downloadPgn } from "@/lib/share-game";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SoundToggle } from "@/components/SoundToggle";
 
