@@ -49,7 +49,17 @@ export function SovereignPageHeader({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-space-xs">
+          <button
+            type="button"
+            onClick={sound.toggle}
+            aria-pressed={sound.enabled}
+            aria-label={t(sound.enabled ? "关闭音效" : "开启音效", sound.enabled ? "Mute sound" : "Unmute sound")}
+            className={`home-glass-control grid h-11 w-11 place-items-center ${sound.enabled ? "text-secondary" : "text-on-surface-variant opacity-60"}`}
+          >
+            <UiIcon name="volume" className="h-6 w-6" />
+          </button>
           <LangToggle className="home-glass-control" />
+
           <Link
             to={signedIn ? "/dynasty" : "/auth"}
             className="home-glass-control flex h-11 shrink-0 items-center gap-2 px-3 text-secondary"
