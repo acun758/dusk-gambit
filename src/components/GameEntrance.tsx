@@ -29,10 +29,10 @@ export function GameEntrance({ onEntered }: { onEntered: () => void }) {
       aria-label={t("进入血誓王权", "Enter Blood Sovereign")}
       onClick={enter}
     >
-      <img className="game-entrance-backdrop" src={entranceArtwork.url} alt="" aria-hidden="true" />
+      <img className="game-entrance-backdrop" src={entranceArtwork} alt="" aria-hidden="true" />
       <img
         className="game-entrance-artwork"
-        src={entranceArtwork.url}
+        src={entranceArtwork}
         alt={t("玄弈暗网格棋局海报：雄狮、城堡与黑金国王棋子", "Dusk Gambit poster with a lion, castle and black-gold king")}
       />
       <div className="game-entrance-vignette" aria-hidden="true" />
