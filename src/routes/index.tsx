@@ -92,7 +92,7 @@ function Index() {
 
       <main className="page-main-hero flex flex-col relative w-full bg-surface min-h-screen">
         <div className="home-glass-scope desktop-page-container flex flex-col w-full pb-32 px-margin-mobile">
-          <div>
+          <div className="mt-space-md">
             <InvitePoster className="home-glass-panel" />
           </div>
           {/* 誓约横幅 */}
