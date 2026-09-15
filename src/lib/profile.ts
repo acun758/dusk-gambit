@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, createElement, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, saveEquipment, submitVerification } from "@/lib/game.functions";
@@ -255,7 +255,7 @@ const ProfileContext = createContext<ProfileContextValue | null>(null);
 /** One profile store and one realtime subscription serve the entire app. */
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const value = useProfileStore();
-  return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
+  return createElement(ProfileContext.Provider, { value }, children);
 }
 
 export function useProfile() {
