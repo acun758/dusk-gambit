@@ -64,6 +64,11 @@ export function placementLabel(p: PlayerProfile): { zh: string; en: string } {
   return { zh: `定级赛 ${played}/10`, en: `Placement ${played}/10` };
 }
 
+/** 全站统一的段位显示：定级赛未打满时不公开段位。 */
+export function tierLabel(p: PlayerProfile): { zh: string; en: string } {
+  return p.inPlacement ? placementLabel(p) : { zh: p.tierZh, en: p.tier };
+}
+
 const KEY = "bs.profile.v1";
 
 export function tierFor(elo: number): { tier: string; tierZh: string } {
