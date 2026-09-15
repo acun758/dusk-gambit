@@ -307,7 +307,7 @@
 
 .home-glass-tile-active {
   border-color: var(--home-glass-line);
-  background: linear-gradient(145deg, color-mix(in oklab, white 12%, transparent), transparent 58%), var(--home-glass-fill);
+  background-color: color-mix(in oklab, var(--color-surface) 86%, transparent);
 }
 
 .home-glass-chip {
