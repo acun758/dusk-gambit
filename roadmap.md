@@ -36,7 +36,7 @@
 - [x] 对弈 AI 与复盘 review 改用统一引擎（ACPL / 失误标记 / 准确率）
 - [x] 逻辑分离验收：core 内 0 React/0 DOM/0 硬编码规则数（已 grep 验证）
 - [x] 图片动工前交付 292 项资产清单与 206 张用户上传缩略图核对册；189–206 主题背景按用户要求剔除
-- [ ] 四步完成后交军师终验（core 纯净性、复盘一致性、断网与外域请求）
+- [x] 军师终验通过：core 纯净、同局面 loss/标签一致、32 个四端页面检查无错误、无视觉外域请求
 - [x] 逻辑与画面分离：core/rules(chess.js 薄封装)、clock、settle（仅显示计算）、review、score
 - [x] 数据访问收敛到 src/lib/db.ts（领域名词、无 supabase 字样），实时帧独立 realtime.ts，厂商 SDK 只在 src/lib/backend.ts
 - [x] 字体砍到 2 套并自托管：Cinzel 标题（28KB）+ 思源黑/宋常用字子集（约 2MB，GB2312 一级 4544 字），正文走系统字体栈，昵称用 --font-ugc 系统字体；页面零外部字体请求
