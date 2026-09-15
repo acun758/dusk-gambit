@@ -193,7 +193,7 @@ function Dynasty() {
                   zh="天梯段位殿堂"
                   en="Dynasty Sanctum"
                   block
-                  className="sm:inline-flex sm:items-baseline sm:gap-1.5"
+                  className="sm:flex-row sm:items-baseline sm:gap-1.5"
                   subClassName="truncate"
                 />
               </h1>
