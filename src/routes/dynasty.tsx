@@ -160,7 +160,7 @@ function Dynasty() {
         /* storage unavailable */
       }
     }
-    await supabase.auth.signOut();
+    await endSession();
     void navigate({ to: "/auth", replace: true });
   };
 

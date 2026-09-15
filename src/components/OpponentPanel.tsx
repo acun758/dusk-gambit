@@ -40,7 +40,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const [verifyStatus, setVerifyStatus] = useState<string>("none");
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)));
+    void fetchSession().then((s) => setSignedIn(Boolean(s)));
   }, []);
 
   const profileQ = useQuery({
