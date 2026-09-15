@@ -361,16 +361,10 @@
 .home-media-frame > :is(img, video) {
   position: relative;
   z-index: 0;
-  display: block;
   width: 100%;
   max-width: 100%;
   border-radius: inherit;
   vertical-align: top;
-}
-
-.home-media-frame > video[hidden],
-.home-media-frame > img[hidden] {
-  display: none;
 }
 
 .home-glass-header {
