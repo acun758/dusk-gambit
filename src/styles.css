@@ -279,7 +279,7 @@
   inset: -3%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.22;
   mix-blend-mode: overlay;
   background-image: var(--home-glass-paper);
   background-size: 200%;
@@ -300,7 +300,7 @@
   inset: -2%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.10;
+  opacity: 0.12;
   mix-blend-mode: soft-light;
   background-image: var(--home-glass-paper);
   background-size: 280%;
