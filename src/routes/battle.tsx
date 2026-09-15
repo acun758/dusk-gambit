@@ -226,7 +226,7 @@ function Battle() {
               {session.paused ? "继续" : "暂停"}
             </Button>
             <Button
-              onClick={session.resign}
+              onClick={() => setConfirm("resign")}
               disabled={waiting || session.state.status !== "live"}
               variant="ghost"
                className="home-glass-control h-12 text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
