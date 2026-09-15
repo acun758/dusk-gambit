@@ -39,6 +39,6 @@
 - [ ] 四步完成后交军师终验（core 纯净性、复盘一致性、断网与外域请求）
 - [x] 逻辑与画面分离：core/rules(chess.js 薄封装)、clock、settle（仅显示计算）、review、score
 - [x] 数据访问收敛到 src/lib/db.ts（领域名词、无 supabase 字样），实时帧独立 realtime.ts，厂商 SDK 只在 src/lib/backend.ts
-- [ ] 字体砍到 2 套并自托管：Cinzel 标题 + 思源 3500 常用字子集，昵称走系统字体
+- [x] 字体砍到 2 套并自托管：Cinzel 标题（28KB）+ 思源黑/宋常用字子集（约 2MB，GB2312 一级 4544 字），正文走系统字体栈，昵称用 --font-ugc 系统字体；页面零外部字体请求
 - [ ] 外链图片分批本地化，按页面分包
 
