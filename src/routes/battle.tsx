@@ -74,6 +74,22 @@ function Battle() {
   const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
+  // 求和 / 认输前的二次确认
+  const [confirmAction, setConfirm] = useState<"draw" | "resign" | null>(null);
+  const exportPgn = () => {
+    const pgn = toPgn(
+      session.moves.map((m) => ({ san: m.san, uci: m.uci })),
+      {
+        white: session.state.players.w.name,
+        black: session.state.players.b.name,
+        whiteElo: session.state.players.w.elo,
+        blackElo: session.state.players.b.elo,
+        timeControl: "180+2",
+        ...(session.state.outcome ? { result: session.state.outcome } : {}),
+      },
+    );
+    downloadPgn(pgn);
+  };
   const timeLevel: "calm" | "warn" | "critical" = myClock <= 20_000 ? "critical" : myClock <= 60_000 ? "warn" : "calm";
   // 读秒提示：自己剩余 10 秒内每整秒轻响一次
   const tickedRef = useRef<number | null>(null);
