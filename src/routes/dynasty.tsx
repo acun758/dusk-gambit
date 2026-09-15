@@ -174,21 +174,28 @@ function Dynasty() {
       <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
-              <GameIcon name="nav-ladder" className="h-14 w-14 sm:h-16 sm:w-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
+            <div className="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
+              <GameIcon name="nav-ladder" className="h-11 w-11 sm:h-16 sm:w-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
                 <span className="font-label-md text-label-md text-secondary tabular-nums">
                   {profile.elo} ELO
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-primary" />
                 <span className="cjk font-label-md text-label-md text-primary-fixed truncate">
                   {t(current.zh, current.en)}
                 </span>
               </div>
-              <h1 className="font-headline-md text-headline-md leading-tight truncate">
-                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
+              {/* 手机端标题竖排小号，保证中英文完整显示不被截断 */}
+              <h1 className="min-w-0 font-headline-md text-[1.15rem] leading-tight sm:text-headline-md">
+                <Bi
+                  zh="天梯段位殿堂"
+                  en="Dynasty Sanctum"
+                  block
+                  className="sm:flex-row sm:items-baseline sm:gap-1.5"
+                  subClassName="truncate"
+                />
               </h1>
             </div>
           </div>

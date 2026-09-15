@@ -13,12 +13,13 @@ const TIER_ICON: Record<string, GameIconName> = {
 };
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
-export function InvitePoster({ compact = false, className = "" }: { compact?: boolean; className?: string }) {
+export function InvitePoster({ className = "" }: { compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
   const icon = TIER_ICON[profile.tier] ?? "rank-knight";
   return (
     <section aria-label="邀请对弈" className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest ${className}`}>
-      <div className={`aged-print-frame w-full ${compact ? "h-56 sm:h-64" : "h-52 sm:h-64 lg:h-72"}`}>
+      {/* 图片铺底，文字按内容撑高，避免手机端文字贴边或溢出 */}
+      <div className="aged-print-frame h-40 w-full sm:absolute sm:inset-0 sm:h-full">
         <img
           src={poster}
           alt="血誓王权邀请对弈海报"
@@ -28,11 +29,12 @@ export function InvitePoster({ compact = false, className = "" }: { compact?: bo
           className="block h-full w-full object-cover"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/95 via-surface-container-lowest/70 to-transparent" />
-      <div className="absolute inset-0 p-space-md flex flex-col justify-center gap-1 max-w-[68%]">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-surface-container-lowest/40 via-surface-container-lowest/85 to-surface-container-lowest/95 sm:bg-gradient-to-r sm:from-surface-container-lowest/95 sm:via-surface-container-lowest/75 sm:to-transparent" />
+      <div className="relative flex flex-col justify-center gap-1.5 p-space-md sm:absolute sm:inset-0 sm:max-w-[68%]">
+
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0">
-          <GameIcon name={icon} className="h-12 w-12" />
+          <GameIcon name={icon} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
           <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate">{profile.tierZh}</h2>
         </div>
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums">
