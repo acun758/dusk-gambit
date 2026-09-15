@@ -19,8 +19,11 @@ self.onmessage = (ev: MessageEvent) => {
   try {
     if (req.cmd === 'search' && req.fen) {
       const r = engine.think(req.fen, {
-        depth: req.depth, movetimeMs: req.movetimeMs, skill: req.skill,
+        depth: req.depth ?? 5,
+        movetimeMs: req.movetimeMs ?? 600,
+        skill: req.skill ?? 20,
       });
+
       post(r
         ? { id: req.id, type: 'bestmove', ...r }
         : { id: req.id, type: 'bestmove', uci: null, cp: 0, depth: 0, nodes: 0, ms: 0 });
