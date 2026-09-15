@@ -57,6 +57,9 @@ export class DuelClient {
   private lastTs = 0;
   private phase: ConnectionPhase = "idle";
   private paused = false;
+  /** AI 正在 Worker 里搜索，避免同一手重复触发 */
+  private thinking = false;
+
   private readonly url: string | undefined;
 
   constructor(
@@ -233,7 +236,7 @@ export class DuelClient {
     if (this.botTimer) clearTimeout(this.botTimer);
     this.botTimer = setTimeout(
       () => {
-        if (this.state.status === "live" && this.state.turn !== this.you) this.applyMove();
+        if (this.state.status === "live" && this.state.turn !== this.you) void this.applyMove();
         this.scheduleBot();
       },
       1800 + Math.random() * 2200,
@@ -250,7 +253,7 @@ export class DuelClient {
         );
         return;
       }
-      this.applyMove(msg.uci || undefined);
+      void this.applyMove(msg.uci || undefined);
     }
     if (msg.t === "resign") {
       this.state.status = "over";
@@ -266,11 +269,24 @@ export class DuelClient {
     }
   }
 
-  private applyMove(requested?: string) {
+  // AI 搜索在 Worker 里跑，这里 await 结果，主线程期间照常渲染与走表
+  private async applyMove(requested?: string) {
+    // 只对 AI 自己的搜索加锁；玩家落子不受影响
+    if (!requested && this.thinking) return;
+    this.thinking = true;
+    try {
+      await this.applyMoveInner(requested);
+    } finally {
+      this.thinking = false;
+    }
+  }
+
+
+  private async applyMoveInner(requested?: string) {
     const idx = this.state.moves.length;
     const chess = new Chess(this.state.fen);
     const level = aiLevel(this.levelId);
-    const engine = requested ? null : chooseMove(this.state.fen, level);
+    const engine = requested ? null : await chooseMove(this.state.fen, level);
     const uci = requested || engine?.uci || "";
     let played;
     try {
@@ -283,7 +299,8 @@ export class DuelClient {
       played = chess.move(fallback.san);
     }
     if (!played) return;
-    const evaluated = engine?.cp ?? evaluatePosition(chess.fen(), 2);
+    const evaluated = engine?.cp ?? (await evaluatePosition(chess.fen(), 2));
+
     const s = {
       uci: `${played.from}${played.to}${played.promotion ?? ""}`,
       san: played.san,

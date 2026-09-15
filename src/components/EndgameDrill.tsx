@@ -129,9 +129,6 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
   const onMove = useCallback(
     (uci: string) => {
       if (!active || status !== "playing" || thinking) return;
-      // 落子前先记下引擎的最佳走法与局面评分，用于结束后的逐步点评
-      const best = chooseMove(fen, aiLevel("master"));
-      const before = evaluatePosition(fen, 2);
       const board = new Chess(fen);
       const promotion = uci[4];
       try {
@@ -140,27 +137,39 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
         return;
       }
       const san = board.history().at(-1) ?? uci;
-      const sign = mySide === "w" ? 1 : -1;
-      const swing = Math.round(sign * (evaluatePosition(board.fen(), 2) - before));
-      const scoredMove: ReviewStep = {
-        no: review.length + 1,
-        san,
-        bestSan: best?.san ?? san,
-        swing,
-        tag: tagFor(swing, !!best && best.uci === uci),
-      };
-      const nextReview = [...review, scoredMove];
-      setReview(nextReview);
+      const beforeFen = fen;
+      // 走子即时生效，引擎评估与应手在 Worker 里算，主线程不卡
       setFen(board.fen());
       setHistory((h) => [...h, san]);
       setLastMove(uci);
       const playerLine = [...moves, uci];
       setMoves(playerLine);
-      if (settle(board, mySide, playerLine, nextReview)) return;
-
       setThinking(true);
-      window.setTimeout(() => {
-        const reply = chooseMove(board.fen(), aiLevel("master"));
+
+      void (async () => {
+        // 记下引擎最佳走法与走子前后的评分，用于结束后的逐步点评
+        const [best, before, after] = await Promise.all([
+          chooseMove(beforeFen, aiLevel("master")),
+          evaluatePosition(beforeFen, 2),
+          evaluatePosition(board.fen(), 2),
+        ]);
+        const sign = mySide === "w" ? 1 : -1;
+        const swing = Math.round(sign * (after - before));
+        const scoredMove: ReviewStep = {
+          no: review.length + 1,
+          san,
+          bestSan: best?.san ?? san,
+          swing,
+          tag: tagFor(swing, !!best && best.uci === uci),
+        };
+        const nextReview = [...review, scoredMove];
+        setReview(nextReview);
+        if (settle(board, mySide, playerLine, nextReview)) {
+          setThinking(false);
+          return;
+        }
+
+        const reply = await chooseMove(board.fen(), aiLevel("master"));
         if (!reply) {
           setThinking(false);
           settle(board, mySide, playerLine, nextReview);
@@ -174,10 +183,11 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
         setMoves(fullLine);
         setThinking(false);
         settle(board, mySide, fullLine, nextReview);
-      }, 260);
+      })();
     },
     [active, fen, moves, mySide, review, status, thinking, settle],
   );
+
 
   const myMoves = Math.ceil(history.length / 2);
 

@@ -9,10 +9,12 @@ import {
   fetchMatchRatings as getMatchRatings,
   fetchSession,
   findMatch,
+  pendingMoves,
   resignMatch,
   submitMove,
 } from "@/lib/db";
-import { subscribeDuel } from "@/lib/realtime";
+import { subscribeDuel, watchLink, type LinkPhase } from "@/lib/realtime";
+
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/core/ai";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
@@ -307,6 +309,21 @@ export function useDuelSession(): DuelSession {
     };
   }, [cloud?.match.id]);
 
+  // 链路状态：断网显示离线、补传完成回到在线
+  useEffect(() => {
+    if (mode !== "cloud") return;
+    return watchLink((p: LinkPhase) => {
+      if (p === "offline") setPhase("offline");
+      else if (p === "resyncing") setPhase("resyncing");
+      else {
+        setPhase(matchRef.current?.status === "waiting" ? "connecting" : "live");
+        if (pendingMoves() === 0) setNotice(null);
+      }
+    });
+  }, [mode]);
+
+
+
   // 本地插值时钟（250ms），到点后请求服务端判负
   useEffect(() => {
     if (mode !== "cloud") return;
@@ -450,6 +467,12 @@ export function useDuelSession(): DuelSession {
     void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
       .then(async (result) => {
         if (result.code === "ok") return;
+        if (result.code === "queued") {
+          // 断网：这一手已落盘排队，恢复联网后按顺序补传
+          const n = pendingMoves();
+          setNotice(`网络已断开，这一手已记录${n > 1 ? `（共 ${n} 手待补传）` : ""}，恢复后自动补传。`);
+          return;
+        }
         const messages = {
           illegal: "这一步不符合规则，请重新选择。",
           not_your_turn: "对手刚刚完成落子，棋局正在同步。",
@@ -463,6 +486,7 @@ export function useDuelSession(): DuelSession {
       })
       .catch(() => setNotice("落子发送失败，请检查网络后重试。"))
       .finally(() => setMovePending(false));
+
   }, [mode, movePending]);
 
   const useLocalPractice = useCallback(() => {
