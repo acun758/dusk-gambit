@@ -36,9 +36,9 @@ export interface PlayerProfile {
 export const DEFAULT_PROFILE: PlayerProfile = {
   name: "Adiamond",
   diamonds: 1280,
-  elo: 2400,
-  tier: "Grandmaster",
-  tierZh: "宗师",
+  elo: 1200,
+  tier: "Knight",
+  tierZh: "骑士",
   wins: 0,
   losses: 0,
   draws: 0,
