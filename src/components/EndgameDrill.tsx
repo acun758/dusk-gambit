@@ -5,11 +5,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
-import { listEndgameLevels, submitEndgameDrill } from "@/lib/game.functions";
+import { fetchEndgameLevels as listEndgameLevels, submitEndgameDrill } from "@/lib/db";
 import { aiLevel, chooseMove, evaluatePosition } from "@/core/ai";
 import { drillScore, tagForSwing } from "@/core/score";
 import { useT } from "@/lib/i18n";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchSession } from "@/lib/db";
 
 export interface DrillLevel {
   id: number;
@@ -104,8 +104,8 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
       setStatus(solved ? "solved" : "failed");
       if (solved && active) {
         const score = drillScore(scored);
-        void supabase.auth.getSession().then(({ data }) => {
-          if (!data.session) {
+        void fetchSession().then((session) => {
+          if (!session) {
             setSaveNote(t("登录后可保存评分并解锁下一难度。", "Sign in to save the score and unlock the next tier."));
             return;
           }

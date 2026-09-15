@@ -38,7 +38,7 @@
 - [ ] 图片动工前先交 160 张外链图资产清单（来源/授权/建议处理，按版权风险排序）
 - [ ] 四步完成后交军师终验（core 纯净性、复盘一致性、断网与外域请求）
 - [x] 逻辑与画面分离：core/rules(chess.js 薄封装)、clock、settle（仅显示计算）、review、score
-- [ ] 数据访问收敛到 src/lib/db.ts（领域名词、无 supabase 字样），实时帧独立 realtime.ts
+- [x] 数据访问收敛到 src/lib/db.ts（领域名词、无 supabase 字样），实时帧独立 realtime.ts，厂商 SDK 只在 src/lib/backend.ts
 - [ ] 字体砍到 2 套并自托管：Cinzel 标题 + 思源 3500 常用字子集，昵称走系统字体
 - [ ] 外链图片分批本地化，按页面分包
 

@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import {
   createDuelInvite,
-  getLobbyStats,
+  fetchDuelInvites as listDuelInvites,
+  fetchFriends as loadFriends,
+  fetchLobbyStats as getLobbyStats,
+  fetchProfile as loadProfile,
+  fetchSession,
   joinDuelInvite,
-  listDuelInvites,
-  loadProfile,
-  loadFriends,
-  submitVerification,
   searchPlayers,
-} from "@/lib/game.functions";
-import { supabase } from "@/integrations/supabase/client";
+  submitVerification,
+} from "@/lib/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
 
 function mmss(sec: number) {
@@ -40,7 +40,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
   const [verifyStatus, setVerifyStatus] = useState<string>("none");
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)));
+    void fetchSession().then((s) => setSignedIn(Boolean(s)));
   }, []);
 
   const profileQ = useQuery({

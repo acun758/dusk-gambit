@@ -6,18 +6,19 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { VerificationCard } from "@/components/VerificationCard";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import {
   createDuelInvite,
   clearRealName,
-  getPromotionSeries,
-  listEndgameLevels,
-  listLadder,
-  listPromotionRivals,
-  loadEndgameProgress,
-  type LadderRow,
-} from "@/lib/game.functions";
+  fetchEndgameLevels as listEndgameLevels,
+  fetchEndgameProgress as loadEndgameProgress,
+  fetchLadder as listLadder,
+  fetchPromotionRivals as listPromotionRivals,
+  fetchPromotionSeries as getPromotionSeries,
+  signOut as endSession,
+} from "@/lib/db";
+import type { LadderRow } from "@/lib/game.functions";
+import { subscribeLadder } from "@/lib/realtime";
 import { useProfile } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
@@ -114,17 +115,11 @@ function Dynasty() {
 
   // 段位榜实时刷新：任何玩家积分写入数据库后，榜单与晋升赛进度立即更新
   useEffect(() => {
-    const channel = supabase
-      .channel(`ladder-live-${Math.random().toString(36).slice(2)}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => {
-        void queryClient.invalidateQueries({ queryKey: ["ladder-board"] });
-        void queryClient.invalidateQueries({ queryKey: ["promotion-rivals"] });
-        void queryClient.invalidateQueries({ queryKey: ["promotion-series"] });
-      })
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
+    return subscribeLadder(() => {
+      void queryClient.invalidateQueries({ queryKey: ["ladder-board"] });
+      void queryClient.invalidateQueries({ queryKey: ["promotion-rivals"] });
+      void queryClient.invalidateQueries({ queryKey: ["promotion-series"] });
+    });
   }, [queryClient]);
 
   const levels = levelsQ.data ?? [];
@@ -165,7 +160,7 @@ function Dynasty() {
         /* storage unavailable */
       }
     }
-    await supabase.auth.signOut();
+    await endSession();
     void navigate({ to: "/auth", replace: true });
   };
 

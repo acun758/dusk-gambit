@@ -2,7 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { listEndgameLevels, loadEndgameProgress, submitEndgame } from "@/lib/game.functions";
+import {
+  fetchEndgameLevels as listEndgameLevels,
+  fetchEndgameProgress as loadEndgameProgress,
+  submitEndgame,
+} from "@/lib/db";
 import { useProfile } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";

@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { DuelClient } from "@/lib/duel-client";
-import { supabase } from "@/integrations/supabase/client";
 import {
   cancelWaitingMatch,
   claimTimeout,
+  fetchActiveMatch as getActiveMatch,
+  fetchMatch as getMatch,
+  fetchMatchRatings as getMatchRatings,
+  fetchSession,
   findMatch,
-  getActiveMatch,
-  getMatch,
-  getMatchRatings,
   resignMatch,
   submitMove,
-} from "@/lib/game.functions";
+} from "@/lib/db";
+import { subscribeDuel } from "@/lib/realtime";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/core/ai";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
@@ -171,9 +172,9 @@ export function useDuelSession(): DuelSession {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const { data } = await supabase.auth.getSession();
+      const session = await fetchSession();
       if (cancelled) return;
-      if (!data.session) {
+      if (!session) {
         setMode("local");
         return;
       }
@@ -257,36 +258,18 @@ export function useDuelSession(): DuelSession {
   useEffect(() => {
     const matchId = cloud?.match.id;
     if (!matchId) return;
-    const channel = supabase
-      .channel(`duel-${matchId}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "matches", filter: `id=eq.${matchId}` },
-        (payload) => {
-          const row = payload.new as MatchRowLite;
-          matchRef.current = row;
-          setCloud((prev) => (prev ? { ...prev, match: row } : prev));
-          setPhase(row.status === "waiting" ? "connecting" : "live");
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "profiles" },
-        () => setAvatarTick((n) => n + 1),
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "match_moves", filter: `match_id=eq.${matchId}` },
-        (payload) => {
-          const row = payload.new as MoveRowLite;
-          lastSeq.current = Math.max(lastSeq.current, row.seq);
-          setMoves((prev) => (prev.some((m) => m.ply === row.ply) ? prev : [...prev, row]));
-        },
-      )
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
+    return subscribeDuel<MatchRowLite, MoveRowLite>(matchId, {
+      onMatch: (row) => {
+        matchRef.current = row;
+        setCloud((prev) => (prev ? { ...prev, match: row } : prev));
+        setPhase(row.status === "waiting" ? "connecting" : "live");
+      },
+      onProfiles: () => setAvatarTick((n) => n + 1),
+      onMove: (row) => {
+        lastSeq.current = Math.max(lastSeq.current, row.seq);
+        setMoves((prev) => (prev.some((m) => m.ply === row.ply) ? prev : [...prev, row]));
+      },
+    });
   }, [cloud?.match.id]);
 
   // 断线追帧：页面回到前台或网络恢复时按 lastSeq 拉缺失帧

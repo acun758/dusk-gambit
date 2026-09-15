@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { currentUserId, fetchAvatarUrl, putAvatarFile } from "@/lib/db";
 
 /**
  * 自定义头像：本地裁成正方形并压到 512×512 后上传到私有桶，
  * 档案里只保存对象路径，显示时换取签名链接（带内存缓存）。
  */
 
-const BUCKET = "avatars";
 const cache = new Map<string, string>();
 
 export async function compressSquare(file: File, size = 512): Promise<Blob> {
@@ -27,16 +26,11 @@ export async function compressSquare(file: File, size = 512): Promise<Blob> {
 
 /** 上传头像，返回存储路径（profiles.avatar_url 里保存的值）。 */
 export async function uploadAvatar(file: File): Promise<string> {
-  const { data } = await supabase.auth.getUser();
-  const uid = data.user?.id;
+  const uid = await currentUserId();
   if (!uid) throw new Error("请先登录后再上传头像");
   const blob = await compressSquare(file);
   const path = `${uid}/avatar-${Date.now()}.webp`;
-  const { error } = await supabase.storage.from(BUCKET).upload(path, blob, {
-    contentType: "image/webp",
-    upsert: true,
-  });
-  if (error) throw new Error(error.message);
+  await putAvatarFile(path, blob);
   cache.delete(path);
   return path;
 }
@@ -45,10 +39,10 @@ export async function avatarSignedUrl(path: string): Promise<string | null> {
   if (!path) return null;
   const hit = cache.get(path);
   if (hit) return hit;
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, 60 * 60);
-  if (error || !data?.signedUrl) return null;
-  cache.set(path, data.signedUrl);
-  return data.signedUrl;
+  const url = await fetchAvatarUrl(path);
+  if (!url) return null;
+  cache.set(path, url);
+  return url;
 }
 
 /** 把存储路径解析成可直接放进 <img> 的地址，未设置时返回 null。 */

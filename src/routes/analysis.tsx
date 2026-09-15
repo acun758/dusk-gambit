@@ -6,8 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Chess } from "chess.js";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { getMatch, listMyMatches } from "@/lib/game.functions";
+import { fetchMatch as getMatch, fetchMyMatches as listMyMatches, fetchSession } from "@/lib/db";
 import { explainMatch } from "@/lib/ai-review.functions";
 import { reviewGame, type ReviewTag } from "@/core/review";
 import { UiIcon } from "@/components/UiIcon";
@@ -66,7 +65,7 @@ function Analysis() {
   const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    void fetchSession().then((s) => setSignedIn(!!s));
   }, []);
 
   const listQ = useQuery({
