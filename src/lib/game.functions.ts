@@ -65,11 +65,6 @@ export interface FriendProfile extends ProfileRow {
   incoming: boolean;
 }
 
-function eloDelta(mine: number, theirs: number, score: number): number {
-  const expected = 1 / (1 + Math.pow(10, (theirs - mine) / 400));
-  return Math.round(24 * (score - expected));
-}
-
 /* --------------------------------- profile --------------------------------- */
 
 export const loadProfile = createServerFn({ method: "POST" })
@@ -313,8 +308,9 @@ async function settle(
     p_reason: reason,
   });
   if (error) throw new Error(error.message);
-  const result = data as { settled?: boolean; rating_delta?: number } | null;
-  return result?.settled ? (result.rating_delta ?? 0) : 0;
+  const result = data as { settled?: boolean; rating_delta?: number; black_delta?: number } | null;
+  if (!result?.settled) return { w: 0, b: 0 };
+  return { w: result.rating_delta ?? 0, b: result.black_delta ?? 0 };
 }
 
 export const submitMove = createServerFn({ method: "POST" })
@@ -348,7 +344,7 @@ export const submitMove = createServerFn({ method: "POST" })
       p_uci: data.uci,
       p_san: move.san,
       p_zh: data.zh ?? "",
-      p_cp: data.cp ?? m.cp,
+      p_cp: Math.max(-1500, Math.min(1500, Math.round(data.cp ?? m.cp ?? 0))),
       p_fen: chess.fen(),
       ...(outcome ? { p_outcome: outcome } : {}),
       ...(reason ? { p_reason: reason } : {}),
@@ -372,7 +368,7 @@ export const resignMatch = createServerFn({ method: "POST" })
     if (!you) throw new Error("forbidden");
     const outcome = you === "w" ? "black" : "white";
     const delta = await settle(supabaseAdmin, m, outcome, "resign");
-    return { outcome, ratingDelta: delta };
+    return { outcome, ratingDelta: delta[you] };
   });
 
 /**
@@ -394,7 +390,7 @@ export const offerDraw = createServerFn({ method: "POST" })
     if (!data.cancel && m.draw_offer_by && m.draw_offer_by !== you) {
       // 对手已在求和，这一次视为接受
       const delta = await settle(supabaseAdmin, m, "draw", "agreement");
-      return { code: "agreed" as const, ratingDelta: delta };
+      return { code: "agreed" as const, ratingDelta: delta[you] };
     }
     await supabaseAdmin.from("matches").update({ draw_offer_by: next }).eq("id", m.id);
     return { code: data.cancel ? ("cancelled" as const) : ("offered" as const) };
@@ -419,7 +415,7 @@ export const respondDraw = createServerFn({ method: "POST" })
     }
     const delta = await settle(supabaseAdmin, m, "draw", "agreement");
     await supabaseAdmin.from("matches").update({ draw_offer_by: null }).eq("id", m.id);
-    return { code: "agreed" as const, ratingDelta: delta };
+    return { code: "agreed" as const, ratingDelta: delta[you] };
   });
 
 
@@ -432,6 +428,7 @@ export const claimTimeout = createServerFn({ method: "POST" })
     const { data: row } = await supabaseAdmin.from("matches").select("*").eq("id", data.matchId).maybeSingle();
     if (!row) throw new Error("match not found");
     const m = row as MatchRow;
+    const viewer = m.white_id === context.userId ? "w" : "b";
     if (m.white_id !== context.userId && m.black_id !== context.userId) throw new Error("forbidden");
     if (m.status !== "live") return { expired: false };
     const elapsed = Date.now() - new Date(m.last_move_at).getTime();
@@ -439,7 +436,7 @@ export const claimTimeout = createServerFn({ method: "POST" })
     if (remaining > 0) return { expired: false, remaining };
     const outcome = m.turn === "w" ? "black" : "white";
     const delta = await settle(supabaseAdmin, m, outcome, "timeout");
-    return { expired: true, outcome, ratingDelta: delta };
+    return { expired: true, outcome, ratingDelta: delta[viewer] };
   });
 
 /* --------------------------------- endgame --------------------------------- */
@@ -674,7 +671,9 @@ export const listMyMatches = createServerFn({ method: "POST" })
         outcome: m.outcome,
         reason: m.reason,
         ply: m.ply,
-        ratingDelta: m.rating_delta === null ? null : you === "w" ? m.rating_delta : -m.rating_delta,
+        ratingDelta: you === "w"
+          ? m.rating_delta
+          : m.black_delta ?? (m.rating_delta === null ? null : -m.rating_delta),
         playedAt: m.last_move_at,
       };
     });
@@ -825,7 +824,7 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin
       .from("matches")
-      .select("id,white_id,black_id,rating_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path,white_piece_set,black_piece_set")
+      .select("id,white_id,black_id,rating_delta,black_delta,status,outcome,white_avatar_key,black_avatar_key,white_avatar_path,black_avatar_path,white_piece_set,black_piece_set")
       .eq("id", data.matchId)
       .maybeSingle();
     if (!row) throw new Error("match not found");
@@ -845,7 +844,9 @@ export const getMatchRatings = createServerFn({ method: "POST" })
     return {
       w: pick(row.white_id, "w"),
       b: pick(row.black_id, "b"),
-      ratingDelta: row.rating_delta,
+      ratingDelta: row.white_id === context.userId
+        ? row.rating_delta
+        : row.black_delta ?? (row.rating_delta === null ? null : -row.rating_delta),
       status: row.status,
       outcome: row.outcome,
     };
