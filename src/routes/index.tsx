@@ -18,12 +18,12 @@ const RELIC_B = GAME_ART.reviewBoard;
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "王座殿堂 · 血誓王权 | Blood Sovereign Court" },
+      { title: "玄弈 · DUSK GAMBIT | 血誓王权 Blood Sovereign" },
       {
         name: "description",
-        content: "王座殿堂：天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。Ranked chess conquest, blitz duels and endgame trials.",
+        content: "玄弈 DUSK GAMBIT：天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。Ranked chess conquest, blitz duels and endgame trials.",
       },
-      { property: "og:title", content: "王座殿堂 · 血誓王权 | Blood Sovereign Court" },
+      { property: "og:title", content: "玄弈 · DUSK GAMBIT | 血誓王权 Blood Sovereign" },
       { property: "og:description", content: "天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -52,9 +52,9 @@ function Index() {
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="home-glass-scope home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-24 px-margin-mobile flex items-center justify-between gap-space-sm">
-          <div className="flex items-center gap-space-md min-w-0">
-            <div className="home-glass-control w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
-              <GameIcon name="brand-emblem" className="h-14 w-14 sm:h-16 sm:w-16" label={t("王座殿堂徽章", "Throne court emblem")} />
+          <div className="flex items-center gap-space-sm sm:gap-space-md min-w-0">
+            <div className="home-glass-control w-12 h-12 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
+              <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈徽章", "Dusk Gambit emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -66,9 +66,14 @@ function Index() {
                   {t(profile.tierZh, profile.tier)}
                 </span>
               </div>
-              <span className="font-headline-lg text-headline-lg text-on-surface tracking-[0.12em] leading-tight truncate">
-                <Bi zh="王座殿堂" en="Throne Court" />
-              </span>
+              {/* 品牌名与进入页一致：玄弈 · DUSK GAMBIT。手机竖排避免截断，桌面横排双语并列。 */}
+              <Bi
+                zh="玄弈"
+                en="DUSK GAMBIT"
+                block
+                className="font-headline-lg-mobile text-headline-lg-mobile leading-[1.15] tracking-[0.08em] text-on-surface sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-tight sm:tracking-[0.12em] sm:font-headline-lg sm:text-headline-lg"
+                subClassName="tracking-[0.18em]"
+              />
               <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
             </div>
           </div>
