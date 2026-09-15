@@ -424,6 +424,7 @@ export type Database = {
           id_tail: string
           losses: number
           name: string
+          provisional_games: number
           real_name: string
           streak: number
           training_points: number
@@ -445,6 +446,7 @@ export type Database = {
           id_tail?: string
           losses?: number
           name?: string
+          provisional_games?: number
           real_name?: string
           streak?: number
           training_points?: number
@@ -466,6 +468,7 @@ export type Database = {
           id_tail?: string
           losses?: number
           name?: string
+          provisional_games?: number
           real_name?: string
           streak?: number
           training_points?: number
@@ -673,6 +676,10 @@ export type Database = {
       settle_ranked_match: {
         Args: { p_match_id: string; p_outcome: string; p_reason: string }
         Returns: Json
+      }
+      side_can_win: {
+        Args: { p_fen: string; p_side: string }
+        Returns: boolean
       }
     }
     Enums: {
