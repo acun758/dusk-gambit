@@ -3,6 +3,8 @@ import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
+import { useSound } from "@/lib/sound";
+
 
 export function SovereignPageHeader({
   icon,
@@ -18,6 +20,8 @@ export function SovereignPageHeader({
   const { profile, signedIn } = useProfile();
   const t = useT();
   const { lang } = useLang();
+  const sound = useSound();
+
 
   return (
     <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
