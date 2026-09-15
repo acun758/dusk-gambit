@@ -31,6 +31,7 @@ export type MatchRow = {
   outcome: string | null;
   reason: string | null;
   rating_delta: number | null;
+  black_delta?: number | null;
   draw_offer_by: string | null;
   last_move_at: string;
   white_piece_set: string;
