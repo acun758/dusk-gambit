@@ -103,7 +103,7 @@ function Arsenal() {
   };
 
   return (
-    <div className="themed-page min-h-screen text-on-surface pb-32">
+    <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32">
       <ThemeBackdrop theme="abyss" />
       <SovereignPageHeader icon="nav-arsenal" titleZh="军械典藏" titleEn="Arsenal Collection" backTo="/" />
       <main className="page-main-dashboard">
@@ -119,7 +119,7 @@ function Arsenal() {
 
             <div className="flex gap-1 overflow-x-auto">
               {KINDS.map((item) => (
-                <Button key={item.id} type="button" onClick={() => setFilter(item.id)} variant="ghost" className={`h-11 shrink-0 rounded-none px-4 cjk ${filter === item.id ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"}`}>{t(item.zh, item.en)}</Button>
+                <Button key={item.id} type="button" onClick={() => setFilter(item.id)} variant="ghost" className={`home-glass-control h-11 shrink-0 px-4 cjk ${filter === item.id ? "home-glass-tile-active text-secondary" : "text-on-surface-variant"}`}>{t(item.zh, item.en)}</Button>
               ))}
             </div>
 
@@ -128,8 +128,8 @@ function Arsenal() {
                 const canUse = profile.elo >= item.floor;
                 const active = selected.id === item.id;
                 return (
-                  <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`grid min-w-0 gap-2 bg-surface-container-low p-space-sm text-left transition-colors ${active ? "gold-hairline bg-surface-container-high" : "hover:bg-surface-container"}`}>
-                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-lowest">
+                  <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`home-glass-tile grid min-w-0 gap-2 p-space-sm text-left transition-colors ${active ? "home-glass-tile-active" : ""}`}>
+                    <div className="home-glass-media relative aspect-[4/3] overflow-hidden">
                       <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-contain p-2" />
                       <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
@@ -143,7 +143,7 @@ function Arsenal() {
             </div>
 
             {/* 残局试炼卡片：直接进入对弈页的残局模式 */}
-            <section className="grid gap-space-sm bg-surface-container-low p-space-md gold-hairline">
+            <section className="home-glass-panel grid gap-space-sm p-space-md">
               <div className="section-heading-row">
                 <h2 className="cjk font-headline-sm text-headline-sm">{t("残局试炼卡片", "Endgame Drill Cards")}</h2>
                 <Link to="/crucible" className="cjk flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("盲视心算版 →", "Blindfold version →")}</Link>
@@ -158,7 +158,7 @@ function Arsenal() {
                     key={level.id}
                     to="/battle"
                     search={{ drill: level.code }}
-                    className="grid min-w-0 gap-1 bg-surface-container p-space-sm hover:bg-surface-container-high"
+                    className="home-glass-tile grid min-w-0 gap-1 p-space-sm"
                   >
                     <span className="cjk truncate font-label-md text-label-md">{t(level.name_zh, level.name_en)}</span>
                     <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">
@@ -169,7 +169,7 @@ function Arsenal() {
               </div>
             </section>
 
-            <section className="grid gap-2 bg-surface-container-low p-space-md gold-hairline">
+            <section className="home-glass-panel grid gap-2 p-space-md">
                <div className="section-heading-row">
                 <h2 className="cjk font-headline-sm text-headline-sm">{t("战盘收藏", "Board Collection")}</h2>
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t("随段位解锁", "Unlocked by tier")}</span>
@@ -179,8 +179,8 @@ function Arsenal() {
                   { image: GAME_ART.reviewBoard, zh: "永夜神庙", en: "Everdark Temple", stateZh: "已启用", stateEn: "Active" },
                   { image: GAME_ART.matchArena, zh: "血色战壕", en: "Crimson Trench", stateZh: "2600 ELO", stateEn: "2600 ELO" },
                 ].map((board) => (
-                  <div key={board.en} className="bg-surface-container p-2">
-                    <img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} className="aspect-video w-full object-cover" />
+                  <div key={board.en} className="home-glass-tile p-2">
+                    <div className="home-glass-media aged-print-frame aspect-video overflow-hidden"><img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} className="h-full w-full object-cover" /></div>
                     <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{t(board.stateZh, board.stateEn)}</span></div>
                   </div>
                 ))}
@@ -188,8 +188,8 @@ function Arsenal() {
             </section>
           </section>
 
-          <aside className="stage-panel grid gap-space-sm bg-surface-container-low p-space-md gold-hairline lg:sticky lg:top-24">
-            <div className="relative aspect-square overflow-hidden bg-surface-container-lowest">
+          <aside className="stage-panel home-glass-panel grid gap-space-sm p-space-md lg:sticky lg:top-24">
+            <div className="home-glass-media relative aspect-square overflow-hidden">
               <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-contain p-space-sm" />
             </div>
             <div>
@@ -203,7 +203,7 @@ function Arsenal() {
                 "Consistently scaled 3D piece sets. Visual only — rules, move validation and ladder rating are unaffected.",
               )}
             </p>
-            <Button type="button" onClick={equip} disabled={equippedId === selected.id} className="h-12 rounded-none bg-primary-container text-on-primary-container disabled:opacity-50">
+            <Button type="button" onClick={equip} disabled={equippedId === selected.id} className="home-glass-action h-12 text-on-primary-container disabled:opacity-50">
               <UiIcon name={unlocked ? "forge" : "seal"} className="h-6 w-6" />
               <span className="cjk">{equippedId === selected.id ? t("当前已装备", "Currently equipped") : unlocked ? t("装备此套", "Equip this set") : t(`${selected.floor} ELO 解锁`, `Unlocks at ${selected.floor} ELO`)}</span>
             </Button>

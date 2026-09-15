@@ -52,7 +52,7 @@ function ArchiveChronicle() {
   };
 
   return (
-    <div className="themed-page min-h-screen text-on-surface pb-32">
+    <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32">
       <ThemeBackdrop theme="fallen" />
       <SovereignPageHeader icon="archive-premium" titleZh="绝杀典藏" titleEn="Victory Archive" backTo="/analysis" />
       <main className="page-main-dashboard">
@@ -66,7 +66,7 @@ function ArchiveChronicle() {
               <Link to="/analysis" className="cjk flex min-h-11 items-center px-3 text-secondary">{t("选择对局 →", "Pick a match →")}</Link>
             </div>
 
-            <div className={`relative mx-auto w-full overflow-hidden bg-surface-container-lowest gold-hairline ${ratio === "1:1" ? "aspect-square max-w-[560px]" : ratio === "9:16" ? "aspect-[9/16] max-w-[390px]" : "aspect-[4/5] max-w-[520px]"}`}>
+            <div className={`home-glass-media aged-print-frame relative mx-auto w-full overflow-hidden ${ratio === "1:1" ? "aspect-square max-w-[560px]" : ratio === "9:16" ? "aspect-[9/16] max-w-[390px]" : "aspect-[4/5] max-w-[520px]"}`}>
               <img src={tarotKingAsset.url} alt={t("黑曜王棋典藏海报", "Obsidian king archive poster")} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80" />
               <div className="absolute inset-0 flex flex-col justify-between p-space-md text-center">
@@ -85,12 +85,12 @@ function ArchiveChronicle() {
             </div>
           </section>
 
-          <aside className="stage-panel grid gap-space-md bg-surface-container-low p-space-md gold-hairline lg:sticky lg:top-24">
+          <aside className="stage-panel home-glass-panel grid gap-space-md p-space-md lg:sticky lg:top-24">
             <section className="grid gap-2">
               <h2 className="cjk font-headline-sm text-headline-sm">{t("典藏样式", "Archive style")}</h2>
               <div className="grid grid-cols-3 gap-1">
                 {STYLES.map((item) => (
-                  <Button key={item.id} type="button" onClick={() => setStyle(item.id)} variant="ghost" className={`h-16 rounded-none flex-col gap-1 px-1 ${style === item.id ? "bg-primary-container text-on-primary-container" : "bg-surface-container text-on-surface-variant"}`}>
+                  <Button key={item.id} type="button" onClick={() => setStyle(item.id)} variant="ghost" className={`home-glass-control h-16 flex-col gap-1 px-1 ${style === item.id ? "home-glass-tile-active text-secondary" : "text-on-surface-variant"}`}>
                     <UiIcon name={item.icon} className="h-6 w-6" />
                     <span className="cjk font-label-sm text-label-sm">{t(item.zh, item.en)}</span>
                   </Button>
@@ -102,7 +102,7 @@ function ArchiveChronicle() {
               <h2 className="cjk font-headline-sm text-headline-sm">{t("画面比例", "Aspect ratio")}</h2>
               <div className="grid grid-cols-3 gap-1">
                 {["9:16", "4:5", "1:1"].map((item) => (
-                  <Button key={item} type="button" onClick={() => setRatio(item)} variant="ghost" className={`h-11 rounded-none ${ratio === item ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"}`}>{item}</Button>
+                  <Button key={item} type="button" onClick={() => setRatio(item)} variant="ghost" className={`home-glass-control h-11 ${ratio === item ? "home-glass-tile-active text-secondary" : "text-on-surface-variant"}`}>{item}</Button>
                 ))}
               </div>
             </section>
@@ -113,7 +113,7 @@ function ArchiveChronicle() {
                 {ELEMENTS.map((item) => {
                   const active = elements.includes(item.id);
                   return (
-                    <Button key={item.id} type="button" aria-pressed={active} onClick={() => setElements((current) => active ? current.filter((value) => value !== item.id) : [...current, item.id])} variant="ghost" className={`h-11 rounded-none justify-start ${active ? "bg-surface-container-high text-secondary" : "bg-surface-container text-on-surface-variant"}`}>
+                    <Button key={item.id} type="button" aria-pressed={active} onClick={() => setElements((current) => active ? current.filter((value) => value !== item.id) : [...current, item.id])} variant="ghost" className={`home-glass-control h-11 justify-start ${active ? "home-glass-tile-active text-secondary" : "text-on-surface-variant"}`}>
                       <UiIcon name={active ? "medal-star" : "seal"} className="h-5 w-5" />
                       <span className="cjk">{t(item.zh, item.en)}</span>
                     </Button>
@@ -122,7 +122,7 @@ function ArchiveChronicle() {
               </div>
             </section>
 
-            <Button type="button" onClick={exportPoster} className="h-12 rounded-none bg-primary-container text-on-primary-container">
+            <Button type="button" onClick={exportPoster} className="home-glass-action h-12 text-on-primary-container">
               <UiIcon name="download" className="h-6 w-6" />
               <span className="cjk">{t("保存典藏图", "Save archive image")}</span>
             </Button>
