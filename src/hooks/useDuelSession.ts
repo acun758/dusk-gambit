@@ -172,9 +172,9 @@ export function useDuelSession(): DuelSession {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const { data } = await supabase.auth.getSession();
+      const session = await fetchSession();
       if (cancelled) return;
-      if (!data.session) {
+      if (!session) {
         setMode("local");
         return;
       }
