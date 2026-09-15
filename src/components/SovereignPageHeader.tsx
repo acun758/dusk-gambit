@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
+import { SoundToggle } from "@/components/SoundToggle";
 import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
-import { useSound } from "@/lib/sound";
+
 
 
 export function SovereignPageHeader({
@@ -49,15 +50,8 @@ export function SovereignPageHeader({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-space-xs">
-          <button
-            type="button"
-            onClick={sound.toggle}
-            aria-pressed={sound.enabled}
-            aria-label={t(sound.enabled ? "关闭音效" : "开启音效", sound.enabled ? "Mute sound" : "Unmute sound")}
-            className={`home-glass-control grid h-11 w-11 place-items-center ${sound.enabled ? "text-secondary" : "text-on-surface-variant opacity-60"}`}
-          >
-            <UiIcon name="volume" className="h-6 w-6" />
-          </button>
+          <SoundToggle />
+
           <LangToggle className="home-glass-control" />
 
           <Link
