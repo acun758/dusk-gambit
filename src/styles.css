@@ -457,6 +457,39 @@
   transform: rotate(-1.2deg) scaleX(-1);
 }
 
+/* Newsprint halftone + warm aged wash on every paper surface, including the
+   fixed header and navigation. Blended into the surface fill so text, icons
+   and avatars above stay untouched. */
+.home-glass-panel,
+.home-glass-tile,
+.home-glass-chip,
+.home-glass-media,
+.home-glass-control,
+.home-glass-action,
+.home-glass-header {
+  background-image:
+    radial-gradient(rgb(54 42 28 / 26%) 0.75px, transparent 0.95px),
+    linear-gradient(160deg, rgb(233 209 150 / 7%), rgb(120 88 40 / 4%));
+  background-size: 3.5px 3.5px, auto;
+  background-repeat: repeat, no-repeat;
+  background-blend-mode: multiply, multiply;
+}
+
+@media (max-width: 600px) {
+  .home-glass-panel,
+  .home-glass-tile,
+  .home-glass-chip,
+  .home-glass-media,
+  .home-glass-control,
+  .home-glass-action,
+  .home-glass-header {
+    background-size: 4px 4px, auto;
+    background-image:
+      radial-gradient(rgb(54 42 28 / 20%) 0.7px, transparent 0.95px),
+      linear-gradient(160deg, rgb(233 209 150 / 6%), rgb(120 88 40 / 3%));
+  }
+}
+
 
 .home-glass-panel {
   border-radius: 1rem;
