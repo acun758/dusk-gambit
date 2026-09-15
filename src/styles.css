@@ -276,14 +276,14 @@
 .home-glass-header::after {
   content: "";
   position: absolute;
-  inset: -2%;
+  inset: -3%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.13;
+  opacity: 0.18;
   mix-blend-mode: overlay;
   background-image: var(--home-glass-paper);
-  background-size: 180%;
-  background-position: 42% 38%;
+  background-size: 200%;
+  background-position: 38% 32%;
   background-repeat: no-repeat;
   transform: rotate(0.8deg);
 }
@@ -297,14 +297,14 @@
 .home-glass-header::before {
   content: "";
   position: absolute;
-  inset: -1%;
+  inset: -2%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.10;
   mix-blend-mode: soft-light;
   background-image: var(--home-glass-paper);
-  background-size: 240%;
-  background-position: 62% 55%;
+  background-size: 280%;
+  background-position: 66% 58%;
   background-repeat: no-repeat;
   transform: rotate(-1.2deg) scaleX(-1);
 }
