@@ -113,9 +113,9 @@ function Index() {
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center mt-space-md mb-space-sm">
-                <div className="home-glass-media relative w-full h-56 lg:h-72 overflow-hidden mb-space-md">
+                <div className="home-glass-media home-media-frame relative w-full h-56 lg:h-72 overflow-hidden mb-space-md">
                   <img
-                    className="w-full h-full object-cover object-center sm:hidden"
+                    className="block w-full h-full object-cover object-center sm:hidden"
                     src={HERO_PORTRAIT}
                     alt={t("黑曜石王棋矗立于风暴与碎裂棋格之上", "An obsidian king standing amid storm and shattered tiles")}
                   />
