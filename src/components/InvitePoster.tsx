@@ -13,13 +13,13 @@ const TIER_ICON: Record<string, GameIconName> = {
 };
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
-export function InvitePoster({ compact = false, className = "" }: { compact?: boolean; className?: string }) {
+export function InvitePoster({ className = "" }: { compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
   const icon = TIER_ICON[profile.tier] ?? "rank-knight";
   return (
     <section aria-label="邀请对弈" className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest ${className}`}>
       {/* 图片铺底，文字按内容撑高，避免手机端文字贴边或溢出 */}
-      <div className={`aged-print-frame absolute inset-0 ${compact ? "" : ""}`}>
+      <div className="aged-print-frame absolute inset-0">
         <img
           src={poster}
           alt="血誓王权邀请对弈海报"
