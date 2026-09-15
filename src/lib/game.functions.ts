@@ -78,12 +78,17 @@ export const loadProfile = createServerFn({ method: "POST" })
     const claims = context.claims as { email?: string } | undefined;
     const fallback = claims?.email?.split("@")[0] ?? "Sovereign";
     const handle = `player-${context.userId.replaceAll("-", "").slice(0, 8)}`;
-    const { data: created, error } = await supabaseAdmin
+    // 并发首登会同时建档，用 upsert 让重复写入直接忽略，再回读现有档案。
+    const { error } = await supabaseAdmin
       .from("profiles")
-      .insert({ id: context.userId, name: fallback, handle })
-      .select("*")
-      .single();
+      .upsert({ id: context.userId, name: fallback, handle }, { onConflict: "id", ignoreDuplicates: true });
     if (error) throw new Error(error.message);
+    const { data: created, error: readError } = await supabaseAdmin
+      .from("profiles")
+      .select("*")
+      .eq("id", context.userId)
+      .single();
+    if (readError) throw new Error(readError.message);
     return created as ProfileRow;
   });
 
