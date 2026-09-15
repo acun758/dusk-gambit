@@ -113,7 +113,7 @@ function Index() {
               </div>
 
               <div className="relative z-10 flex flex-col items-center text-center mt-space-md mb-space-sm">
-                <div className="home-glass-media home-media-frame relative w-full h-56 lg:h-72 overflow-hidden mb-space-md">
+                <div className="home-glass-media home-media-frame aged-print-frame relative w-full h-56 lg:h-72 overflow-hidden mb-space-md">
                   <img
                     className="block w-full h-full object-cover object-center sm:hidden"
                     src={HERO_PORTRAIT}
@@ -291,7 +291,7 @@ function Index() {
                 { img: RELIC_B, zh: "猩红王后", en: "Crimson Queen", tagZh: "2500 分解锁", tagEn: "Unlock at 2500", locked: true },
               ].map((r) => (
                 <div key={r.en} className="home-glass-tile p-space-sm flex flex-col">
-                  <div className="home-glass-media relative w-full h-36 mb-space-sm overflow-hidden">
+                  <div className="home-glass-media aged-print-frame relative w-full h-36 mb-space-sm overflow-hidden">
                     <img className="w-full h-full object-cover object-center" src={r.img} alt={t(r.zh, r.en)} loading="lazy" />
                   </div>
                   <span className="font-headline-sm text-headline-sm text-on-surface truncate">{t(r.zh, r.en)}</span>

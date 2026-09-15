@@ -261,7 +261,7 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
-  filter: sepia(0.24) contrast(1.05) saturate(0.82) brightness(0.98);
+  filter: sepia(0.18) contrast(1.04) saturate(0.86) brightness(1.02);
 }
 
 .game-entrance-photo-frame::before,
@@ -273,15 +273,15 @@
 }
 
 .game-entrance-photo-frame::before {
-  background: linear-gradient(160deg, rgb(233 209 150 / 18%), rgb(120 88 40 / 10%));
+  background: linear-gradient(160deg, rgb(233 209 150 / 12%), rgb(120 88 40 / 5%));
   mix-blend-mode: multiply;
 }
 
 .game-entrance-photo-frame::after {
-  background-image: radial-gradient(rgb(42 33 22 / 60%) 1px, transparent 1.15px);
-  background-size: 3px 3px;
+  background-image: radial-gradient(rgb(54 42 28 / 52%) 0.75px, transparent 0.95px);
+  background-size: 3.5px 3.5px;
   mix-blend-mode: multiply;
-  opacity: 0.16;
+  opacity: 0.13;
 }
 
 .game-entrance-vignette {
@@ -325,6 +325,11 @@
 
   .game-entrance-artwork {
     object-fit: cover;
+  }
+
+  .game-entrance-photo-frame::after {
+    background-size: 4px 4px;
+    opacity: 0.11;
   }
 
   .game-entrance-action {
@@ -491,6 +496,50 @@
   max-width: 100%;
   border-radius: inherit;
   vertical-align: top;
+}
+
+/* Photo-only aged letterpress treatment. This stays on media wrappers so
+   avatars, icons, copy and controls retain their original clarity. */
+.aged-print-frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.aged-print-frame > :is(img, video) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: sepia(0.18) contrast(1.04) saturate(0.86) brightness(1.02);
+}
+
+.aged-print-frame::before,
+.aged-print-frame::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  content: "";
+}
+
+.aged-print-frame::before {
+  background: linear-gradient(160deg, rgb(233 209 150 / 12%), rgb(120 88 40 / 5%));
+  mix-blend-mode: multiply;
+}
+
+.aged-print-frame::after {
+  background-image: radial-gradient(rgb(54 42 28 / 52%) 0.75px, transparent 0.95px);
+  background-size: 3.5px 3.5px;
+  mix-blend-mode: multiply;
+  opacity: 0.13;
+}
+
+@media (max-width: 600px) {
+  .aged-print-frame::after {
+    background-size: 4px 4px;
+    opacity: 0.11;
+  }
 }
 
 .home-glass-header {

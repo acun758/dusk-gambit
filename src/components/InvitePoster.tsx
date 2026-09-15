@@ -18,14 +18,16 @@ export function InvitePoster({ compact = false, className = "" }: { compact?: bo
   const icon = TIER_ICON[profile.tier] ?? "rank-knight";
   return (
     <section aria-label="邀请对弈" className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest ${className}`}>
-      <img
-        src={poster}
-        alt="血誓王权邀请对弈海报"
-        loading="lazy"
-        width={1536}
-        height={864}
-        className={`block w-full rounded-[inherit] object-cover ${compact ? "h-56 sm:h-64" : "h-52 sm:h-64 lg:h-72"}`}
-      />
+      <div className={`aged-print-frame w-full ${compact ? "h-56 sm:h-64" : "h-52 sm:h-64 lg:h-72"}`}>
+        <img
+          src={poster}
+          alt="血誓王权邀请对弈海报"
+          loading="lazy"
+          width={1536}
+          height={864}
+          className="block h-full w-full object-cover"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/95 via-surface-container-lowest/70 to-transparent" />
       <div className="absolute inset-0 p-space-md flex flex-col justify-center gap-1 max-w-[68%]">
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
