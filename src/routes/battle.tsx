@@ -230,7 +230,7 @@ function Battle() {
               variant="ghost"
               className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
             >
-              <UiIcon name="handshake" className="h-6 w-6" />
+              <UiIcon name="laurel" className="h-6 w-6" />
               {session.drawOffer === "mine" ? "撤回求和" : "提和"}
             </Button>
             <Button
