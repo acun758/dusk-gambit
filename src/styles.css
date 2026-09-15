@@ -457,46 +457,23 @@
   background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
 }
 
+/* One污渍纸层即可：大面板/图框/页眉保留纹理，密集的小控件只用点阵与染色，
+   避免成百上千个混合层拖慢滚动与落子动画。 */
 .home-glass-panel::after,
-.home-glass-tile::after,
-.home-glass-chip::after,
 .home-glass-media::after,
-.home-glass-control::after,
-.home-glass-action::after,
 .home-glass-header::after {
   content: "";
   position: absolute;
   inset: -3%;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0.22;
+  opacity: 0.24;
   mix-blend-mode: overlay;
   background-image: var(--home-glass-paper);
   background-size: 200%;
   background-position: 38% 32%;
   background-repeat: no-repeat;
   transform: rotate(0.8deg);
-}
-
-.home-glass-panel::before,
-.home-glass-tile::before,
-.home-glass-chip::before,
-.home-glass-media::before,
-.home-glass-control::before,
-.home-glass-action::before,
-.home-glass-header::before {
-  content: "";
-  position: absolute;
-  inset: -2%;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0.12;
-  mix-blend-mode: soft-light;
-  background-image: var(--home-glass-paper);
-  background-size: 280%;
-  background-position: 66% 58%;
-  background-repeat: no-repeat;
-  transform: rotate(-1.2deg) scaleX(-1);
 }
 
 /* Newsprint halftone + warm aged wash on every paper surface, including the
