@@ -66,12 +66,12 @@ function Index() {
                   {t(profile.tierZh, profile.tier)}
                 </span>
               </div>
-              {/* 品牌名与进入页一致：玄弈 · DUSK GAMBIT。手机竖排避免截断，桌面横排双语并列。 */}
+              {/* 品牌名与进入页一致：玄弈 · DUSK GAMBIT。手机竖排避免截断（英文折行时收缩到页眉内），桌面横排双语并列。 */}
               <Bi
                 zh="玄弈"
                 en="DUSK GAMBIT"
                 block
-                className="font-headline-lg-mobile text-headline-lg-mobile leading-[1.15] tracking-[0.08em] text-on-surface sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-tight sm:tracking-[0.12em] sm:font-headline-lg sm:text-headline-lg"
+                className="font-headline-lg-mobile text-[1.375rem] leading-[1.2] tracking-[0.06em] text-on-surface sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-tight sm:tracking-[0.12em] sm:font-headline-lg sm:text-headline-lg"
                 subClassName="tracking-[0.18em]"
               />
               <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
