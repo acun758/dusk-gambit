@@ -270,6 +270,32 @@ function Battle() {
             </Button>
           </div>
 
+          <AlertDialog open={confirmAction !== null} onOpenChange={(open) => !open && setConfirm(null)}>
+            <AlertDialogContent className="home-glass-panel">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="cjk">{confirmAction === "resign" ? "确认认输？" : "向对手提和？"}</AlertDialogTitle>
+                <AlertDialogDescription className="cjk">
+                  {confirmAction === "resign"
+                    ? "认输后本局立即结束，并按天梯规则结算扣分。"
+                    : "对手接受后本局按和棋结算；在对手回应前你可以随时撤回。"}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="cjk">再想想</AlertDialogCancel>
+                <AlertDialogAction
+                  className="cjk"
+                  onClick={() => {
+                    if (confirmAction === "resign") session.resign();
+                    else session.offerDraw();
+                    setConfirm(null);
+                  }}
+                >
+                  {confirmAction === "resign" ? "确认认输" : "发出提和"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           {session.drawOffer === "theirs" && (
             <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
               <p className="cjk font-body-sm text-body-sm text-on-surface">对手提出和棋，是否接受？</p>
