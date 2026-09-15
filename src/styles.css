@@ -215,16 +215,19 @@
     background:
       radial-gradient(120% 80% at 50% 0%, rgba(217, 164, 65, 0.06), transparent 60%),
       radial-gradient(100% 100% at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+    transform: translateZ(0);
   }
 
   body::after {
     content: "";
     position: fixed;
-    inset: -50%;
+    inset: 0;
     pointer-events: none;
     z-index: 61;
     opacity: 0.045;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    background-image: radial-gradient(rgb(218 195 147 / 32%) 0.55px, transparent 0.8px);
+    background-size: 4px 4px;
+    transform: translateZ(0);
   }
 
   h1, h2, h3 {
@@ -422,11 +425,12 @@
   --home-glass-line: color-mix(in oklab, var(--home-glass-line-base) 0.4%, transparent);
   --home-glass-line-soft: color-mix(in oklab, var(--home-glass-line-base) 0.2%, transparent);
   --home-glass-paper: url("/assets/textures-glass-paper.jpg");
+  --radius-control: 0.75rem;
 }
 
 .home-glass-page .theme-backdrop img,
 .themed-page:not(.home-glass-page) .theme-backdrop img {
-  filter: saturate(0.78) brightness(0.74) contrast(1.04);
+  filter: none;
 }
 
 .home-glass-page .theme-backdrop-shade {
@@ -453,15 +457,14 @@
 /* Operational fields retain contrast while matching the same paper window geometry. */
 .home-glass-scope .field-control {
   border-color: var(--home-glass-line-soft);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
 }
 
 /* One污渍纸层即可：大面板/图框/页眉保留纹理，密集的小控件只用点阵与染色，
    避免成百上千个混合层拖慢滚动与落子动画。 */
 .home-glass-panel::after,
-.home-glass-media::after,
-.home-glass-header::after {
+.home-glass-media::after {
   content: "";
   position: absolute;
   inset: -3%;
@@ -480,12 +483,7 @@
    fixed header and navigation. Blended into the surface fill so text, icons
    and avatars above stay untouched. */
 .home-glass-panel,
-.home-glass-tile,
-.home-glass-chip,
-.home-glass-media,
-.home-glass-control,
-.home-glass-action,
-.home-glass-header {
+.home-glass-media {
   background-image:
     radial-gradient(rgb(54 42 28 / 26%) 0.75px, transparent 0.95px),
     linear-gradient(160deg, rgb(233 209 150 / 7%), rgb(120 88 40 / 4%));
@@ -496,12 +494,7 @@
 
 @media (max-width: 600px) {
   .home-glass-panel,
-  .home-glass-tile,
-  .home-glass-chip,
-  .home-glass-media,
-  .home-glass-control,
-  .home-glass-action,
-  .home-glass-header {
+  .home-glass-media {
     background-size: 4px 4px, auto;
     background-image:
       radial-gradient(rgb(54 42 28 / 20%) 0.7px, transparent 0.95px),
@@ -619,7 +612,7 @@
 }
 
 .home-glass-control {
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   background-color: color-mix(in oklab, var(--color-surface) 74%, transparent);
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, white 14%, transparent),
@@ -628,7 +621,7 @@
 }
 
 .home-glass-action {
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   border-color: var(--home-glass-line-soft);
   background-color: color-mix(in oklab, var(--color-primary-container) 72%, transparent);
   box-shadow:
@@ -690,6 +683,17 @@
   height: 3rem;
   padding-inline: 0.75rem;
   white-space: nowrap;
+  border-radius: var(--radius-control);
+}
+
+/* Every interactive field follows the same 12px control geometry. Chessboard
+   squares are the sole deliberate sharp-corner exception. */
+.home-glass-scope :where(button, input, select, textarea) {
+  border-radius: var(--radius-control);
+}
+
+.home-glass-scope .board-square {
+  border-radius: 0;
 }
 
 @media (min-width: 768px) {
@@ -797,8 +801,8 @@
 .theme-backdrop img {
   object-fit: cover;
   object-position: center;
-  filter: saturate(0.58) brightness(0.5) contrast(1.08);
-  transform: scale(1.01);
+  filter: none;
+  transform: none;
 }
 
 .theme-backdrop-shade {
@@ -844,17 +848,6 @@
       linear-gradient(90deg, color-mix(in oklab, var(--color-surface) 88%, transparent) 0%, color-mix(in oklab, var(--color-surface) 58%, transparent) 38%, color-mix(in oklab, var(--color-surface) 34%, transparent) 100%),
       linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 58%, transparent), color-mix(in oklab, var(--color-surface) 82%, transparent));
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .theme-backdrop img {
-    animation: themeBreath 18s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes themeBreath {
-  from { transform: scale(1.01); }
-  to { transform: scale(1.035); }
 }
 
 /* Desktop / iPad landscape and up: content sits beside the fixed left rail.
@@ -921,7 +914,6 @@
   .stage-panel {
     background: color-mix(in oklab, var(--color-surface-container-lowest) 78%, transparent);
     border-left: 1px solid color-mix(in oklab, var(--color-secondary) 24%, transparent);
-    backdrop-filter: blur(10px);
     box-shadow: -18px 0 46px color-mix(in oklab, var(--color-surface-dim) 46%, transparent);
   }
 }

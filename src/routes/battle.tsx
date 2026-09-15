@@ -80,10 +80,10 @@ function Battle() {
         {tab === "drill" ? (
           <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm">
             <div className="battle-core-width flex gap-1">
-              <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="h-11 flex-1 rounded-none bg-surface-container text-on-surface-variant cjk">
+              <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="home-glass-control h-11 flex-1 bg-surface-container text-on-surface-variant cjk">
                 {t("对弈", "Duel")}
               </Button>
-              <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="h-11 flex-1 rounded-none bg-secondary text-on-secondary cjk">
+              <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="home-glass-control h-11 flex-1 bg-secondary text-on-secondary cjk">
                 {t("残局试炼", "Endgame drill")}
               </Button>
             </div>
@@ -92,10 +92,10 @@ function Battle() {
         ) : (
         <section className="battle-column w-full lg:max-w-[min(64vw,680px)] flex flex-col items-center gap-space-sm pt-space-sm lg:pt-0 lg:sticky lg:top-20">
           <div className="battle-core-width flex gap-1">
-            <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="h-11 flex-1 rounded-none bg-secondary text-on-secondary cjk">
+            <Button type="button" variant="ghost" onClick={() => setTab("duel")} className="home-glass-control h-11 flex-1 bg-secondary text-on-secondary cjk">
               {t("对弈", "Duel")}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="h-11 flex-1 rounded-none bg-surface-container text-on-surface-variant cjk">
+            <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="home-glass-control h-11 flex-1 bg-surface-container text-on-surface-variant cjk">
               {t("残局试炼", "Endgame drill")}
             </Button>
           </div>
@@ -182,7 +182,7 @@ function Battle() {
           {session.notice && (
              <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>
-              {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="h-11 rounded-none bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
+              {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
             </div>
           )}
 

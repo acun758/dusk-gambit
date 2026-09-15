@@ -200,7 +200,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
             type="button"
             variant="ghost"
             onClick={() => load(l)}
-            className={`h-11 shrink-0 rounded-none px-3 font-label-sm text-label-sm ${
+            className={`home-glass-control h-11 shrink-0 px-3 font-label-sm text-label-sm ${
               l.id === activeId ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"
             }`}
           >
@@ -278,13 +278,13 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
               )}
               {saveNote && <p role="status" className="cjk font-body-sm text-body-sm text-secondary">{saveNote}</p>}
               <div className="flex flex-wrap gap-2">
-                <Button type="button" onClick={() => load(active)} className="h-11 rounded-none bg-surface-container text-on-surface">
+                <Button type="button" onClick={() => load(active)} className="home-glass-control h-11 bg-surface-container text-on-surface">
                   <UiIcon name="spinner" className="h-5 w-5" />
                   <span className="cjk">{t("重新挑战", "Retry")}</span>
                 </Button>
                 <Link
                   to="/analysis"
-                  className="cjk flex h-11 items-center gap-2 bg-primary-container px-3 text-on-primary-container font-label-sm text-label-sm"
+                  className="home-glass-control cjk flex h-11 items-center gap-2 bg-primary-container px-3 text-on-primary-container font-label-sm text-label-sm"
                 >
                   <UiIcon name="quill" className="h-5 w-5" />
                   {t("进入复盘讲解", "Open review")}

@@ -84,7 +84,7 @@ export function VerificationCard({
               placeholder={t("真实姓名", "Real name")}
               className="field-control cjk"
             />
-            <button type="button" disabled className="field-action bg-surface-container-high cjk font-label-md text-label-md opacity-0 pointer-events-none">—</button>
+            <button type="button" disabled className="field-action home-glass-control bg-surface-container-high cjk font-label-md text-label-md opacity-0 pointer-events-none">—</button>
           </div>
           <div className="field-row">
             <input
@@ -98,7 +98,7 @@ export function VerificationCard({
               type="button"
               disabled={busy}
               onClick={() => void submit()}
-              className="field-action bg-secondary text-on-secondary cjk font-label-md text-label-md disabled:opacity-60"
+              className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md disabled:opacity-60"
             >
               {t("认证", "Verify")}
             </button>
