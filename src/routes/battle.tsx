@@ -61,17 +61,17 @@ function Battle() {
   );
   const ratingDelta = session.ratings?.ratingDelta ?? 0;
   return (
-    <div className="themed-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
+    <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
-      <header className="desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-xl">
+      <header className="home-glass-header desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe">
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
-          <Link to="/" aria-label="返回王座" className="w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
+           <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex-1 min-w-0">
             <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("3+2 对弈", "3+2 Duel")}</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</p>
           </div>
-          <LangToggle />
+           <LangToggle className="home-glass-control" />
           <span className={`w-2.5 h-2.5 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
         </div>
       </header>
@@ -136,7 +136,7 @@ function Battle() {
             clock={fmtClock(session.clock[session.state.you])}
             active={myTurn}
           />
-          <div className="battle-core-width bg-surface-container-low p-space-sm flex items-center justify-between gap-3 gold-hairline">
+          <div className="battle-core-width home-glass-panel p-space-sm flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{waiting ? "保持页面开启，匹配成功后自动开局" : `点击棋子，再点击高亮目标格 · 评估 ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`}</p>
@@ -147,7 +147,7 @@ function Battle() {
           </div>
 
           {timeLevel !== "calm" && session.state.status === "live" && (
-            <p role="status" className={`battle-core-width cjk px-space-sm py-2 font-body-sm text-body-sm gold-hairline ${timeLevel === "critical" ? "bg-primary-container/40 text-on-primary-container" : "bg-surface-container-high text-on-surface-variant"}`}>
+            <p role="status" className={`battle-core-width home-glass-panel cjk px-space-sm py-2 font-body-sm text-body-sm ${timeLevel === "critical" ? "text-on-primary-container" : "text-on-surface-variant"}`}>
               {timeLevel === "critical" ? `只剩 ${Math.ceil(myClock / 1000)} 秒，先落子保时间，每步加 2 秒。` : "剩余时间不足 1 分钟，注意读秒节奏。"}
             </p>
           )}
@@ -157,7 +157,7 @@ function Battle() {
               onClick={session.togglePause}
               disabled={!session.canPause || session.state.status !== "live"}
               variant="ghost"
-              className="h-12 rounded-none bg-surface-container text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
+               className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name={session.paused ? "play-motion" : "equalizer"} className="h-6 w-6" />
               {session.paused ? "继续" : "暂停"}
@@ -166,12 +166,12 @@ function Battle() {
               onClick={session.resign}
               disabled={waiting || session.state.status !== "live"}
               variant="ghost"
-              className="h-12 rounded-none bg-surface-container text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
+               className="home-glass-control h-12 text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name="skull" className="h-6 w-6" />
               结束本局
             </Button>
-            <Button onClick={session.restart} variant="ghost" className="h-12 rounded-none bg-surface-container text-secondary cjk font-label-sm text-label-sm">
+             <Button onClick={session.restart} variant="ghost" className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm">
               <UiIcon name="spinner" className="h-6 w-6" />
               重新开始
             </Button>
@@ -180,14 +180,14 @@ function Battle() {
             <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。</p>
           )}
           {session.notice && (
-            <div role="status" className="battle-core-width bg-primary-container/30 px-space-sm py-3 flex items-center justify-between gap-3 gold-hairline">
+             <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>
               {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="h-11 rounded-none bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
             </div>
           )}
 
           {ranked && session.state.status === "over" && (
-            <section role="status" aria-live="polite" className="battle-core-width bg-surface-container p-space-md gold-hairline text-center">
+             <section role="status" aria-live="polite" className="battle-core-width home-glass-panel p-space-md text-center">
               <p className="cjk font-label-sm text-label-sm text-secondary">天梯结算完成</p>
               <p className="cjk mt-1 font-headline-md text-headline-md text-on-surface">
                 {session.state.outcome === "draw" ? "和棋" : session.state.outcome === (session.state.you === "w" ? "white" : "black") ? "胜利" : "败北"}
@@ -201,7 +201,7 @@ function Battle() {
             </section>
           )}
 
-          <section aria-label="棋局教练" className="battle-core-width bg-surface-container p-space-sm gold-hairline flex items-start gap-space-sm">
+           <section aria-label="棋局教练" className="battle-core-width home-glass-panel p-space-sm flex items-start gap-space-sm">
             <UiIcon name={(coach.phase === "opening" ? "quill" : coach.phase === "endgame" ? "flame" : coach.icon === "target" ? "bolt" : "lotus") as UiIconName} className="h-8 w-8 mt-0.5" />
             <div className="min-w-0">
               <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
@@ -211,7 +211,7 @@ function Battle() {
             </div>
           </section>
 
-          <section aria-label="AI 陪练段位" className="battle-core-width bg-surface-container-low p-space-sm gold-hairline">
+           <section aria-label="AI 陪练段位" className="battle-core-width home-glass-panel p-space-sm">
             <div className="flex items-baseline justify-between gap-2 mb-2">
               <h2 className="cjk font-label-md text-label-md text-on-surface">AI 分级陪练</h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
@@ -225,7 +225,7 @@ function Battle() {
                   <button
                     key={lv.id}
                     onClick={() => session.setAiLevel(lv.id)}
-                    className={`min-h-14 px-2 py-2 text-left transition-colors ${active ? "bg-primary-container text-on-primary-container gold-hairline" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
+                     className={`home-glass-tile min-h-14 px-2 py-2 text-left transition-colors ${active ? "home-glass-tile-active text-on-primary-container" : "text-on-surface-variant hover:text-secondary"}`}
                   >
                     <span className="cjk block font-label-md text-label-md">{lv.zh}</span>
                     <span className="block font-label-sm text-label-sm tabular-nums">{lv.elo}</span>
@@ -248,7 +248,7 @@ function Battle() {
 
 function PlayerBar({ name, elo, clock, active, dark = false, seed, avatarKey, avatarPath, avatarSrc }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean; seed?: string; avatarKey?: string; avatarPath?: string; avatarSrc?: string | null }) {
   return (
-    <div className={`battle-core-width min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${dark ? "bg-surface-container-lowest" : "bg-surface-container"} ${active ? "gold-hairline" : ""}`}>
+    <div className={`battle-core-width home-glass-panel min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${active ? "home-glass-tile-active" : ""}`}>
       <div className="flex items-center gap-3 min-w-0"><PlayerAvatar className="h-10 w-10" seed={seed} avatarKey={avatarKey} avatarPath={avatarPath} avatarSrc={avatarSrc} /><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
       <span className={`font-headline-md text-headline-md tabular-nums ${active ? "text-secondary" : "text-on-surface-variant"}`}>{clock}</span>
     </div>

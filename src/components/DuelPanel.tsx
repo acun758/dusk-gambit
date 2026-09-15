@@ -285,7 +285,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
             willChange: "transform",
             touchAction: "pan-y",
           }}
-          className="bg-surface-container-lowest/97 backdrop-blur-xl shadow-[0_-10px_30px_rgba(0,0,0,0.85)] gold-hairline"
+          className="home-glass-panel shadow-[0_-10px_30px_rgba(0,0,0,0.85)]"
         >
           <button
             onClick={() => setOpen((v) => !v)}
@@ -331,7 +331,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
 
       {/* Wide: live right column (iPad landscape / desktop) */}
       <aside className="duel-live-panel hidden lg:flex flex-col gap-space-sm w-[290px] xl:w-[340px] shrink-0 self-start sticky top-20">
-        <div className="stage-panel bg-surface-container-lowest p-space-md flex flex-col gap-space-sm gold-hairline shadow-xl">
+        <div className="stage-panel home-glass-panel p-space-md flex flex-col gap-space-sm">
           <div className="flex items-baseline justify-between">
             <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{evalText}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">

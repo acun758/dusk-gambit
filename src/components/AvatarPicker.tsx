@@ -43,7 +43,7 @@ export function AvatarPicker({
             onClick={() => onSelect(option.key)}
             aria-label={t(option.zh, option.en)}
             aria-pressed={value === option.key}
-            className={`aspect-square flex items-center justify-center bg-surface-container p-0.5 md:p-1 ${value === option.key ? "gold-hairline opacity-100" : "opacity-70 hover:opacity-100"}`}
+            className={`home-glass-tile aspect-square flex items-center justify-center p-0.5 md:p-1 ${value === option.key ? "home-glass-tile-active opacity-100" : "opacity-70 hover:opacity-100"}`}
           >
             <img src={option.url} alt="" className="h-full w-full scale-110 object-contain" />
           </button>
@@ -53,7 +53,7 @@ export function AvatarPicker({
           onClick={() => input.current?.click()}
           aria-label={t("上传我的头像", "Upload your photo")}
           aria-pressed={usingUpload}
-          className={`aspect-square flex items-center justify-center overflow-hidden bg-surface-container p-1 ${usingUpload ? "gold-hairline opacity-100" : "opacity-70 hover:opacity-100"}`}
+          className={`home-glass-tile aspect-square flex items-center justify-center overflow-hidden p-1 ${usingUpload ? "home-glass-tile-active opacity-100" : "opacity-70 hover:opacity-100"}`}
         >
           {preview ? (
             <img src={preview} alt="" className="h-full w-full rounded-full object-cover" />

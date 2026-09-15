@@ -206,7 +206,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
 
       {active && (
         <>
-          <div className="bg-surface-container-low p-space-sm gold-hairline">
+          <div className="home-glass-panel p-space-sm">
             <p className="cjk font-label-sm text-label-sm text-primary">{t(active.objective_zh, active.objective_en)}</p>
             <h2 className="cjk font-headline-sm text-headline-sm">{t(active.name_zh, active.name_en)}</h2>
             <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
@@ -219,7 +219,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
 
           <PlayableBoard fen={fen} lastMove={lastMove} disabled={status !== "playing" || thinking} onMove={onMove} />
 
-          <div className="bg-surface-container p-space-sm flex items-center justify-between gap-space-sm gold-hairline">
+          <div className="home-glass-panel p-space-sm flex items-center justify-between gap-space-sm">
             <p className="cjk font-label-md text-label-md">
               {status === "solved"
                 ? t("将死成功，试炼通关。", "Checkmate — trial cleared.")
@@ -239,7 +239,7 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
           )}
 
           {status !== "playing" && (
-            <div className="bg-surface-container-low p-space-md grid gap-2 gold-hairline">
+            <div className="home-glass-panel p-space-md grid gap-2">
               {status === "solved" && (active.explanation_zh || active.hint_zh) && (
                 <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
                   {t(active.explanation_zh || active.hint_zh, active.explanation_en || active.hint_en)}

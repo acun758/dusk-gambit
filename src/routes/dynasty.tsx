@@ -173,10 +173,10 @@ function Dynasty() {
 
   return (
 
-    <div className="themed-page text-on-surface flex flex-col min-h-screen pb-32">
+    <div className="themed-page home-glass-page text-on-surface flex flex-col min-h-screen pb-32">
       <ThemeBackdrop theme="blackGold" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
-      <header className="desktop-page-header fixed top-0 w-full z-40 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+      <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
@@ -198,9 +198,9 @@ function Dynasty() {
             </div>
           </div>
           <div className="flex items-center gap-space-xs shrink-0">
-            <LangToggle />
+            <LangToggle className="home-glass-control" />
 
-            <div className="hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex bg-surface-container-high">
+            <div className="home-glass-control hidden h-11 shrink-0 items-center gap-1 px-space-sm sm:flex">
               <UiIcon name="crystal" className="h-6 w-6" />
               <span className="font-label-md text-label-md text-secondary tracking-widest tabular-nums">
                 {profile.diamonds.toLocaleString()}
@@ -209,7 +209,7 @@ function Dynasty() {
             {signedIn && (
               <button
                 onClick={() => void signOut()}
-                className="cjk inline-flex h-11 shrink-0 items-center justify-center px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+                className="home-glass-control cjk inline-flex h-11 shrink-0 items-center justify-center px-3 font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
               >
                 {t("退出登录", "Sign out")}
               </button>
@@ -220,9 +220,9 @@ function Dynasty() {
 
       <main className="page-main-dashboard desktop-page-container mx-auto grid w-full grid-cols-1 gap-space-md px-margin-mobile lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.9fr)] lg:items-start lg:gap-space-lg lg:px-space-lg">
         <div className="flex w-full min-w-0 flex-col gap-space-md">
-          <InvitePoster compact />
+          <InvitePoster compact className="home-glass-panel" />
           {/* 当前段位 */}
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <div className="flex items-center gap-space-md min-w-0">
                  <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 p-0 shrink-0">
@@ -268,7 +268,7 @@ function Dynasty() {
             </div>
 
             {!signedIn && (
-              <Link to="/auth" className="cjk min-h-11 px-3 bg-surface-container-high font-body-sm text-body-sm text-secondary flex items-center gap-2">
+              <Link to="/auth" className="home-glass-action cjk min-h-11 px-3 font-body-sm text-body-sm text-secondary flex items-center gap-2">
                 <GameIcon name="auth-google" className="h-7 w-7 shrink-0" />
                 {t("当前为本地演示数据，登录后段位与钻石由服务端结算 →", "Demo data — sign in for server-settled rating →")}
               </Link>
@@ -278,7 +278,7 @@ function Dynasty() {
           {/* 个人资料：头像与实名认证 */}
           {signedIn && (
             <>
-              <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+              <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
                 <div className="section-heading-row">
                   <h2 className="font-headline-sm text-headline-sm tracking-wider">
                     <Bi zh="个人资料" en="Profile" />
@@ -296,7 +296,7 @@ function Dynasty() {
                         type="button"
                         onClick={() => uploadInput.current?.click()}
                         disabled={avatarBusy}
-                        className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm disabled:opacity-50"
+                        className="home-glass-action cjk min-h-11 px-3 text-on-primary-container font-label-sm text-label-sm disabled:opacity-50"
                       >
                         {avatarBusy ? t("上传中…", "Uploading…") : t("上传我的头像", "Upload my photo")}
                       </button>
@@ -309,7 +309,7 @@ function Dynasty() {
                               setAvatarError(e instanceof Error ? e.message : "恢复徽章头像失败"),
                             );
                           }}
-                          className="cjk min-h-11 px-3 bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
+                           className="home-glass-control cjk min-h-11 px-3 font-label-sm text-label-sm text-on-surface-variant hover:text-secondary"
                         >
                           {t("改回徽章头像", "Use a badge avatar")}
                         </button>
@@ -346,7 +346,7 @@ function Dynasty() {
           )}
 
           {/* 晋升挑战赛 */}
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="段位晋升挑战赛" en="Promotion Series" />
@@ -419,7 +419,7 @@ function Dynasty() {
                   <button
                     onClick={() => challenge(r.id)}
                     disabled={!signedIn}
-                    className="cjk min-h-11 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
+                    className="home-glass-action cjk min-h-11 px-3 text-on-primary-container font-label-sm text-label-sm shrink-0 disabled:opacity-50"
                   >
                     {t("发起挑战", "Challenge")}
                   </button>
@@ -436,7 +436,7 @@ function Dynasty() {
           </section>
 
           {/* 战绩 */}
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <h2 className="font-headline-sm text-headline-sm tracking-wider">
               <Bi zh="赛季战绩" en="Season Record" />
             </h2>
@@ -468,7 +468,7 @@ function Dynasty() {
             </p>
             <Link
               to="/battle"
-              className="w-full py-space-md bg-primary-container text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
+              className="home-glass-action w-full py-space-md text-on-primary-container flex items-center justify-center gap-space-sm active:scale-[0.99] transition-transform"
             >
               <UiIcon name="shield" className="h-6 w-6" />
               <span className="font-label-lg text-label-lg tracking-[0.16em] font-semibold">
@@ -478,7 +478,7 @@ function Dynasty() {
           </section>
 
           {/* 段位榜 */}
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="段位榜" en="Leaderboard" />
@@ -502,8 +502,8 @@ function Dynasty() {
                 return (
                   <li
                     key={row.id}
-                    className={`grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
-                      mine ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                    className={`home-glass-tile grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-space-sm p-space-sm ${
+                      mine ? "home-glass-tile-active" : ""
                     }`}
                   >
                     <span className="font-label-md text-label-md tabular-nums text-secondary">{i + 1}</span>
@@ -541,7 +541,7 @@ function Dynasty() {
 
         {/* 九重王座 + 试炼联动 */}
         <div className="flex w-full min-w-0 flex-col gap-space-md mt-space-md lg:mt-0 lg:sticky lg:top-24">
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-xs">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-xs">
              <div className="section-heading-row mb-space-xs">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">
                 <Bi zh="天梯王座" en="Ladder" />
@@ -556,8 +556,8 @@ function Dynasty() {
               return (
                 <div
                   key={tier.en}
-                  className={`p-space-sm flex items-center justify-between gap-space-sm ${
-                    active ? "bg-surface-container-high gold-hairline" : "bg-surface-container-lowest"
+                  className={`home-glass-tile p-space-sm flex items-center justify-between gap-space-sm ${
+                    active ? "home-glass-tile-active" : ""
                   }`}
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
@@ -584,7 +584,7 @@ function Dynasty() {
             })}
           </section>
 
-          <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+          <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <h2 className="font-headline-sm text-headline-sm tracking-wider whitespace-nowrap">
               <Bi zh="残局试炼联动" en="Crucible Link" />
             </h2>
@@ -606,7 +606,7 @@ function Dynasty() {
             </div>
             <Link
               to="/crucible"
-              className="w-full py-space-sm bg-surface-container-high text-on-surface flex items-center justify-center gap-space-xs"
+              className="home-glass-control w-full py-space-sm text-on-surface flex items-center justify-center gap-space-xs"
             >
               <UiIcon name="lotus" className="h-6 w-6" />
               <span className="cjk font-label-md text-label-md">{t("前往盲棋试炼", "Go to trials")}</span>

@@ -372,8 +372,7 @@
   text-align: right;
 }
 
-/* Home-only Ancient Gold Frosted treatment. Other routes intentionally keep
-   their established surfaces until this direction is approved app-wide. */
+/* Approved stained-paper surface system shared by every app route. */
 .home-glass-scope {
   --home-glass-fill: color-mix(in oklab, var(--color-home-glass) 6%, transparent);
   --home-glass-fill-soft: color-mix(in oklab, var(--color-home-glass-deep) 3%, transparent);
@@ -383,7 +382,8 @@
   --home-glass-paper: url("/__l5e/assets-v1/3ecccb14-c307-4bd6-bca8-640f961a2792/glass-paper-texture.jpg");
 }
 
-.home-glass-page .theme-backdrop img {
+.home-glass-page .theme-backdrop img,
+.themed-page:not(.home-glass-page) .theme-backdrop img {
   filter: saturate(0.78) brightness(0.74) contrast(1.04);
 }
 
@@ -405,6 +405,13 @@
 .home-glass-action {
   position: relative;
   border: 1px solid var(--home-glass-line-soft);
+  background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
+}
+
+/* Operational fields retain contrast while matching the same paper window geometry. */
+.home-glass-scope .field-control {
+  border-color: var(--home-glass-line-soft);
+  border-radius: 0.75rem;
   background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
 }
 

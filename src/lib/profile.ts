@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { createContext, createElement, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { loadProfile, renameProfile, saveAvatar, saveAvatarImage, saveEquipment, submitVerification } from "@/lib/game.functions";
@@ -113,7 +113,7 @@ function fromCloud(row: CloudRow): PlayerProfile {
  * 玩家档案：登录后由服务端（Lovable Cloud）作为唯一真源，
  * 未登录时退回本地演示数据，保证页面永远可看。
  */
-export function useProfile() {
+function useProfileStore() {
   const [profile, setProfile] = useState<PlayerProfile>(DEFAULT_PROFILE);
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -247,4 +247,19 @@ export function useProfile() {
   }, []);
 
   return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, setEquipment, verifyIdentity, recordResult, winRate: winRate(profile) };
+}
+
+type ProfileContextValue = ReturnType<typeof useProfileStore>;
+const ProfileContext = createContext<ProfileContextValue | null>(null);
+
+/** One profile store and one realtime subscription serve the entire app. */
+export function ProfileProvider({ children }: { children: ReactNode }) {
+  const value = useProfileStore();
+  return createElement(ProfileContext.Provider, { value }, children);
+}
+
+export function useProfile() {
+  const value = useContext(ProfileContext);
+  if (!value) throw new Error("useProfile must be used inside ProfileProvider");
+  return value;
 }

@@ -115,9 +115,9 @@ function AuthPage() {
   }
 
   return (
-    <div className="themed-page text-on-surface min-h-screen flex items-center justify-center px-margin-mobile py-space-lg md:py-space-xl lg:pl-[calc(var(--nav-rail-width)+var(--space-lg))]">
+    <div className="themed-page home-glass-page text-on-surface min-h-screen flex items-center justify-center px-margin-mobile pt-space-lg pb-32 md:py-space-xl lg:pl-[calc(var(--nav-rail-width)+var(--space-lg))]">
       <ThemeBackdrop theme="gothic" />
-      <div className="flex w-full max-w-sm flex-col gap-space-md bg-surface-container-low p-space-lg gold-hairline md:min-h-[calc(100dvh-8rem)] md:max-w-3xl md:justify-center md:p-space-xl lg:max-w-4xl">
+      <div className="home-glass-panel flex w-full max-w-sm flex-col gap-space-md p-space-lg md:min-h-[calc(100dvh-8rem)] md:max-w-3xl md:justify-center md:p-space-xl lg:max-w-4xl">
         <div className="flex flex-col gap-1">
           <span className="font-label-sm text-label-sm uppercase tracking-[0.25em] text-on-surface-variant">
             Blood Sovereign
@@ -190,7 +190,7 @@ function AuthPage() {
           <button
             type="submit"
             disabled={busy}
-            className="h-11 bg-primary-container text-on-primary-container font-label-lg text-label-lg uppercase tracking-widest disabled:opacity-60"
+            className="home-glass-action h-11 text-on-primary-container font-label-lg text-label-lg uppercase tracking-widest disabled:opacity-60"
           >
             {mode === "in" ? t("进入王座", "Enter the Court") : t("立誓注册", "Swear the Oath")}
           </button>
@@ -199,7 +199,7 @@ function AuthPage() {
         <button
           onClick={google}
           disabled={busy}
-          className="h-11 bg-surface-container-high text-on-surface font-label-md text-label-md uppercase tracking-widest disabled:opacity-60 flex items-center justify-center gap-2"
+          className="home-glass-control h-11 text-on-surface font-label-md text-label-md uppercase tracking-widest disabled:opacity-60 flex items-center justify-center gap-2"
         >
           <GameIcon name="auth-google" className="h-7 w-7" />
           <Bi zh="用 Google 继续" en="Continue with Google" />

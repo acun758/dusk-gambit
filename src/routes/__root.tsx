@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { SovereignNav } from "../components/SovereignNav";
 import { GameEntrance } from "../components/GameEntrance";
 import { LangProvider } from "../lib/i18n";
+import { ProfileProvider } from "../lib/profile";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -131,17 +132,36 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const [showEntrance, setShowEntrance] = useState(true);
-  const enterGame = useCallback(() => setShowEntrance(false), []);
+  const enterGame = useCallback(() => {
+    try {
+      window.sessionStorage.setItem("bs.entrance.seen", "1");
+    } catch {
+      /* storage unavailable */
+    }
+    setShowEntrance(false);
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (window.sessionStorage.getItem("bs.entrance.seen") === "1") setShowEntrance(false);
+    } catch {
+      /* storage unavailable */
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <LangProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <div className="app-shell">
-          <Outlet />
-        </div>
-        {!showEntrance && <SovereignNav />}
-        {showEntrance && <GameEntrance onEntered={enterGame} />}
+        <ProfileProvider>
+          <div className="home-glass-scope">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <div className="app-shell">
+              <Outlet />
+            </div>
+            {!showEntrance && <SovereignNav />}
+            {showEntrance && <GameEntrance onEntered={enterGame} />}
+          </div>
+        </ProfileProvider>
       </LangProvider>
     </QueryClientProvider>
   );

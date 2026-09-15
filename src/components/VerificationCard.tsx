@@ -57,7 +57,7 @@ export function VerificationCard({
 
 
   return (
-    <section className="bg-surface-container p-space-md shadow-xl flex flex-col gap-space-sm">
+    <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
       <div className="section-heading-row">
         <h2 className="font-headline-sm text-headline-sm tracking-wider">
           <span className="cjk">账户安全</span> <span className="font-label-sm text-label-sm text-on-surface-variant">Account Security</span>
