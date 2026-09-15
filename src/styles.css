@@ -2,6 +2,45 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* 自托管字体：境内可直接访问，不依赖任何外部字体服务。
+   Cinzel 用于拉丁标题；思源宋/黑（Noto Serif/Sans SC）已裁到常用字子集；
+   玩家昵称等用户内容用系统字体渲染，避免子集缺字。 */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/cinzel600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/cinzel700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/sans400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/sans600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/serif700.woff2") format("woff2");
+}
+
 @theme {
   --color-background: #0b0b0c;
   --color-error: #ffb4ab;
