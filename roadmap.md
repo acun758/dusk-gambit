@@ -1,6 +1,19 @@
 ## Current request
-- [ ] Unify highlighted controls with the global button corner-radius standard.
-- [ ] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
+- [x] Unify highlighted controls with the global button corner-radius standard.
+- [x] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
+
+## 竞技品质升级（2026-09 评审，按阶段落地）
+- [x] 第一阶段·公平性：和棋按期望分结算 + 分段 K 值（rank_k 16/24/32）
+- [x] 第一阶段·公平性：起步分 2480 → 1200，前 10 局定级赛（K×2、无连胜加成）
+- [x] 第一阶段·公平性：超时判负遵循 FIDE 6.9，胜方无成杀子力时判和（side_can_win）
+- [x] 第一阶段·公平性：残局通关改加训练点+钻石，不再污染天梯分
+- [ ] 第二阶段·体验：预走子 premove、PGN/FEN 导出分享、求和/认输确认、悔棋（仅陪练）、再战一局
+- [ ] 第二阶段·UI：定级赛中段位暂不公开的展示与定级完成提示
+- [ ] 第三阶段·内容：战术谜题（每日谜题+连续闯关）；多赛制（1+0/10+0/15+10、好友对战）
+- [ ] 第三阶段·引擎：置换表+着法排序补强，或自我对弈定标后把 AI 标称分改为真实分
+- [ ] 第三阶段·复盘：云端深搜复核大漏着，端内只做快评
+- [ ] 第四阶段·上线前：赛季与软重置、每日任务、观战、反作弊（引擎检测+每手用时记录）
+
 ## Current tasks
 - [x] 将首页污渍纸浮窗标准统一到其余全部页面与共享面板
 - [x] 统一全站页眉、按钮、媒体框、卡片圆角与浮层层级
