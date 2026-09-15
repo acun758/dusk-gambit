@@ -129,8 +129,8 @@ function useProfileStore() {
   const queryClient = useQueryClient();
 
   const refresh = useCallback(async () => {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    const session = await fetchSession();
+    if (!session) {
       setSignedIn(false);
       setProfile(read());
       setLoading(false);
@@ -150,19 +150,12 @@ function useProfileStore() {
     void refresh();
     const sync = (e: Event) => setProfile((e as CustomEvent<PlayerProfile>).detail);
     window.addEventListener("bs:profile", sync);
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") void refresh();
-    });
-    // 每个组件实例独立频道，避免多处同时使用 useProfile 时重复订阅报错
-    const channel = supabase.channel(`my-profile-live-${Math.random().toString(36).slice(2)}`).on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "profiles" },
-      () => void refresh(),
-    ).subscribe();
+    const stopAuth = onSessionChange(() => void refresh());
+    const stopProfile = subscribeMyProfile(() => void refresh());
     return () => {
       window.removeEventListener("bs:profile", sync);
-      sub.subscription.unsubscribe();
-      void supabase.removeChannel(channel);
+      stopAuth();
+      stopProfile();
     };
   }, [refresh]);
 
