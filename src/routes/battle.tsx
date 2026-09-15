@@ -85,7 +85,7 @@ function Battle() {
         whiteElo: session.state.players.w.elo,
         blackElo: session.state.players.b.elo,
         timeControl: "180+2",
-        ...(session.state.outcome ? { result: session.state.outcome } : {}),
+        result: resultTag(session.state.outcome as Outcome),
       },
     );
     downloadPgn(pgn);
