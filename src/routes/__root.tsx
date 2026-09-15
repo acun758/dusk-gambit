@@ -149,8 +149,8 @@ function RootComponent() {
       const id = window.requestIdleCallback(warmThemeCache, { timeout: 2500 });
       return () => window.cancelIdleCallback(id);
     }
-    const id = window.setTimeout(warmThemeCache, 500);
-    return () => window.clearTimeout(id);
+    const id = globalThis.setTimeout(warmThemeCache, 500);
+    return () => globalThis.clearTimeout(id);
   }, []);
 
   useEffect(() => {
