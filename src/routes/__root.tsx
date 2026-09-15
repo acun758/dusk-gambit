@@ -7,10 +7,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { SovereignNav } from "../components/SovereignNav";
+import { GameEntrance } from "../components/GameEntrance";
 import { LangProvider } from "../lib/i18n";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -129,6 +130,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [showEntrance, setShowEntrance] = useState(true);
+  const enterGame = useCallback(() => setShowEntrance(false), []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -137,7 +140,8 @@ function RootComponent() {
         <div className="app-shell">
           <Outlet />
         </div>
-        <SovereignNav />
+        {!showEntrance && <SovereignNav />}
+        {showEntrance && <GameEntrance onEntered={enterGame} />}
       </LangProvider>
     </QueryClientProvider>
   );
