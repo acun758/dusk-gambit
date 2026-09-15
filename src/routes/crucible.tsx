@@ -7,7 +7,7 @@ import {
   fetchEndgameProgress as loadEndgameProgress,
   submitEndgame,
 } from "@/lib/db";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";
 import { UiIcon } from "@/components/UiIcon";

@@ -1,6 +1,6 @@
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import poster from "@/assets/invite-poster.jpg";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 
