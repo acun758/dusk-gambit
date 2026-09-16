@@ -12,6 +12,7 @@ import { fetchEndgameLevels as listEndgameLevels } from "@/lib/db";
 import type { DrillLevel } from "@/components/EndgameDrill";
 
 export const Route = createFileRoute("/arsenal")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "军械典藏 · 血誓王权 | Arsenal Collection" },

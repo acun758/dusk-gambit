@@ -18,6 +18,7 @@ const RELIC_A = GAME_ART.matchArena;
 const RELIC_B = GAME_ART.reviewBoard;
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "玄弈 · DUSK GAMBIT | 血誓王权 Blood Sovereign" },

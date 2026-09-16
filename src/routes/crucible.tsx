@@ -14,6 +14,7 @@ import { UiIcon } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
 
 export const Route = createFileRoute("/crucible")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "盲棋心算 · 残局试炼 | Blindfold Endgame Crucible" },

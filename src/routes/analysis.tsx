@@ -15,6 +15,7 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
 export const Route = createFileRoute("/analysis")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "对局复盘与点评 · 血誓王权" },

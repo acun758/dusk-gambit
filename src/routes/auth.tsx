@@ -12,6 +12,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { uploadAvatar } from "@/lib/avatar-upload";
 
 export const Route = createFileRoute("/auth")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "血誓登录 · 玄弈 DUSK GAMBIT | Sovereign Sign In" },

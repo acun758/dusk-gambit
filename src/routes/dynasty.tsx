@@ -28,6 +28,7 @@ import { RANK_TIERS, RANK_DISCLAIMER, RANK_TAGLINE, rankOf } from "@/lib/ranks";
 import { RankBadge } from "@/components/RankBadge";
 
 export const Route = createFileRoute("/dynasty")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "天梯段位殿堂 · 血誓王权 | Dynasty Sanctum" },

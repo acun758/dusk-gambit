@@ -9,6 +9,7 @@ import { useProfile } from "@/lib/profile";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/archive")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "绝杀典藏 · 血誓王权 | Victory Archive" },
