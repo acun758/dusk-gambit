@@ -59,8 +59,9 @@ interface ProgressRow {
   best_ms: number | null;
 }
 
+/** 明视棋盘统一用线条（空心）棋子符号，黑白只靠颜色与描边区分，与对弈棋盘一致。 */
 const GLYPH: Record<string, string> = {
-  k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
+  k: "♔", q: "♕", r: "♖", b: "♗", n: "♘", p: "♙",
   K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
 };
 
@@ -164,7 +165,7 @@ function Crucible() {
               {profile.trainingPoints} {t("训练积分", "Training points")} · {t(tierLabel(profile).zh, tierLabel(profile).en)}
             </span>
             <h1 className="font-headline-md text-headline-md leading-tight truncate">
-              <Bi zh="残局试炼" en="Endgame Crucible" />
+              <Bi zh="残局试炼 · 心算" en="Blindfold Crucible" />
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-space-xs">
@@ -303,9 +304,8 @@ function Crucible() {
                       >
                         {cell && (
                           <span
-                            className={`text-[clamp(14px,4vw,30px)] leading-none ${
-                              blind ? "opacity-0" : cell === cell.toUpperCase() ? "text-secondary" : "text-on-surface"
-                            }`}
+                            className={`crucible-piece leading-none ${blind ? "opacity-0" : ""}`}
+                            data-color={cell === cell.toUpperCase() ? "w" : "b"}
                           >
                             {GLYPH[cell]}
                           </span>
