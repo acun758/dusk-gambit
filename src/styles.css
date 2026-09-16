@@ -454,6 +454,12 @@
   background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
 }
 
+/* 浮层（对话框）自身依赖 fixed 居中，纸面样式不得把它改回 relative。 */
+[role="dialog"].home-glass-panel,
+[role="alertdialog"].home-glass-panel {
+  position: fixed;
+}
+
 /* Operational fields retain contrast while matching the same paper window geometry. */
 .home-glass-scope .field-control {
   border-color: var(--home-glass-line-soft);
