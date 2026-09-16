@@ -131,7 +131,7 @@ function Arsenal() {
                 return (
                   <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`home-glass-tile grid min-w-0 gap-2 p-space-sm text-left transition-colors ${active ? "home-glass-tile-active" : ""}`}>
                     <div className="home-glass-media aged-print-frame relative aspect-[4/3] overflow-hidden">
-                      <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-contain p-2" />
+                      <img src={item.image} alt={t(`${item.zh}${kindLabel(item.kind)}——${canUse ? "当前段位可使用" : `需 ${item.floor} 分解锁`}`, `${item.en} ${kindLabel(item.kind)} — ${canUse ? "available at your rating" : `unlocks at ${item.floor} rating`}`)} className="h-full w-full object-contain p-2" />
                       <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
                     <div className="min-w-0">
