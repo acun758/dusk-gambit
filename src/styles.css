@@ -605,10 +605,38 @@
 
 .home-glass-header {
   background-color: var(--color-surface);
+  /* 实底上叠旧报纸网点 + 暖旧染色，内容区滚动时不再透出，同时保留中古纸感 */
+  background-image:
+    radial-gradient(rgb(54 42 28 / 24%) 0.75px, transparent 0.95px),
+    linear-gradient(160deg, rgb(233 209 150 / 6%), rgb(120 88 40 / 4%));
+  background-size: 3.5px 3.5px, auto;
+  background-repeat: repeat, no-repeat;
+  background-blend-mode: multiply, multiply;
   border-bottom: 1px solid var(--home-glass-line-soft);
   box-shadow:
     inset 0 -1px 0 color-mix(in oklab, white 8%, transparent),
     0 16px 42px color-mix(in oklab, var(--color-surface-dim) 32%, transparent);
+}
+
+/* 页眉与底部导航仅两处，斑驳纸纹混合层开销可忽略 */
+.home-glass-header::after {
+  content: "";
+  position: absolute;
+  inset: -3%;
+  pointer-events: none;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  background-image: var(--home-glass-paper);
+  background-size: 200%;
+  background-position: 38% 32%;
+  background-repeat: no-repeat;
+  transform: rotate(0.8deg);
+}
+
+@media (max-width: 600px) {
+  .home-glass-header {
+    background-size: 4px 4px, auto;
+  }
 }
 
 .home-glass-control {
