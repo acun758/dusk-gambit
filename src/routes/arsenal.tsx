@@ -191,7 +191,7 @@ function Arsenal() {
 
           <aside className="stage-panel home-glass-panel grid gap-space-sm p-space-md lg:sticky lg:top-24">
             <div className="home-glass-media aged-print-frame relative aspect-square overflow-hidden">
-              <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-contain p-space-sm" />
+              <img src={selected.image} alt={t(`${selected.zh}${kindLabel(selected.kind)}的细节展示图`, `Detailed view of the ${selected.en} ${kindLabel(selected.kind)}`)} className="h-full w-full object-contain p-space-sm" />
             </div>
             <div>
               <p className="cjk font-label-sm text-label-sm text-primary">{kindLabel(selected.kind)} · {unlocked ? t("已解锁", "Unlocked") : t("段位锁定", "Tier locked")}</p>
