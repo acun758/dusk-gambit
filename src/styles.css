@@ -604,7 +604,7 @@
 }
 
 .home-glass-header {
-  background-color: color-mix(in oklab, var(--color-surface) 80%, transparent);
+  background-color: var(--color-surface);
   border-bottom: 1px solid var(--home-glass-line-soft);
   box-shadow:
     inset 0 -1px 0 color-mix(in oklab, white 8%, transparent),
