@@ -147,7 +147,7 @@ function Battle() {
                 {t("对弈", "Duel")}
               </Button>
               <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="home-glass-control h-11 flex-1 bg-secondary text-on-secondary cjk">
-                {t("残局试炼", "Endgame drill")}
+                {t("残局实战", "Endgame practice")}
               </Button>
             </div>
             <EndgameDrill initialCode={drill} />
@@ -159,7 +159,7 @@ function Battle() {
               {t("对弈", "Duel")}
             </Button>
             <Button type="button" variant="ghost" onClick={() => setTab("drill")} className="home-glass-control h-11 flex-1 bg-surface-container text-on-surface-variant cjk">
-              {t("残局试炼", "Endgame drill")}
+              {t("残局实战", "Endgame practice")}
             </Button>
           </div>
           <PlayerBar
@@ -355,7 +355,7 @@ function Battle() {
               <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
               <h2 className="cjk font-label-lg text-label-lg text-on-surface mt-0.5">{coach.title}</h2>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">{coach.body}</p>
-              {coach.phase === "endgame" && <Link to="/crucible" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">去残局试炼强化此主题 →</Link>}
+              {coach.phase === "endgame" && <Link to="/crucible" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">去残局试炼（心算）强化此主题 →</Link>}
             </div>
           </section>
 

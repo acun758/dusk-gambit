@@ -1,16 +1,47 @@
 /**
- * 外部锚定基准：我方 4 个档位 × Stockfish 限级锚点，跑快棋并用 Elo 公式反推。
- * 用法：bun bench.ts <games-per-pair>
+ * 外部锚定基准（无沙箱硬编码路径）。
+ * 我方 4 个档位 × Stockfish 限级锚点对战，用 Elo 公式反推区间。
+ *
+ * 用法：
+ *   bun scripts/anchor-benchmark.ts [--games 20] [--output reports/anchor.json]
+ *                                   [--stockfish <path-to-stockfish-js>]
+ *                                   [--sf-movetime 60] [--max-ply 120] [--level <id>]
+ *
+ * Stockfish 路径默认取 node_modules/stockfish/bin/stockfish-19-lite-single.js，
+ * 也可用环境变量 STOCKFISH_PATH 指定。
  */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawn } from "node:child_process";
 import { Chess } from "chess.js";
-import { spawn } from "child_process";
-import fs from "fs";
-import { AshbornEngine } from "/dev-server/src/core/engine/engine";
-import { AI_LEVELS } from "/dev-server/src/core/ai";
+import { AshbornEngine } from "../src/core/engine/engine";
+import { AI_LEVELS } from "../src/core/ai";
 
-const GAMES = Number(process.argv[2] ?? 6);
-const SF_MOVETIME = 60;
-const MAX_PLY = 120;
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(HERE, "..");
+
+function arg(name: string, fallback?: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
+}
+function resolvePath(p: string): string {
+  return path.isAbsolute(p) ? p : path.resolve(PROJECT_ROOT, p);
+}
+
+const GAMES = Number(arg("games", "20"));
+const SF_MOVETIME = Number(arg("sf-movetime", "60"));
+const MAX_PLY = Number(arg("max-ply", "120"));
+const ONLY_LEVEL = arg("level");
+const OUTPUT = resolvePath(arg("output", "reports/anchor-benchmark.json")!);
+const SF_PATH = resolvePath(
+  arg("stockfish", process.env["STOCKFISH_PATH"] ?? "node_modules/stockfish/bin/stockfish-19-lite-single.js")!,
+);
+
+if (!fs.existsSync(SF_PATH)) {
+  console.error(`找不到 Stockfish：${SF_PATH}（用 --stockfish 或 STOCKFISH_PATH 指定）`);
+  process.exit(1);
+}
 
 type Anchor = { label: string; elo: number; opts: string[] };
 const ANCHORS: Anchor[] = [
@@ -22,13 +53,13 @@ const ANCHORS: Anchor[] = [
 ];
 
 class SF {
-  private p = spawn("node", ["node_modules/stockfish/bin/stockfish-19-lite-single.js"], { stdio: ["pipe", "pipe", "ignore"], cwd: "/tmp/anchor" });
+  private p = spawn("node", [SF_PATH], { stdio: ["pipe", "pipe", "ignore"], cwd: PROJECT_ROOT });
   private buf = "";
   private waiters: ((l: string) => boolean)[] = [];
   constructor() {
-    this.p.stdout.on("data", (d) => {
+    this.p.stdout!.on("data", (d: Buffer) => {
       this.buf += d.toString();
-      let i;
+      let i: number;
       while ((i = this.buf.indexOf("\n")) >= 0) {
         const line = this.buf.slice(0, i).trim();
         this.buf = this.buf.slice(i + 1);
@@ -36,7 +67,7 @@ class SF {
       }
     });
   }
-  send(s: string) { this.p.stdin.write(s + "\n"); }
+  send(s: string) { this.p.stdin!.write(s + "\n"); }
   wait(prefix: string): Promise<string> {
     return new Promise((res) => this.waiters.push((l) => (l.startsWith(prefix) ? (res(l), true) : false)));
   }
@@ -61,14 +92,16 @@ function result(g: Chess, ourColor: "w" | "b"): number {
 }
 
 const engine = new AshbornEngine();
-const out: any[] = [];
+const levels = ONLY_LEVEL ? AI_LEVELS.filter((l) => l.id === ONLY_LEVEL) : AI_LEVELS;
+const out: unknown[] = [];
 
-for (const lvl of AI_LEVELS) {
-  const perAnchor: any[] = [];
+for (const lvl of levels) {
+  const perAnchor: { anchor: string; anchorElo: number; games: number; score: number; winRate: number; est: number }[] = [];
   for (const a of ANCHORS) {
     const sf = new SF();
     await sf.init(a);
-    let score = 0, played = 0;
+    let score = 0;
+    let played = 0;
     for (let i = 0; i < GAMES; i++) {
       const ourColor: "w" | "b" = i % 2 === 0 ? "w" : "b";
       const g = new Chess();
@@ -102,5 +135,7 @@ for (const lvl of AI_LEVELS) {
   out.push({ level: lvl.id, nominal: lvl.elo, median, interval: spread, perAnchor });
   console.log("==", lvl.id, "标称", lvl.elo, "实测", `${median} ± ${spread}`);
 }
-fs.writeFileSync("/tmp/anchor/result.json", JSON.stringify(out, null, 1));
-console.log("DONE");
+
+fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
+fs.writeFileSync(OUTPUT, JSON.stringify({ params: { games: GAMES, sfMovetime: SF_MOVETIME, maxPly: MAX_PLY }, levels: out }, null, 1));
+console.log("报告已写入", OUTPUT);

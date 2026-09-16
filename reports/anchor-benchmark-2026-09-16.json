@@ -1,0 +1,201 @@
+{
+ "params": {
+  "games": 20,
+  "sfMovetime": 60,
+  "maxPly": 120
+ },
+ "levels": [
+  {
+   "level": "novice",
+   "nominal": 900,
+   "median": 1259,
+   "interval": 315,
+   "perAnchor": [
+    {
+     "anchor": "SF-skill0",
+     "anchorElo": 1000,
+     "games": 20,
+     "score": 4,
+     "winRate": 0.2,
+     "est": 759
+    },
+    {
+     "anchor": "SF-1320",
+     "anchorElo": 1320,
+     "games": 20,
+     "score": 7.5,
+     "winRate": 0.375,
+     "est": 1231
+    },
+    {
+     "anchor": "SF-1500",
+     "anchorElo": 1500,
+     "games": 20,
+     "score": 4,
+     "winRate": 0.2,
+     "est": 1259
+    },
+    {
+     "anchor": "SF-1700",
+     "anchorElo": 1700,
+     "games": 20,
+     "score": 1.5,
+     "winRate": 0.075,
+     "est": 1264
+    },
+    {
+     "anchor": "SF-1900",
+     "anchorElo": 1900,
+     "games": 20,
+     "score": 0.5,
+     "winRate": 0.05,
+     "est": 1388
+    }
+   ]
+  },
+  {
+   "level": "club",
+   "nominal": 1450,
+   "median": 1665,
+   "interval": 175,
+   "perAnchor": [
+    {
+     "anchor": "SF-skill0",
+     "anchorElo": 1000,
+     "games": 20,
+     "score": 19,
+     "winRate": 0.95,
+     "est": 1512
+    },
+    {
+     "anchor": "SF-1320",
+     "anchorElo": 1320,
+     "games": 20,
+     "score": 19,
+     "winRate": 0.95,
+     "est": 1832
+    },
+    {
+     "anchor": "SF-1500",
+     "anchorElo": 1500,
+     "games": 20,
+     "score": 9.5,
+     "winRate": 0.475,
+     "est": 1483
+    },
+    {
+     "anchor": "SF-1700",
+     "anchorElo": 1700,
+     "games": 20,
+     "score": 9,
+     "winRate": 0.45,
+     "est": 1665
+    },
+    {
+     "anchor": "SF-1900",
+     "anchorElo": 1900,
+     "games": 20,
+     "score": 6.5,
+     "winRate": 0.325,
+     "est": 1773
+    }
+   ]
+  },
+  {
+   "level": "expert",
+   "nominal": 1750,
+   "median": 1827,
+   "interval": 212,
+   "perAnchor": [
+    {
+     "anchor": "SF-skill0",
+     "anchorElo": 1000,
+     "games": 20,
+     "score": 20,
+     "winRate": 0.95,
+     "est": 1512
+    },
+    {
+     "anchor": "SF-1320",
+     "anchorElo": 1320,
+     "games": 20,
+     "score": 19.5,
+     "winRate": 0.95,
+     "est": 1832
+    },
+    {
+     "anchor": "SF-1500",
+     "anchorElo": 1500,
+     "games": 20,
+     "score": 16.5,
+     "winRate": 0.825,
+     "est": 1769
+    },
+    {
+     "anchor": "SF-1700",
+     "anchorElo": 1700,
+     "games": 20,
+     "score": 13.5,
+     "winRate": 0.675,
+     "est": 1827
+    },
+    {
+     "anchor": "SF-1900",
+     "anchorElo": 1900,
+     "games": 20,
+     "score": 11,
+     "winRate": 0.55,
+     "est": 1935
+    }
+   ]
+  },
+  {
+   "level": "master",
+   "nominal": 1900,
+   "median": 1827,
+   "interval": 221,
+   "perAnchor": [
+    {
+     "anchor": "SF-skill0",
+     "anchorElo": 1000,
+     "games": 20,
+     "score": 19.5,
+     "winRate": 0.95,
+     "est": 1512
+    },
+    {
+     "anchor": "SF-1320",
+     "anchorElo": 1320,
+     "games": 20,
+     "score": 19,
+     "winRate": 0.95,
+     "est": 1832
+    },
+    {
+     "anchor": "SF-1500",
+     "anchorElo": 1500,
+     "games": 20,
+     "score": 16.5,
+     "winRate": 0.825,
+     "est": 1769
+    },
+    {
+     "anchor": "SF-1700",
+     "anchorElo": 1700,
+     "games": 20,
+     "score": 13.5,
+     "winRate": 0.675,
+     "est": 1827
+    },
+    {
+     "anchor": "SF-1900",
+     "anchorElo": 1900,
+     "games": 20,
+     "score": 11.5,
+     "winRate": 0.575,
+     "est": 1953
+    }
+   ]
+  }
+ ]
+}
