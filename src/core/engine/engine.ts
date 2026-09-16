@@ -1,12 +1,16 @@
-// @ts-nocheck -- 军师交付的已验证引擎（15/15 回归测试通过），0x88 定长数组索引不做逐项断言。
+// @ts-nocheck -- 军师交付的已验证引擎（回归测试通过），0x88 定长数组索引不做逐项断言。
 /**
- * ASHBORN 端内引擎 v0.1 — 0x88 棋盘 + 迭代加深 alpha-beta
+ * ASHBORN 端内引擎 v0.2 — 0x88 棋盘 + 迭代加深 alpha-beta
  *
- * 设计对齐《duel-integration.md》引擎协议：
- *   search(fen, { depth, movetimeMs, skill }) → { uci, cp, depth, nodes, ms }
- *   - depth 硬上限 6，movetimeMs 硬上限 600ms（引擎内再次钳制）
- *   - skill 0~20：同时约束搜索深度与走法"失误窗口"（陪练引擎会按水平选出次优解）
- *   - 引擎结果永远不作为对局仲裁依据，仲裁只认服务端
+ * v0.2 增强（第三阶段）：
+ *   - 置换表（Zobrist 增量哈希，64K 条目，存最佳着法与界限）
+ *   - 着法排序：置换表着法 → MVV-LVA 吃子/升变 → 杀手着法 → 历史启发
+ *   - 评估补强：兵型（叠兵/孤兵/通路兵）、王翼安全（兵盾与开放线）、
+ *     滑行子力活动度、双象加成、残局王位表切换
+ *   - 深度上限 6 → 8，单手时间预算上限 600ms → 1200ms（调用方仍可传更小值）
+ *
+ * 协议不变：search(fen, { depth, movetimeMs, skill }) → { uci, cp, depth, nodes, ms }
+ * 引擎结果永远不作为对局仲裁依据，仲裁只认服务端。
  *
  * 纯 TS，零 DOM/BOM 依赖：Web Worker / Cocos Worker / 云函数均可编译。
  */
@@ -30,6 +34,9 @@ castleMask[0x74] = 15 & ~(CASTLE_BK | CASTLE_BQ);
 
 const VAL = [0, 100, 320, 330, 500, 900, 20000];
 const MATE = 100000;
+
+export const MAX_DEPTH = 8;
+export const MAX_MOVETIME = 1200;
 
 // 时间源：浏览器 Worker 有 performance，小游戏环境回退 Date.now
 const now: () => number =
@@ -90,10 +97,63 @@ const PST_KING = [
  -20,-30,-30,-40,-40,-30,-30,-20,
   24, 20,  0,  0,  0,  4, 24, 24,
   24, 32, 12,  0,  0,  8, 36, 24];
+// 残局王位表：王应走向中心并支援通路兵
+const PST_KING_END = [
+ -50,-30,-20,-20,-20,-20,-30,-50,
+ -30,-14,  0,  0,  0,  0,-14,-30,
+ -20,  0, 16, 22, 22, 16,  0,-20,
+ -20,  4, 22, 30, 30, 22,  4,-20,
+ -20,  4, 22, 30, 30, 22,  4,-20,
+ -20,  0, 16, 22, 22, 16,  0,-20,
+ -30,-14,  0,  0,  0,  0,-14,-30,
+ -50,-34,-24,-20,-20,-24,-34,-50];
 const PSTS = [
   new Int16Array(64), new Int16Array(PST_PAWN), new Int16Array(PST_KNIGHT),
   new Int16Array(PST_BISHOP), new Int16Array(PST_ROOK), new Int16Array(PST_QUEEN),
   new Int16Array(PST_KING)];
+const PST_KING_ENDGAME = new Int16Array(PST_KING_END);
+
+/** 通路兵按推进行数的奖励（0 = 起始行） */
+const PASSED_BONUS = [0, 8, 14, 24, 42, 68, 100, 0];
+const DOUBLED_PENALTY = 14;
+const ISOLATED_PENALTY = 16;
+const BISHOP_PAIR = 32;
+const ROOK_OPEN_FILE = 14;
+const ROOK_SEMI_OPEN = 7;
+const SHIELD_MISSING = 14;
+const KING_OPEN_FILE = 22;
+const MOBILITY = [0, 0, 4, 5, 3, 2, 0]; // 每个可达格的分值（马/象/车/后）
+
+/* ------------------------------- Zobrist 哈希 ------------------------------- */
+// 固定种子的伪随机，保证每次运行哈希一致（便于复现与测试）
+function makeRng(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s ^= s << 13; s >>>= 0;
+    s ^= s >>> 17;
+    s ^= s << 5; s >>>= 0;
+    return s >>> 0;
+  };
+}
+const rng = makeRng(0x9e3779b9);
+const Z_PIECE_LO: Uint32Array[] = [];
+const Z_PIECE_HI: Uint32Array[] = [];
+for (let p = 0; p < 16; p++) {
+  const lo = new Uint32Array(128), hi = new Uint32Array(128);
+  for (let sq = 0; sq < 128; sq++) { lo[sq] = rng(); hi[sq] = rng(); }
+  Z_PIECE_LO.push(lo); Z_PIECE_HI.push(hi);
+}
+const Z_CASTLE_LO = new Uint32Array(16), Z_CASTLE_HI = new Uint32Array(16);
+for (let i = 0; i < 16; i++) { Z_CASTLE_LO[i] = rng(); Z_CASTLE_HI[i] = rng(); }
+const Z_EP_LO = new Uint32Array(128), Z_EP_HI = new Uint32Array(128);
+for (let i = 0; i < 128; i++) { Z_EP_LO[i] = rng(); Z_EP_HI[i] = rng(); }
+const Z_SIDE_LO = rng(), Z_SIDE_HI = rng();
+
+/* -------------------------------- 置换表结构 -------------------------------- */
+const TT_BITS = 16;                 // 65536 条目，约 1.3MB
+const TT_SIZE = 1 << TT_BITS;
+const TT_MASK = TT_SIZE - 1;
+const TT_EXACT = 1, TT_LOWER = 2, TT_UPPER = 3;
 
 export interface SearchOptions {
   depth?: number;
@@ -121,7 +181,53 @@ export class AshbornEngine {
   private stopAt = 0;
   private aborted = false;
   // 撤销栈：递归搜索中 make/unmake 必须严格成对，逐层保存现场
-  private undoStack: { captured: number; castling: number; ep: number; halfmove: number }[] = [];
+  private undoStack: { captured: number; castling: number; ep: number; halfmove: number; hashLo: number; hashHi: number }[] = [];
+
+  // Zobrist 当前哈希
+  private hashLo = 0;
+  private hashHi = 0;
+
+  // 置换表
+  private ttKey = new Int32Array(TT_SIZE);
+  private ttMove = new Int32Array(TT_SIZE);
+  private ttScore = new Int32Array(TT_SIZE);
+  private ttDepth = new Int8Array(TT_SIZE);
+  private ttFlag = new Uint8Array(TT_SIZE);
+  private ttGen = 0;
+
+  // 启发式表
+  private killers = new Int32Array(64 * 2);
+  private history = new Int32Array(128 * 128);
+
+  /* ------------------------------ 哈希维护 ------------------------------ */
+  private xorPiece(p: number, sq: number): void {
+    this.hashLo = (this.hashLo ^ Z_PIECE_LO[p][sq]) >>> 0;
+    this.hashHi = (this.hashHi ^ Z_PIECE_HI[p][sq]) >>> 0;
+  }
+  private xorCastle(c: number): void {
+    this.hashLo = (this.hashLo ^ Z_CASTLE_LO[c]) >>> 0;
+    this.hashHi = (this.hashHi ^ Z_CASTLE_HI[c]) >>> 0;
+  }
+  private xorEp(sq: number): void {
+    if (sq < 0) return;
+    this.hashLo = (this.hashLo ^ Z_EP_LO[sq & 127]) >>> 0;
+    this.hashHi = (this.hashHi ^ Z_EP_HI[sq & 127]) >>> 0;
+  }
+  private xorSide(): void {
+    this.hashLo = (this.hashLo ^ Z_SIDE_LO) >>> 0;
+    this.hashHi = (this.hashHi ^ Z_SIDE_HI) >>> 0;
+  }
+  private computeHash(): void {
+    this.hashLo = 0; this.hashHi = 0;
+    for (let sq = 0; sq < 128; sq++) {
+      if (sq & 0x88) { sq += 7; continue; }
+      const p = this.board[sq];
+      if (p) this.xorPiece(p, sq);
+    }
+    this.xorCastle(this.castling);
+    this.xorEp(this.ep);
+    if (this.side === BLACK) this.xorSide();
+  }
 
   load(fen: string): void {
     this.board.fill(EMPTY);
@@ -148,6 +254,8 @@ export class AshbornEngine {
     this.ep = parts[3] && parts[3] !== '-'
       ? (parts[3].charCodeAt(0) - 97) + (parseInt(parts[3][1]) - 1) * 16 : -1;
     this.halfmove = parts[4] ? parseInt(parts[4]) : 0;
+    this.undoStack.length = 0;
+    this.computeHash();
   }
 
   // ---------- 攻击判定 ----------
@@ -297,26 +405,51 @@ export class AshbornEngine {
     const piece = b[from];
 
     // 保存现场（吃子记录含 ep 标志位 0x100）
-    const captured = flag === 2 ? (b[to + (this.side === WHITE ? -16 : 16)] | 0x100) : b[to];
-    this.undoStack.push({ captured, castling: this.castling, ep: this.ep, halfmove: this.halfmove });
+    const epCapSq = to + (this.side === WHITE ? -16 : 16);
+    const capturedPiece = flag === 2 ? b[epCapSq] : b[to];
+    const captured = flag === 2 ? (capturedPiece | 0x100) : capturedPiece;
+    this.undoStack.push({
+      captured, castling: this.castling, ep: this.ep, halfmove: this.halfmove,
+      hashLo: this.hashLo, hashHi: this.hashHi,
+    });
 
-    b[to] = promo ? (promo | this.side) : piece;
+    const placed = promo ? (promo | this.side) : piece;
+    // 哈希：起讫子、被吃子
+    this.xorPiece(piece, from);
+    if (capturedPiece) this.xorPiece(capturedPiece, flag === 2 ? epCapSq : to);
+    this.xorPiece(placed, to);
+
+    b[to] = placed;
     b[from] = EMPTY;
 
     if (flag === 2) { // 吃过路兵
-      b[to + (this.side === WHITE ? -16 : 16)] = EMPTY;
+      b[epCapSq] = EMPTY;
     } else if (flag === 3) { // 易位挪车
-      if (to === 0x06) { b[0x05] = b[0x07]; b[0x07] = EMPTY; }
-      else if (to === 0x02) { b[0x03] = b[0x00]; b[0x00] = EMPTY; }
-      else if (to === 0x76) { b[0x75] = b[0x77]; b[0x77] = EMPTY; }
-      else if (to === 0x72) { b[0x73] = b[0x70]; b[0x70] = EMPTY; }
+      let rf = -1, rt = -1;
+      if (to === 0x06) { rf = 0x07; rt = 0x05; }
+      else if (to === 0x02) { rf = 0x00; rt = 0x03; }
+      else if (to === 0x76) { rf = 0x77; rt = 0x75; }
+      else if (to === 0x72) { rf = 0x70; rt = 0x73; }
+      if (rf >= 0) {
+        const rook = b[rf];
+        b[rt] = rook; b[rf] = EMPTY;
+        this.xorPiece(rook, rf); this.xorPiece(rook, rt);
+      }
     }
 
     if ((piece & 7) === KING) this.kingSq[this.side >> 3] = to;
+
+    this.xorCastle(this.castling);
     this.castling &= castleMask[from] & castleMask[to];
+    this.xorCastle(this.castling);
+
+    this.xorEp(this.ep);
     this.ep = flag === 1 ? from + (this.side === WHITE ? 16 : -16) : -1;
+    this.xorEp(this.ep);
+
     this.halfmove = ((piece & 7) === PAWN || captured) ? 0 : this.halfmove + 1;
     this.side ^= 8;
+    this.xorSide();
   }
 
   private unmake(move: number): void {
@@ -346,22 +479,99 @@ export class AshbornEngine {
     this.castling = u.castling;
     this.ep = u.ep;
     this.halfmove = u.halfmove;
+    this.hashLo = u.hashLo;
+    this.hashHi = u.hashHi;
   }
 
   // ---------- 评估（行棋方视角，厘兵） ----------
   private evaluate(): number {
     let score = 0;
     const b = this.board;
+    // 兵型统计：每列兵数（白/黑）与最前方推进行
+    const wPawnFile = [0, 0, 0, 0, 0, 0, 0, 0];
+    const bPawnFile = [0, 0, 0, 0, 0, 0, 0, 0];
+    let bishopsW = 0, bishopsB = 0;
+    let nonPawnMaterial = 0;
+
     for (let sq = 0; sq < 128; sq++) {
       if (sq & 0x88) { sq += 7; continue; }
       const p = b[sq];
       if (!p) continue;
       const ty = p & 7, white = (p & 8) === WHITE;
-      const idx = white ? (7 - (sq >> 4)) * 8 + (sq & 7) : (sq >> 4) * 8 + (sq & 7);
-      const v = VAL[ty] + PSTS[ty][idx];
+      if (ty === PAWN) { (white ? wPawnFile : bPawnFile)[sq & 7]++; }
+      else if (ty !== KING) nonPawnMaterial += VAL[ty];
+      if (ty === BISHOP) { if (white) bishopsW++; else bishopsB++; }
+    }
+    // 局面阶段：非兵子力越少越接近残局
+    const endgame = nonPawnMaterial <= 2600;
+
+    for (let sq = 0; sq < 128; sq++) {
+      if (sq & 0x88) { sq += 7; continue; }
+      const p = b[sq];
+      if (!p) continue;
+      const ty = p & 7, white = (p & 8) === WHITE;
+      const rank = sq >> 4, file = sq & 7;
+      const idx = white ? (7 - rank) * 8 + file : rank * 8 + file;
+      let v = VAL[ty] + (ty === KING && endgame ? PST_KING_ENDGAME[idx] : PSTS[ty][idx]);
+
+      if (ty === PAWN) {
+        const own = white ? wPawnFile : bPawnFile;
+        const foe = white ? bPawnFile : wPawnFile;
+        if (own[file] > 1) v -= DOUBLED_PENALTY;
+        const leftEmpty = file === 0 || own[file - 1] === 0;
+        const rightEmpty = file === 7 || own[file + 1] === 0;
+        if (leftEmpty && rightEmpty) v -= ISOLATED_PENALTY;
+        const blockedAhead = foe[file] > 0
+          || (file > 0 && foe[file - 1] > 0)
+          || (file < 7 && foe[file + 1] > 0);
+        if (!blockedAhead) v += PASSED_BONUS[white ? rank : 7 - rank];
+      } else if (ty === ROOK) {
+        const own = white ? wPawnFile : bPawnFile;
+        const foe = white ? bPawnFile : wPawnFile;
+        if (own[file] === 0) v += foe[file] === 0 ? ROOK_OPEN_FILE : ROOK_SEMI_OPEN;
+        v += this.slideMobility(sq, ROOK_OFF) * MOBILITY[ROOK];
+      } else if (ty === BISHOP) {
+        v += this.slideMobility(sq, BISHOP_OFF) * MOBILITY[BISHOP];
+      } else if (ty === QUEEN) {
+        v += this.slideMobility(sq, ALL_OFF) * MOBILITY[QUEEN];
+      } else if (ty === KNIGHT) {
+        let m = 0;
+        for (const d of KNIGHT_OFF) {
+          const t = sq + d;
+          if (!(t & 0x88) && (!b[t] || (b[t] & 8) !== (p & 8))) m++;
+        }
+        v += m * MOBILITY[KNIGHT];
+      } else if (ty === KING && !endgame) {
+        const own = white ? wPawnFile : bPawnFile;
+        if (own[file] === 0) v -= KING_OPEN_FILE;
+        for (const f of [file - 1, file + 1]) {
+          if (f < 0 || f > 7) continue;
+          if (own[f] === 0) v -= SHIELD_MISSING;
+        }
+      }
       score += white ? v : -v;
     }
+
+    if (bishopsW >= 2) score += BISHOP_PAIR;
+    if (bishopsB >= 2) score -= BISHOP_PAIR;
     return this.side === WHITE ? score : -score;
+  }
+
+  /** 滑行子力可达格数（含可吃格） */
+  private slideMobility(sq: number, dirs: number[]): number {
+    const b = this.board;
+    const us = b[sq] & 8;
+    let m = 0;
+    for (const d of dirs) {
+      let t = sq + d;
+      while (!(t & 0x88)) {
+        const tp = b[t];
+        if (!tp) { m++; t += d; continue; }
+        if ((tp & 8) !== us) m++;
+        break;
+      }
+    }
+    return m;
   }
 
   // ---------- 搜索 ----------
@@ -369,6 +579,34 @@ export class AshbornEngine {
     if (this.aborted) return true;
     if ((this.nodes & 1023) === 0 && now() >= this.stopAt) this.aborted = true;
     return this.aborted;
+  }
+
+  private ttIndex(): number {
+    return this.hashLo & TT_MASK;
+  }
+
+  private ttProbe(depth: number, alpha: number, beta: number): { score: number | null; move: number } {
+    const i = this.ttIndex();
+    if (this.ttKey[i] !== (this.hashHi | 0)) return { score: null, move: 0 };
+    const move = this.ttMove[i];
+    if (this.ttDepth[i] >= depth) {
+      const s = this.ttScore[i], f = this.ttFlag[i];
+      if (f === TT_EXACT) return { score: s, move };
+      if (f === TT_LOWER && s >= beta) return { score: s, move };
+      if (f === TT_UPPER && s <= alpha) return { score: s, move };
+    }
+    return { score: null, move };
+  }
+
+  private ttStore(depth: number, score: number, flag: number, move: number): void {
+    const i = this.ttIndex();
+    // 深度优先替换：更深的结果更值钱
+    if (this.ttKey[i] === (this.hashHi | 0) && this.ttDepth[i] > depth && this.ttFlag[i] === TT_EXACT) return;
+    this.ttKey[i] = this.hashHi | 0;
+    this.ttMove[i] = move;
+    this.ttScore[i] = score;
+    this.ttDepth[i] = depth;
+    this.ttFlag[i] = flag;
   }
 
   private quiesce(alpha: number, beta: number, qdepth: number): number {
@@ -388,8 +626,13 @@ export class AshbornEngine {
       const promo = (m >> 14) & 7, flag = (m >> 17) & 15;
       if (victim || flag === 2 || promo) caps.push(m);
     }
-    // 简化排序：被吃子价值降序
-    caps.sort((a, b) => (this.board[(b >> 7) & 127] & 7) - (this.board[(a >> 7) & 127] & 7));
+    // MVV-LVA：先吃大子、用小子吃
+    const b = this.board;
+    caps.sort((x, y) => {
+      const vx = (b[(x >> 7) & 127] & 7) * 10 - (b[x & 127] & 7);
+      const vy = (b[(y >> 7) & 127] & 7) * 10 - (b[y & 127] & 7);
+      return vy - vx;
+    });
     for (const m of caps) {
       this.make(m);
       // 合法性过滤：走完后己王不能被攻击（防止静态搜索里"吃有保护的王"污染评估）
@@ -406,13 +649,19 @@ export class AshbornEngine {
   private negamax(depth: number, alpha: number, beta: number, ply: number): number {
     if (this.timeUp()) return alpha;
     if (ply > 0 && this.halfmove >= 100) return 0;
+
+    const alphaOrig = alpha;
+    const probe = this.ttProbe(depth, alpha, beta);
+    if (probe.score !== null && ply > 0) return probe.score;
+
     if (depth <= 0) return this.quiesce(alpha, beta, 8);
 
     this.nodes++;
     const moves: number[] = [];
     this.genMoves(moves);
-    this.orderMoves(moves);
+    this.orderMoves(moves, probe.move, ply);
     let legalFound = false;
+    let bestMove = 0;
 
     for (const m of moves) {
       this.make(m);
@@ -422,28 +671,55 @@ export class AshbornEngine {
       const score = -this.negamax(depth - 1, -beta, -alpha, ply + 1);
       this.unmake(m);
       if (this.aborted) return alpha;
-      if (score >= beta) return beta;
-      if (score > alpha) alpha = score;
+      if (score >= beta) {
+        this.recordCutoff(m, depth, ply);
+        this.ttStore(depth, beta, TT_LOWER, m);
+        return beta;
+      }
+      if (score > alpha) { alpha = score; bestMove = m; }
     }
     if (!legalFound) {
       return this.inCheck(this.side === WHITE) ? -MATE + ply : 0;
     }
+    this.ttStore(depth, alpha, alpha > alphaOrig ? TT_EXACT : TT_UPPER, bestMove);
     return alpha;
   }
 
-  private orderMoves(moves: number[]): void {
+  /** 剪枝命中的安静着法记入杀手与历史表 */
+  private recordCutoff(move: number, depth: number, ply: number): void {
+    const to = (move >> 7) & 127;
+    if (this.board[to]) return; // 吃子本来就排在前面，不占用启发式名额
+    const slot = (ply & 63) * 2;
+    if (this.killers[slot] !== move) {
+      this.killers[slot + 1] = this.killers[slot];
+      this.killers[slot] = move;
+    }
+    const h = (move & 127) * 128 + to;
+    this.history[h] += depth * depth;
+    if (this.history[h] > 1 << 20) {
+      for (let i = 0; i < this.history.length; i++) this.history[i] >>= 1;
+    }
+  }
+
+  private orderMoves(moves: number[], ttMove: number, ply: number): void {
     const b = this.board;
+    const slot = (ply & 63) * 2;
+    const k0 = this.killers[slot], k1 = this.killers[slot + 1];
     const scored = moves.map(m => {
-      const to = (m >> 7) & 127;
+      const from = m & 127, to = (m >> 7) & 127;
       const victim = b[to] & 7;
       const promo = (m >> 14) & 7, flag = (m >> 17) & 15;
       let s = 0;
-      if (victim) s = 100000 + victim * 100 - (b[m & 127] & 7);
+      if (m === ttMove) s = 1000000;
+      else if (victim) s = 100000 + victim * 100 - (b[from] & 7);
       else if (flag === 2) s = 100099;
+      else if (m === k0) s = 90050;
+      else if (m === k1) s = 90040;
+      else s = Math.min(89000, this.history[from * 128 + to]);
       if (promo) s += 90000 + promo * 100;
       return { m, s };
     });
-    scored.sort((a, b) => b.s - a.s);
+    scored.sort((a, b2) => b2.s - a.s);
     for (let i = 0; i < moves.length; i++) moves[i] = scored[i].m;
   }
 
@@ -452,9 +728,11 @@ export class AshbornEngine {
     this.load(fen);
     const t0 = now();
     this.nodes = 0; this.aborted = false;
+    this.killers.fill(0);
+    this.ttGen++;
     const skill = Math.max(0, Math.min(20, opts.skill ?? 12));
-    const maxDepth = Math.min(6, Math.max(1, opts.depth ?? 2 + Math.floor(skill / 4)));
-    const movetime = Math.min(600, Math.max(50, opts.movetimeMs ?? 400));
+    const maxDepth = Math.min(MAX_DEPTH, Math.max(1, opts.depth ?? 2 + Math.floor(skill / 4)));
+    const movetime = Math.min(MAX_MOVETIME, Math.max(50, opts.movetimeMs ?? 400));
     this.stopAt = t0 + movetime;
     const errCp = opts.maxErrCp ?? (skill >= 18 ? 0 : skill >= 12 ? 25 : skill >= 8 ? 60 : skill >= 5 ? 120 : 220);
 
@@ -464,7 +742,8 @@ export class AshbornEngine {
     for (let d = 2; d <= maxDepth; d++) {
       const moves: number[] = [];
       this.genMoves(moves);
-      this.orderMoves(moves);
+      // 上一轮的最佳着法优先，形成主要变例（PV）排序
+      this.orderMoves(moves, roots.length ? roots[0].m : 0, 0);
       const iteration: { m: number; cp: number }[] = [];
       let anyLegal = false;
 
@@ -506,6 +785,48 @@ export class AshbornEngine {
       cp: pick.cp, depth: completedDepth, nodes: this.nodes,
       ms: Math.round(now() - t0),
     };
+  }
+
+  /**
+   * 根节点全部着法的评分（行棋方视角，厘兵，按优劣排序）。
+   * 供提示、谜题校验与出题使用；不做失误窗口抽样。
+   */
+  analyzeRoot(fen: string, opts: SearchOptions = {}): { uci: string; cp: number }[] {
+    this.load(fen);
+    const t0 = now();
+    this.nodes = 0; this.aborted = false;
+    this.killers.fill(0);
+    const maxDepth = Math.min(MAX_DEPTH, Math.max(1, opts.depth ?? 6));
+    const movetime = Math.min(MAX_MOVETIME * 8, Math.max(50, opts.movetimeMs ?? 1500));
+    this.stopAt = t0 + movetime;
+
+    let roots: { m: number; cp: number }[] = [];
+    for (let d = 2; d <= maxDepth; d++) {
+      const moves: number[] = [];
+      this.genMoves(moves);
+      this.orderMoves(moves, roots.length ? roots[0].m : 0, 0);
+      const iteration: { m: number; cp: number }[] = [];
+      for (const m of moves) {
+        this.make(m);
+        if (this.inCheck(this.side === BLACK)) { this.unmake(m); continue; }
+        const score = -this.negamax(d - 1, -MATE * 2, MATE * 2, 1);
+        this.unmake(m);
+        if (this.aborted) break;
+        iteration.push({ m, cp: score });
+      }
+      if (this.aborted) break;
+      if (iteration.length) {
+        iteration.sort((a, b) => b.cp - a.cp);
+        roots = iteration;
+      }
+    }
+    return roots.map(r => {
+      const promo = (r.m >> 14) & 7;
+      return {
+        uci: sqName(r.m & 127) + sqName((r.m >> 7) & 127) + (promo ? 'nbrq'[promo - 2] : ''),
+        cp: r.cp,
+      };
+    });
   }
 
   /** 合法着法列表（协议 cmd:"legal"） */

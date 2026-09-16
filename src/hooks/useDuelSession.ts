@@ -20,6 +20,12 @@ import { subscribeDuel, watchLink, type LinkPhase } from "@/lib/realtime";
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/core/ai";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
+import {
+  DEFAULT_TIME_CONTROL,
+  timeControl,
+  timeControlLabel,
+  type TimeControlId,
+} from "@/lib/time-controls";
 
 export interface LiveRating {
   elo: number;
@@ -59,7 +65,9 @@ export interface DuelSession {
   togglePause: () => void;
   restart: () => void;
   setAiLevel: (id: AiLevelId) => void;
-  startRanked: () => void;
+  /** 当前赛制（时限） */
+  timeControlId: TimeControlId;
+  startRanked: (tc?: TimeControlId) => void;
   playMove: (uci?: string) => void;
   resign: () => void;
   simulateDrop: () => void;
@@ -135,7 +143,7 @@ function stateFrom(match: MatchRowLite, you: Color, moves: MoveRowLite[]): DuelS
     you,
     turn: match.turn as Color,
     fen: match.fen,
-    tc: { base: match.tc_base, inc: match.tc_inc, label: `${Math.round(match.tc_base / 60000)} | ${match.tc_inc / 1000}` },
+    tc: { base: match.tc_base, inc: match.tc_inc, label: timeControlLabel(match.tc_base, match.tc_inc) },
     clock: { w: match.clock_w, b: match.clock_b },
     moves: moves.map((m) => {
       const frame: MoveFrame = {
@@ -177,6 +185,8 @@ export function useDuelSession(): DuelSession {
   const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
   const [matchmakingKey, setMatchmakingKey] = useState(0);
+  const [timeControlId, setTimeControlId] = useState<TimeControlId>(DEFAULT_TIME_CONTROL);
+  const tcRef = useRef<TimeControlId>(DEFAULT_TIME_CONTROL);
   const [ratings, setRatings] = useState<DuelRatings | null>(null);
   const [resumed, setResumed] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -221,7 +231,8 @@ export function useDuelSession(): DuelSession {
       setPhase("connecting");
       setResumed(false);
       try {
-        const res = await findMatch();
+        const tc = timeControl(tcRef.current);
+        const res = await findMatch({ data: { tcBase: tc.base, tcInc: tc.inc } });
         if (cancelled) return;
         matchRef.current = res.match as unknown as MatchRowLite;
         setCloud({ match: res.match as unknown as MatchRowLite, you: res.you });
@@ -456,7 +467,11 @@ export function useDuelSession(): DuelSession {
     setMode("local");
   }, []);
 
-  const startRanked = useCallback(() => {
+  const startRanked = useCallback((tc?: TimeControlId) => {
+    if (tc) {
+      tcRef.current = tc;
+      setTimeControlId(tc);
+    }
     clientRef.current?.disconnect();
     clientRef.current = null;
     setLocalState(null);
@@ -620,6 +635,7 @@ export function useDuelSession(): DuelSession {
         togglePause,
         restart,
         setAiLevel,
+        timeControlId,
         startRanked,
         playMove,
         resign,
@@ -636,7 +652,7 @@ export function useDuelSession(): DuelSession {
         answerDraw,
         canTakeback: false,
         takeback,
-        rematch: startRanked,
+        rematch: () => startRanked(),
       };
     }
 
@@ -673,6 +689,7 @@ export function useDuelSession(): DuelSession {
       togglePause,
       restart,
       setAiLevel,
+      timeControlId,
       startRanked,
       playMove,
       resign,
@@ -688,5 +705,5 @@ export function useDuelSession(): DuelSession {
       rematch: restart,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, levelId, tick, ratings, resumed, paused, togglePause, restart, offerDraw, cancelDrawOffer, answerDraw, takeback]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, timeControlId, levelId, tick, ratings, resumed, paused, togglePause, restart, offerDraw, cancelDrawOffer, answerDraw, takeback]);
 }

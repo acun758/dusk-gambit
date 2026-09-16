@@ -59,6 +59,15 @@ export const claimTimeout = gateway.claimTimeout;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;
 
+/* --------------------------------- 战术谜题 -------------------------------- */
+
+/** 题库与我的闯关进度（不含答案）。 */
+export const fetchPuzzles = gateway.fetchPuzzles;
+/** 每日一题与连胜天数。 */
+export const fetchDailyPuzzle = gateway.fetchDailyPuzzle;
+/** 逐步提交作答，由服务端判对错并发放奖励。 */
+export const submitPuzzleMove = gateway.submitPuzzleMove;
+
 type SubmitMoveArgs = Parameters<typeof gateway.submitMove>[0];
 type SubmitMoveResult = Awaited<ReturnType<typeof gateway.submitMove>>;
 /** 断网时排队的落子，队列里等着补传。 */

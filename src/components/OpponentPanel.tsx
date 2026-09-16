@@ -14,6 +14,7 @@ import {
   submitVerification,
 } from "@/lib/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
+import { DEFAULT_TIME_CONTROL, TIME_CONTROLS, timeControl, type TimeControlId } from "@/lib/time-controls";
 
 function mmss(sec: number) {
   const s = Math.max(0, Math.floor(sec));
@@ -26,7 +27,16 @@ type Tab = "auto" | "invite" | "lobby";
  * 对弈页的「找对手」面板：系统匹配、点名邀请（好友 / 搜索 / 对战码）、
  * 以及别人发出的约战大厅，10 秒轮询刷新。
  */
-export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanked: () => void; ranked: boolean; waiting: boolean }) {
+export function OpponentPanel({
+  onStartRanked,
+  ranked,
+  waiting,
+}: {
+  onStartRanked: (tc?: TimeControlId) => void;
+  ranked: boolean;
+  waiting: boolean;
+}) {
+  const [tcId, setTcId] = useState<TimeControlId>(DEFAULT_TIME_CONTROL);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>("auto");
   const [query, setQuery] = useState("");
@@ -62,7 +72,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
     setAutoQueued(true);
     setTab("auto");
     setNotice("正在为你匹配段位相近的对手…");
-    if (!ranked) onStartRanked();
+    if (!ranked) onStartRanked(DEFAULT_TIME_CONTROL);
   }, [autoQueued, signedIn, ranked, onStartRanked]);
 
   const invitesQ = useQuery({
@@ -109,7 +119,8 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
 
   const makeInvite = (invitedId?: string) => {
     setNotice(null);
-    void createDuelInvite({ data: invitedId ? { invitedId } : {} })
+    const tc = timeControl(tcId);
+    void createDuelInvite({ data: { ...(invitedId ? { invitedId } : {}), tcBase: tc.base, tcInc: tc.inc } })
       .then((r) => {
         setMyCode(r?.code ?? "");
         setNotice(invitedId ? "已向该玩家发出约战，对方在对弈页会看到提醒。" : "已生成对战码，发给对手即可开局。");
@@ -133,7 +144,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
       <div className="section-heading-row">
         <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">找对手</h2>
         <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
-          {incoming.length ? `${incoming.length} 条约战邀请` : open.length ? `大厅 ${open.length} 人等待` : "3+2 快棋"}
+          {incoming.length ? `${incoming.length} 条约战邀请` : open.length ? `大厅 ${open.length} 人等待` : `${timeControl(tcId).label} ${timeControl(tcId).zh}`}
         </span>
       </div>
 
@@ -168,13 +179,36 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
       <div className="mt-space-sm">
         {tab === "auto" && (
           <div className="space-y-space-sm">
+            <div>
+              <p className="cjk font-label-sm text-label-sm text-on-surface">选择赛制</p>
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-1" role="radiogroup" aria-label="赛制">
+                {TIME_CONTROLS.map((t) => (
+                  <button
+                    key={t.id}
+                    role="radio"
+                    aria-checked={tcId === t.id}
+                    disabled={ranked}
+                    onClick={() => setTcId(t.id)}
+                    className={`home-glass-control cjk min-h-12 px-2 py-1 font-label-sm text-label-sm transition-colors disabled:opacity-60 ${
+                      tcId === t.id
+                        ? "home-glass-tile-active bg-primary-container text-on-primary-container"
+                        : "bg-surface-container text-on-surface-variant hover:text-secondary"
+                    }`}
+                  >
+                    <span className="block tabular-nums">{t.label}</span>
+                    <span className="block">{t.zh}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{timeControl(tcId).descZh} · 四种赛制共用同一套天梯分</p>
+            </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
                 {ranked && waiting
-                  ? "正在按积分就近排队，段位相近者优先，匹配成功自动开局，无需手动点名。"
-                  : "系统按积分就近匹配真人 3+2，段位相近者优先，胜负结算段位与钻石。"}
+                  ? "正在按积分就近排队，只会配到选了同一赛制的对手，匹配成功自动开局。"
+                  : `系统按积分就近匹配真人 ${timeControl(tcId).label}，段位相近者优先，胜负结算段位与钻石。`}
               </p>
-              <Button onClick={onStartRanked} disabled={ranked} className="home-glass-action h-12 text-on-primary-container px-space-md shrink-0">
+              <Button onClick={() => onStartRanked(tcId)} disabled={ranked} className="home-glass-action h-12 text-on-primary-container px-space-md shrink-0">
                 <UiIcon name="shield" className="h-7 w-7" />
                 {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
               </Button>
@@ -268,7 +302,7 @@ export function OpponentPanel({ onStartRanked, ranked, waiting }: { onStartRanke
               </div>
             ))}
             <div className="grid gap-2 sm:grid-cols-2">
-               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码</Button>
+               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码（{timeControl(tcId).label}）</Button>
               <div className="field-row">
                 <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="field-control uppercase" />
                  <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">加入</Button>
