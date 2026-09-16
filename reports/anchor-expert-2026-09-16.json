@@ -1,0 +1,57 @@
+{
+ "params": {
+  "games": 20,
+  "sfMovetime": 60,
+  "maxPly": 120
+ },
+ "levels": [
+  {
+   "level": "expert",
+   "nominal": 1550,
+   "median": 1647,
+   "interval": 291,
+   "perAnchor": [
+    {
+     "anchor": "SF-skill0",
+     "anchorElo": 1000,
+     "games": 20,
+     "score": 15,
+     "winRate": 0.75,
+     "est": 1191
+    },
+    {
+     "anchor": "SF-1320",
+     "anchorElo": 1320,
+     "games": 20,
+     "score": 18,
+     "winRate": 0.9,
+     "est": 1702
+    },
+    {
+     "anchor": "SF-1500",
+     "anchorElo": 1500,
+     "games": 20,
+     "score": 13,
+     "winRate": 0.65,
+     "est": 1608
+    },
+    {
+     "anchor": "SF-1700",
+     "anchorElo": 1700,
+     "games": 20,
+     "score": 8.5,
+     "winRate": 0.425,
+     "est": 1647
+    },
+    {
+     "anchor": "SF-1900",
+     "anchorElo": 1900,
+     "games": 20,
+     "score": 6.5,
+     "winRate": 0.325,
+     "est": 1773
+    }
+   ]
+  }
+ ]
+}
