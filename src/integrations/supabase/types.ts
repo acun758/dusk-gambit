@@ -624,7 +624,12 @@ export type Database = {
         Returns: boolean
       }
       create_match_invite: {
-        Args: { p_invited_id?: string; p_user_id: string }
+        Args: {
+          p_invited_id?: string
+          p_tc_base?: number
+          p_tc_inc?: number
+          p_user_id: string
+        }
         Returns: {
           code: string
           expires_at: string
@@ -632,7 +637,7 @@ export type Database = {
         }[]
       }
       find_or_create_ranked_match: {
-        Args: { p_user_id: string }
+        Args: { p_tc_base?: number; p_tc_inc?: number; p_user_id: string }
         Returns: {
           match_id: string
           side: string

@@ -10,6 +10,18 @@ import { Chess } from "chess.js";
 const BASE = 180_000;
 const INC = 2_000;
 
+/** 服务端只接受这四种赛制，其余一律回落到 3+2。 */
+const ALLOWED_TC: { base: number; inc: number }[] = [
+  { base: 60_000, inc: 0 },
+  { base: 180_000, inc: 2_000 },
+  { base: 600_000, inc: 0 },
+  { base: 900_000, inc: 10_000 },
+];
+
+function normalizeTc(base?: number, inc?: number): { base: number; inc: number } {
+  return ALLOWED_TC.find((t) => t.base === base && t.inc === inc) ?? { base: BASE, inc: INC };
+}
+
 export type MatchRow = {
   id: string;
   white_id: string | null;
@@ -248,9 +260,15 @@ export const submitVerification = createServerFn({ method: "POST" })
 
 export const findMatch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input?: { tcBase?: number; tcInc?: number }) => input ?? {})
+  .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin.rpc("find_or_create_ranked_match", { p_user_id: context.userId });
+    const tc = normalizeTc(data?.tcBase, data?.tcInc);
+    const { data: rows, error } = await supabaseAdmin.rpc("find_or_create_ranked_match", {
+      p_user_id: context.userId,
+      p_tc_base: tc.base,
+      p_tc_inc: tc.inc,
+    });
     if (error) throw new Error(error.message);
     const picked = rows?.[0];
     if (!picked) throw new Error("match unavailable");
@@ -618,10 +636,16 @@ export const respondFriend = createServerFn({ method: "POST" }).middleware([requ
   });
 
 export const createDuelInvite = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
-  .inputValidator((input: { invitedId?: string }) => input)
+  .inputValidator((input: { invitedId?: string; tcBase?: number; tcInc?: number }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const args = { p_user_id: context.userId, ...(data.invitedId ? { p_invited_id: data.invitedId } : {}) };
+    const tc = normalizeTc(data.tcBase, data.tcInc);
+    const args = {
+      p_user_id: context.userId,
+      p_tc_base: tc.base,
+      p_tc_inc: tc.inc,
+      ...(data.invitedId ? { p_invited_id: data.invitedId } : {}),
+    };
     const { data: rows, error } = await supabaseAdmin.rpc("create_match_invite", args);
     if (error) throw new Error(error.message); return rows?.[0] ?? null;
   });

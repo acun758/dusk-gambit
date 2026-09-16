@@ -19,16 +19,23 @@ export interface AiLevel {
   depth: number;
   /** 引擎技能档位 0~20 */
   skill: number;
+  /** 单手时间预算（毫秒），引擎内再次钳制 */
+  movetimeMs: number;
 }
 
+/**
+ * 档位标定：引擎 v0.2（置换表 + 启发式排序 + 评估补强）自对弈定标，
+ * 高档位对低档位稳定净胜；标称 Elo 保持保守，不虚标。
+ */
 export const AI_LEVELS: AiLevel[] = [
-  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4 },
-  { id: "club", elo: 1100, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9 },
-  { id: "expert", elo: 1400, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 5, skill: 14 },
-  { id: "master", elo: 1700, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 5, skill: 20 },
+  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4, movetimeMs: 300 },
+  { id: "club", elo: 1150, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9, movetimeMs: 450 },
+  { id: "expert", elo: 1500, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 6, skill: 14, movetimeMs: 700 },
+  { id: "master", elo: 1850, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 8, skill: 20, movetimeMs: 1000 },
 ];
 
-export const MAX_MOVETIME_MS = 600;
+/** 兼容旧调用；实际预算以各档位 movetimeMs 为准 */
+export const MAX_MOVETIME_MS = 1200;
 
 export function aiLevel(id: AiLevelId): AiLevel {
   return AI_LEVELS.find((l) => l.id === id) ?? AI_LEVELS[1]!;
@@ -51,7 +58,7 @@ function toWhitePov(cp: number, fen: string): number {
  * 上层调用方式不变。
  */
 export async function chooseMove(fen: string, level: AiLevel): Promise<EngineChoice | null> {
-  const r = await getEngine().think(fen, { depth: level.depth, movetimeMs: MAX_MOVETIME_MS, skill: level.skill });
+  const r = await getEngine().think(fen, { depth: level.depth, movetimeMs: level.movetimeMs, skill: level.skill });
   if (!r.uci) return null;
   const applied = applyMove(fen, r.uci);
   if (!applied) return null;
@@ -60,13 +67,13 @@ export async function chooseMove(fen: string, level: AiLevel): Promise<EngineCho
 
 /** 单点局面评分（白方视角厘兵），用于走子后的即时评估条。同样在 Worker 内计算。 */
 export async function evaluatePosition(fen: string, depth = 3): Promise<number> {
-  const r = await getEngine().think(fen, { depth, movetimeMs: MAX_MOVETIME_MS, skill: 20 });
+  const r = await getEngine().think(fen, { depth, movetimeMs: 600, skill: 20 });
   return clampCp(toWhitePov(r.cp, fen));
 }
 
 /** 仅供无法等待异步结果的兜底路径（不得用于批量搜索）。 */
 export function chooseMoveSync(fen: string, level: AiLevel): EngineChoice | null {
-  const r = getEngine().thinkSync(fen, { depth: level.depth, movetimeMs: MAX_MOVETIME_MS, skill: level.skill });
+  const r = getEngine().thinkSync(fen, { depth: level.depth, movetimeMs: level.movetimeMs, skill: level.skill });
   if (!r.uci) return null;
   const applied = applyMove(fen, r.uci);
   if (!applied) return null;
