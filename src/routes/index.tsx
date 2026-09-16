@@ -43,9 +43,8 @@ function Index() {
   const nextTier = nextRank(profile.elo)?.floor ?? tier.ceil;
   const floor = tier.floor;
   const progress = Math.max(4, Math.min(100, ((profile.elo - floor) / (nextTier - floor)) * 100));
-  const rankArt = rankOf(profile.elo).art;
   const ceremony = usePromotionCeremony(
-    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: rankOf(profile.elo).floor },
+    { key: profile.tier, zh: profile.tierZh, en: profile.tier, rank: tier.id, floor: tier.floor },
     signedIn,
   );
 
@@ -144,7 +143,7 @@ function Index() {
                   {t("宗师之约", "Covenant of the Grandmaster")}
                 </span>
                 <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-wider mb-1 drop-shadow-md">
-                  {t("棋盘从不说谎。", "The Board Never Lies.")}
+                  {t("每个王，都曾是一个兵。", "Every king was once a pawn.")}
                 </h1>
                 <p className="cjk font-label-sm text-label-sm text-secondary tracking-widest mb-2">
                   {t("静默布局，血中落子。", "Plan in silence. Execute in blood.")}

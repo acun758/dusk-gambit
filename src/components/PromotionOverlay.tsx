@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { RankBadge } from "@/components/RankBadge";
+import type { RankTier } from "@/lib/ranks";
 
 export interface TierMark {
   key: string;
   zh: string;
   en: string;
-  art: GameIconName;
+  rank: RankTier["id"];
   floor: number;
 }
 
@@ -67,7 +68,7 @@ export function PromotionOverlay({
     >
       <div className="flex flex-col items-center gap-space-sm text-center">
         <div className={`promotion-badge w-32 h-32 flex items-center justify-center ${up ? "is-up" : "is-down"}`}>
-          <GameIcon name={event.tier.art} className="h-28 w-28" />
+          <RankBadge rank={event.tier.rank} className="h-28 w-28" label={`${event.tier.zh}段徽章`} />
         </div>
         <span className="promotion-kicker cjk font-label-sm text-label-sm tracking-[0.4em] text-secondary">
           {up ? "段 位 晋 升" : "段 位 变 动"}

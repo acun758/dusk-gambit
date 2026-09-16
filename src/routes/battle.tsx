@@ -115,9 +115,9 @@ function Battle() {
     if (session.state.status === "live") endedRef.current = false;
   }, [session.state.status]);
 
-  const rankArt = rankOf(profile.elo).art;
+  const rank = rankOf(profile.elo);
   const ceremony = usePromotionCeremony(
-    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: rankOf(profile.elo).floor },
+    { key: profile.tier, zh: profile.tierZh, en: profile.tier, rank: rank.id, floor: rank.floor },
     signedIn && ranked,
   );
   const ratingDelta = session.ratings?.ratingDelta ?? 0;

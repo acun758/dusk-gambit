@@ -25,6 +25,7 @@ import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
 import { RANK_TIERS, RANK_DISCLAIMER, RANK_TAGLINE, rankOf } from "@/lib/ranks";
+import { RankBadge } from "@/components/RankBadge";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
@@ -137,7 +138,7 @@ function Dynasty() {
   const rivals = (rivalsQ.data ?? []).filter((r) => Math.abs(r.elo - profile.elo) <= 120);
 
   const ceremony = usePromotionCeremony(
-    { key: current.en, zh: current.zh, en: current.en, art: current.art as never, floor: current.floor },
+    { key: current.en, zh: current.zh, en: current.en, rank: current.id, floor: current.floor },
     signedIn,
   );
 
@@ -225,7 +226,7 @@ function Dynasty() {
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <div className="flex items-center gap-space-md min-w-0">
                  <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 p-0 shrink-0">
-                  <GameIcon name={current.art} className="h-full w-full" />
+                  <RankBadge rank={current.id} className="h-full w-full" label={`${current.zh}段徽章`} />
                 </div>
                 <div className="flex flex-col min-w-0">
                    <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
@@ -517,7 +518,7 @@ function Dynasty() {
                         className={`w-11 h-11 shrink-0 hidden sm:flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
-                        <UiIcon name={tier.icon} className="h-10 w-10" />
+                        <RankBadge rank={tier.id} className="h-10 w-10" label={`${tier.zh}段徽章`} />
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-lg text-label-lg truncate">{row.name}</span>
@@ -569,7 +570,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <UiIcon name={tier.icon} className="h-9 w-9" /> : <UiIcon name="seal" className="h-6 w-6" />}
+                      {unlocked ? <RankBadge rank={tier.id} className="h-9 w-9" label={`${tier.zh}段徽章`} /> : <UiIcon name="seal" className="h-6 w-6" />}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>

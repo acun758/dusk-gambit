@@ -1,21 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import poster from "@/assets/invite-poster.jpg";
 import { useProfile, tierLabel } from "@/lib/profile";
-import { GameIcon, type GameIconName } from "@/components/GameIcon";
+import { RankBadge } from "@/components/RankBadge";
 import { UiIcon } from "@/components/UiIcon";
-
-const TIER_ICON: Record<string, GameIconName> = {
-  Sovereign: "rank-sovereign",
-  Apex: "rank-apex",
-  Grandmaster: "rank-grandmaster",
-  Master: "rank-master",
-  Knight: "rank-knight",
-};
+import { rankOf } from "@/lib/ranks";
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
 export function InvitePoster({ className = "" }: { compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
-  const icon = TIER_ICON[profile.tier] ?? "rank-knight";
+  const rank = rankOf(profile.elo);
   return (
     <section
       aria-label="邀请对弈"
@@ -38,7 +31,7 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
 
         <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0">
-          <GameIcon name={icon} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
+          <RankBadge rank={rank.id} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" label={`${rank.zh}段徽章`} />
           <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate">{tierLabel(profile).zh}</h2>
         </div>
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums">
