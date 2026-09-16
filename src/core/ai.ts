@@ -37,14 +37,14 @@ export interface AiLevel {
  * 标称值一律取实测区间的保守侧，不虚标。
  */
 export const AI_LEVELS: AiLevel[] = [
-  { id: "novice", elo: 900, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4, movetimeMs: 300 },
-  { id: "club", elo: 1450, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9, movetimeMs: 450 },
-  { id: "expert", elo: 1750, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 6, skill: 14, movetimeMs: 700 },
-  { id: "master", elo: 1900, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 8, skill: 20, movetimeMs: 1000 },
+  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 2, skill: 2, movetimeMs: 250 },
+  { id: "club", elo: 1250, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 3, skill: 7, movetimeMs: 350 },
+  { id: "expert", elo: 1550, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 4, skill: 10, movetimeMs: 400 },
+  { id: "master", elo: 1800, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 10, skill: 20, movetimeMs: 1800 },
 ];
 
 /** 兼容旧调用；实际预算以各档位 movetimeMs 为准 */
-export const MAX_MOVETIME_MS = 1200;
+export const MAX_MOVETIME_MS = 2000;
 
 export function aiLevel(id: AiLevelId): AiLevel {
   return AI_LEVELS.find((l) => l.id === id) ?? AI_LEVELS[1]!;

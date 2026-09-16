@@ -35,8 +35,8 @@ castleMask[0x74] = 15 & ~(CASTLE_BK | CASTLE_BQ);
 const VAL = [0, 100, 320, 330, 500, 900, 20000];
 const MATE = 100000;
 
-export const MAX_DEPTH = 8;
-export const MAX_MOVETIME = 1200;
+export const MAX_DEPTH = 10;
+export const MAX_MOVETIME = 2000;
 
 // 时间源：浏览器 Worker 有 performance，小游戏环境回退 Date.now
 const now: () => number =
