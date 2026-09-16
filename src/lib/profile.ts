@@ -12,6 +12,7 @@ import {
 } from "@/lib/db";
 import { subscribeMyProfile } from "@/lib/realtime";
 import { uploadAvatar } from "@/lib/avatar-upload";
+import { rankOf } from "@/lib/ranks";
 
 export interface PlayerProfile {
   name: string;
@@ -40,9 +41,9 @@ export interface PlayerProfile {
 export const DEFAULT_PROFILE: PlayerProfile = {
   name: "Adiamond",
   diamonds: 1280,
-  elo: 1200,
-  tier: "Knight",
-  tierZh: "骑士",
+  elo: 1000,
+  tier: "Pawn",
+  tierZh: "兵",
   wins: 0,
   losses: 0,
   draws: 0,
