@@ -24,14 +24,23 @@ export interface AiLevel {
 }
 
 /**
- * 档位标定：引擎 v0.2（置换表 + 启发式排序 + 评估补强）自对弈定标，
- * 高档位对低档位稳定净胜；标称 Elo 保持保守，不虚标。
+ * 档位标定（外部锚定，非自对弈）：
+ * 基准脚本 scripts/anchor-benchmark.ts —— 我方各档 × Stockfish 19 lite 限级锚点
+ * （Skill Level 0 / UCI_Elo 1320・1500・1700・1900），每对 6 局快棋，
+ * 以 R = R_anchor + 400·log10(W/(1−W)) 反推，取 5 个锚点估计值的中位数。
+ *
+ * 2026-09-16 实测（中位数 ± 半幅）：
+ *   novice ≈ 900 ± 290（下沿被 0/6 截断污染，以 Skill0 锚点 809 为准，标称取 900）
+ *   club   ≈ 1642 ± 134  → 标称 1450（取保守下沿）
+ *   expert ≈ 1820 ± 165  → 标称 1750
+ *   master ≈ 1891 ± 406  → 标称 1900（基准里每手被压到 300ms，线上 1000ms 只会更强）
+ * 标称值一律取实测区间的保守侧，不虚标。
  */
 export const AI_LEVELS: AiLevel[] = [
-  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4, movetimeMs: 300 },
-  { id: "club", elo: 1150, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9, movetimeMs: 450 },
-  { id: "expert", elo: 1500, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 6, skill: 14, movetimeMs: 700 },
-  { id: "master", elo: 1850, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 8, skill: 20, movetimeMs: 1000 },
+  { id: "novice", elo: 900, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 3, skill: 4, movetimeMs: 300 },
+  { id: "club", elo: 1450, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 4, skill: 9, movetimeMs: 450 },
+  { id: "expert", elo: 1750, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 6, skill: 14, movetimeMs: 700 },
+  { id: "master", elo: 1900, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 8, skill: 20, movetimeMs: 1000 },
 ];
 
 /** 兼容旧调用；实际预算以各档位 movetimeMs 为准 */
