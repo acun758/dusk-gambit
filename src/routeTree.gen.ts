@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
+import { Route as PuzzlesRouteImport } from './routes/puzzles'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const DynastyRoute = DynastyRouteImport.update({
   path: '/dynasty',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PuzzlesRoute = PuzzlesRouteImport.update({
+  id: '/puzzles',
+  path: '/puzzles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/puzzles': typeof PuzzlesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/puzzles': typeof PuzzlesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/puzzles': typeof PuzzlesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/puzzles'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/puzzles'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/puzzles'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   BattleRoute: typeof BattleRoute
   CrucibleRoute: typeof CrucibleRoute
   DynastyRoute: typeof DynastyRoute
+  PuzzlesRoute: typeof PuzzlesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DynastyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/puzzles': {
+      id: '/puzzles'
+      path: '/puzzles'
+      fullPath: '/puzzles'
+      preLoaderRoute: typeof PuzzlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   BattleRoute: BattleRoute,
   CrucibleRoute: CrucibleRoute,
   DynastyRoute: DynastyRoute,
+  PuzzlesRoute: PuzzlesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
