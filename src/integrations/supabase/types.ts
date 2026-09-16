@@ -431,6 +431,9 @@ export type Database = {
           losses: number
           name: string
           provisional_games: number
+          puzzle_best_streak: number
+          puzzle_last_day: string | null
+          puzzle_streak: number
           real_name: string
           streak: number
           training_points: number
@@ -453,6 +456,9 @@ export type Database = {
           losses?: number
           name?: string
           provisional_games?: number
+          puzzle_best_streak?: number
+          puzzle_last_day?: string | null
+          puzzle_streak?: number
           real_name?: string
           streak?: number
           training_points?: number
@@ -475,6 +481,9 @@ export type Database = {
           losses?: number
           name?: string
           provisional_games?: number
+          puzzle_best_streak?: number
+          puzzle_last_day?: string | null
+          puzzle_streak?: number
           real_name?: string
           streak?: number
           training_points?: number
@@ -527,6 +536,174 @@ export type Database = {
           updated_at?: string
           user_id?: string
           wins?: number
+        }
+        Relationships: []
+      }
+      puzzle_daily: {
+        Row: {
+          created_at: string
+          day: string
+          puzzle_id: number
+        }
+        Insert: {
+          created_at?: string
+          day: string
+          puzzle_id: number
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          puzzle_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "puzzle_daily_puzzle_id_fkey"
+            columns: ["puzzle_id"]
+            isOneToOne: false
+            referencedRelation: "puzzles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      puzzle_progress: {
+        Row: {
+          attempts: number
+          best_ms: number | null
+          created_at: string
+          id: string
+          puzzle_id: number
+          reward_granted: boolean
+          solved: boolean
+          solved_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          best_ms?: number | null
+          created_at?: string
+          id?: string
+          puzzle_id: number
+          reward_granted?: boolean
+          solved?: boolean
+          solved_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          best_ms?: number | null
+          created_at?: string
+          id?: string
+          puzzle_id?: number
+          reward_granted?: boolean
+          solved?: boolean
+          solved_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "puzzle_progress_puzzle_id_fkey"
+            columns: ["puzzle_id"]
+            isOneToOne: false
+            referencedRelation: "puzzles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      puzzle_solutions: {
+        Row: {
+          alternates: Json
+          created_at: string
+          puzzle_id: number
+          solution: string[]
+          updated_at: string
+        }
+        Insert: {
+          alternates?: Json
+          created_at?: string
+          puzzle_id: number
+          solution: string[]
+          updated_at?: string
+        }
+        Update: {
+          alternates?: Json
+          created_at?: string
+          puzzle_id?: number
+          solution?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "puzzle_solutions_puzzle_id_fkey"
+            columns: ["puzzle_id"]
+            isOneToOne: true
+            referencedRelation: "puzzles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      puzzles: {
+        Row: {
+          code: string
+          created_at: string
+          diamond_reward: number
+          difficulty: number
+          explanation_en: string
+          explanation_zh: string
+          fen: string
+          hint_en: string
+          hint_zh: string
+          id: number
+          moves_required: number
+          rating: number
+          side_to_move: string
+          theme: string
+          theme_en: string
+          theme_zh: string
+          tp_reward: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          diamond_reward?: number
+          difficulty?: number
+          explanation_en?: string
+          explanation_zh?: string
+          fen: string
+          hint_en?: string
+          hint_zh?: string
+          id?: number
+          moves_required?: number
+          rating?: number
+          side_to_move?: string
+          theme?: string
+          theme_en?: string
+          theme_zh?: string
+          tp_reward?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          diamond_reward?: number
+          difficulty?: number
+          explanation_en?: string
+          explanation_zh?: string
+          fen?: string
+          hint_en?: string
+          hint_zh?: string
+          id?: number
+          moves_required?: number
+          rating?: number
+          side_to_move?: string
+          theme?: string
+          theme_en?: string
+          theme_zh?: string
+          tp_reward?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -647,6 +824,7 @@ export type Database = {
         Args: { p_code: string; p_user_id: string }
         Returns: string
       }
+      pick_daily_puzzle: { Args: { p_day: string }; Returns: number }
       rank_floor: { Args: { p_elo: number }; Returns: number }
       rank_k: { Args: { p_elo: number }; Returns: number }
       rank_next_floor: { Args: { p_elo: number }; Returns: number }
@@ -655,6 +833,17 @@ export type Database = {
           p_correct: boolean
           p_level_id: number
           p_ms: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      record_puzzle_result: {
+        Args: {
+          p_correct: boolean
+          p_day?: string
+          p_is_daily?: boolean
+          p_ms: number
+          p_puzzle_id: number
           p_user_id: string
         }
         Returns: Json
