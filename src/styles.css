@@ -352,7 +352,7 @@
 .game-entrance-action {
   position: absolute;
   left: 50%;
-  bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem));
+  bottom: clamp(3rem, 11vh, 6rem);
   z-index: 2;
   min-width: 10.5rem;
   height: 3rem;
@@ -388,7 +388,7 @@
   }
 
   .game-entrance-action {
-    bottom: max(1rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem));
+    bottom: max(clamp(2.5rem, 11vh, 5rem), calc(env(safe-area-inset-bottom, 0px) + 0.75rem));
   }
 }
 
