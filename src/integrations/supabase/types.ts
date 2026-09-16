@@ -176,48 +176,6 @@ export type Database = {
           },
         ]
       }
-      fide_ratings: {
-        Row: {
-          country: string
-          fide_id: number
-          name: string
-          rank_chn: number | null
-          rank_chn_w: number | null
-          rank_open: number | null
-          rank_women: number | null
-          rating: number
-          sex: string | null
-          title: string | null
-          updated_at: string
-        }
-        Insert: {
-          country: string
-          fide_id: number
-          name: string
-          rank_chn?: number | null
-          rank_chn_w?: number | null
-          rank_open?: number | null
-          rank_women?: number | null
-          rating: number
-          sex?: string | null
-          title?: string | null
-          updated_at?: string
-        }
-        Update: {
-          country?: string
-          fide_id?: number
-          name?: string
-          rank_chn?: number | null
-          rank_chn_w?: number | null
-          rank_open?: number | null
-          rank_women?: number | null
-          rating?: number
-          sex?: string | null
-          title?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       friendships: {
         Row: {
           addressee_id: string

@@ -74,3 +74,6 @@
 - [x] 页眉品牌名与进入页统一为「玄弈 · DUSK GAMBIT」（手机竖排不截断，桌面双语横排；桌面侧栏品牌同步更新）
 - [x] 修复手机页眉标题显示不全（原「王座殿堂」小字英文被截断，已随品牌改版消除）
 - [x] Add wooden move/capture/check/countdown/game-end sounds with a header mute toggle.
+
+## 第 25 号回执追问
+- [ ] 七条追问逐条作答 + 代码包交终审

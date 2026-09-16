@@ -46,7 +46,7 @@ const SETS = [
   { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "knight", image: demonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "demon-gold" },
   { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "dark-dragon" },
   { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: platinumQueenPreview, floor: 1600, price: 1200, pieceSetId: null },
-  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset, floor: 2000, price: 1800, pieceSetId: null },
+  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset, floor: 2200, price: 1800, pieceSetId: null },
 ] as const;
 
 function Arsenal() {
