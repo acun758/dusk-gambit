@@ -100,6 +100,16 @@ export function SovereignNav() {
 
         <div className="mt-auto px-space-sm pb-space-lg grid gap-1">
           <Link
+            to="/puzzles"
+            className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
+              isActive("/puzzles")
+                ? "home-glass-tile-active text-secondary"
+                : "text-on-surface-variant hover:text-secondary"
+            }`}
+          >
+            <UiIcon name="bolt" className="h-7 w-7" /><span className="rail-label">战术谜题</span>
+          </Link>
+          <Link
             to="/arsenal"
             className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
               isActive("/arsenal")
