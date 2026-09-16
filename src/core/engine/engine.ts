@@ -787,6 +787,48 @@ export class AshbornEngine {
     };
   }
 
+  /**
+   * 根节点全部着法的评分（行棋方视角，厘兵，按优劣排序）。
+   * 供提示、谜题校验与出题使用；不做失误窗口抽样。
+   */
+  analyzeRoot(fen: string, opts: SearchOptions = {}): { uci: string; cp: number }[] {
+    this.load(fen);
+    const t0 = now();
+    this.nodes = 0; this.aborted = false;
+    this.killers.fill(0);
+    const maxDepth = Math.min(MAX_DEPTH, Math.max(1, opts.depth ?? 6));
+    const movetime = Math.min(MAX_MOVETIME * 8, Math.max(50, opts.movetimeMs ?? 1500));
+    this.stopAt = t0 + movetime;
+
+    let roots: { m: number; cp: number }[] = [];
+    for (let d = 2; d <= maxDepth; d++) {
+      const moves: number[] = [];
+      this.genMoves(moves);
+      this.orderMoves(moves, roots.length ? roots[0].m : 0, 0);
+      const iteration: { m: number; cp: number }[] = [];
+      for (const m of moves) {
+        this.make(m);
+        if (this.inCheck(this.side === BLACK)) { this.unmake(m); continue; }
+        const score = -this.negamax(d - 1, -MATE * 2, MATE * 2, 1);
+        this.unmake(m);
+        if (this.aborted) break;
+        iteration.push({ m, cp: score });
+      }
+      if (this.aborted) break;
+      if (iteration.length) {
+        iteration.sort((a, b) => b.cp - a.cp);
+        roots = iteration;
+      }
+    }
+    return roots.map(r => {
+      const promo = (r.m >> 14) & 7;
+      return {
+        uci: sqName(r.m & 127) + sqName((r.m >> 7) & 127) + (promo ? 'nbrq'[promo - 2] : ''),
+        cp: r.cp,
+      };
+    });
+  }
+
   /** 合法着法列表（协议 cmd:"legal"） */
   legalMoves(fen: string): string[] {
     this.load(fen);
