@@ -273,7 +273,7 @@ function Battle() {
           </div>
 
           <AlertDialog open={confirmAction !== null} onOpenChange={(open) => !open && setConfirm(null)}>
-            <AlertDialogContent className="home-glass-panel">
+            <AlertDialogContent className="home-glass-panel fixed! w-[calc(100%-2rem)] max-w-md max-h-[85dvh] overflow-y-auto">
               <AlertDialogHeader>
                 <AlertDialogTitle className="cjk">{confirmAction === "resign" ? "确认认输？" : "向对手提和？"}</AlertDialogTitle>
                 <AlertDialogDescription className="cjk">
