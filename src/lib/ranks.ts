@@ -7,6 +7,9 @@
  * 合规：本平台自建等级，「参考水平」仅为水平类比，非官方授予。
  */
 
+import type { GameIconName } from "@/components/GameIcon";
+import type { UiIconName } from "@/components/UiIcon";
+
 export interface RankTier {
   /** 稳定标识 */
   id: "king" | "queen" | "rook" | "bishop" | "knight" | "pawn";
@@ -20,8 +23,8 @@ export interface RankTier {
   /** 参考水平（非官方） */
   referenceZh: string;
   referenceEn: string;
-  icon: string;
-  art: string;
+  icon: UiIconName;
+  art: GameIconName;
   accent: string;
 }
 
