@@ -12,6 +12,7 @@ import {
 } from "@/lib/db";
 import { subscribeMyProfile } from "@/lib/realtime";
 import { uploadAvatar } from "@/lib/avatar-upload";
+import { rankOf } from "@/lib/ranks";
 
 export interface PlayerProfile {
   name: string;
@@ -40,9 +41,9 @@ export interface PlayerProfile {
 export const DEFAULT_PROFILE: PlayerProfile = {
   name: "Adiamond",
   diamonds: 1280,
-  elo: 1200,
-  tier: "Knight",
-  tierZh: "骑士",
+  elo: 1000,
+  tier: "Pawn",
+  tierZh: "兵",
   wins: 0,
   losses: 0,
   draws: 0,
@@ -72,11 +73,8 @@ export function tierLabel(p: PlayerProfile): { zh: string; en: string } {
 const KEY = "bs.profile.v1";
 
 export function tierFor(elo: number): { tier: string; tierZh: string } {
-  if (elo >= 2600) return { tier: "Sovereign", tierZh: "血誓君主" };
-  if (elo >= 2500) return { tier: "Apex", tierZh: "神圣大宗师" };
-  if (elo >= 2400) return { tier: "Grandmaster", tierZh: "宗师" };
-  if (elo >= 2200) return { tier: "Master", tierZh: "大师" };
-  return { tier: "Knight", tierZh: "骑士" };
+  const r = rankOf(elo);
+  return { tier: r.en, tierZh: r.zh };
 }
 
 export function winRate(p: PlayerProfile): number {

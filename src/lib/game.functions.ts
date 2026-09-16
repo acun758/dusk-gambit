@@ -1,3 +1,4 @@
+import { RANK_TIERS } from "@/lib/ranks";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { Chess } from "chess.js";
@@ -990,13 +991,11 @@ export interface LobbyStats {
   recent: { id: string; white: string; black: string; outcome: string | null; ratingDelta: number | null; playedAt: string }[];
 }
 
-const TIER_BUCKETS: { min: number; tier: string; tierZh: string }[] = [
-  { min: 2600, tier: "Sovereign", tierZh: "血誓君主" },
-  { min: 2500, tier: "Apex", tierZh: "神圣大宗师" },
-  { min: 2400, tier: "Grandmaster", tierZh: "宗师" },
-  { min: 2200, tier: "Master", tierZh: "大师" },
-  { min: 0, tier: "Knight", tierZh: "骑士" },
-];
+const TIER_BUCKETS: { min: number; tier: string; tierZh: string }[] = RANK_TIERS.map((r) => ({
+  min: r.floor,
+  tier: r.en,
+  tierZh: r.zh,
+}));
 
 /** 约战大厅概况：在线人数、排队人数、段位分布与最近战报。 */
 export const getLobbyStats = createServerFn({ method: "GET" }).handler(async (): Promise<LobbyStats> => {
