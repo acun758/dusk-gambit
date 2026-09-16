@@ -297,7 +297,7 @@ function Index() {
             <div className="grid grid-cols-2 gap-space-xs">
               {[
                 { img: RELIC_A, zh: "黑曜骑士", en: "Obsidian Knight", tagZh: "已装备", tagEn: "Equipped", locked: false },
-                { img: RELIC_B, zh: "猩红王后", en: "Crimson Queen", tagZh: "2500 分解锁", tagEn: "Unlock at 2500", locked: true },
+                { img: RELIC_B, zh: "猩红王后", en: "Crimson Queen", tagZh: "2000 分解锁", tagEn: "Unlock at 2000", locked: true },
               ].map((r) => (
                 <div key={r.en} className="home-glass-tile p-space-sm flex flex-col">
                   <div className="home-glass-media aged-print-frame relative w-full h-36 mb-space-sm overflow-hidden">
