@@ -78,6 +78,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -85,14 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1.0, viewport-fit=cover",
       },
-      { title: "血誓王权 · 专业国际象棋 | Blood Sovereign" },
-      {
-        name: "description",
-        content:
-          "专业国际象棋对弈、残局训练、AI 复盘与实时天梯晋级。",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:site_name", content: "玄弈 · DUSK GAMBIT" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

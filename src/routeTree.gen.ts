@@ -18,6 +18,7 @@ import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
 import { Route as PuzzlesRouteImport } from './routes/puzzles'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const PuzzlesRoute = PuzzlesRouteImport.update({
   path: '/puzzles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
   '/puzzles': typeof PuzzlesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
   '/puzzles': typeof PuzzlesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
   '/puzzles': typeof PuzzlesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/crucible'
     | '/dynasty'
     | '/puzzles'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/crucible'
     | '/dynasty'
     | '/puzzles'
+    | '/sitemap.xml'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/crucible'
     | '/dynasty'
     | '/puzzles'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   CrucibleRoute: typeof CrucibleRoute
   DynastyRoute: typeof DynastyRoute
   PuzzlesRoute: typeof PuzzlesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PuzzlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   CrucibleRoute: CrucibleRoute,
   DynastyRoute: DynastyRoute,
   PuzzlesRoute: PuzzlesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -12,6 +12,7 @@ import { fetchEndgameLevels as listEndgameLevels } from "@/lib/db";
 import type { DrillLevel } from "@/components/EndgameDrill";
 
 export const Route = createFileRoute("/arsenal")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "军械典藏 · 血誓王权 | Arsenal Collection" },
@@ -130,7 +131,7 @@ function Arsenal() {
                 return (
                   <button key={item.id} type="button" onClick={() => setSelectedId(item.id)} className={`home-glass-tile grid min-w-0 gap-2 p-space-sm text-left transition-colors ${active ? "home-glass-tile-active" : ""}`}>
                     <div className="home-glass-media aged-print-frame relative aspect-[4/3] overflow-hidden">
-                      <img src={item.image} alt={t(`${item.zh}棋子套装`, `${item.en} piece set`)} className="h-full w-full object-contain p-2" />
+                      <img src={item.image} alt={t(`${item.zh}${kindLabel(item.kind)}——${canUse ? "当前段位可使用" : `需 ${item.floor} 分解锁`}`, `${item.en} ${kindLabel(item.kind)} — ${canUse ? "available at your rating" : `unlocks at ${item.floor} rating`}`)} className="h-full w-full object-contain p-2" />
                       <span className={`absolute left-2 top-2 px-2 py-1 font-label-sm text-label-sm cjk ${canUse ? "bg-secondary text-on-secondary" : "bg-surface-container-highest text-on-surface-variant"}`}>{equippedId === item.id ? t("已装备", "Equipped") : canUse ? t("可使用", "Available") : `${item.floor} ELO`}</span>
                     </div>
                     <div className="min-w-0">
@@ -190,7 +191,7 @@ function Arsenal() {
 
           <aside className="stage-panel home-glass-panel grid gap-space-sm p-space-md lg:sticky lg:top-24">
             <div className="home-glass-media aged-print-frame relative aspect-square overflow-hidden">
-              <img src={selected.image} alt={t(`${selected.zh}大图`, `${selected.en} preview`)} className="h-full w-full object-contain p-space-sm" />
+              <img src={selected.image} alt={t(`${selected.zh}${kindLabel(selected.kind)}的细节展示图`, `Detailed view of the ${selected.en} ${kindLabel(selected.kind)}`)} className="h-full w-full object-contain p-space-sm" />
             </div>
             <div>
               <p className="cjk font-label-sm text-label-sm text-primary">{kindLabel(selected.kind)} · {unlocked ? t("已解锁", "Unlocked") : t("段位锁定", "Tier locked")}</p>

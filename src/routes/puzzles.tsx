@@ -13,6 +13,7 @@ import { useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/puzzles")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "战术谜题 · 每日一题 | Tactics Puzzles" },

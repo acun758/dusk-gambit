@@ -32,6 +32,7 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SoundToggle } from "@/components/SoundToggle";
 
 export const Route = createFileRoute("/battle")({
+  staticData: { sitemap: false },
   validateSearch: (search: Record<string, unknown>): { drill?: string } =>
     typeof search['drill'] === "string" ? { drill: search['drill'] as string } : {},
   head: () => ({
