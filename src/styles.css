@@ -622,15 +622,30 @@
 .home-glass-header::after {
   content: "";
   position: absolute;
-  inset: -3%;
+  inset: -4%;
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.45;
   mix-blend-mode: overlay;
   background-image: var(--home-glass-paper);
-  background-size: 200%;
+  background-size: 140%;
   background-position: 38% 32%;
   background-repeat: no-repeat;
   transform: rotate(0.8deg);
+}
+
+/* 加一层 soft-light 纸纹，让深底上的斑驳感更清楚 */
+.home-glass-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  mix-blend-mode: soft-light;
+  background-image: var(--home-glass-paper);
+  background-size: 220%;
+  background-position: 72% 18%;
+  background-repeat: no-repeat;
+  transform: rotate(-1.2deg);
 }
 
 @media (max-width: 600px) {
