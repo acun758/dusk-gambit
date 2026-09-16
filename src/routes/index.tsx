@@ -38,12 +38,13 @@ export const Route = createFileRoute("/")({
 function Index() {
   const { profile, winRate, signedIn, loading } = useProfile();
   const t = useT();
-  const nextTier = profile.elo >= 2500 ? 2600 : profile.elo >= 2400 ? 2500 : 2400;
-  const floor = nextTier - 100;
+  const tier = rankOf(profile.elo);
+  const nextTier = nextRank(profile.elo)?.floor ?? tier.ceil;
+  const floor = tier.floor;
   const progress = Math.max(4, Math.min(100, ((profile.elo - floor) / (nextTier - floor)) * 100));
-  const rankArt = profile.elo >= 2600 ? "rank-sovereign" : profile.elo >= 2500 ? "rank-apex" : profile.elo >= 2400 ? "rank-grandmaster" : profile.elo >= 2200 ? "rank-master" : "rank-knight";
+  const rankArt = rankOf(profile.elo).art;
   const ceremony = usePromotionCeremony(
-    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: profile.elo >= 2600 ? 2600 : profile.elo >= 2500 ? 2500 : profile.elo >= 2400 ? 2400 : profile.elo >= 2200 ? 2200 : 0 },
+    { key: profile.tier, zh: profile.tierZh, en: profile.tier, art: rankArt, floor: rankOf(profile.elo).floor },
     signedIn,
   );
 

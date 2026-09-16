@@ -24,6 +24,7 @@ import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
+import { RANK_TIERS, RANK_DISCLAIMER, RANK_TAGLINE, rankOf } from "@/lib/ranks";
 
 export const Route = createFileRoute("/dynasty")({
   head: () => ({
@@ -55,16 +56,10 @@ interface ProgressRow {
   solved: boolean;
 }
 
-const TIERS = [
-  { floor: 2600, ceil: 3000, zh: "血誓君主", en: "Sovereign", icon: "crown" as UiIconName, art: "rank-sovereign" as const, accent: "from-primary/70 via-primary/20 to-transparent" },
-  { floor: 2500, ceil: 2600, zh: "神圣大宗师", en: "Apex", icon: "medal-star" as UiIconName, art: "rank-apex" as const, accent: "from-secondary/60 via-secondary/15 to-transparent" },
-  { floor: 2400, ceil: 2500, zh: "宗师", en: "Grandmaster", icon: "medal-laurel" as UiIconName, art: "rank-grandmaster" as const, accent: "from-secondary/45 via-secondary/10 to-transparent" },
-  { floor: 2200, ceil: 2400, zh: "大师", en: "Master", icon: "badge-hex" as UiIconName, art: "rank-master" as const, accent: "from-on-surface/25 via-on-surface/8 to-transparent" },
-  { floor: 0, ceil: 2200, zh: "骑士", en: "Knight", icon: "shield" as UiIconName, art: "rank-knight" as const, accent: "from-on-surface/15 via-on-surface/5 to-transparent" },
-];
+const TIERS = RANK_TIERS;
 
 function tierOf(elo: number) {
-  return TIERS.find((x) => elo >= x.floor) ?? TIERS[TIERS.length - 1]!;
+  return rankOf(elo);
 }
 
 function Dynasty() {
@@ -142,7 +137,7 @@ function Dynasty() {
   const rivals = (rivalsQ.data ?? []).filter((r) => Math.abs(r.elo - profile.elo) <= 120);
 
   const ceremony = usePromotionCeremony(
-    { key: current.en, zh: current.zh, en: current.en, art: current.art, floor: current.floor },
+    { key: current.en, zh: current.zh, en: current.en, art: current.art as never, floor: current.floor },
     signedIn,
   );
 
@@ -522,7 +517,7 @@ function Dynasty() {
                         className={`w-11 h-11 shrink-0 hidden sm:flex items-center justify-center bg-gradient-to-br ${tier.accent}`}
                         aria-hidden="true"
                       >
-                        <UiIcon name={tier.icon} className="h-10 w-10" />
+                        <UiIcon name={tier.icon as UiIconName} className="h-10 w-10" />
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="cjk font-label-lg text-label-lg truncate">{row.name}</span>
@@ -554,6 +549,9 @@ function Dynasty() {
                 {t("按等级分解锁", "By rating")}
               </span>
             </div>
+            <p className="cjk font-body-sm text-body-sm text-secondary leading-relaxed">
+              {t(RANK_TAGLINE.zh, RANK_TAGLINE.en)}
+            </p>
             {TIERS.map((tier) => {
               const active = tier === current;
               const unlocked = profile.elo >= tier.floor;
@@ -571,12 +569,12 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <UiIcon name={tier.icon} className="h-9 w-9" /> : <UiIcon name="seal" className="h-6 w-6" />}
+                      {unlocked ? <UiIcon name={tier.icon as UiIconName} className="h-9 w-9" /> : <UiIcon name="seal" className="h-6 w-6" />}
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
                       <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
-                        {tier.floor}+ ELO
+                        {tier.floor}+ ELO · <span className="cjk">{t(`${tier.personaZh} · 参考 ${tier.referenceZh}`, `${tier.personaEn} · ${tier.referenceEn}`)}</span>
                       </span>
                     </div>
                   </div>
@@ -586,6 +584,9 @@ function Dynasty() {
                 </div>
               );
             })}
+            <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              {t(RANK_DISCLAIMER.zh, RANK_DISCLAIMER.en)}
+            </p>
           </section>
 
           <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
