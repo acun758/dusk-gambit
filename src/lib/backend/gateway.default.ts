@@ -6,6 +6,7 @@
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
 import * as remote from "@/lib/game.functions";
+import * as puzzleRemote from "@/lib/puzzle.functions";
 import type { AuthResult, SessionInfo } from "./types";
 
 const AVATAR_BUCKET = "avatars";
@@ -101,4 +102,9 @@ export const defaultGateway = {
   fetchEndgameProgress: remote.loadEndgameProgress,
   submitEndgame: remote.submitEndgame,
   submitEndgameDrill: remote.submitEndgameDrill,
+
+  /* --------------------------------- 战术谜题 -------------------------------- */
+  fetchPuzzles: puzzleRemote.listPuzzles,
+  fetchDailyPuzzle: puzzleRemote.getDailyPuzzle,
+  submitPuzzleMove: puzzleRemote.submitPuzzleMove,
 };
