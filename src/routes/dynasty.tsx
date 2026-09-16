@@ -570,7 +570,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      {unlocked ? <RankBadge rank={tier.id} className="h-9 w-9" label={`${tier.zh}段徽章`} /> : <UiIcon name="seal" className="h-6 w-6" />}
+                      <RankBadge rank={tier.id} className="h-9 w-9" label={`${tier.zh}段徽章`} />
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
