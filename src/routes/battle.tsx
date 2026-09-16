@@ -35,10 +35,10 @@ export const Route = createFileRoute("/battle")({
     typeof search['drill'] === "string" ? { drill: search['drill'] as string } : {},
   head: () => ({
     meta: [
-      { title: "3+2 实时对弈 · 血誓王权" },
-      { name: "description", content: "服务端仲裁时钟、合法落子与断线追帧的实时天梯对弈。" },
-      { property: "og:title", content: "3+2 实时对弈 · 血誓王权" },
-      { property: "og:description", content: "服务端仲裁时钟、合法落子与断线追帧的实时天梯对弈。" },
+      { title: "实时对弈 · 玄弈 DUSK GAMBIT" },
+      { name: "description", content: "1+0 / 3+2 / 10+0 / 15+10 四种赛制，服务端仲裁时钟与胜负的实时天梯对弈。" },
+      { property: "og:title", content: "实时对弈 · 玄弈 DUSK GAMBIT" },
+      { property: "og:description", content: "1+0 / 3+2 / 10+0 / 15+10 四种赛制，服务端仲裁时钟与胜负的实时天梯对弈。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -84,7 +84,7 @@ function Battle() {
         black: session.state.players.b.name,
         whiteElo: session.state.players.w.elo,
         blackElo: session.state.players.b.elo,
-        timeControl: "180+2",
+        timeControl: `${Math.round(session.state.tc.base / 1000)}+${Math.round(session.state.tc.inc / 1000)}`,
         result: resultTag(session.state.outcome as Outcome),
       },
     );
@@ -128,7 +128,7 @@ function Battle() {
         <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
            <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex-1 min-w-0">
-            <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("3+2 对弈", "3+2 Duel")}</h1>
+            <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("实时对弈", "Live Duel")}</h1>
             <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</p>
           </div>
            <SoundToggle />
@@ -380,7 +380,7 @@ function Battle() {
               })}
             </div>
             <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{aiLevel(session.aiLevelId).desc}</p>
-            <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">准备好后在下方「找对手」进入真人 3+2；胜负会改变 ELO、段位和赛季战绩。</p>
+            <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">准备好后在下方「找对手」选择赛制进入真人对局；四种赛制共用同一套 ELO 与段位。</p>
           </section>
 
           <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
