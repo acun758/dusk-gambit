@@ -186,6 +186,13 @@ function Crucible() {
           <h2 className="font-headline-sm text-headline-sm">
             <Bi zh="六道实战试炼" en="Six Practical Trials" />
           </h2>
+          <Link
+            to="/puzzles"
+            className="home-glass-control cjk flex h-11 items-center gap-2 px-3 text-secondary font-label-md text-label-md"
+          >
+            <UiIcon name="bolt" className="h-6 w-6 shrink-0" />
+            {t("战术谜题 · 每日一题", "Tactics puzzles · daily")}
+          </Link>
           {levelsQ.isLoading && (
             <div className="grid gap-space-xs" aria-label={t("关卡载入中", "Loading trials")}>
               {Array.from({ length: 6 }, (_, index) => (
