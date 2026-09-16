@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { rankOf } from "@/lib/ranks";
 import { useEffect, useRef, useState } from "react";
 import { playSound, primeSounds } from "@/lib/sound";
 

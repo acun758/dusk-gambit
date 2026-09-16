@@ -225,7 +225,7 @@ function Dynasty() {
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <div className="flex items-center gap-space-md min-w-0">
                  <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 p-0 shrink-0">
-                  <GameIcon name={current.art} className="h-full w-full" />
+                  <GameIcon name={current.art as never} className="h-full w-full" />
                 </div>
                 <div className="flex flex-col min-w-0">
                    <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
