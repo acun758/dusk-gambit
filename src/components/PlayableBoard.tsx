@@ -8,7 +8,7 @@ import { playSound } from "@/lib/sound";
 export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
 export const PIECE_SET_EVENT = "bs:piece-set";
 
-function usePieceAssets(): Record<string, string> {
+export function usePieceAssets(): Record<string, string> {
   const [setId, setSetId] = useState(DEFAULT_PIECE_SET_ID);
   useEffect(() => {
     const read = () => {
