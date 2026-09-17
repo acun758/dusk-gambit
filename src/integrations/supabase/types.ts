@@ -176,6 +176,48 @@ export type Database = {
           },
         ]
       }
+      fide_ratings: {
+        Row: {
+          country: string
+          fide_id: number
+          name: string
+          rank_chn: number | null
+          rank_chn_w: number | null
+          rank_open: number | null
+          rank_women: number | null
+          rating: number
+          sex: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          country: string
+          fide_id: number
+          name: string
+          rank_chn?: number | null
+          rank_chn_w?: number | null
+          rank_open?: number | null
+          rank_women?: number | null
+          rating: number
+          sex?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string
+          fide_id?: number
+          name?: string
+          rank_chn?: number | null
+          rank_chn_w?: number | null
+          rank_open?: number | null
+          rank_women?: number | null
+          rating?: number
+          sex?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       friendships: {
         Row: {
           addressee_id: string
@@ -299,6 +341,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "match_moves_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_reports: {
+        Row: {
+          accuracy: number
+          acpl: number
+          created_at: string
+          elo: number
+          id: string
+          match_id: string | null
+          mind: Json
+          rank_id: string
+          ranked: boolean
+          user_id: string
+        }
+        Insert: {
+          accuracy: number
+          acpl: number
+          created_at?: string
+          elo?: number
+          id?: string
+          match_id?: string | null
+          mind?: Json
+          rank_id?: string
+          ranked?: boolean
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          acpl?: number
+          created_at?: string
+          elo?: number
+          id?: string
+          match_id?: string | null
+          mind?: Json
+          rank_id?: string
+          ranked?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_reports_match_id_fkey"
             columns: ["match_id"]
             isOneToOne: false
             referencedRelation: "matches"

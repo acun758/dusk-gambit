@@ -359,6 +359,21 @@ function Dynasty() {
           )}
 
           {/* 晋升挑战赛 */}
+          <Link
+            to="/hall-of-fame"
+            className="home-glass-panel p-space-md flex items-center justify-between gap-space-sm"
+          >
+            <span className="flex flex-col min-w-0">
+              <span className="font-headline-sm text-headline-sm tracking-wider">
+                <Bi zh="名人堂" en="Hall of Fame" />
+              </span>
+              <span className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                {t("世界 · 女子 · 中国 FIDE 等级分榜", "World / Women / China FIDE ratings")}
+              </span>
+            </span>
+            <span className="cjk font-label-sm text-label-sm text-secondary shrink-0">{t("查看", "View")}</span>
+          </Link>
+
           <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <div className="section-heading-row">
               <h2 className="font-headline-sm text-headline-sm tracking-wider">

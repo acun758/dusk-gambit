@@ -14,6 +14,7 @@ import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
+import { MatchReportOverlay, type MatchReportInput } from "@/components/MatchReportOverlay";
 import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
@@ -108,13 +109,34 @@ function Battle() {
   }, [myClock, session.state.status, session.state.turn, session.state.you]);
   // 终局一声
   const endedRef = useRef(false);
+  const [reportInput, setReportInput] = useState<MatchReportInput | null>(null);
   useEffect(() => {
     if (session.state.status === "over" && !endedRef.current) {
       endedRef.current = true;
       playSound("end");
+      // 结束 2 秒后自动弹出心智战报（有着法才弹）
+      const line = session.moves.map((m) => m.uci).filter(Boolean);
+      if (line.length > 0) {
+        const timer = setTimeout(
+          () =>
+            setReportInput({
+              uciLine: line,
+              you: session.state.you,
+              outcome: session.state.outcome ?? null,
+              matchId: ranked ? session.state.matchId : null,
+              ranked,
+            }),
+          2000,
+        );
+        return () => clearTimeout(timer);
+      }
     }
-    if (session.state.status === "live") endedRef.current = false;
-  }, [session.state.status]);
+    if (session.state.status === "live") {
+      endedRef.current = false;
+      setReportInput(null);
+    }
+    return;
+  }, [session.state.status, session.state.you, session.state.outcome, session.state.matchId, session.moves, ranked]);
 
   const rank = rankOf(profile.elo);
   const ceremony = usePromotionCeremony(
@@ -126,6 +148,13 @@ function Battle() {
     <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32 lg:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
+      {reportInput && (
+        <MatchReportOverlay
+          input={reportInput}
+          onClose={() => setReportInput(null)}
+          onRematch={session.rematch}
+        />
+      )}
       <header className="home-glass-header desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe">
         <div className="mobile-royal-header sm:hidden">
           <div className="mobile-royal-meta">

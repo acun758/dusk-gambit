@@ -7,6 +7,8 @@
 import { supabase as sdk } from "@/integrations/supabase/client";
 import * as remote from "@/lib/game.functions";
 import * as puzzleRemote from "@/lib/puzzle.functions";
+import * as mindRemote from "@/lib/mind.functions";
+import * as hallRemote from "@/lib/hall.functions";
 import type { AuthResult, SessionInfo } from "./types";
 
 const AVATAR_BUCKET = "avatars";
@@ -107,4 +109,9 @@ export const defaultGateway = {
   fetchPuzzles: puzzleRemote.listPuzzles,
   fetchDailyPuzzle: puzzleRemote.getDailyPuzzle,
   submitPuzzleMove: puzzleRemote.submitPuzzleMove,
+
+  /* ------------------------------ 心智战报与名人堂 ----------------------------- */
+  analyzeMind: mindRemote.analyzeMind,
+  recordMatchReport: mindRemote.recordMatchReport,
+  fetchFideRatings: hallRemote.listFideRatings,
 };

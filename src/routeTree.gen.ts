@@ -17,8 +17,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
+import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as PuzzlesRouteImport } from './routes/puzzles'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ApiPublicCronFideSyncRouteImport } from './routes/api/public/cron/fide-sync'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -60,6 +62,11 @@ const DynastyRoute = DynastyRouteImport.update({
   path: '/dynasty',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HallOfFameRoute = HallOfFameRouteImport.update({
+  id: '/hall-of-fame',
+  path: '/hall-of-fame',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PuzzlesRoute = PuzzlesRouteImport.update({
   id: '/puzzles',
   path: '/puzzles',
@@ -68,6 +75,11 @@ const PuzzlesRoute = PuzzlesRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCronFideSyncRoute = ApiPublicCronFideSyncRouteImport.update({
+  id: '/api/public/cron/fide-sync',
+  path: '/api/public/cron/fide-sync',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -80,8 +92,10 @@ export interface FileRoutesByFullPath {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,8 +106,10 @@ export interface FileRoutesByTo {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,8 +121,10 @@ export interface FileRoutesById {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -119,8 +137,10 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/api/public/cron/fide-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -131,8 +151,10 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/api/public/cron/fide-sync'
   id:
     | '__root__'
     | '/'
@@ -143,8 +165,10 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/api/public/cron/fide-sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -156,8 +180,10 @@ export interface RootRouteChildren {
   BattleRoute: typeof BattleRoute
   CrucibleRoute: typeof CrucibleRoute
   DynastyRoute: typeof DynastyRoute
+  HallOfFameRoute: typeof HallOfFameRoute
   PuzzlesRoute: typeof PuzzlesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicCronFideSyncRoute: typeof ApiPublicCronFideSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -218,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DynastyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hall-of-fame': {
+      id: '/hall-of-fame'
+      path: '/hall-of-fame'
+      fullPath: '/hall-of-fame'
+      preLoaderRoute: typeof HallOfFameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/puzzles': {
       id: '/puzzles'
       path: '/puzzles'
@@ -232,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cron/fide-sync': {
+      id: '/api/public/cron/fide-sync'
+      path: '/api/public/cron/fide-sync'
+      fullPath: '/api/public/cron/fide-sync'
+      preLoaderRoute: typeof ApiPublicCronFideSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -244,8 +284,10 @@ const rootRouteChildren: RootRouteChildren = {
   BattleRoute: BattleRoute,
   CrucibleRoute: CrucibleRoute,
   DynastyRoute: DynastyRoute,
+  HallOfFameRoute: HallOfFameRoute,
   PuzzlesRoute: PuzzlesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicCronFideSyncRoute: ApiPublicCronFideSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

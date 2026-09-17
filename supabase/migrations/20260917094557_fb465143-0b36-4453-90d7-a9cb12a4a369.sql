@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.rank_avg_accuracy(text);
