@@ -52,7 +52,29 @@ function Index() {
       <ThemeBackdrop theme="storm" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="home-glass-scope home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
-        <div className="h-24 px-margin-mobile flex items-center justify-between gap-space-sm">
+        <div className="mobile-royal-header sm:hidden">
+          <div className="mobile-royal-meta">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="font-label-sm text-label-sm text-secondary tabular-nums">{profile.elo} ELO</span>
+              <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
+            </div>
+            <div className="mobile-royal-tools">
+              <SoundToggle className="mobile-royal-tool" />
+              <LangToggle className="home-glass-control mobile-royal-lang" />
+            </div>
+          </div>
+          <div className="mobile-royal-main">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <GameIcon name="brand-emblem" className="h-10 w-10 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
+              <Bi zh="玄弈" en="DUSK GAMBIT" block className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface" subClassName="text-[0.65rem] text-secondary tracking-[0.12em]" />
+            </div>
+            <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center px-3 font-label-sm text-label-sm text-on-primary-container">
+              {signedIn ? t("档案", "Profile") : t("登录", "Sign in")}
+            </Link>
+          </div>
+        </div>
+        <div className="hidden h-24 px-margin-mobile items-center justify-between gap-space-sm sm:flex">
           <div className="flex items-center gap-space-sm sm:gap-space-md min-w-0">
             <div className="home-glass-control w-12 h-12 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
               <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈徽章", "Dusk Gambit emblem")} />

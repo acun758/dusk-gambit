@@ -25,7 +25,41 @@ export function SovereignPageHeader({
 
   return (
     <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
-      <div className="h-20 px-margin-mobile grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-sm">
+      <div className="mobile-royal-header sm:hidden">
+        <div className="mobile-royal-meta">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="font-label-sm text-label-sm text-secondary tabular-nums">{profile.elo} ELO</span>
+            <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+            <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
+          </div>
+          <div className="mobile-royal-tools">
+            <SoundToggle className="mobile-royal-tool" />
+            <LangToggle className="home-glass-control mobile-royal-lang" />
+          </div>
+        </div>
+        <div className="mobile-royal-main">
+          <div className="flex min-w-0 items-center gap-2.5">
+            {backTo ? (
+              <Link to={backTo} aria-label={t("返回", "Back")} className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary">
+                <GameIcon name="action-back" className="h-7 w-7" />
+              </Link>
+            ) : (
+              <GameIcon name={icon} className="h-10 w-10 shrink-0" />
+            )}
+            <h1 className={`min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface ${lang === "zh" ? "cjk" : ""}`}>
+              {lang === "zh" ? titleZh : titleEn}
+            </h1>
+          </div>
+          <Link
+            to={signedIn ? "/dynasty" : "/auth"}
+            className="home-glass-action cjk flex h-10 shrink-0 items-center gap-1.5 px-3 font-label-sm text-label-sm text-on-primary-container"
+          >
+            <UiIcon name="crystal" className="h-5 w-5" />
+            {signedIn ? t("档案", "Profile") : t("登录", "Sign in")}
+          </Link>
+        </div>
+      </div>
+      <div className="hidden h-20 px-margin-mobile sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-space-sm">
         <div className="flex min-w-0 items-center gap-space-sm">
           {backTo ? (
             <Link to={backTo} aria-label={t("返回", "Back")} className="home-glass-control grid h-11 w-11 shrink-0 place-items-center text-secondary">
