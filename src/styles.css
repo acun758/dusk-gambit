@@ -1009,8 +1009,8 @@
   .rail-brand-title { font-size: 1rem; line-height: 1.35; }
   .rail-brand-subtitle, .rail-account { display: none; }
   .rail-label { font-size: 0.75rem; letter-spacing: 0; }
-  .app-shell [class*="fixed"][class*="top-0"],
-  .app-shell [class*="fixed"][class*="bottom-0"],
+  .app-shell [class*="fixed"][class*="top-0"]:not(.sovereign-rail),
+  .app-shell [class*="fixed"][class*="bottom-0"]:not(.sovereign-rail),
   .desktop-page-header { left: 10rem; width: calc(100% - 10rem); }
   .desktop-page-container, .desktop-content-flow { width: min(100%, 1440px); }
   .battle-stage { min-height: calc(100dvh - 4rem); align-content: start; padding-top: 1rem; gap: 1.5rem; }
@@ -1026,7 +1026,7 @@
 /* Below the rail breakpoint the bottom bar is visible — keep content clear of it. */
 @media (max-width: 1023px) {
   .app-shell main {
-    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px) + 1rem);
+    padding-bottom: calc(7.25rem + env(safe-area-inset-bottom, 0px) + 1rem);
   }
 }
 

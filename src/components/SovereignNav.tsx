@@ -12,6 +12,12 @@ const PRIMARY = [
   { to: "/dynasty", icon: "dynasty" as NavIconKey, label: "Ladder", zh: "天梯" },
 ] as const;
 
+const SECONDARY = [
+  { to: "/puzzles", icon: "bolt", zh: "战术谜题" },
+  { to: "/arsenal", icon: "forge", zh: "军械典藏" },
+  { to: "/archive", icon: "cards", zh: "绝杀典藏" },
+] as const;
+
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
   const { lang } = useLang();
   return <span className={lang === "zh" ? "cjk" : ""}>{lang === "zh" ? zh : en}</span>;
@@ -29,7 +35,22 @@ export function SovereignNav() {
     <>
       {/* Phones & iPad portrait: single bottom bar */}
       <div className="home-glass-header lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe">
+        <div className="px-gutter-mobile py-1 grid grid-cols-3 gap-space-xs border-b border-outline-variant/30">
+          {SECONDARY.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex items-center justify-center gap-1 h-9 px-1 rounded-[12px] font-label-sm text-label-sm cjk transition-colors ${
+                isActive(item.to) ? "text-secondary" : "text-on-surface-variant"
+              }`}
+            >
+              <UiIcon name={item.icon} className="h-4 w-4" />
+              <span>{item.zh}</span>
+            </Link>
+          ))}
+        </div>
         <nav className="h-[4.75rem] px-gutter-mobile grid items-center" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
+
           {items.map((item) => (
             <Link
               key={item.to}
