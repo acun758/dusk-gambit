@@ -2,25 +2,26 @@ import { Link } from "@tanstack/react-router";
 import { GameIcon, type GameIconName } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
-import { LangToggle, useLang, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { useProfile, tierLabel } from "@/lib/profile";
 
 
 
+// 全站内页页眉统一结构（与残局试炼页一致）：
+// 第一行 状态信息 + 音量/语言键；第二行 「中文 · 英文」同行标题 + 右侧功能键。
 export function SovereignPageHeader({
-  icon,
   titleZh,
   titleEn,
   backTo,
 }: {
-  icon: GameIconName;
+  /** 保留入参兼容旧调用；装饰性图标已按统一排版取消。 */
+  icon?: GameIconName;
   titleZh: string;
   titleEn: string;
   backTo?: "/" | "/battle" | "/analysis" | "/dynasty" | "/arsenal" | "/archive";
 }) {
   const { profile, signedIn } = useProfile();
   const t = useT();
-  const { lang } = useLang();
 
 
   return (
@@ -43,11 +44,9 @@ export function SovereignPageHeader({
               <Link to={backTo} aria-label={t("返回", "Back")} className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary">
                 <GameIcon name="action-back" className="h-7 w-7" />
               </Link>
-            ) : (
-              <GameIcon name={icon} className="h-10 w-10 shrink-0" />
-            )}
-            <h1 className={`min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface ${lang === "zh" ? "cjk" : ""}`}>
-              {lang === "zh" ? titleZh : titleEn}
+            ) : null}
+            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
+              <Bi zh={titleZh} en={titleEn} />
             </h1>
           </div>
           <Link
@@ -59,26 +58,22 @@ export function SovereignPageHeader({
           </Link>
         </div>
       </div>
-      <div className="hidden h-20 px-margin-mobile sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-space-sm">
+      <div className="hidden h-20 px-margin-mobile items-center justify-between gap-space-sm sm:flex">
         <div className="flex min-w-0 items-center gap-space-sm">
           {backTo ? (
             <Link to={backTo} aria-label={t("返回", "Back")} className="home-glass-control grid h-11 w-11 shrink-0 place-items-center text-secondary">
               <GameIcon name="action-back" className="h-8 w-8" />
             </Link>
-          ) : (
-            <div className="grid h-12 w-12 shrink-0 place-items-center">
-              <GameIcon name={icon} className="h-12 w-12" />
-            </div>
-          )}
-          <div className="min-w-0">
+          ) : null}
+          <div className="flex min-w-0 flex-col">
             <div className="flex min-w-0 items-center gap-space-xs">
               <span className="font-label-md text-label-md text-secondary tabular-nums">{profile.elo} ELO</span>
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
               <span className="cjk truncate font-label-md text-label-md text-primary-fixed">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
             </div>
-            {/* 页眉随语言开关实时切换中/英文，单行截断保持布局不变 */}
-            <h1 className={`truncate font-headline-md text-headline-md leading-tight text-on-surface ${lang === "zh" ? "cjk" : ""}`}>
-              {lang === "zh" ? titleZh : titleEn}
+            {/* 页眉随语言开关实时切换中/英文，中英同行，单行截断保持布局不变 */}
+            <h1 className="min-w-0 font-headline-md text-headline-md leading-tight text-on-surface">
+              <Bi zh={titleZh} en={titleEn} />
             </h1>
           </div>
         </div>
