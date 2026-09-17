@@ -183,7 +183,7 @@ function Dynasty() {
             </div>
           </div>
           <div className="mobile-royal-main">
-            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
               <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
             </h1>
             {signedIn && (

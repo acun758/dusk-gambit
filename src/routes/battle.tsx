@@ -142,7 +142,7 @@ function Battle() {
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
               <Link to="/" aria-label="返回王座" className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary"><UiIcon name="play-motion" className="h-6 w-6 rotate-180" /></Link>
-              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
                 <Bi zh="实时对弈" en="Live Duel" />
               </h1>
             </div>

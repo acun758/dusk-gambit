@@ -67,7 +67,7 @@ function Index() {
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
               <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
-              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
                 <span className="inline-flex min-w-0 items-baseline gap-1.5">
                   <span className="cjk flex items-baseline gap-[0.18em] leading-tight text-on-surface">
                     <span>玄</span>
@@ -177,7 +177,7 @@ function Index() {
                 <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-wider mb-1 drop-shadow-md">
                   {t("每个王，都曾是一个兵。", "Every king was once a pawn.")}
                 </h1>
-                <p className="cjk font-label-sm text-label-sm text-secondary tracking-widest mb-2">
+                <p className="cjk font-body-md text-body-md text-on-surface-variant tracking-[0.2em] mb-2">
                   {t("静默布局，血中落子。", "Plan in silence. Execute in blood.")}
                 </p>
               </div>

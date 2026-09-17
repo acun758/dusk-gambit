@@ -157,16 +157,20 @@ function Crucible() {
       <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
         <div className="mobile-royal-header sm:hidden">
           <div className="mobile-royal-meta">
-            <span className="truncate font-label-sm text-label-sm text-secondary tabular-nums">
-              {profile.trainingPoints} {t("训练积分", "Training points")} · {t(tierLabel(profile).zh, tierLabel(profile).en)}
-            </span>
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="font-label-sm text-label-sm text-secondary tabular-nums">
+                {profile.trainingPoints} {t("训练积分", "Training points")}
+              </span>
+              <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
+            </div>
             <div className="mobile-royal-tools">
               <SoundToggle className="mobile-royal-tool" />
               <LangToggle className="home-glass-control mobile-royal-lang" />
             </div>
           </div>
           <div className="mobile-royal-main">
-            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
               <Bi zh="残局试炼 · 心算" en="Blindfold Crucible" />
             </h1>
             <button
