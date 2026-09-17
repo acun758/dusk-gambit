@@ -12,6 +12,7 @@ import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";
 import { UiIcon } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
+import { BoardPiece, usePieceAssets } from "@/components/PlayableBoard";
 
 export const Route = createFileRoute("/crucible")({
   staticData: { sitemap: true },
@@ -59,12 +60,6 @@ interface ProgressRow {
   best_ms: number | null;
 }
 
-/** 明视棋盘统一用线条（空心）棋子符号，黑白只靠颜色与描边区分，与对弈棋盘一致。 */
-const GLYPH: Record<string, string> = {
-  k: "♔", q: "♕", r: "♖", b: "♗", n: "♘", p: "♙",
-  K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
-};
-
 function boardFromFen(fen: string): (string | null)[][] {
   const rows = fen.split(" ")[0]?.split("/") ?? [];
   return Array.from({ length: 8 }, (_, r) => {
@@ -87,6 +82,7 @@ function Crucible() {
   const [result, setResult] = useState<{ correct: boolean; firstSolve: boolean; expectedLength: number; explanation?: { zh: string; en: string } } | null>(null);
   const [busy, setBusy] = useState(false);
   const [blind, setBlind] = useState(true);
+  const pieceAssets = usePieceAssets();
 
   const levelsQ = useQuery({
     queryKey: ["endgame-levels"],
@@ -318,23 +314,20 @@ function Crucible() {
               <div className="crucible-core-width crucible-board relative aspect-square bg-surface-container-lowest p-space-xs">
                 <div className="grid grid-cols-8 grid-rows-8 w-full h-full">
                   {board.flatMap((row, r) =>
-                    row.map((cell, c) => (
-                      <div
-                        key={`${r}-${c}`}
-                        className={`flex items-center justify-center ${
-                          (r + c) % 2 === 0 ? "crucible-square-light" : "crucible-square-dark"
-                        }`}
-                      >
-                        {cell && (
-                          <span
-                            className={`crucible-piece leading-none ${blind ? "opacity-0" : ""}`}
-                            data-color={cell === cell.toUpperCase() ? "w" : "b"}
-                          >
-                            {GLYPH[cell]}
-                          </span>
-                        )}
-                      </div>
-                    )),
+                    row.map((cell, c) => {
+                      const color = cell === cell?.toUpperCase() ? "w" : "b";
+                      const type = cell?.toLowerCase() ?? "";
+                      return (
+                        <div
+                          key={`${r}-${c}`}
+                          className={`relative flex items-center justify-center text-[clamp(29px,7.2vw,54px)] leading-none ${
+                            (r + c) % 2 === 0 ? "crucible-square-light" : "crucible-square-dark"
+                          }`}
+                        >
+                          {cell && <BoardPiece color={color} type={type} assets={pieceAssets} hidden={blind} />}
+                        </div>
+                      );
+                    }),
                   )}
                 </div>
                 {blind && (

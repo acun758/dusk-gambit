@@ -8,7 +8,7 @@ import { playSound } from "@/lib/sound";
 export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
 export const PIECE_SET_EVENT = "bs:piece-set";
 
-function usePieceAssets(): Record<string, string> {
+export function usePieceAssets(): Record<string, string> {
   const [setId, setSetId] = useState(DEFAULT_PIECE_SET_ID);
   useEffect(() => {
     const read = () => {
@@ -23,6 +23,35 @@ function usePieceAssets(): Record<string, string> {
     return () => window.removeEventListener(PIECE_SET_EVENT, read);
   }, []);
   return pieceSet(setId).assets;
+}
+
+export function BoardPiece({
+  color,
+  type,
+  assets,
+  hidden = false,
+}: {
+  color: "w" | "b";
+  type: string;
+  assets: Record<string, string>;
+  hidden?: boolean;
+}) {
+  const pieceKey = `${color}${type}`;
+  return (
+    <span
+      className={`board-piece relative z-10 ${hidden ? "opacity-0" : ""}`}
+      data-color={color}
+      data-glyph={GLYPH[pieceKey]}
+    >
+      <span className="board-piece-fallback" aria-hidden="true">{GLYPH[pieceKey]}</span>
+      <img
+        src={assets[pieceKey]}
+        alt=""
+        draggable={false}
+        onError={(event) => { event.currentTarget.hidden = true; }}
+      />
+    </span>
+  );
 }
 
 const GLYPH: Record<string, string> = {
@@ -190,19 +219,11 @@ function PlayableBoardComponent({
                 <span className={targetMove?.captured ? "board-capture" : "board-target"} aria-hidden="true" />
               )}
               {piece && (
-                <span
-                  className="board-piece relative z-10"
-                  data-color={piece.color}
-                  data-glyph={GLYPH[`${piece.color}${piece.type}`]}
-                >
-                  <span className="board-piece-fallback" aria-hidden="true">{GLYPH[`${piece.color}${piece.type}`]}</span>
-                  <img
-                    src={(piece.color === "w" ? whiteAssets : blackAssets)[`${piece.color}${piece.type}`]}
-                    alt=""
-                    draggable={false}
-                    onError={(event) => { event.currentTarget.hidden = true; }}
-                  />
-                </span>
+                <BoardPiece
+                  color={piece.color}
+                  type={piece.type}
+                  assets={piece.color === "w" ? whiteAssets : blackAssets}
+                />
               )}
             </Button>
           );
