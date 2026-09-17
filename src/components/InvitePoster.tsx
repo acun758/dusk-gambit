@@ -12,7 +12,7 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
   return (
     <section
       aria-label="邀请对弈"
-      className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest min-h-[16rem] sm:min-h-0 sm:aspect-[16/9] ${className}`}
+      className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest sm:aspect-[16/9] ${className}`}
     >
       {/* 图片始终铺满整张卡片，文字压在图上（手机 / iPad / 桌面一致） */}
       <div className="aged-print-frame absolute inset-0">
