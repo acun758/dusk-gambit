@@ -19,7 +19,7 @@ import {
 } from "@/lib/db";
 import type { LadderRow } from "@/lib/game.functions";
 import { subscribeLadder } from "@/lib/realtime";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
@@ -170,7 +170,33 @@ function Dynasty() {
       <ThemeBackdrop theme="blackGold" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="home-glass-header desktop-page-header fixed top-0 w-full z-40 pt-safe">
-        <div className="h-20 px-margin-mobile flex items-center justify-between gap-space-sm">
+        <div className="mobile-royal-header sm:hidden">
+          <div className="mobile-royal-meta">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="font-label-sm text-label-sm text-secondary tabular-nums">{profile.elo} ELO</span>
+              <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
+            </div>
+            <div className="mobile-royal-tools">
+              <SoundToggle className="mobile-royal-tool" />
+              <LangToggle className="home-glass-control mobile-royal-lang" />
+            </div>
+          </div>
+          <div className="mobile-royal-main">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <GameIcon name="nav-ladder" className="h-10 w-10 shrink-0" />
+              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
+              </h1>
+            </div>
+            {signedIn && (
+              <button onClick={() => void signOut()} className="home-glass-action cjk h-10 shrink-0 px-3 font-label-sm text-label-sm text-on-primary-container">
+                {t("退出", "Sign out")}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="hidden h-20 px-margin-mobile items-center justify-between gap-space-sm sm:flex">
           <div className="flex items-center gap-space-sm min-w-0">
             <div className="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
               <GameIcon name="nav-ladder" className="h-11 w-11 sm:h-16 sm:w-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />

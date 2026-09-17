@@ -127,7 +127,30 @@ function Battle() {
       <ThemeBackdrop theme="gothic" />
       <PromotionOverlay event={ceremony.event} onDismiss={ceremony.dismiss} />
       <header className="home-glass-header desktop-page-header fixed top-0 inset-x-0 z-40 pt-safe">
-        <div className="h-16 px-margin-mobile flex items-center justify-between gap-3">
+        <div className="mobile-royal-header sm:hidden">
+          <div className="mobile-royal-meta">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="font-label-sm text-label-sm text-secondary tabular-nums">{profile.elo} ELO</span>
+              <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{placementLabel(profile).zh}</span>
+            </div>
+            <div className="mobile-royal-tools">
+              <SoundToggle className="mobile-royal-tool" />
+              <LangToggle className="home-glass-control mobile-royal-lang" />
+            </div>
+          </div>
+          <div className="mobile-royal-main">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <Link to="/" aria-label="返回王座" className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary"><UiIcon name="play-motion" className="h-6 w-6 rotate-180" /></Link>
+              <div className="min-w-0">
+                <h1 className={`font-headline-sm text-headline-sm leading-tight ${lang === "zh" ? "cjk" : ""}`}>{t("实时对弈", "Live Duel")}</h1>
+                <p className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{ranked ? (waiting ? t("等待玩家加入", "Waiting for player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 陪练 · 不计分", "AI training · unrated")}</p>
+              </div>
+            </div>
+            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
+          </div>
+        </div>
+        <div className="hidden h-16 px-margin-mobile items-center justify-between gap-3 sm:flex">
            <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex-1 min-w-0">
             <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("实时对弈", "Live Duel")}</h1>
