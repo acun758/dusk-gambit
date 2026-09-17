@@ -36,17 +36,15 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums sm:text-body-md lg:font-body-lg lg:text-body-lg">
           {profile.elo} 分 · 胜率 {winRate}% · ♦ {profile.diamonds}
         </p>
-        <p className="cjk font-label-sm text-label-sm sm:text-label-md lg:text-label-lg">
-          {profile.realName
-            ? <span className="text-secondary">已实名 · {profile.realName} · 段位与积分实时同步</span>
-            : <span className="text-primary">未实名 · 约战与天梯前请先填写真实姓名</span>}
+        <p className="cjk font-label-sm text-label-sm text-secondary sm:text-label-md lg:text-label-lg">
+          实名认证可选 · 不影响约战与天梯
         </p>
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant sm:text-body-md lg:text-body-lg">系统按段位就近匹配，段位相近者优先。</p>
         <Link
           to="/battle"
           className="home-glass-action cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 px-4 text-on-primary-container font-label-sm text-label-sm sm:mt-2 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:mt-3 lg:min-h-14 lg:px-8 lg:text-label-lg"
         >
-          发起 3+2 约战
+          选择赛制发起约战
           <UiIcon name="shield" className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
         </Link>
       </div>
