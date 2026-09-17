@@ -12,7 +12,7 @@ import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";
 import { UiIcon } from "@/components/UiIcon";
 import { SoundToggle } from "@/components/SoundToggle";
-import { usePieceAssets } from "@/components/PlayableBoard";
+import { BoardPiece, usePieceAssets } from "@/components/PlayableBoard";
 
 export const Route = createFileRoute("/crucible")({
   staticData: { sitemap: true },
@@ -59,11 +59,6 @@ interface ProgressRow {
   attempts: number;
   best_ms: number | null;
 }
-
-const GLYPH: Record<string, string> = {
-  wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
-  bk: "♚", bq: "♛", br: "♜", bb: "♝", bn: "♞", bp: "♟",
-};
 
 function boardFromFen(fen: string): (string | null)[][] {
   const rows = fen.split(" ")[0]?.split("/") ?? [];
@@ -322,7 +317,6 @@ function Crucible() {
                     row.map((cell, c) => {
                       const color = cell === cell?.toUpperCase() ? "w" : "b";
                       const type = cell?.toLowerCase() ?? "";
-                      const pieceKey = `${color}${type}`;
                       return (
                         <div
                           key={`${r}-${c}`}
@@ -330,21 +324,7 @@ function Crucible() {
                             (r + c) % 2 === 0 ? "crucible-square-light" : "crucible-square-dark"
                           }`}
                         >
-                          {cell && (
-                            <span
-                              className={`board-piece relative z-10 ${blind ? "opacity-0" : ""}`}
-                              data-color={color}
-                              data-glyph={GLYPH[pieceKey]}
-                            >
-                              <span className="board-piece-fallback" aria-hidden="true">{GLYPH[pieceKey]}</span>
-                              <img
-                                src={pieceAssets[pieceKey]}
-                                alt=""
-                                draggable={false}
-                                onError={(event) => { event.currentTarget.hidden = true; }}
-                              />
-                            </span>
-                          )}
+                          {cell && <BoardPiece color={color} type={type} assets={pieceAssets} hidden={blind} />}
                         </div>
                       );
                     }),
