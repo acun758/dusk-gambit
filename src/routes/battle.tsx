@@ -86,8 +86,8 @@ function Battle() {
       {
         white: session.state.players.w.name,
         black: session.state.players.b.name,
-        whiteElo: session.state.players.w.elo,
-        blackElo: session.state.players.b.elo,
+        whiteElo: session.state.you === "w" ? myElo : oppElo,
+        blackElo: session.state.you === "b" ? myElo : oppElo,
         timeControl: `${Math.round(session.state.tc.base / 1000)}+${Math.round(session.state.tc.inc / 1000)}`,
         result: resultTag(session.state.outcome as Outcome),
       },
