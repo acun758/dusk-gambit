@@ -240,9 +240,9 @@ function Dynasty() {
               <div className="flex items-center gap-space-md min-w-0">
                 <RankBadge rank={current.id} className="h-10 w-10 shrink-0 sm:h-14 sm:w-14 lg:h-20 lg:w-20" label={`${current.zh}段徽章`} />
                 <div className="flex flex-col min-w-0">
-                  <span className="flex min-w-0 items-baseline gap-2">
-                    <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
-                    <span className="truncate font-label-md text-label-md text-on-surface-variant">
+                  <span className="flex min-w-0 items-end gap-2">
+                    <span className="cjk font-headline-md text-headline-md leading-none truncate">{t(current.zh, current.en)}</span>
+                    <span className="truncate font-label-md text-label-md leading-none text-on-surface-variant">
                       {t(current.en, current.zh)}
                     </span>
                   </span>
