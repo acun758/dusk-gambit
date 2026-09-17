@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
-import { SovereignNav } from "@/components/SovereignNav";
+
 import { UiIcon } from "@/components/UiIcon";
 import { Input } from "@/components/ui/input";
 import { fetchFideRatings } from "@/lib/db";
@@ -49,11 +49,11 @@ function HallOfFame() {
   const updated = listQ.data?.updatedAt ? new Date(listQ.data.updatedAt).toISOString().slice(0, 10) : null;
 
   return (
-    <div className="relative min-h-dvh">
+    <div className="themed-page home-glass-page min-h-screen text-on-surface pb-32 md:pb-space-lg">
       <ThemeBackdrop theme="gothic" />
-      <SovereignPageHeader titleZh="名人堂" titleEn="Hall of Fame" backTo="/" />
+      <SovereignPageHeader icon="nav-review" titleZh="名人堂" titleEn="Hall of Fame" />
 
-      <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm pb-32">
+      <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm md:pb-space-lg">
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col gap-space-sm">
           <div className="grid grid-cols-4 gap-1">
             {BOARDS.map((b) => (
@@ -123,8 +123,6 @@ function HallOfFame() {
           </p>
         </section>
       </main>
-
-      <SovereignNav />
     </div>
   );
 }

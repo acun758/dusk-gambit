@@ -4,7 +4,7 @@ import { Chess } from "chess.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
-import { SovereignNav } from "@/components/SovereignNav";
+
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
@@ -332,8 +332,6 @@ function Puzzles() {
           </section>
         )}
       </main>
-
-      <SovereignNav />
     </div>
   );
 }
