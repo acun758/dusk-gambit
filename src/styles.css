@@ -846,16 +846,6 @@
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-.rank-hero-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid color-mix(in oklab, var(--color-secondary) 55%, transparent);
-  border-radius: 9999px;
-  box-shadow: 0 0 18px color-mix(in oklab, var(--color-secondary) 14%, transparent);
-}
-
 .player-mark {
   display: grid;
   width: 2.5rem;
