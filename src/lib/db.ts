@@ -68,6 +68,15 @@ export const fetchDailyPuzzle = gateway.fetchDailyPuzzle;
 /** 逐步提交作答，由服务端判对错并发放奖励。 */
 export const submitPuzzleMove = gateway.submitPuzzleMove;
 
+/* ------------------------------- 心智战报与名人堂 ------------------------------ */
+
+/** 未登录也能看的心智战报：服务端算，不存档。 */
+export const analyzeMind = gateway.analyzeMind;
+/** 登录用户的战报：服务端算完存档，并返回与历史、段位均值的对比。 */
+export const recordMatchReport = gateway.recordMatchReport;
+/** 名人堂榜单（库内月度快照，客户端不直连外部榜单站点）。 */
+export const fetchFideRatings = gateway.fetchFideRatings;
+
 type SubmitMoveArgs = Parameters<typeof gateway.submitMove>[0];
 type SubmitMoveResult = Awaited<ReturnType<typeof gateway.submitMove>>;
 /** 断网时排队的落子，队列里等着补传。 */
