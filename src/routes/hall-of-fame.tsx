@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
-import { SovereignNav } from "@/components/SovereignNav";
+
 import { UiIcon } from "@/components/UiIcon";
 import { Input } from "@/components/ui/input";
 import { fetchFideRatings } from "@/lib/db";
@@ -123,8 +123,6 @@ function HallOfFame() {
           </p>
         </section>
       </main>
-
-      <SovereignNav />
     </div>
   );
 }
