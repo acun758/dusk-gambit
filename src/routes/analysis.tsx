@@ -154,7 +154,7 @@ function Analysis() {
       <SovereignPageHeader icon="nav-review" titleZh="对局复盘" titleEn="Match Review" />
 
       <main className="page-main-dashboard">
-        <div className="desktop-page-container w-full py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
+        <div className="desktop-page-container w-full px-margin-mobile py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
           <section aria-label="对局历史" className="review-history home-glass-panel">
             <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
