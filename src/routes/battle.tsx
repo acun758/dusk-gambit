@@ -146,16 +146,18 @@ function Battle() {
                 <Bi zh="实时对弈" en="Live Duel" />
               </h1>
             </div>
-            <span className="flex min-w-0 shrink-0 items-center gap-1.5">
-              <span className={`h-2 w-2 shrink-0 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
-              <span className={`truncate text-right font-label-sm text-label-sm text-on-surface-variant ${lang === "zh" ? "cjk" : ""}`}>{ranked ? (waiting ? t("等待玩家加入", "Waiting for player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 陪练 · 不计分", "AI training · unrated")}</span>
-            </span>
+            {ranked && (
+              <span className="flex min-w-0 shrink-0 items-center gap-1.5">
+                <span className={`h-2 w-2 shrink-0 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
+                <span className={`truncate text-right font-label-sm text-label-sm text-on-surface-variant ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("等待玩家加入", "Waiting for player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)}</span>
+              </span>
+            )}
           </div>
         </div>
         <div className="hidden h-20 px-margin-mobile items-center justify-between gap-3 sm:flex">
            <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex flex-1 flex-col min-w-0">
-            <span className={`truncate font-label-sm text-label-sm uppercase text-secondary tracking-widest ${lang === "zh" ? "cjk" : ""}`}>{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</span>
+            {ranked && <span className={`truncate font-label-sm text-label-sm uppercase text-secondary tracking-widest ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)}</span>}
             <h1 className="min-w-0 font-headline-md text-headline-md leading-tight truncate">
               <Bi zh="实时对弈" en="Live Duel" />
             </h1>
@@ -388,7 +390,7 @@ function Battle() {
 
            <section aria-label="AI 陪练段位" className="battle-core-width home-glass-panel p-space-sm">
             <div className="flex items-baseline justify-between gap-2 mb-2">
-              <h2 className="cjk font-label-md text-label-md text-on-surface">AI 分级陪练</h2>
+              <h2 className="cjk flex items-baseline gap-2 font-label-md text-label-md text-on-surface">AI 分级陪练<span className="rounded-full border border-secondary/40 px-2 py-0.5 font-label-sm text-label-sm text-secondary">不计分</span></h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
                 {ranked ? "当前为真人天梯，选择段位即切换陪练" : `默认模式 · ${aiLevel(session.aiLevelId).zh} ${aiLevel(session.aiLevelId).elo}`}
               </span>
