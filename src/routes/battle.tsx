@@ -14,7 +14,7 @@ import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { OpponentPanel } from "@/components/OpponentPanel";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
-import { LangToggle, useLang, useT } from "@/lib/i18n";
+import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
 import { downloadPgn } from "@/lib/share-game";
@@ -152,11 +152,13 @@ function Battle() {
             </span>
           </div>
         </div>
-        <div className="hidden h-16 px-margin-mobile items-center justify-between gap-3 sm:flex">
+        <div className="hidden h-20 px-margin-mobile items-center justify-between gap-3 sm:flex">
            <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
-          <div className="flex-1 min-w-0">
-            <h1 className={`font-headline-md text-headline-md leading-tight truncate ${lang === "zh" ? "cjk" : ""}`}>{t("实时对弈", "Live Duel")}</h1>
-            <p className="cjk font-label-sm text-label-sm text-on-surface-variant truncate">{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</p>
+          <div className="flex flex-1 flex-col min-w-0">
+            <span className={`truncate font-label-sm text-label-sm uppercase text-secondary tracking-widest ${lang === "zh" ? "cjk" : ""}`}>{ranked ? (waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)) : t("AI 分级陪练 · 不计天梯分", "AI training · unrated")}</span>
+            <h1 className="min-w-0 font-headline-md text-headline-md leading-tight truncate">
+              <Bi zh="实时对弈" en="Live Duel" />
+            </h1>
           </div>
            <SoundToggle />
             <LangToggle className="home-glass-control" />
