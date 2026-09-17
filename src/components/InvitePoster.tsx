@@ -22,7 +22,8 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
           loading="lazy"
           width={1536}
           height={864}
-          className="block h-full w-full object-cover"
+          className="block"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface-container-lowest/95 via-surface-container-lowest/82 to-surface-container-lowest/45 sm:bg-gradient-to-r sm:from-surface-container-lowest/95 sm:via-surface-container-lowest/75 sm:to-transparent" />
