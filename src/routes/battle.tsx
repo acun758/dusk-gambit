@@ -74,7 +74,8 @@ function Battle() {
   const ranked = session.transport === "cloud";
   const coach = getCoachInsight(session.state.fen, session.moves, ranked);
   const oppSide = session.state.you === "w" ? "b" : "w";
-  const myElo = session.ratings?.[session.state.you]?.elo ?? me.elo;
+  // 本方积分只认服务端档案；陪练/离线时也用档案分，不再显示占位值
+  const myElo = session.ratings?.[session.state.you]?.elo ?? profile.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
   // 求和 / 认输前的二次确认
@@ -85,8 +86,8 @@ function Battle() {
       {
         white: session.state.players.w.name,
         black: session.state.players.b.name,
-        whiteElo: session.state.players.w.elo,
-        blackElo: session.state.players.b.elo,
+        whiteElo: session.state.you === "w" ? myElo : oppElo,
+        blackElo: session.state.you === "b" ? myElo : oppElo,
         timeControl: `${Math.round(session.state.tc.base / 1000)}+${Math.round(session.state.tc.inc / 1000)}`,
         result: resultTag(session.state.outcome as Outcome),
       },

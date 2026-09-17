@@ -3,7 +3,7 @@
  *
  * 算法（军师交付口径）：每手做两轮搜索，走子前的最佳收益减去走子后的实际收益即该手损失。
  *   loss ≤30 最佳 | ≤90 良好 | ≤200 一般 | ≤400 失误 | >400 大漏着
- *   ACPL = 全局平均 loss；准确率 = 103.1668 × exp(-0.04354 × ACPL) - 3.1668（Lichess）
+ *   ACPL = 全局平均 loss（厘兵）；准确率 = 103.1668 × exp(-0.04354 × ACPL/100) - 3.1668（Lichess，兵为单位）
  *
  * 批量搜索必须走 Worker：一局 80 手 × 2 轮，主线程会假死。
  * 未拿到 Worker 时按批让出主线程，并通过 onProgress 回报进度。
@@ -47,8 +47,10 @@ export function tagForLoss(loss: number): ReviewTag {
   return "blunder";
 }
 
+/** 入参为「厘兵」ACPL；Lichess 公式以「兵」为单位，因此先除以 100。 */
 export function accuracyFromAcpl(acpl: number): number {
-  const v = 103.1668 * Math.exp(-0.04354 * acpl) - 3.1668;
+  const pawns = Math.max(0, acpl) / 100;
+  const v = 103.1668 * Math.exp(-0.04354 * pawns) - 3.1668;
   return Math.max(0, Math.min(100, Math.round(v * 10) / 10));
 }
 
