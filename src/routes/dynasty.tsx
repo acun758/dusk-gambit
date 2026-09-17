@@ -19,7 +19,7 @@ import {
 } from "@/lib/db";
 import type { LadderRow } from "@/lib/game.functions";
 import { subscribeLadder } from "@/lib/realtime";
-import { useProfile } from "@/lib/profile";
+import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
@@ -175,7 +175,7 @@ function Dynasty() {
             <div className="flex min-w-0 items-center gap-2">
               <span className="font-label-sm text-label-sm text-secondary tabular-nums">{profile.elo} ELO</span>
               <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
-              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(current.zh, current.en)}</span>
+              <span className="cjk truncate font-label-sm text-label-sm text-on-surface-variant">{t(tierLabel(profile).zh, tierLabel(profile).en)}</span>
             </div>
             <div className="mobile-royal-tools">
               <SoundToggle className="mobile-royal-tool" />

@@ -659,7 +659,6 @@
   position: relative;
   z-index: 1;
   min-height: 5.75rem;
-  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .mobile-royal-meta,
