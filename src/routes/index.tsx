@@ -345,7 +345,7 @@ function Index() {
 
           <footer className="py-space-lg flex flex-col items-center text-center gap-1">
             <UiIcon name="equalizer" className="h-6 w-6" />
-            <p className="cjk font-label-sm text-label-sm text-on-surface-variant tracking-[0.2em]">
+            <p className="cjk font-body-md text-body-md text-on-surface-variant tracking-[0.2em]">
               {t("今日的每一步，都在铸造明日的王座。", "Every move today shapes your throne tomorrow.")}
             </p>
           </footer>
