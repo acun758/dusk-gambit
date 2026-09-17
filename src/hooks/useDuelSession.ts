@@ -668,7 +668,7 @@ export function useDuelSession(): DuelSession {
       cp: 18,
       depth: 6,
       mind: mindFor(0),
-      players: { w: { name: "你", elo: 2480 }, b: { name: `AI · ${aiLevel(levelId).zh}`, elo: aiLevel(levelId).elo } },
+      players: { w: { name: "你", elo: 1000 }, b: { name: `AI · ${aiLevel(levelId).zh}`, elo: aiLevel(levelId).elo } },
       status: mode === "error" ? "waiting" : "live",
     };
     return {
