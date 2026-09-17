@@ -390,7 +390,7 @@ function Battle() {
 
            <section aria-label="AI 陪练段位" className="battle-core-width home-glass-panel p-space-sm">
             <div className="flex items-baseline justify-between gap-2 mb-2">
-              <h2 className="cjk flex items-baseline gap-2 font-label-md text-label-md text-on-surface">AI 分级陪练<span className="rounded-full border border-secondary/40 px-2 py-0.5 font-label-sm text-label-sm text-secondary">不计分</span></h2>
+              <h2 className="cjk flex items-baseline gap-2 font-label-md text-label-md text-on-surface">AI 分级陪练<span className="font-label-sm text-label-sm text-secondary">不计分</span></h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
                 {ranked ? "当前为真人天梯，选择段位即切换陪练" : `默认模式 · ${aiLevel(session.aiLevelId).zh} ${aiLevel(session.aiLevelId).elo}`}
               </span>
