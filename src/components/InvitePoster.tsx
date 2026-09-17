@@ -28,7 +28,6 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-surface-container-lowest/95 via-surface-container-lowest/82 to-surface-container-lowest/45 sm:bg-gradient-to-r sm:from-surface-container-lowest/95 sm:via-surface-container-lowest/75 sm:to-transparent" />
       <div className="absolute inset-0 flex flex-col justify-center gap-1.5 p-space-md sm:max-w-[68%] sm:gap-3 sm:p-8 lg:gap-4 lg:p-12">
 
-        <span className="cjk font-label-sm text-label-sm tracking-[0.3em] text-primary sm:text-label-md lg:text-label-lg">邀 战 书</span>
         <div className="flex items-center gap-2 min-w-0 sm:gap-3 lg:gap-4">
           <RankBadge rank={rank.id} className="h-10 w-10 shrink-0 sm:h-14 sm:w-14 lg:h-20 lg:w-20" label={`${rank.zh}段徽章`} />
           <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate sm:text-headline-md lg:font-headline-lg lg:text-headline-lg">{tierLabel(profile).zh}</h2>

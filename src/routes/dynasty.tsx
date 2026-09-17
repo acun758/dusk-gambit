@@ -238,15 +238,15 @@ function Dynasty() {
           <section className="home-glass-panel p-space-md flex flex-col gap-space-sm">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-space-md">
               <div className="flex items-center gap-space-md min-w-0">
-                 <div className="rank-hero-mark w-24 h-24 sm:w-28 sm:h-28 p-0 shrink-0">
-                  <RankBadge rank={current.id} className="h-full w-full" label={`${current.zh}段徽章`} />
-                </div>
+                <RankBadge rank={current.id} className="h-10 w-10 shrink-0 sm:h-14 sm:w-14 lg:h-20 lg:w-20" label={`${current.zh}段徽章`} />
                 <div className="flex flex-col min-w-0">
-                   <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
-                   <span className="font-label-md text-label-md text-on-surface-variant">
-                    {t(current.en, current.zh)}
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <span className="cjk font-headline-md text-headline-md truncate">{t(current.zh, current.en)}</span>
+                    <span className="truncate font-label-md text-label-md text-on-surface-variant">
+                      {t(current.en, current.zh)}
+                    </span>
                   </span>
-                   <span className="cjk font-label-md text-label-md text-secondary mt-1 truncate">
+                  <span className="cjk font-label-md text-label-md text-secondary mt-1 truncate">
                     {profile.name} · {t("连胜", "Streak")} {profile.streak}
                   </span>
                 </div>
