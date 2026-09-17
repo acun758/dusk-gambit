@@ -251,16 +251,16 @@ function Dynasty() {
                   </span>
                 </div>
               </div>
-               <div className="hidden text-right shrink-0 sm:block">
-                <span className="cjk font-label-sm text-label-sm text-on-surface-variant block tracking-widest">
-                  {t("下一段位", "Next tier")}
-                </span>
-                <span className="cjk font-label-md text-label-md text-primary font-bold">
-                  {nextTier
-                    ? t(`还差 ${Math.max(0, current.ceil - profile.elo)} 分 → ${nextTier.zh}`, `${Math.max(0, current.ceil - profile.elo)} to ${nextTier.en}`)
-                    : t("已达巅峰", "Peak reached")}
-                </span>
-              </div>
+                <div className="text-right shrink-0">
+                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant block tracking-widest">
+                   {t("下一段位", "Next tier")}
+                 </span>
+                 <span className="cjk font-label-sm text-label-sm sm:font-label-md sm:text-label-md text-primary font-bold">
+                   {nextTier
+                     ? t(`还差 ${Math.max(0, current.ceil - profile.elo)} 分 → ${nextTier.zh}`, `${Math.max(0, current.ceil - profile.elo)} to ${nextTier.en}`)
+                     : t("已达巅峰", "Peak reached")}
+                 </span>
+               </div>
             </div>
 
             <div className="bg-surface-container-lowest p-space-sm shadow-inner">
