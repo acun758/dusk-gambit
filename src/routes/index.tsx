@@ -66,8 +66,15 @@ function Index() {
           </div>
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
-              <GameIcon name="brand-emblem" className="h-10 w-10 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
-              <Bi zh="玄弈" en="DUSK GAMBIT" block className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface" subClassName="text-[0.65rem] text-secondary tracking-[0.12em]" />
+              <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
+              <span className="flex min-w-0 flex-col items-stretch">
+                <span className="cjk flex items-baseline justify-between font-headline-sm text-headline-sm leading-tight text-on-surface">
+                  <span>玄</span>
+                  <span className="text-secondary/80">·</span>
+                  <span>弈</span>
+                </span>
+                <span className="whitespace-nowrap text-[0.7rem] uppercase tracking-[0.14em] text-secondary">DUSK GAMBIT</span>
+              </span>
             </div>
             <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center px-3 font-label-sm text-label-sm text-on-primary-container">
               {signedIn ? t("档案", "Profile") : t("登录", "Sign in")}
