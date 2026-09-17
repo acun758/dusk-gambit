@@ -67,7 +67,7 @@ function Index() {
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
               <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
-              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
                 <span className="inline-flex min-w-0 items-baseline gap-1.5">
                   <span className="cjk flex items-baseline gap-[0.18em] leading-tight text-on-surface">
                     <span>玄</span>
