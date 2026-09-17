@@ -54,8 +54,12 @@ export function MatchReportOverlay({
   const [report, setReport] = useState<MindReport | null>(null);
   const [comparison, setComparison] = useState<ReportComparison | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // 同一局只跑一次：开发模式下 effect 会被重复触发，重复跑会把引擎排满
+  const startedFor = useRef<MatchReportInput | null>(null);
+
   useEffect(() => {
-    const signal = { aborted: false };
+    if (startedFor.current === input) return;
+    startedFor.current = input;
     setProgress(0);
     setReport(null);
     setComparison(null);
@@ -63,14 +67,9 @@ export function MatchReportOverlay({
 
     void (async () => {
       try {
-        console.log('[report] start', input.uciLine.length, input.uciLine);
         const summary = await reviewGame(input.uciLine, {
-          signal,
-          onProgress: (done, total) => {
-            if (!signal.aborted) setProgress(Math.round((done / total) * 100));
-          },
+          onProgress: (done, total) => setProgress(Math.round((done / total) * 100)),
         });
-        if (signal.aborted) return;
         const moves = summary.moves.map((m) => ({
           ply: m.ply,
           by: m.by,
@@ -78,29 +77,20 @@ export function MatchReportOverlay({
           cp: m.cp,
           loss: m.loss,
         }));
-        console.log('[report] reviewed', moves.length);
         const payload = { moves, you: input.you, outcome: input.outcome };
         if (await isSignedIn()) {
           const res = await recordMatchReport({
             data: { ...payload, matchId: input.matchId, ranked: input.ranked },
           });
-          if (signal.aborted) return;
           setReport(res.report);
           setComparison(res.comparison);
         } else {
-          const res = await analyzeMind({ data: payload });
-          if (signal.aborted) return;
-          setReport(res);
+          setReport(await analyzeMind({ data: payload }));
         }
       } catch (e) {
-        console.log('[report] error', e);
-        if (!signal.aborted) setError(e instanceof Error ? e.message : "战报生成失败");
+        setError(e instanceof Error ? e.message : "战报生成失败");
       }
     })();
-
-    return () => {
-      signal.aborted = true;
-    };
   }, [input]);
 
   return (
