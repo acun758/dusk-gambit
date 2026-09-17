@@ -78,7 +78,8 @@ function Index() {
                 </span>
               </h1>
             </div>
-            <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center px-3 font-label-sm text-label-sm text-on-primary-container">
+            <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center gap-1.5 px-3 font-label-sm text-label-sm text-on-primary-container">
+              <UiIcon name="crystal" className="h-5 w-5" />
               {signedIn ? t("档案", "Profile") : t("登录", "Sign in")}
             </Link>
           </div>
