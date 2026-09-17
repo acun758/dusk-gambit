@@ -183,12 +183,9 @@ function Dynasty() {
             </div>
           </div>
           <div className="mobile-royal-main">
-            <div className="flex min-w-0 items-center gap-2.5">
-              <GameIcon name="nav-ladder" className="h-10 w-10 shrink-0" />
-              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
-                <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
-              </h1>
-            </div>
+            <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+              <Bi zh="天梯段位殿堂" en="Dynasty Sanctum" />
+            </h1>
             {signedIn && (
               <button onClick={() => void signOut()} className="home-glass-action cjk h-10 shrink-0 px-3 font-label-sm text-label-sm text-on-primary-container">
                 {t("退出", "Sign out")}
