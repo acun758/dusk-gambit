@@ -63,6 +63,7 @@ export function MatchReportOverlay({
 
     void (async () => {
       try {
+        console.log('[report] start', input.uciLine.length, input.uciLine);
         const summary = await reviewGame(input.uciLine, {
           signal,
           onProgress: (done, total) => {
@@ -77,6 +78,7 @@ export function MatchReportOverlay({
           cp: m.cp,
           loss: m.loss,
         }));
+        console.log('[report] reviewed', moves.length);
         const payload = { moves, you: input.you, outcome: input.outcome };
         if (await isSignedIn()) {
           const res = await recordMatchReport({
@@ -91,6 +93,7 @@ export function MatchReportOverlay({
           setReport(res);
         }
       } catch (e) {
+        console.log('[report] error', e);
         if (!signal.aborted) setError(e instanceof Error ? e.message : "战报生成失败");
       }
     })();
