@@ -142,10 +142,9 @@ function Battle() {
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
               <Link to="/" aria-label="返回王座" className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary"><UiIcon name="play-motion" className="h-6 w-6 rotate-180" /></Link>
-              <div className="min-w-0">
-                <h1 className={`font-headline-sm text-headline-sm leading-tight ${lang === "zh" ? "cjk" : ""}`}>{t("实时对弈", "Live Duel")}</h1>
-                <p className={`truncate font-label-sm text-label-sm text-on-surface-variant ${lang === "zh" ? "" : "cjk"}`}>{t("Live Duel", "实时对弈")}</p>
-              </div>
+              <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight">
+                <Bi zh="实时对弈" en="Live Duel" />
+              </h1>
             </div>
             <span className="flex min-w-0 shrink-0 items-center gap-1.5">
               <span className={`h-2 w-2 shrink-0 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
