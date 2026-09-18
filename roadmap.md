@@ -104,3 +104,13 @@
 - [x] P0 对局结束自动弹出心智战报（进度条修复，四端验证）
 - [x] P0-2 心智四维服务端计算 + 上一局/个人最好/段位平均对比
 - [x] 自测报告与 AI 档位差异说明：reports/28号-P0自测报告-2026-09-17.md
+
+## 29 号《小游戏化前置改造需求》（2026-09-18）
+- [x] R1 纯逻辑收进 src/core，纯 Node 自测 44 项全绿（reports/core-selftest-node-2026-09-18.log，npm run test:core）
+- [x] R2 数据访问收进 src/data，出具《数据访问清单》与云开发迁移映射
+- [x] R3 profiles 新增 wx_openid / platform / migrated_from（docs/29-小游戏化前置改造/DDL.sql）
+- [x] R4 身份层抽象 src/data/auth.ts，AUTH_PLATFORM=h5
+- [x] R5 首屏体积清单（字体 2MB、图片视频 53MB、引擎源码 30KB），压缩留待下轮
+- [x] 回归自测：九条路由可开、陪练局可打、结算口径未变、tsgo 通过
+- [x] 代码包导出 zip
+- [ ] 待外部确认：小游戏运行时 WASM 支持边界；Stockfish GPLv3 闭源分发合规边界
