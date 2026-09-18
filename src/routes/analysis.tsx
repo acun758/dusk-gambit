@@ -14,6 +14,20 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
+interface AnalysisSearch {
+  match?: string;
+  local?: boolean;
+  ply?: number;
+}
+
+interface LastGame {
+  uciLine: string[];
+  you: "w" | "b";
+  outcome: string | null;
+  matchId: string | null;
+  ranked: boolean;
+}
+
 export const Route = createFileRoute("/analysis")({
   staticData: { sitemap: false },
   // match=刚结束的天梯局；local=刚结束的陪练局（棋谱存在会话里）；ply=直接停在第几手
