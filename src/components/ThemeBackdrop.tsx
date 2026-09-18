@@ -6,8 +6,8 @@ export function ThemeBackdrop({ theme }: { theme: ThemeBackgroundName }) {
   return (
     <div className="theme-backdrop" aria-hidden="true">
       <picture>
-        <source media="(min-width: 1024px)" srcSet={artwork.desktop} />
-        <source media="(min-width: 768px)" srcSet={artwork.ipad} />
+        <source media="(orientation: landscape) and (min-width: 600px)" srcSet={artwork.desktop} />
+        <source media="(orientation: portrait) and (min-width: 600px)" srcSet={artwork.ipad} />
         <img src={artwork.iphone} alt="" decoding="async" fetchPriority="high" />
       </picture>
       <div className="theme-backdrop-shade" />

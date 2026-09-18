@@ -340,7 +340,7 @@ function Analysis() {
               </div>
             </div>
 
-            <div className="review-insights grid gap-space-sm md:grid-cols-2 xl:grid-cols-1">
+            <div className="review-insights grid gap-space-sm tab:grid-cols-2 xl:grid-cols-1">
               <div className="home-glass-panel p-space-sm">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">

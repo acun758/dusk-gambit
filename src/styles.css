@@ -42,6 +42,7 @@
 }
 
 @theme {
+  --breakpoint-tab: 37.5rem;
   --color-background: #0b0b0c;
   --color-error: #ffb4ab;
   --color-error-container: #93000a;
@@ -863,7 +864,12 @@
   position: relative;
   isolation: isolate;
   overflow-x: clip;
+  min-height: 100dvh;
   background-color: var(--color-surface);
+}
+
+.themed-page main.min-h-screen {
+  min-height: 100dvh;
 }
 
 .themed-page > :not(.theme-backdrop):not([class*="fixed"]):not([class*="sticky"]) {
@@ -1033,7 +1039,7 @@
 /* iPad portrait uses the same outer gutter as the dashboard and ladder.
    Never pad direct children again: that previously created a second inset on
    board-led pages and made battle, crucible and review look phone-width. */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 600px) and (max-width: 1023px) {
   .desktop-page-container,
   .desktop-content-flow {
     width: 100%;
@@ -1113,7 +1119,7 @@
   width: 100%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 599px) {
   .battle-column,
   .crucible-column,
   .review-playback,
@@ -1124,7 +1130,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 600px) and (max-width: 1023px) {
   .battle-column,
   .crucible-column {
     --battle-core-width: 100%;
@@ -1192,15 +1198,15 @@
   }
 }
 
-@media (orientation: landscape) and (max-height: 600px) and (max-width: 1023px) {
+@media (orientation: landscape) and (max-height: 700px) and (min-width: 600px) and (max-width: 1023px) {
   .battle-column,
   .crucible-column {
-    --battle-core-width: min(100%, calc(100dvh - 5.5rem));
-    --crucible-core-width: min(100%, calc(100dvh - 5.5rem));
+    --battle-core-width: min(100%, calc(100dvh - 12rem));
+    --crucible-core-width: min(100%, calc(100dvh - 12rem));
   }
 
   .review-layout {
-    grid-template-columns: minmax(280px, calc(100dvh - 5.5rem)) minmax(280px, 1fr);
+    grid-template-columns: minmax(280px, calc(100dvh - 12rem)) minmax(280px, 1fr);
     align-items: start;
   }
 
@@ -1211,7 +1217,7 @@
 
   .review-playback,
   .review-history {
-    --review-core-width: min(100%, calc(100dvh - 5.5rem));
+    --review-core-width: min(100%, calc(100dvh - 12rem));
   }
 
   .review-history {
@@ -1224,6 +1230,98 @@
 
   .review-history-list {
     max-height: 48dvh;
+  }
+
+  .battle-stage {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--spacing-space-md);
+  }
+
+  .battle-stage > .battle-column {
+    width: min(52vw, calc(100dvh - 10.5rem));
+    flex: 0 0 auto;
+    padding-top: 0.25rem;
+  }
+
+  .battle-stage > .duel-live-panel {
+    display: flex;
+    width: min(34vw, 19rem);
+    max-height: calc(100dvh - 10rem);
+    overflow-y: auto;
+    position: sticky;
+    top: 5rem;
+  }
+
+  .battle-stage ~ * .duel-live-panel,
+  .battle-stage .duel-live-panel + * {
+    min-width: 0;
+  }
+
+  .fold-mobile-duel-panel {
+    display: none;
+  }
+
+  .home-glass-header.fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .home-glass-header.fixed.bottom-0 > div:first-child {
+    display: none;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav {
+    height: 3.5rem;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav > a {
+    height: 3.5rem;
+    flex-direction: row;
+    gap: 0.25rem;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav > a > span:first-child {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .app-shell main {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 599px) and (max-height: 700px) {
+  .home-glass-header.fixed.bottom-0 > div:first-child {
+    display: none;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav,
+  .home-glass-header.fixed.bottom-0 nav > a {
+    height: 3.75rem;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav > a > span:first-child {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .home-glass-header.fixed.bottom-0 nav img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .app-shell main {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .fold-mobile-duel-panel {
+    bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px));
   }
 }
 

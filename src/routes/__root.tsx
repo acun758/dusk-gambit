@@ -138,7 +138,11 @@ function RootComponent() {
   useEffect(() => {
     const warmThemeCache = () => {
       const width = window.innerWidth;
-      const source = width >= 1024 ? "desktop" : width >= 768 ? "ipad" : "iphone";
+      const source = width >= 600
+        ? window.matchMedia("(orientation: landscape)").matches
+          ? "desktop"
+          : "ipad"
+        : "iphone";
       Object.values(THEME_BACKGROUNDS).forEach((artwork) => {
         const image = new Image();
         image.decoding = "async";

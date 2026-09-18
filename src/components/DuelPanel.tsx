@@ -276,7 +276,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
   return (
     <>
       {/* Compact: swipeable bottom drawer (iPhone / iPad portrait) */}
-      <div className="lg:hidden fixed inset-x-0 bottom-[4.5rem] z-40 px-margin-mobile">
+      <div className="fold-mobile-duel-panel lg:hidden fixed inset-x-0 bottom-[4.5rem] z-40 px-margin-mobile">
         <div
           ref={sheetRef}
           style={{
