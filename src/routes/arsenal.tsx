@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { UiIcon } from "@/components/UiIcon";
-import { GAME_ART } from "@/lib/game-art-assets";
 import { useProfile } from "@/lib/profile";
 import { useT } from "@/lib/i18n";
 import { fetchEndgameLevels as listEndgameLevels } from "@/data/db";
@@ -33,6 +32,12 @@ import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
 import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp";
+import boardTemple from "@/assets/boards/temple.webp";
+import boardTrench from "@/assets/boards/trench.webp";
+import boardPaleCourt from "@/assets/boards/palecourt.webp";
+import boardDragonPit from "@/assets/boards/dragonpit.webp";
+import boardAbbey from "@/assets/boards/abbey.webp";
+import boardCoronation from "@/assets/boards/coronation.webp";
 
 const KINDS = [
   { id: "all", zh: "全部", en: "All" },
@@ -48,6 +53,15 @@ const SETS = [
   { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "dark-dragon" },
   { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: platinumQueenPreview, floor: 1600, price: 1200, pieceSetId: null },
   { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset, floor: 2200, price: 1800, pieceSetId: null },
+] as const;
+
+const BOARDS = [
+  { id: "temple", zh: "永夜神庙", en: "Everdark Temple", image: boardTemple, floor: 0 },
+  { id: "trench", zh: "血色战壕", en: "Crimson Trench", image: boardTrench, floor: 1200 },
+  { id: "palecourt", zh: "苍白王庭", en: "Pale Court", image: boardPaleCourt, floor: 1600 },
+  { id: "dragonpit", zh: "龙焰深穴", en: "Dragonflame Pit", image: boardDragonPit, floor: 2000 },
+  { id: "abbey", zh: "沉没修道院", en: "Sunken Abbey", image: boardAbbey, floor: 2200 },
+  { id: "coronation", zh: "黄金加冕厅", en: "Golden Coronation Hall", image: boardCoronation, floor: 2500 },
 ] as const;
 
 function Arsenal() {
@@ -176,15 +190,15 @@ function Arsenal() {
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t("随段位解锁", "Unlocked by tier")}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { image: GAME_ART.reviewBoard, zh: "永夜神庙", en: "Everdark Temple", stateZh: "已启用", stateEn: "Active" },
-                  { image: GAME_ART.matchArena, zh: "血色战壕", en: "Crimson Trench", stateZh: "2600 ELO", stateEn: "2600 ELO" },
-                ].map((board) => (
-                  <div key={board.en} className="home-glass-tile p-2">
-                    <div className="home-glass-media aged-print-frame aspect-video overflow-hidden"><img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} className="h-full w-full object-cover" /></div>
-                    <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{t(board.stateZh, board.stateEn)}</span></div>
-                  </div>
-                ))}
+                {BOARDS.map((board) => {
+                  const canUse = profile.elo >= board.floor;
+                  return (
+                    <div key={board.id} className="home-glass-tile p-2">
+                      <div className="home-glass-media aged-print-frame aspect-video overflow-hidden"><img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} loading="lazy" decoding="async" className="h-full w-full object-cover" /></div>
+                      <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{canUse ? t("可使用", "Available") : `${board.floor} ELO`}</span></div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
           </section>

@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import tarotKingAsset from "@/assets/tarot-king.jpg";
+import styleTarot from "@/assets/archive-styles/tarot.webp";
+import stylePoster from "@/assets/archive-styles/poster.webp";
+import styleDispatch from "@/assets/archive-styles/dispatch.webp";
+import styleCathedral from "@/assets/archive-styles/cathedral.webp";
+import styleBlackgold from "@/assets/archive-styles/blackgold.webp";
+import styleCrimson from "@/assets/archive-styles/crimson.webp";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
@@ -23,10 +28,13 @@ export const Route = createFileRoute("/archive")({
   component: ArchiveChronicle,
 });
 
-const STYLES: { id: string; zh: string; en: string; icon: UiIconName }[] = [
-  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards" },
-  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper" },
-  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll" },
+const STYLES: { id: string; zh: string; en: string; icon: UiIconName; image: string }[] = [
+  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards", image: styleTarot },
+  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper", image: stylePoster },
+  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll", image: styleDispatch },
+  { id: "cathedral", zh: "教堂绝杀", en: "Cathedral Mate", icon: "seal", image: styleCathedral },
+  { id: "blackgold", zh: "黑金加冕", en: "Black Gold Coronation", icon: "crown", image: styleBlackgold },
+  { id: "crimson", zh: "赤色终局", en: "Crimson Endgame", icon: "flame", image: styleCrimson },
 ];
 
 const ELEMENTS: { id: string; zh: string; en: string }[] = [
@@ -44,10 +52,12 @@ function ArchiveChronicle() {
   const [elements, setElements] = useState<string[]>(ELEMENTS.map((e) => e.id));
   const [notice, setNotice] = useState("");
 
+  const activeStyle = STYLES.find((item) => item.id === style) ?? STYLES[0]!;
+
   const exportPoster = () => {
     const a = document.createElement("a");
-    a.href = tarotKingAsset;
-    a.download = `blood-sovereign-${profile.name}-archive.jpg`;
+    a.href = activeStyle.image;
+    a.download = `blood-sovereign-${profile.name}-${activeStyle.id}.webp`;
     a.click();
     setNotice(t("典藏图已准备下载；完整战报数据仍保留在对局复盘中。", "Your archive image is downloading; the full report stays in match review."));
   };
@@ -68,7 +78,7 @@ function ArchiveChronicle() {
             </div>
 
             <div className={`home-glass-media aged-print-frame relative mx-auto w-full overflow-hidden ${ratio === "1:1" ? "aspect-square max-w-[560px]" : ratio === "9:16" ? "aspect-[9/16] max-w-[390px]" : "aspect-[4/5] max-w-[520px]"}`}>
-              <img src={tarotKingAsset} alt={t("黑曜王棋典藏海报", "Obsidian king archive poster")} className="absolute inset-0 h-full w-full object-cover" />
+              <img src={activeStyle.image} alt={t(`${activeStyle.zh}典藏海报`, `${activeStyle.en} archive poster`)} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80" />
               <div className="absolute inset-0 flex flex-col justify-between p-space-md text-center">
                 <div>
