@@ -78,7 +78,7 @@ function ArchiveChronicle() {
             </div>
 
             <div className={`home-glass-media aged-print-frame relative mx-auto w-full overflow-hidden ${ratio === "1:1" ? "aspect-square max-w-[560px]" : ratio === "9:16" ? "aspect-[9/16] max-w-[390px]" : "aspect-[4/5] max-w-[520px]"}`}>
-              <img src={tarotKingAsset} alt={t("黑曜王棋典藏海报", "Obsidian king archive poster")} className="absolute inset-0 h-full w-full object-cover" />
+              <img src={activeStyle.image} alt={t(`${activeStyle.zh}典藏海报`, `${activeStyle.en} archive poster`)} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80" />
               <div className="absolute inset-0 flex flex-col justify-between p-space-md text-center">
                 <div>
