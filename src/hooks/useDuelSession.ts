@@ -329,7 +329,16 @@ export function useDuelSession(): DuelSession {
     const onOnline = () => void resync();
     window.addEventListener("online", onOnline);
     document.addEventListener("visibilitychange", onVisible);
+    // 兜底轮询：等待配对与对局进行中每 2 秒对齐一次服务端权威局面，
+    // 即使实时推送被网络或代理掐断，对手落子与匹配成功仍会到达。
+    const timer = setInterval(() => {
+      const status = matchRef.current?.status;
+      if (status === "over") return;
+      if (document.visibilityState === "hidden") return;
+      void resync(true);
+    }, 2000);
     return () => {
+      clearInterval(timer);
       window.removeEventListener("online", onOnline);
       document.removeEventListener("visibilitychange", onVisible);
     };
