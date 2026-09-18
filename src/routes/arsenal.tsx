@@ -50,6 +50,15 @@ const SETS = [
   { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset, floor: 2200, price: 1800, pieceSetId: null },
 ] as const;
 
+const BOARDS = [
+  { id: "temple", zh: "永夜神庙", en: "Everdark Temple", image: boardTemple, floor: 0 },
+  { id: "trench", zh: "血色战壕", en: "Crimson Trench", image: boardTrench, floor: 1200 },
+  { id: "palecourt", zh: "苍白王庭", en: "Pale Court", image: boardPaleCourt, floor: 1600 },
+  { id: "dragonpit", zh: "龙焰深穴", en: "Dragonflame Pit", image: boardDragonPit, floor: 2000 },
+  { id: "abbey", zh: "沉没修道院", en: "Sunken Abbey", image: boardAbbey, floor: 2200 },
+  { id: "coronation", zh: "黄金加冕厅", en: "Golden Coronation Hall", image: boardCoronation, floor: 2500 },
+] as const;
+
 function Arsenal() {
   const t = useT();
   const { profile, signedIn, setEquipment } = useProfile();
