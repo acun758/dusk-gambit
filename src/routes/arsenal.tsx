@@ -32,12 +32,12 @@ import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
 import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp";
-import boardTemple from "@/assets/boards/temple.webp";
-import boardTrench from "@/assets/boards/trench.webp";
-import boardPaleCourt from "@/assets/boards/palecourt.webp";
-import boardDragonPit from "@/assets/boards/dragonpit.webp";
-import boardAbbey from "@/assets/boards/abbey.webp";
-import boardCoronation from "@/assets/boards/coronation.webp";
+import boardTempleAsset from "@/assets/boards/temple.webp.asset.json";
+import boardTrenchAsset from "@/assets/boards/trench.webp.asset.json";
+import boardPaleCourtAsset from "@/assets/boards/palecourt.webp.asset.json";
+import boardDragonPitAsset from "@/assets/boards/dragonpit.webp.asset.json";
+import boardAbbeyAsset from "@/assets/boards/abbey.webp.asset.json";
+import boardCoronationAsset from "@/assets/boards/coronation.webp.asset.json";
 
 const KINDS = [
   { id: "all", zh: "全部", en: "All" },
@@ -56,12 +56,12 @@ const SETS = [
 ] as const;
 
 const BOARDS = [
-  { id: "temple", zh: "永夜神庙", en: "Everdark Temple", image: boardTemple, floor: 0 },
-  { id: "trench", zh: "血色战壕", en: "Crimson Trench", image: boardTrench, floor: 1200 },
-  { id: "palecourt", zh: "苍白王庭", en: "Pale Court", image: boardPaleCourt, floor: 1600 },
-  { id: "dragonpit", zh: "龙焰深穴", en: "Dragonflame Pit", image: boardDragonPit, floor: 2000 },
-  { id: "abbey", zh: "沉没修道院", en: "Sunken Abbey", image: boardAbbey, floor: 2200 },
-  { id: "coronation", zh: "黄金加冕厅", en: "Golden Coronation Hall", image: boardCoronation, floor: 2500 },
+  { id: "temple", zh: "永夜神庙", en: "Everdark Temple", image: boardTempleAsset.url, floor: 0 },
+  { id: "trench", zh: "血色战壕", en: "Crimson Trench", image: boardTrenchAsset.url, floor: 1200 },
+  { id: "palecourt", zh: "苍白王庭", en: "Pale Court", image: boardPaleCourtAsset.url, floor: 1600 },
+  { id: "dragonpit", zh: "龙焰深穴", en: "Dragonflame Pit", image: boardDragonPitAsset.url, floor: 2000 },
+  { id: "abbey", zh: "沉没修道院", en: "Sunken Abbey", image: boardAbbeyAsset.url, floor: 2200 },
+  { id: "coronation", zh: "黄金加冕厅", en: "Golden Coronation Hall", image: boardCoronationAsset.url, floor: 2500 },
 ] as const;
 
 function Arsenal() {
