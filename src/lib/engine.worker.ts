@@ -5,7 +5,7 @@
  *       { id, type:"legal", moves: string[] }
  * 注：san 字段由主线程用 chess.js 计算，Worker 不携带规则库（保持轻量）。
  */
-import { AshbornEngine } from './engine';
+import { AshbornEngine } from '@/core/engine/engine';
 
 const engine = new AshbornEngine();
 
