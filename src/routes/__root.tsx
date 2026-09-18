@@ -144,13 +144,16 @@ function RootComponent() {
     installEngineHost();
   }, []);
 
-  // 入口页显示期间：只预取首页代码和首页背景，避免其他主题大图抢带宽
+  // 入口页显示期间：先预取首页代码，稍后再取首页背景，避免和入口海报抢带宽
   useEffect(() => {
     if (!showEntrance) return;
     void router.preloadRoute({ to: "/" }).catch(() => {});
-    const image = new Image();
-    image.decoding = "async";
-    image.src = THEME_BACKGROUNDS.storm[currentBackgroundSource()];
+    const id = globalThis.setTimeout(() => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = THEME_BACKGROUNDS.storm[currentBackgroundSource()];
+    }, 700);
+    return () => globalThis.clearTimeout(id);
   }, [showEntrance, router]);
 
   // 进入王座之后再按顺序预热其余主题背景，一次只加载一张
