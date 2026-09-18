@@ -8,19 +8,34 @@
  *  4. 换云开发时只改 src/data/backend/ 下的适配器，本文件与页面零改动。
  */
 import { gateway } from "./backend";
+import { authProvider } from "./auth";
 import { isLinkUp, markOffline, pendingOutbound, queueOutbound, registerOutboundSender } from "./realtime";
 
 export type { AuthResult, SessionInfo } from "./backend";
 
-/* ---------------------------------- 会话 ---------------------------------- */
+/* ------------------------- 会话（统一走身份层 auth.ts） ------------------------- */
 
-export const fetchSession = gateway.fetchSession;
-export const currentUserId = gateway.currentUserId;
-export const signIn = gateway.signIn;
-export const register = gateway.register;
-export const signOut = gateway.signOut;
+export type { AuthUser, AuthPlatform, AuthProvider } from "./auth";
+export { authProvider, AUTH_PLATFORM } from "./auth";
+
+export async function fetchSession(): Promise<{ userId: string } | null> {
+  const user = await authProvider.getCurrentUser();
+  return user ? { userId: user.userId } : null;
+}
+export async function currentUserId(): Promise<string | null> {
+  return (await authProvider.getCurrentUser())?.userId ?? null;
+}
+export async function signIn(email: string, password: string) {
+  return authProvider.signIn({ email, password });
+}
+export async function register(email: string, password: string, redirectTo?: string) {
+  return authProvider.register(redirectTo === undefined ? { email, password } : { email, password, redirectTo });
+}
+export async function signOut(): Promise<void> {
+  await authProvider.signOut();
+}
 /** 登录状态变化（登录 / 退出）。返回退订函数。 */
-export const onSessionChange = gateway.onSessionChange;
+export const onSessionChange = (cb: () => void) => authProvider.onAuthChange(cb);
 
 export async function isSignedIn(): Promise<boolean> {
   return (await fetchSession()) !== null;
