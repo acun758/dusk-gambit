@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { computeMind, mean, sanitizeMindMoves as sanitize, type MindReport, type MoveInput } from "@/core/mind";
-import { rankOf } from "@/core/ranks";
+import { rankOfCore as rankOf } from "@/core/ranks";
 
 /**
  * 心智战报（服务端权威计算）——算法在 src/core/mind.ts，这里只做鉴权、消毒与存档。
