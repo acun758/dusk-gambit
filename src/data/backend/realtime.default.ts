@@ -1,6 +1,6 @@
 /**
  * 默认适配器的实时帧实现（表变更推送）。
- * 断线重连、补传队列等与平台无关的策略统一在 src/lib/realtime.ts。
+ * 断线重连、补传队列等与平台无关的策略统一在 src/data/realtime.ts。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
 import type { DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";

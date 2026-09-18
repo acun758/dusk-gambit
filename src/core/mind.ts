@@ -1,15 +1,11 @@
-import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { accuracyFromAcpl, tagForLoss } from "@/core/review";
-import { rankOf } from "@/lib/ranks";
-
 /**
- * 心智战报（服务端权威计算）
+ * core/mind.ts — 心智四维评分（纯逻辑，零 React / 零 DOM / 零云 SDK）
  *
- * 红线：四维公式、准确率口径、段位均值全部在服务端算，客户端只负责显示。
- * 这里只描述**棋局行为**，不做任何心理学诊断；也不参与胜负、积分与段位结算。
+ * 只描述棋局行为，不做任何心理学诊断；也不参与胜负、积分与段位结算。
  * 输入的 cp / loss 来自端内引擎复盘，仅用于讲解，绝不写进天梯或奖励。
+ * 服务端调用本模块计算（权威口径），客户端只显示结果。
  */
+import { accuracyFromAcpl, tagForLoss } from "./review";
 
 export type MindKey = "composure" | "resilience" | "discipline" | "audacity";
 
@@ -31,15 +27,6 @@ export interface MindReport {
   worst: { ply: number; san: string; loss: number; tag: string }[];
 }
 
-export interface ReportComparison {
-  previousAccuracy: number | null;
-  personalBest: number | null;
-  rankAverage: number | null;
-  rankId: string;
-  rankZh: string;
-  saved: boolean;
-}
-
 export interface MoveInput {
   ply: number;
   by: "w" | "b";
@@ -51,9 +38,10 @@ export interface MoveInput {
 }
 
 const clamp = (v: number) => Math.max(0, Math.min(100, Math.round(v)));
-const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+export const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
-function sanitize(moves: MoveInput[]): MoveInput[] {
+/** 入参消毒：限长、限幅，防止脏数据进入评分。 */
+export function sanitizeMindMoves(moves: MoveInput[]): MoveInput[] {
   return moves.slice(0, 300).map((m) => ({
     ply: Math.max(0, Math.round(m.ply)),
     by: m.by === "b" ? "b" : "w",
@@ -153,86 +141,3 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
     ],
   };
 }
-
-/** 未登录也能看到的战报：只算不存。 */
-export const analyzeMind = createServerFn({ method: "POST" })
-  .inputValidator((input: { moves: MoveInput[]; you: "w" | "b"; outcome?: string | null }) => ({
-    moves: sanitize(input.moves ?? []),
-    you: input.you === "b" ? ("b" as const) : ("w" as const),
-    outcome: input.outcome ?? null,
-  }))
-  .handler(async ({ data }): Promise<MindReport> => computeMind(data.moves, data.you, data.outcome));
-
-/** 登录用户：算完存档，并给出与上一局 / 个人最好 / 本段位平均的对比。 */
-export const recordMatchReport = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: {
-    moves: MoveInput[];
-    you: "w" | "b";
-    outcome?: string | null;
-    matchId?: string | null;
-    ranked?: boolean;
-  }) => ({
-    moves: sanitize(input.moves ?? []),
-    you: input.you === "b" ? ("b" as const) : ("w" as const),
-    outcome: input.outcome ?? null,
-    matchId: input.matchId ?? null,
-    ranked: !!input.ranked,
-  }))
-  .handler(async ({ data, context }): Promise<{ report: MindReport; comparison: ReportComparison }> => {
-    const report = computeMind(data.moves, data.you, data.outcome);
-    const userId = context.userId;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("elo")
-      .eq("id", userId)
-      .maybeSingle();
-    const elo = profile?.elo ?? 1000;
-    const tier = rankOf(elo);
-
-    const { data: history } = await supabaseAdmin
-      .from("match_reports")
-      .select("accuracy")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(50);
-    const past = (history ?? []).map((r) => Number(r.accuracy));
-    const previousAccuracy = past.length ? past[0]! : null;
-    const personalBest = past.length ? Math.max(...past) : null;
-
-    const { data: peers } = await supabaseAdmin
-      .from("match_reports")
-      .select("accuracy")
-      .eq("rank_id", tier.id)
-      .limit(500);
-    const peerValues = (peers ?? []).map((r) => Number(r.accuracy));
-    const rankAverage = peerValues.length ? Math.round(mean(peerValues) * 10) / 10 : null;
-
-    const row = {
-      user_id: userId,
-      match_id: data.matchId,
-      ranked: data.ranked,
-      accuracy: report.accuracy,
-      acpl: report.acpl,
-      elo,
-      rank_id: tier.id,
-      mind: Object.fromEntries(report.facets.map((f) => [f.key, f.value])),
-    };
-    const { error } = data.matchId
-      ? await supabaseAdmin.from("match_reports").upsert(row, { onConflict: "user_id,match_id" })
-      : await supabaseAdmin.from("match_reports").insert(row);
-
-    return {
-      report,
-      comparison: {
-        previousAccuracy,
-        personalBest,
-        rankAverage,
-        rankId: tier.id,
-        rankZh: tier.zh,
-        saved: !error,
-      },
-    };
-  });

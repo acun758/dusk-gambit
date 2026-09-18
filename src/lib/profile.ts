@@ -9,8 +9,8 @@ import {
   saveAvatarPath as saveAvatarImage,
   saveEquipment,
   submitVerification,
-} from "@/lib/db";
-import { subscribeMyProfile } from "@/lib/realtime";
+} from "@/data/db";
+import { subscribeMyProfile } from "@/data/realtime";
 import { uploadAvatar } from "@/lib/avatar-upload";
 import { rankOf } from "@/lib/ranks";
 

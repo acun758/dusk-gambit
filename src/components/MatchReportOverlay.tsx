@@ -3,8 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import { reviewGame } from "@/core/review";
-import { analyzeMind, isSignedIn, recordMatchReport } from "@/lib/db";
-import type { MindReport, ReportComparison } from "@/lib/mind.functions";
+import { analyzeMind, isSignedIn, recordMatchReport } from "@/data/db";
+import type { MindReport, ReportComparison } from "@/data/mind.functions";
 
 /**
  * 心智战报浮窗：对局结束后自动弹出。

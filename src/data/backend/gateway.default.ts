@@ -2,16 +2,17 @@
  * 默认适配器 —— 当前线上云后端。
  *
  * 全工程只有本文件与 realtime.default.ts 直接引用云厂商 SDK。
- * 业务代码一律走 src/lib/db.ts（数据）与 src/lib/realtime.ts（实时帧）。
+ * 业务代码一律走 src/data/db.ts（数据）与 src/data/realtime.ts（实时帧）。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
-import * as remote from "@/lib/game.functions";
-import * as puzzleRemote from "@/lib/puzzle.functions";
-import * as mindRemote from "@/lib/mind.functions";
-import * as hallRemote from "@/lib/hall.functions";
+import * as remote from "@/data/game.functions";
+import * as puzzleRemote from "@/data/puzzle.functions";
+import * as mindRemote from "@/data/mind.functions";
+import * as hallRemote from "@/data/hall.functions";
 import type { AuthResult, SessionInfo } from "./types";
+import { STORAGE_CONFIG } from "@/config/app-config";
 
-const AVATAR_BUCKET = "avatars";
+const AVATAR_BUCKET = STORAGE_CONFIG.avatarBucket;
 
 export const defaultGateway = {
   /* ---------------------------------- 会话 ---------------------------------- */

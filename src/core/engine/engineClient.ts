@@ -1,9 +1,19 @@
 /**
- * 引擎客户端 — 环境自适应
- * 优先 Web Worker / Cocos Worker；构造失败时降级为主线程同步搜索（≤600ms，可接受）。
- * Web 版传 workerFactory（Vite 打包出的独立 chunk）；Cocos/小游戏版注入 wx.createWorker。
+ * 引擎客户端 — 环境自适应（纯逻辑，零 DOM 类型依赖）
+ * 由宿主注入 workerFactory：Web 版注入 Vite 打包的 worker chunk，小游戏版注入 wx.createWorker。
+ * 未注入或构造失败时降级为主线程同步搜索（≤600ms，可接受）。
  */
 import { AshbornEngine, type SearchOptions, type SearchResult } from './engine';
+
+/** 与平台无关的 worker 形状：Web Worker 与 wx.createWorker 均满足。 */
+export interface WorkerLike {
+  postMessage(msg: unknown): void;
+  terminate?: () => void;
+  onmessage: ((ev: { data: unknown }) => void) | null;
+  onerror: ((err: unknown) => void) | null;
+}
+
+export type WorkerFactory = () => WorkerLike;
 
 interface Pending {
   resolve: (r: SearchResult) => void;
@@ -12,16 +22,16 @@ interface Pending {
 const EMPTY_RESULT: SearchResult = { uci: '', cp: 0, depth: 0, nodes: 0, ms: 0 };
 
 export class EngineClient {
-  private worker: Worker | null = null;
+  private worker: WorkerLike | null = null;
   private local = new AshbornEngine();
   private seq = 0;
   private pending = new Map<string, Pending>();
 
-  constructor(workerFactory?: () => Worker) {
+  constructor(workerFactory?: WorkerFactory) {
     if (workerFactory) {
       try {
         const worker = workerFactory();
-        worker.onmessage = (ev: MessageEvent) => {
+        worker.onmessage = (ev: { data: unknown }) => {
           const res = ev.data as { id: string; type: string; uci: string | null } & SearchResult;
           const p = this.pending.get(res.id);
           if (!p) return;
@@ -70,7 +80,7 @@ export class EngineClient {
   }
 
   dispose(): void {
-    this.worker?.terminate();
+    this.worker?.terminate?.();
     this.worker = null;
   }
 }

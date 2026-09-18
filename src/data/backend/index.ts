@@ -8,11 +8,11 @@ import { defaultGateway } from "./gateway.default";
 import { defaultRealtime } from "./realtime.default";
 import { cloudGateway, cloudRealtime } from "./gateway.cloud";
 import type { DataGateway, RealtimeGateway } from "./types";
+import { BACKEND_PROVIDER } from "@/config/app-config";
 
 export type BackendProvider = "default" | "cloud";
 
-export const provider: BackendProvider =
-  (import.meta.env["VITE_BACKEND_PROVIDER"] as BackendProvider | undefined) === "cloud" ? "cloud" : "default";
+export const provider: BackendProvider = BACKEND_PROVIDER;
 
 export const gateway: DataGateway = provider === "cloud" ? cloudGateway : defaultGateway;
 export const realtimeGateway: RealtimeGateway = provider === "cloud" ? cloudRealtime : defaultRealtime;

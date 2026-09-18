@@ -1,3 +1,4 @@
+import { ENDPOINTS } from "@/config/app-config";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
@@ -74,7 +75,7 @@ export const explainMatch = createServerFn({ method: "POST" })
       script,
     ].join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch(ENDPOINTS.aiGateway, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

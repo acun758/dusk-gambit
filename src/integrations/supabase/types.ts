@@ -518,7 +518,9 @@ export type Database = {
           id: string
           id_tail: string
           losses: number
+          migrated_from: string | null
           name: string
+          platform: string
           provisional_games: number
           puzzle_best_streak: number
           puzzle_last_day: string | null
@@ -530,6 +532,7 @@ export type Database = {
           verified_at: string | null
           verify_status: string
           wins: number
+          wx_openid: string | null
         }
         Insert: {
           avatar_key?: string
@@ -543,7 +546,9 @@ export type Database = {
           id: string
           id_tail?: string
           losses?: number
+          migrated_from?: string | null
           name?: string
+          platform?: string
           provisional_games?: number
           puzzle_best_streak?: number
           puzzle_last_day?: string | null
@@ -555,6 +560,7 @@ export type Database = {
           verified_at?: string | null
           verify_status?: string
           wins?: number
+          wx_openid?: string | null
         }
         Update: {
           avatar_key?: string
@@ -568,7 +574,9 @@ export type Database = {
           id?: string
           id_tail?: string
           losses?: number
+          migrated_from?: string | null
           name?: string
+          platform?: string
           provisional_games?: number
           puzzle_best_streak?: number
           puzzle_last_day?: string | null
@@ -580,6 +588,7 @@ export type Database = {
           verified_at?: string | null
           verify_status?: string
           wins?: number
+          wx_openid?: string | null
         }
         Relationships: []
       }

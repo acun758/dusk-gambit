@@ -15,6 +15,7 @@ import { GameEntrance } from "../components/GameEntrance";
 import { LangProvider } from "../lib/i18n";
 import { ProfileProvider } from "../lib/profile";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { installEngineHost } from "../lib/engine-host";
 import { THEME_BACKGROUNDS } from "../lib/theme-background-assets";
 
 function NotFoundComponent() {
@@ -127,6 +128,11 @@ function RootComponent() {
       /* storage unavailable */
     }
     setShowEntrance(false);
+  }, []);
+
+  // 引擎宿主接入（把浏览器 Worker 注入 core/engine；core 本身不认识浏览器）
+  useEffect(() => {
+    installEngineHost();
   }, []);
 
   useEffect(() => {

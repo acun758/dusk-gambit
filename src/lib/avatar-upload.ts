@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { currentUserId, fetchAvatarUrl, putAvatarFile } from "@/lib/db";
+import { currentUserId, fetchAvatarUrl, putAvatarFile } from "@/data/db";
 
 /**
  * 自定义头像：本地裁成正方形并压到 512×512 后上传到私有桶，

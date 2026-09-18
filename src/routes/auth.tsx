@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { useEffect, useState } from "react";
-import { fetchSession, register, signIn } from "@/lib/db";
+import { fetchSession, register, signIn } from "@/data/db";
 import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage, submitVerification } from "@/lib/db";
+import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage, submitVerification } from "@/data/db";
 import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { uploadAvatar } from "@/lib/avatar-upload";

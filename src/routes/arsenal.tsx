@@ -8,7 +8,7 @@ import { UiIcon } from "@/components/UiIcon";
 import { GAME_ART } from "@/lib/game-art-assets";
 import { useProfile } from "@/lib/profile";
 import { useT } from "@/lib/i18n";
-import { fetchEndgameLevels as listEndgameLevels } from "@/lib/db";
+import { fetchEndgameLevels as listEndgameLevels } from "@/data/db";
 import type { DrillLevel } from "@/components/EndgameDrill";
 
 export const Route = createFileRoute("/arsenal")({

@@ -1,24 +1,28 @@
 /**
- * 端内引擎单例（军师交付的 Dusk/Ashborn 引擎 v0.1）。
- * 对弈 AI 与复盘逐手评估共用这一处实例，页面不要自行 new。
+ * 端内引擎单例（Dusk/Ashborn 引擎 v0.1）。
  *
- * 浏览器端走 Vite 打包出的独立 worker chunk（复盘批量搜索的硬性前置）；
- * 构造失败或非浏览器环境自动降级主线程。
- * 小游戏端把 workerFactory 换成 wx.createWorker 即可，上层零改动。
+ * core 内不认识浏览器：worker 工厂由宿主注入
+ *   - Web：src/lib/engine-host.ts 注入 Vite 打包的 worker chunk
+ *   - 小游戏：注入 wx.createWorker 包装
+ * 未注入时自动降级为主线程搜索，上层调用方式不变。
  */
-import { EngineClient } from './engineClient';
+import { EngineClient, type WorkerFactory } from './engineClient';
 
 let client: EngineClient | null = null;
+let factory: WorkerFactory | undefined;
 
-function browserWorkerFactory(): (() => Worker) | undefined {
-  if (typeof window === 'undefined' || typeof Worker === 'undefined') return undefined;
-  return () => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
+/** 宿主在启动时注入 worker 工厂；必须在首次 getEngine() 之前调用。 */
+export function setEngineWorkerFactory(next: WorkerFactory | undefined): void {
+  factory = next;
+  client?.dispose();
+  client = null;
 }
 
 export function getEngine(): EngineClient {
-  if (!client) client = new EngineClient(browserWorkerFactory());
+  if (!client) client = new EngineClient(factory);
   return client;
 }
 
 export { EngineClient };
+export type { WorkerFactory, WorkerLike } from './engineClient';
 export type { SearchOptions, SearchResult } from './engine';

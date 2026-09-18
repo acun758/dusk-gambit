@@ -14,8 +14,8 @@ import {
   resignMatch,
   respondDraw as respondDrawRemote,
   submitMove,
-} from "@/lib/db";
-import { subscribeDuel, watchLink, type LinkPhase } from "@/lib/realtime";
+} from "@/data/db";
+import { subscribeDuel, watchLink, type LinkPhase } from "@/data/realtime";
 
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
 import { aiLevel, type AiLevelId } from "@/core/ai";
