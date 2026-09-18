@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import { reviewGame } from "@/core/review";
@@ -56,6 +56,20 @@ export function MatchReportOverlay({
   const [error, setError] = useState<string | null>(null);
   // 同一局只跑一次：开发模式下 effect 会被重复触发，重复跑会把引擎排满
   const startedFor = useRef<MatchReportInput | null>(null);
+  const navigate = useNavigate();
+
+  /** 打开刚结束这一局的复盘；ply>0 时直接停在该手的局面 */
+  const openReview = (ply?: number) => {
+    onClose();
+    if (ply && ply > 0) onJumpToPly?.(ply);
+    void navigate({
+      to: "/analysis",
+      search: {
+        ...(input.matchId ? { match: input.matchId } : { local: true }),
+        ...(ply && ply > 0 ? { ply } : {}),
+      },
+    });
+  };
 
   useEffect(() => {
     if (startedFor.current === input) return;
@@ -175,7 +189,7 @@ export function MatchReportOverlay({
                 {report.worst.map((w) => (
                   <button
                     key={w.ply}
-                    onClick={() => onJumpToPly?.(w.ply)}
+                    onClick={() => openReview(w.ply)}
                     className="flex items-center gap-space-sm bg-surface-container px-2 py-2 min-h-11 rounded-xl text-left"
                   >
                     <span className="font-label-sm text-label-sm text-on-surface-variant w-8 shrink-0 tabular-nums">
@@ -207,10 +221,12 @@ export function MatchReportOverlay({
           >
             再来一局
           </Button>
-          <Button asChild variant="ghost" className="home-glass-control h-11 rounded-xl bg-surface-container-high">
-            <Link to="/analysis" className="font-label-md text-label-md">
-              看完整复盘
-            </Link>
+          <Button
+            variant="ghost"
+            onClick={() => openReview()}
+            className="home-glass-control h-11 rounded-xl bg-surface-container-high font-label-md text-label-md"
+          >
+            看完整复盘
           </Button>
         </div>
       </div>

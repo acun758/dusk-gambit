@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Chess } from "chess.js";
 import { PlayableBoard } from "@/components/PlayableBoard";
@@ -14,8 +14,33 @@ import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
 
+interface AnalysisSearch {
+  match?: string;
+  local?: boolean;
+  ply?: number;
+}
+
+interface LastGame {
+  uciLine: string[];
+  you: "w" | "b";
+  outcome: string | null;
+  matchId: string | null;
+  ranked: boolean;
+}
+
 export const Route = createFileRoute("/analysis")({
   staticData: { sitemap: false },
+  // match=刚结束的天梯局；local=刚结束的陪练局（棋谱存在会话里）；ply=直接停在第几手
+  validateSearch: (search: Record<string, unknown>): AnalysisSearch => {
+    const out: AnalysisSearch = {};
+    const m = search["match"];
+    const l = search["local"];
+    const p = Number(search["ply"]);
+    if (typeof m === "string" && m) out.match = m;
+    if (l === true || l === "true") out.local = true;
+    if (Number.isFinite(p) && p > 0) out.ply = Math.floor(p);
+    return out;
+  },
   head: () => ({
     meta: [
       { title: "对局复盘与点评 · 血誓王权" },
@@ -60,10 +85,26 @@ function matchResult(match: { outcome: string | null; you: string }) {
 }
 
 function Analysis() {
+  const search = Route.useSearch();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
-  const [matchId, setMatchId] = useState<string | null>(null);
+  const [matchId, setMatchId] = useState<string | null>(search.match ?? null);
   const [index, setIndex] = useState(0);
   const [historyOpen, setHistoryOpen] = useState(false);
+  // 陪练局没有服务端棋谱，用刚结束那局存在会话里的着法直接复盘
+  const [lastGame, setLastGame] = useState<LastGame | null>(null);
+
+  useEffect(() => {
+    if (!search.local) {
+      setLastGame(null);
+      return;
+    }
+    try {
+      const raw = sessionStorage.getItem("bs.lastGame");
+      setLastGame(raw ? (JSON.parse(raw) as LastGame) : null);
+    } catch {
+      setLastGame(null);
+    }
+  }, [search.local]);
 
   useEffect(() => {
     void fetchSession().then((s) => setSignedIn(!!s));
@@ -78,8 +119,8 @@ function Analysis() {
   const matches = listQ.data ?? [];
   // 默认选中最近一局“有着法”的对局，空局（0 手）不会让复盘区看起来是空的
   const firstPlayed = matches.find((m) => (m.ply ?? 0) > 0) ?? matches[0];
-  const activeId = matchId ?? firstPlayed?.id ?? null;
-  const activeMatch = matches.find((match) => match.id === activeId) ?? firstPlayed;
+  const activeId = lastGame ? null : (matchId ?? firstPlayed?.id ?? null);
+  const activeMatch = lastGame ? undefined : (matches.find((match) => match.id === activeId) ?? firstPlayed);
 
   const detailQ = useQuery({
     queryKey: ["match-review", activeId],
@@ -94,21 +135,23 @@ function Analysis() {
   const [steps, setSteps] = useState<Step[]>([]);
   const [reviewPct, setReviewPct] = useState(0);
 
+  const sourceUcis = lastGame
+    ? lastGame.uciLine
+    : ((detailQ.data?.moves ?? []) as { uci: string }[]).map((m) => m.uci);
+  const sourceKey = sourceUcis.join(" ");
+
   useEffect(() => {
-    const moves = (detailQ.data?.moves ?? []) as { uci: string; san: string; by: string }[];
     setSteps([]);
     setReviewPct(0);
-    if (!moves.length) return;
+    const line = sourceKey ? sourceKey.split(" ") : [];
+    if (!line.length) return;
     const signal = { aborted: false };
-    void reviewGame(
-      moves.map((m) => m.uci),
-      {
-        signal,
-        onProgress: (done, total) => {
-          if (!signal.aborted) setReviewPct(Math.round((done / total) * 100));
-        },
+    void reviewGame(line, {
+      signal,
+      onProgress: (done, total) => {
+        if (!signal.aborted) setReviewPct(Math.round((done / total) * 100));
       },
-    ).then((summary) => {
+    }).then((summary) => {
       if (signal.aborted) return;
       setSteps(
         summary.moves.map((m) => ({
@@ -126,7 +169,17 @@ function Analysis() {
     return () => {
       signal.aborted = true;
     };
-  }, [detailQ.data]);
+  }, [sourceKey]);
+
+  // 从战报点进来时，复盘算完后直接停在那一手
+  const jumpedForRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!search.ply || steps.length === 0) return;
+    if (jumpedForRef.current === sourceKey) return;
+    jumpedForRef.current = sourceKey;
+    setIndex(Math.min(steps.length, search.ply));
+  }, [search.ply, steps.length, sourceKey]);
+
 
   useEffect(() => setIndex(0), [activeId]);
 
@@ -159,7 +212,11 @@ function Analysis() {
             <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
                  <h2 className="cjk font-headline-sm text-headline-sm">对局历史</h2>
-                {activeMatch ? (
+                {lastGame ? (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                    刚结束的这一局 · {lastGame.ranked ? "天梯对局" : "陪练对局 · 不计分"} · {lastGame.uciLine.length} 手
+                  </p>
+                ) : activeMatch ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
                     对手 {activeMatch.opponent} · {matchResult(activeMatch)} · {activeMatch.ply} 手 · {new Date(activeMatch.playedAt).toLocaleDateString("zh-CN")}
                   </p>
@@ -206,6 +263,7 @@ function Analysis() {
                   <button
                     key={m.id}
                     onClick={() => {
+                      setLastGame(null);
                       setMatchId(m.id);
                       setHistoryOpen(false);
                     }}

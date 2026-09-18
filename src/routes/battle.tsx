@@ -108,35 +108,47 @@ function Battle() {
     tickedRef.current = second;
     playSound("tick");
   }, [myClock, session.state.status, session.state.turn, session.state.you]);
-  // 终局一声
+  // 终局一声 + 心智战报
+  // 排位赛在终局后仍会收到结算/评分等后续帧，每帧都会让本 effect 重跑。
+  // 旧写法把 setTimeout 放在 effect 的 cleanup 里清掉，而重跑时 endedRef 已为 true、
+  // 不再重新排期，于是 2 秒弹窗在真人局里被“顶掉”。现在改为：整局只排一次，
+  // 计时器存在 ref 里，只有卸载或开新局才取消。
   const endedRef = useRef(false);
+  const reportTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [reportInput, setReportInput] = useState<MatchReportInput | null>(null);
+  useEffect(
+    () => () => {
+      if (reportTimerRef.current) clearTimeout(reportTimerRef.current);
+    },
+    [],
+  );
   useEffect(() => {
-    if (session.state.status === "over" && !endedRef.current) {
-      endedRef.current = true;
-      playSound("end");
-      // 结束 2 秒后自动弹出心智战报（有着法才弹）
-      const line = session.moves.map((m) => m.uci).filter(Boolean);
-      if (line.length > 0) {
-        const timer = setTimeout(
-          () =>
-            setReportInput({
-              uciLine: line,
-              you: session.state.you,
-              outcome: session.state.outcome ?? null,
-              matchId: ranked ? session.state.matchId : null,
-              ranked,
-            }),
-          2000,
-        );
-        return () => clearTimeout(timer);
-      }
-    }
     if (session.state.status === "live") {
       endedRef.current = false;
+      if (reportTimerRef.current) clearTimeout(reportTimerRef.current);
+      reportTimerRef.current = null;
       setReportInput(null);
+      return;
     }
-    return;
+    if (session.state.status !== "over" || endedRef.current) return;
+    const line = session.moves.map((m) => m.uci).filter(Boolean);
+    if (line.length === 0) return;
+    endedRef.current = true;
+    playSound("end");
+    const input: MatchReportInput = {
+      uciLine: line,
+      you: session.state.you,
+      outcome: session.state.outcome ?? null,
+      matchId: ranked ? session.state.matchId : null,
+      ranked,
+    };
+    // 供复盘页打开“刚结束的这一局”（真人局有 matchId 时走服务端棋谱）
+    try {
+      sessionStorage.setItem("bs.lastGame", JSON.stringify(input));
+    } catch {
+      /* 隐私模式下忽略 */
+    }
+    reportTimerRef.current = setTimeout(() => setReportInput(input), 2000);
   }, [session.state.status, session.state.you, session.state.outcome, session.state.matchId, session.moves, ranked]);
 
   const rank = rankOf(profile.elo);
