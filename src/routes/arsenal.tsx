@@ -176,15 +176,15 @@ function Arsenal() {
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{t("随段位解锁", "Unlocked by tier")}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {[
-                  { image: GAME_ART.reviewBoard, zh: "永夜神庙", en: "Everdark Temple", stateZh: "已启用", stateEn: "Active" },
-                  { image: GAME_ART.matchArena, zh: "血色战壕", en: "Crimson Trench", stateZh: "2600 ELO", stateEn: "2600 ELO" },
-                ].map((board) => (
-                  <div key={board.en} className="home-glass-tile p-2">
-                    <div className="home-glass-media aged-print-frame aspect-video overflow-hidden"><img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} className="h-full w-full object-cover" /></div>
-                    <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{t(board.stateZh, board.stateEn)}</span></div>
-                  </div>
-                ))}
+                {BOARDS.map((board) => {
+                  const canUse = profile.elo >= board.floor;
+                  return (
+                    <div key={board.id} className="home-glass-tile p-2">
+                      <div className="home-glass-media aged-print-frame aspect-video overflow-hidden"><img src={board.image} alt={t(`${board.zh}战盘`, `${board.en} board`)} loading="lazy" decoding="async" className="h-full w-full object-cover" /></div>
+                      <div className="mt-2 flex items-center justify-between gap-2"><span className="cjk truncate font-label-md text-label-md">{t(board.zh, board.en)}</span><span className="cjk shrink-0 font-label-sm text-label-sm text-secondary">{canUse ? t("可使用", "Available") : `${board.floor} ELO`}</span></div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
           </section>
