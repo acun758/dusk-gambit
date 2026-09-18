@@ -17,11 +17,16 @@ const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中�
 export const Route = createFileRoute("/analysis")({
   staticData: { sitemap: false },
   // match=刚结束的天梯局；local=刚结束的陪练局（棋谱存在会话里）；ply=直接停在第几手
-  validateSearch: (search: Record<string, unknown>) => ({
-    match: typeof search.match === "string" ? search.match : undefined,
-    local: search.local === true || search.local === "true" ? true : undefined,
-    ply: Number.isFinite(Number(search.ply)) && Number(search.ply) > 0 ? Number(search.ply) : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): AnalysisSearch => {
+    const out: AnalysisSearch = {};
+    const m = search["match"];
+    const l = search["local"];
+    const p = Number(search["ply"]);
+    if (typeof m === "string" && m) out.match = m;
+    if (l === true || l === "true") out.local = true;
+    if (Number.isFinite(p) && p > 0) out.ply = Math.floor(p);
+    return out;
+  },
   head: () => ({
     meta: [
       { title: "对局复盘与点评 · 血誓王权" },
