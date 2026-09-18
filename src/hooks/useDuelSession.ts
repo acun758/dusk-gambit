@@ -241,11 +241,17 @@ export function useDuelSession(): DuelSession {
         if (cancelled) return;
         setMoves(full.moves as unknown as MoveRowLite[]);
         setPhase(res.match.status === "waiting" ? "connecting" : "live");
-      } catch {
+      } catch (err) {
         if (!cancelled) {
           setMode("error");
           setPhase("offline");
-          setNotice("真人对局暂时连接失败，可切换到本地陪练。已登录数据不会受影响。");
+          const raw = err instanceof Error ? err.message : "";
+          const reason = /profile required/.test(raw)
+            ? "档案尚未创建，请重新登录后再试。"
+            : /real name required/.test(raw)
+              ? "服务端仍要求实名，请联系我们处理。"
+              : "";
+          setNotice(`真人对局暂时连接失败${reason ? ` · ${reason}` : ""}，可切换到本地陪练。已登录数据不会受影响。`);
         }
       }
     })();
@@ -300,12 +306,12 @@ export function useDuelSession(): DuelSession {
     });
   }, [cloud?.match.id]);
 
-  // 断线追帧：页面回到前台或网络恢复时按 lastSeq 拉缺失帧
+  // 断线追帧 + 轮询兜底：推送不可用时对局也必须能继续同步
   useEffect(() => {
     const matchId = cloud?.match.id;
     if (!matchId) return;
-    const resync = async () => {
-      setPhase("resyncing");
+    const resync = async (quiet = false) => {
+      if (!quiet) setPhase("resyncing");
       try {
         const res = await getMatch({ data: { matchId, lastSeq: lastSeq.current } });
         matchRef.current = res.match as unknown as MatchRowLite;
@@ -329,7 +335,16 @@ export function useDuelSession(): DuelSession {
     const onOnline = () => void resync();
     window.addEventListener("online", onOnline);
     document.addEventListener("visibilitychange", onVisible);
+    // 兜底轮询：等待配对与对局进行中每 2 秒对齐一次服务端权威局面，
+    // 即使实时推送被网络或代理掐断，对手落子与匹配成功仍会到达。
+    const timer = setInterval(() => {
+      const status = matchRef.current?.status;
+      if (status === "over") return;
+      if (document.visibilityState === "hidden") return;
+      void resync(true);
+    }, 2000);
     return () => {
+      clearInterval(timer);
       window.removeEventListener("online", onOnline);
       document.removeEventListener("visibilitychange", onVisible);
     };
@@ -496,7 +511,19 @@ export function useDuelSession(): DuelSession {
     setNotice(null);
     void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
       .then(async (result) => {
-        if (result.code === "ok") return;
+        if (result.code === "ok") {
+          // 服务端已接受这一手：立刻用返回的权威局面更新，
+          // 不再把同步全部押在实时推送上（推送被掐断时棋盘也不会停住）。
+          const fresh = (result as { match?: MatchRowLite }).match;
+          if (fresh) {
+            matchRef.current = fresh;
+            setCloud((prev) => (prev ? { ...prev, match: fresh } : prev));
+            lastSeq.current = Math.max(lastSeq.current, fresh.seq ?? lastSeq.current);
+          }
+          const full = await getMatch({ data: { matchId: m.id, lastSeq: 0 } });
+          setMoves(full.moves as unknown as MoveRowLite[]);
+          return;
+        }
         if (result.code === "queued") {
           // 断网：这一手已落盘排队，恢复联网后按顺序补传
           const n = pendingMoves();

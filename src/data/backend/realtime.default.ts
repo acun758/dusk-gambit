@@ -1,6 +1,10 @@
 /**
  * 默认适配器的实时帧实现（表变更推送）。
  * 断线重连、补传队列等与平台无关的策略统一在 src/data/realtime.ts。
+ *
+ * 关键纪律：一局对局的三类订阅必须各自独立成频道。
+ * 只要有一条订阅参数被服务端拒绝，整个频道都会进入 error，
+ * 三类帧会一起失效（对手落子推不到、时钟不同步）——分开订阅即可互不牵连。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
 import type { DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";
@@ -8,6 +12,8 @@ import type { DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";
 function uniqueName(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2)}`;
 }
+
+type Status = "SUBSCRIBED" | "CHANNEL_ERROR" | "TIMED_OUT" | "CLOSED" | string;
 
 export const defaultRealtime: RealtimeGateway = {
   onLadderChanged(cb: () => void): Unsubscribe {
@@ -31,22 +37,39 @@ export const defaultRealtime: RealtimeGateway = {
   },
 
   onDuelFrames<M, V>(matchId: string, handlers: DuelFrameHandlers<M, V>): Unsubscribe {
-    const channel = sdk
-      .channel(uniqueName(`duel-${matchId}`))
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "matches", filter: `id=eq.${matchId}` },
-        (payload) => handlers.onMatch(payload.new as M),
-      )
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles" }, () => handlers.onProfiles())
+    const report = (status: Status) => {
+      if (status === "SUBSCRIBED") handlers.onStatus?.("live");
+      else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") handlers.onStatus?.("degraded");
+    };
+
+    const moveChannel = sdk
+      .channel(uniqueName(`duel-moves-${matchId}`))
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "match_moves", filter: `match_id=eq.${matchId}` },
         (payload) => handlers.onMove(payload.new as V),
       )
+      .subscribe(report);
+
+    const matchChannel = sdk
+      .channel(uniqueName(`duel-match-${matchId}`))
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "matches", filter: `id=eq.${matchId}` },
+        (payload) => handlers.onMatch(payload.new as M),
+      )
+      .subscribe(report);
+
+    // 档案订阅只影响头像/积分显示，失败不拖累前两条
+    const profileChannel = sdk
+      .channel(uniqueName(`duel-profiles-${matchId}`))
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles" }, () => handlers.onProfiles())
       .subscribe();
+
     return () => {
-      void sdk.removeChannel(channel);
+      void sdk.removeChannel(moveChannel);
+      void sdk.removeChannel(matchChannel);
+      void sdk.removeChannel(profileChannel);
     };
   },
 };
