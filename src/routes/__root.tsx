@@ -184,7 +184,8 @@ function RootComponent() {
 
   useEffect(() => {
     try {
-      if (window.sessionStorage.getItem("bs.entrance.seen") === "1") setShowEntrance(false);
+      // 仅自动化检查使用的跳过开关；正常访问每次打开都会看到进入页
+      if (window.sessionStorage.getItem("bs.entrance.skip") === "1") setShowEntrance(false);
     } catch {
       /* storage unavailable */
     }
