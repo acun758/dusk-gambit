@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import tarotKingAsset from "@/assets/tarot-king.jpg";
+import styleTarot from "@/assets/archive-styles/tarot.webp";
+import stylePoster from "@/assets/archive-styles/poster.webp";
+import styleDispatch from "@/assets/archive-styles/dispatch.webp";
+import styleCathedral from "@/assets/archive-styles/cathedral.webp";
+import styleBlackgold from "@/assets/archive-styles/blackgold.webp";
+import styleCrimson from "@/assets/archive-styles/crimson.webp";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
