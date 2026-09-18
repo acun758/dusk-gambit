@@ -300,12 +300,12 @@ export function useDuelSession(): DuelSession {
     });
   }, [cloud?.match.id]);
 
-  // 断线追帧：页面回到前台或网络恢复时按 lastSeq 拉缺失帧
+  // 断线追帧 + 轮询兜底：推送不可用时对局也必须能继续同步
   useEffect(() => {
     const matchId = cloud?.match.id;
     if (!matchId) return;
-    const resync = async () => {
-      setPhase("resyncing");
+    const resync = async (quiet = false) => {
+      if (!quiet) setPhase("resyncing");
       try {
         const res = await getMatch({ data: { matchId, lastSeq: lastSeq.current } });
         matchRef.current = res.match as unknown as MatchRowLite;
