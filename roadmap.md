@@ -1,6 +1,10 @@
 ## Current request
 - [x] Unify highlighted controls with the global button corner-radius standard.
 - [x] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
+- [x] 31 号 R1：平板结构档下沿扩展到 600px
+- [x] 31 号 R2：背景按朝向与宽度映射
+- [x] 31 号 R3：四档短视口 × 九路由截图验收
+- [x] 31 号 R4：对局中折叠/展开状态保持验收
 
 ## 竞技品质升级（2026-09 评审，按阶段落地）
 - [x] 第一阶段·公平性：和棋按期望分结算 + 分段 K 值（rank_k 16/24/32）

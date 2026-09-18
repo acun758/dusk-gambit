@@ -340,7 +340,7 @@ function Analysis() {
               </div>
             </div>
 
-            <div className="review-insights grid gap-space-sm md:grid-cols-2 xl:grid-cols-1">
+            <div className="review-insights grid gap-space-sm tab:grid-cols-2 xl:grid-cols-1">
               <div className="home-glass-panel p-space-sm">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
@@ -383,7 +383,7 @@ function Analysis() {
                 </div>
               </div>
 
-              <div className="home-glass-panel p-space-sm grid gap-2 md:col-span-2 xl:col-span-1">
+              <div className="home-glass-panel p-space-sm grid gap-2 tab:col-span-2 xl:col-span-1">
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="cjk font-label-lg text-label-lg">AI 分段讲解</h3>
                   <Button
@@ -434,7 +434,7 @@ function Analysis() {
               </div>
 
               {steps.length > 0 && (
-                <Link to="/archive" className="home-glass-action min-h-12 px-space-md flex items-center justify-between gap-space-sm text-secondary md:col-span-2 xl:col-span-1">
+                <Link to="/archive" className="home-glass-action min-h-12 px-space-md flex items-center justify-between gap-space-sm text-secondary tab:col-span-2 xl:col-span-1">
                   <span className="cjk font-label-md text-label-md">将本局制作成绝杀典藏</span>
                   <UiIcon name="cards" className="h-7 w-7" />
                 </Link>
