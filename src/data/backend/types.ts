@@ -24,6 +24,8 @@ export interface DuelFrameHandlers<M, V> {
   onMatch: (row: M) => void;
   onMove: (row: V) => void;
   onProfiles: () => void;
+  /** 推送通道状态：degraded 表示推送不可用，页面应退回轮询兜底。 */
+  onStatus?: (status: "live" | "degraded") => void;
 }
 
 /** 实时帧契约：各家云平台推送能力不同，只在适配器内部体现差异。 */
