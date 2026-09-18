@@ -52,10 +52,12 @@ function ArchiveChronicle() {
   const [elements, setElements] = useState<string[]>(ELEMENTS.map((e) => e.id));
   const [notice, setNotice] = useState("");
 
+  const activeStyle = STYLES.find((item) => item.id === style) ?? STYLES[0];
+
   const exportPoster = () => {
     const a = document.createElement("a");
-    a.href = tarotKingAsset;
-    a.download = `blood-sovereign-${profile.name}-archive.jpg`;
+    a.href = activeStyle.image;
+    a.download = `blood-sovereign-${profile.name}-${activeStyle.id}.webp`;
     a.click();
     setNotice(t("典藏图已准备下载；完整战报数据仍保留在对局复盘中。", "Your archive image is downloading; the full report stays in match review."));
   };
