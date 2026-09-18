@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import styleTarot from "@/assets/archive-styles/tarot.webp";
-import stylePoster from "@/assets/archive-styles/poster.webp";
-import styleDispatch from "@/assets/archive-styles/dispatch.webp";
-import styleCathedral from "@/assets/archive-styles/cathedral.webp";
-import styleBlackgold from "@/assets/archive-styles/blackgold.webp";
-import styleCrimson from "@/assets/archive-styles/crimson.webp";
+import styleTarotAsset from "@/assets/archive-styles/tarot.webp.asset.json";
+import stylePosterAsset from "@/assets/archive-styles/poster.webp.asset.json";
+import styleDispatchAsset from "@/assets/archive-styles/dispatch.webp.asset.json";
+import styleCathedralAsset from "@/assets/archive-styles/cathedral.webp.asset.json";
+import styleBlackgoldAsset from "@/assets/archive-styles/blackgold.webp.asset.json";
+import styleCrimsonAsset from "@/assets/archive-styles/crimson.webp.asset.json";
 import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
@@ -29,12 +29,12 @@ export const Route = createFileRoute("/archive")({
 });
 
 const STYLES: { id: string; zh: string; en: string; icon: UiIconName; image: string }[] = [
-  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards", image: styleTarot },
-  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper", image: stylePoster },
-  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll", image: styleDispatch },
-  { id: "cathedral", zh: "教堂绝杀", en: "Cathedral Mate", icon: "seal", image: styleCathedral },
-  { id: "blackgold", zh: "黑金加冕", en: "Black Gold Coronation", icon: "crown", image: styleBlackgold },
-  { id: "crimson", zh: "赤色终局", en: "Crimson Endgame", icon: "flame", image: styleCrimson },
+  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards", image: styleTarotAsset.url },
+  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper", image: stylePosterAsset.url },
+  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll", image: styleDispatchAsset.url },
+  { id: "cathedral", zh: "教堂绝杀", en: "Cathedral Mate", icon: "seal", image: styleCathedralAsset.url },
+  { id: "blackgold", zh: "黑金加冕", en: "Black Gold Coronation", icon: "crown", image: styleBlackgoldAsset.url },
+  { id: "crimson", zh: "赤色终局", en: "Crimson Endgame", icon: "flame", image: styleCrimsonAsset.url },
 ];
 
 const ELEMENTS: { id: string; zh: string; en: string }[] = [
