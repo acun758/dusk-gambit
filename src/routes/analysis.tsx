@@ -212,7 +212,11 @@ function Analysis() {
             <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
                  <h2 className="cjk font-headline-sm text-headline-sm">对局历史</h2>
-                {activeMatch ? (
+                {lastGame ? (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
+                    刚结束的这一局 · {lastGame.ranked ? "天梯对局" : "陪练对局 · 不计分"} · {lastGame.uciLine.length} 手
+                  </p>
+                ) : activeMatch ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
                     对手 {activeMatch.opponent} · {matchResult(activeMatch)} · {activeMatch.ply} 手 · {new Date(activeMatch.playedAt).toLocaleDateString("zh-CN")}
                   </p>
