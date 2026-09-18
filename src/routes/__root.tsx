@@ -118,6 +118,11 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function currentBackgroundSource(): "desktop" | "ipad" | "iphone" {
+  if (window.innerWidth < 600) return "iphone";
+  return window.matchMedia("(orientation: landscape)").matches ? "desktop" : "ipad";
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
