@@ -56,6 +56,20 @@ export function MatchReportOverlay({
   const [error, setError] = useState<string | null>(null);
   // 同一局只跑一次：开发模式下 effect 会被重复触发，重复跑会把引擎排满
   const startedFor = useRef<MatchReportInput | null>(null);
+  const navigate = useNavigate();
+
+  /** 打开刚结束这一局的复盘；ply>0 时直接停在该手的局面 */
+  const openReview = (ply?: number) => {
+    onClose();
+    if (ply && ply > 0) onJumpToPly?.(ply);
+    void navigate({
+      to: "/analysis",
+      search: {
+        ...(input.matchId ? { match: input.matchId } : { local: true }),
+        ...(ply && ply > 0 ? { ply } : {}),
+      },
+    });
+  };
 
   useEffect(() => {
     if (startedFor.current === input) return;
