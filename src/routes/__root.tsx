@@ -118,6 +118,11 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function currentBackgroundSource(): "desktop" | "ipad" | "iphone" {
+  if (window.innerWidth < 600) return "iphone";
+  return window.matchMedia("(orientation: landscape)").matches ? "desktop" : "ipad";
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
@@ -139,27 +144,40 @@ function RootComponent() {
     installEngineHost();
   }, []);
 
+  // 入口页显示期间：只预取首页代码和首页背景，避免其他主题大图抢带宽
   useEffect(() => {
-    const warmThemeCache = () => {
-      const width = window.innerWidth;
-      const source = width >= 600
-        ? window.matchMedia("(orientation: landscape)").matches
-          ? "desktop"
-          : "ipad"
-        : "iphone";
-      Object.values(THEME_BACKGROUNDS).forEach((artwork) => {
-        const image = new Image();
-        image.decoding = "async";
-        image.src = artwork[source];
-      });
+    if (!showEntrance) return;
+    void router.preloadRoute({ to: "/" }).catch(() => {});
+    const image = new Image();
+    image.decoding = "async";
+    image.src = THEME_BACKGROUNDS.storm[currentBackgroundSource()];
+  }, [showEntrance, router]);
+
+  // 进入王座之后再按顺序预热其余主题背景，一次只加载一张
+  useEffect(() => {
+    if (showEntrance) return;
+    let cancelled = false;
+    const source = currentBackgroundSource();
+    const urls = Array.from(
+      new Set(Object.values(THEME_BACKGROUNDS).map((artwork) => artwork[source]))
+    ).filter((url) => url !== THEME_BACKGROUNDS.storm[source]);
+
+    const warmNext = (index: number) => {
+      if (cancelled || index >= urls.length) return;
+      const image = new Image();
+      image.decoding = "async";
+      const next = () => warmNext(index + 1);
+      image.onload = next;
+      image.onerror = next;
+      image.src = urls[index]!;
     };
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(warmThemeCache, { timeout: 2500 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = globalThis.setTimeout(warmThemeCache, 500);
-    return () => globalThis.clearTimeout(id);
-  }, []);
+
+    const id = globalThis.setTimeout(() => warmNext(0), 1500);
+    return () => {
+      cancelled = true;
+      globalThis.clearTimeout(id);
+    };
+  }, [showEntrance]);
 
   useEffect(() => {
     try {
