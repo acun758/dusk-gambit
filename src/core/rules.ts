@@ -123,3 +123,45 @@ export function sanOf(fen: string, uci: string): string {
 export function boardPieces(fen: string) {
   return load(fen)?.board() ?? [];
 }
+
+export interface DrawDetails {
+  stalemate: boolean;
+  threefold: boolean;
+  fiftyMove: boolean;
+  insufficientMaterial: boolean;
+  draw: boolean;
+}
+
+/**
+ * 判和细分（仍由 chess.js 判定，本层不自研规则）。
+ * 需要着法历史才能判三次重复，因此按 UCI 序列重放后再问。
+ */
+export function drawDetails(uciLine: string[] = [], startFen: string = START_FEN): DrawDetails {
+  let chess: Chess;
+  try {
+    chess = new Chess(startFen);
+  } catch {
+    return { stalemate: false, threefold: false, fiftyMove: false, insufficientMaterial: false, draw: false };
+  }
+  for (const uci of uciLine) {
+    const promotion = uci[4];
+    try {
+      const played = chess.move({
+        from: uci.slice(0, 2),
+        to: uci.slice(2, 4),
+        ...(promotion ? { promotion } : {}),
+      });
+      if (!played) break;
+    } catch {
+      break;
+    }
+  }
+  const fiftyMove = Number(chess.fen().split(" ")[4] ?? 0) >= 100;
+  return {
+    stalemate: chess.isStalemate(),
+    threefold: chess.isThreefoldRepetition(),
+    fiftyMove,
+    insufficientMaterial: chess.isInsufficientMaterial(),
+    draw: chess.isDraw(),
+  };
+}
