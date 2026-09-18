@@ -505,7 +505,19 @@ export function useDuelSession(): DuelSession {
     setNotice(null);
     void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
       .then(async (result) => {
-        if (result.code === "ok") return;
+        if (result.code === "ok") {
+          // 服务端已接受这一手：立刻用返回的权威局面更新，
+          // 不再把同步全部押在实时推送上（推送被掐断时棋盘也不会停住）。
+          const fresh = (result as { match?: MatchRowLite }).match;
+          if (fresh) {
+            matchRef.current = fresh;
+            setCloud((prev) => (prev ? { ...prev, match: fresh } : prev));
+            lastSeq.current = Math.max(lastSeq.current, fresh.seq ?? lastSeq.current);
+          }
+          const full = await getMatch({ data: { matchId: m.id, lastSeq: 0 } });
+          setMoves(full.moves as unknown as MoveRowLite[]);
+          return;
+        }
         if (result.code === "queued") {
           // 断网：这一手已落盘排队，恢复联网后按顺序补传
           const n = pendingMoves();
