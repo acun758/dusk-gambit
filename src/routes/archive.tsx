@@ -23,10 +23,13 @@ export const Route = createFileRoute("/archive")({
   component: ArchiveChronicle,
 });
 
-const STYLES: { id: string; zh: string; en: string; icon: UiIconName }[] = [
-  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards" },
-  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper" },
-  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll" },
+const STYLES: { id: string; zh: string; en: string; icon: UiIconName; image: string }[] = [
+  { id: "tarot", zh: "塔罗王牌", en: "Tarot Ace", icon: "cards", image: styleTarot },
+  { id: "poster", zh: "战役海报", en: "Battle Poster", icon: "wallpaper", image: stylePoster },
+  { id: "dispatch", zh: "王权军牒", en: "Royal Dispatch", icon: "scroll", image: styleDispatch },
+  { id: "cathedral", zh: "教堂绝杀", en: "Cathedral Mate", icon: "seal", image: styleCathedral },
+  { id: "blackgold", zh: "黑金加冕", en: "Black Gold Coronation", icon: "crown", image: styleBlackgold },
+  { id: "crimson", zh: "赤色终局", en: "Crimson Endgame", icon: "flame", image: styleCrimson },
 ];
 
 const ELEMENTS: { id: string; zh: string; en: string }[] = [
