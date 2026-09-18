@@ -16,9 +16,9 @@ import {
   fetchPromotionRivals as listPromotionRivals,
   fetchPromotionSeries as getPromotionSeries,
   signOut as endSession,
-} from "@/lib/db";
-import type { LadderRow } from "@/lib/game.functions";
-import { subscribeLadder } from "@/lib/realtime";
+} from "@/data/db";
+import type { LadderRow } from "@/data/game.functions";
+import { subscribeLadder } from "@/data/realtime";
 import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";

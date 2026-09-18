@@ -8,7 +8,7 @@ import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
-import { fetchDailyPuzzle, fetchPuzzles, submitPuzzleMove } from "@/lib/db";
+import { fetchDailyPuzzle, fetchPuzzles, submitPuzzleMove } from "@/data/db";
 import { useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 

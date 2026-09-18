@@ -5,11 +5,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlayableBoard } from "@/components/PlayableBoard";
 import { UiIcon } from "@/components/UiIcon";
 import { Button } from "@/components/ui/button";
-import { fetchEndgameLevels as listEndgameLevels, submitEndgameDrill } from "@/lib/db";
+import { fetchEndgameLevels as listEndgameLevels, submitEndgameDrill } from "@/data/db";
 import { aiLevel, chooseMove, evaluatePosition } from "@/core/ai";
 import { drillScore, tagForSwing } from "@/core/score";
 import { useT } from "@/lib/i18n";
-import { fetchSession } from "@/lib/db";
+import { fetchSession } from "@/data/db";
 
 export interface DrillLevel {
   id: number;

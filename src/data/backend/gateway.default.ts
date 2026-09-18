@@ -5,10 +5,10 @@
  * 业务代码一律走 src/lib/db.ts（数据）与 src/lib/realtime.ts（实时帧）。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
-import * as remote from "@/lib/game.functions";
-import * as puzzleRemote from "@/lib/puzzle.functions";
-import * as mindRemote from "@/lib/mind.functions";
-import * as hallRemote from "@/lib/hall.functions";
+import * as remote from "@/data/game.functions";
+import * as puzzleRemote from "@/data/puzzle.functions";
+import * as mindRemote from "@/data/mind.functions";
+import * as hallRemote from "@/data/hall.functions";
 import type { AuthResult, SessionInfo } from "./types";
 
 const AVATAR_BUCKET = "avatars";

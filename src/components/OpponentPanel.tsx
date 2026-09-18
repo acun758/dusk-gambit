@@ -12,7 +12,7 @@ import {
   joinDuelInvite,
   searchPlayers,
   submitVerification,
-} from "@/lib/db";
+} from "@/data/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
 import { DEFAULT_TIME_CONTROL, TIME_CONTROLS, timeControl, type TimeControlId } from "@/lib/time-controls";
 

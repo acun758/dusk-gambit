@@ -6,7 +6,7 @@ import {
   fetchEndgameLevels as listEndgameLevels,
   fetchEndgameProgress as loadEndgameProgress,
   submitEndgame,
-} from "@/lib/db";
+} from "@/data/db";
 import { useProfile, tierLabel } from "@/lib/profile";
 import { Bi, LangToggle, useT } from "@/lib/i18n";
 import { groupByTier } from "@/lib/endgame-tiers";

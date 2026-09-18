@@ -6,8 +6,8 @@ import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 
 import { UiIcon } from "@/components/UiIcon";
 import { Input } from "@/components/ui/input";
-import { fetchFideRatings } from "@/lib/db";
-import type { HallBoard } from "@/lib/hall.functions";
+import { fetchFideRatings } from "@/data/db";
+import type { HallBoard } from "@/data/hall.functions";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/hall-of-fame")({
