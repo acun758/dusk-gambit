@@ -120,6 +120,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
   const [showEntrance, setShowEntrance] = useState(true);
   const enterGame = useCallback(() => {
     try {
@@ -128,7 +129,10 @@ function RootComponent() {
       /* storage unavailable */
     }
     setShowEntrance(false);
-  }, []);
+    if (router.state.location.pathname !== "/") {
+      void router.navigate({ to: "/" });
+    }
+  }, [router]);
 
   // 引擎宿主接入（把浏览器 Worker 注入 core/engine；core 本身不认识浏览器）
   useEffect(() => {
