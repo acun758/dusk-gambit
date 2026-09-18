@@ -1201,7 +1201,7 @@
 @media (orientation: landscape) and (max-height: 700px) and (min-width: 600px) and (max-width: 1023px) {
   .battle-column,
   .crucible-column {
-    --battle-core-width: min(100%, calc(100dvh - 12rem));
+    --battle-core-width: min(100%, calc(100dvh - 20rem));
     --crucible-core-width: min(100%, calc(100dvh - 12rem));
   }
 
@@ -1240,7 +1240,7 @@
   }
 
   .battle-stage > .battle-column {
-    width: min(52vw, calc(100dvh - 10.5rem));
+    width: min(52vw, calc(100dvh - 20rem));
     flex: 0 0 auto;
     padding-top: 0.25rem;
   }
