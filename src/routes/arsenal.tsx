@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { UiIcon } from "@/components/UiIcon";
-import { GAME_ART } from "@/lib/game-art-assets";
 import { useProfile } from "@/lib/profile";
 import { useT } from "@/lib/i18n";
 import { fetchEndgameLevels as listEndgameLevels } from "@/data/db";
