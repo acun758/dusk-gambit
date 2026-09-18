@@ -33,6 +33,12 @@ import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
 import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp";
+import boardTemple from "@/assets/boards/temple.webp";
+import boardTrench from "@/assets/boards/trench.webp";
+import boardPaleCourt from "@/assets/boards/palecourt.webp";
+import boardDragonPit from "@/assets/boards/dragonpit.webp";
+import boardAbbey from "@/assets/boards/abbey.webp";
+import boardCoronation from "@/assets/boards/coronation.webp";
 
 const KINDS = [
   { id: "all", zh: "全部", en: "All" },
