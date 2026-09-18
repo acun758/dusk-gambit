@@ -241,11 +241,17 @@ export function useDuelSession(): DuelSession {
         if (cancelled) return;
         setMoves(full.moves as unknown as MoveRowLite[]);
         setPhase(res.match.status === "waiting" ? "connecting" : "live");
-      } catch {
+      } catch (err) {
         if (!cancelled) {
           setMode("error");
           setPhase("offline");
-          setNotice("真人对局暂时连接失败，可切换到本地陪练。已登录数据不会受影响。");
+          const raw = err instanceof Error ? err.message : "";
+          const reason = /profile required/.test(raw)
+            ? "档案尚未创建，请重新登录后再试。"
+            : /real name required/.test(raw)
+              ? "服务端仍要求实名，请联系我们处理。"
+              : "";
+          setNotice(`真人对局暂时连接失败${reason ? ` · ${reason}` : ""}，可切换到本地陪练。已登录数据不会受影响。`);
         }
       }
     })();
