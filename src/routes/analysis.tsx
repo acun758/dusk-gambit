@@ -259,6 +259,7 @@ function Analysis() {
                   <button
                     key={m.id}
                     onClick={() => {
+                      setLastGame(null);
                       setMatchId(m.id);
                       setHistoryOpen(false);
                     }}
