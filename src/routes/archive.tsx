@@ -52,7 +52,7 @@ function ArchiveChronicle() {
   const [elements, setElements] = useState<string[]>(ELEMENTS.map((e) => e.id));
   const [notice, setNotice] = useState("");
 
-  const activeStyle = STYLES.find((item) => item.id === style) ?? STYLES[0];
+  const activeStyle = STYLES.find((item) => item.id === style) ?? STYLES[0]!;
 
   const exportPoster = () => {
     const a = document.createElement("a");
