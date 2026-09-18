@@ -10,8 +10,9 @@ import * as puzzleRemote from "@/data/puzzle.functions";
 import * as mindRemote from "@/data/mind.functions";
 import * as hallRemote from "@/data/hall.functions";
 import type { AuthResult, SessionInfo } from "./types";
+import { STORAGE_CONFIG } from "@/config/app-config";
 
-const AVATAR_BUCKET = "avatars";
+const AVATAR_BUCKET = STORAGE_CONFIG.avatarBucket;
 
 export const defaultGateway = {
   /* ---------------------------------- 会话 ---------------------------------- */

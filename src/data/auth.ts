@@ -21,7 +21,7 @@ export interface AuthProvider {
   /** 登录：H5 传邮箱密码；小游戏实现里改为静默登录（无参）。 */
   signIn(credentials?: { email: string; password: string }): Promise<AuthResult>;
   /** 注册（小游戏侧无注册概念，实现可直接返回静默登录结果）。 */
-  register(credentials: { email: string; password: string; nickname?: string }): Promise<AuthResult>;
+  register(credentials: { email: string; password: string; redirectTo?: string }): Promise<AuthResult>;
   signOut(): Promise<void>;
   /** 登录状态变化，返回退订函数。 */
   onAuthChange(cb: () => void): Unsubscribe;
@@ -39,8 +39,8 @@ export const authProvider: AuthProvider = {
     if (!credentials) return { error: "当前平台需要邮箱与密码", signedIn: false };
     return gateway.signIn(credentials.email, credentials.password);
   },
-  async register({ email, password, nickname }) {
-    return gateway.register(email, password, nickname ?? "");
+  async register({ email, password, redirectTo }) {
+    return gateway.register(email, password, redirectTo);
   },
   async signOut() {
     await gateway.signOut();
