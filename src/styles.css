@@ -1522,7 +1522,8 @@
   place-items: center;
   font-family: "Times New Roman", "Noto Serif Symbols 2", serif;
   font-size: 0.9em;
-  opacity: 0.22;
+  /* 仅作图片加载失败的兜底，平时完全隐藏，避免在棋子下方露出线条图案。 */
+  opacity: 0;
   transition: opacity 150ms ease;
 }
 
