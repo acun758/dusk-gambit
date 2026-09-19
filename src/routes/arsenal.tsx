@@ -48,7 +48,7 @@ const KINDS = [
 
 const SETS = [
   { id: "obsidian-sovereignty", zh: "黑曜王权", en: "Obsidian Sovereignty", kind: "knight", image: obsidianKnightPreview.url, floor: 0, price: 0, pieceSetId: "obsidian-sovereignty" },
-  { id: "abyssal-legacy", zh: "深渊遗族", en: "Abyssal Legacy", kind: "knight", image: abyssalKnightPreview.url, floor: 0, price: 0, pieceSetId: "abyssal-legacy" },
+  { id: "abyssal-legacy", zh: "深翡冷翠", en: "Abyssal Legacy", kind: "knight", image: abyssalKnightPreview.url, floor: 0, price: 0, pieceSetId: "abyssal-legacy" },
   { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreview.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
   { id: "crimson-empress", zh: "猩红女帝", en: "Crimson Empress", kind: "queen", image: crimsonQueenPreview.url, floor: 1600, price: 1200, pieceSetId: "crimson-empress" },
   { id: "temple-judgment", zh: "圣堂裁决", en: "Temple Judgment", kind: "bishop", image: templeBishopPreview.url, floor: 2200, price: 1800, pieceSetId: "temple-judgment" },

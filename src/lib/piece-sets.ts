@@ -28,7 +28,7 @@ export const PIECE_SETS: PieceSet[] = [
   },
   {
     id: "abyssal-legacy",
-    zh: "深渊遗族",
+    zh: "深翡冷翠",
     en: "Abyssal Legacy",
     assets: ABYSSAL_LEGACY_PIECE_ASSETS,
     source: "src/assets/chess/abyssal-legacy",
