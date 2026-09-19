@@ -193,14 +193,14 @@ export function EndgameDrill({ initialCode }: { initialCode?: string | undefined
 
   return (
     <section className="battle-core-width grid gap-space-sm" aria-label={t("残局试炼模式", "Endgame drill mode")}>
-      <div className="flex gap-1 overflow-x-auto">
+      <div className="grid grid-cols-2 gap-1 sm:grid-cols-3" aria-label={t("选择残局题目", "Choose an endgame drill")}>
         {levels.map((l) => (
           <Button
             key={l.id}
             type="button"
             variant="ghost"
             onClick={() => load(l)}
-            className={`home-glass-control h-11 shrink-0 px-3 font-label-sm text-label-sm ${
+            className={`home-glass-control min-h-11 h-auto min-w-0 whitespace-normal px-2 py-2 text-center font-label-sm text-label-sm leading-snug ${
               l.id === activeId ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"
             }`}
           >
