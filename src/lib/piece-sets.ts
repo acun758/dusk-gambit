@@ -1,4 +1,4 @@
-import { CHESS_PIECE_ASSETS, DARK_DRAGON_PIECE_ASSETS, DEMON_GOLD_PIECE_ASSETS, STELLAR_PIECE_ASSETS } from "./chess-piece-assets";
+import { ABYSSAL_LEGACY_PIECE_ASSETS, CHESS_PIECE_ASSETS, DARK_DRAGON_PIECE_ASSETS, DEMON_GOLD_PIECE_ASSETS } from "./chess-piece-assets";
 
 /**
  * 棋子套装登记表。
@@ -27,11 +27,11 @@ export const PIECE_SETS: PieceSet[] = [
     source: "src/assets/chess-next/optimized",
   },
   {
-    id: "stellar",
-    zh: "星钻圣辉",
-    en: "Star Diamond Radiance",
-    assets: STELLAR_PIECE_ASSETS,
-    source: "src/assets/chess-next/optimized",
+    id: "abyssal-legacy",
+    zh: "深渊遗族",
+    en: "Abyssal Legacy",
+    assets: ABYSSAL_LEGACY_PIECE_ASSETS,
+    source: "src/assets/chess/abyssal-legacy",
   },
   {
     id: "demon-gold",

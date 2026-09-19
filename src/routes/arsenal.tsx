@@ -28,7 +28,7 @@ export const Route = createFileRoute("/arsenal")({
 import { PIECE_SET_EVENT, PIECE_SET_STORAGE_KEY } from "@/components/PlayableBoard";
 import obsidianKnightPreview from "@/assets/chess-next/optimized/obsidian-n.webp";
 import platinumQueenPreview from "@/assets/chess-next/optimized/platinum-q.webp";
-import stellarKnightPreview from "@/assets/chess-next/optimized/stellar-n.webp";
+import abyssalKnightPreviewAsset from "@/assets/chess/abyssal-legacy/abyssal-bn.webp.asset.json";
 import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp";
 import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
 import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp";
@@ -48,7 +48,7 @@ const KINDS = [
 
 const SETS = [
   { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "knight", image: obsidianKnightPreview, floor: 0, price: 0, pieceSetId: "sovereign" },
-  { id: "stellar", zh: "星钻圣辉", en: "Star Diamond Radiance", kind: "knight", image: stellarKnightPreview, floor: 0, price: 0, pieceSetId: "stellar" },
+  { id: "abyssal-legacy", zh: "深渊遗族", en: "Abyssal Legacy", kind: "knight", image: abyssalKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "abyssal-legacy" },
   { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "knight", image: demonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "demon-gold" },
   { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "dark-dragon" },
   { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: platinumQueenPreview, floor: 1600, price: 1200, pieceSetId: null },

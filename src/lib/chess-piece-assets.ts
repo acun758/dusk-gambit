@@ -10,18 +10,18 @@ import obsidianBishop from "@/assets/chess-next/optimized/obsidian-b.webp";
 import obsidianRook from "@/assets/chess-next/optimized/obsidian-r.webp";
 import obsidianQueen from "@/assets/chess-next/optimized/obsidian-q.webp";
 import obsidianKing from "@/assets/chess-next/optimized/obsidian-k.webp";
-import stellarPawn from "@/assets/chess-next/optimized/stellar-p.webp";
-import stellarKnight from "@/assets/chess-next/optimized/stellar-n.webp";
-import stellarBishop from "@/assets/chess-next/optimized/stellar-b.webp";
-import stellarRook from "@/assets/chess-next/optimized/stellar-r.webp";
-import stellarQueen from "@/assets/chess-next/optimized/stellar-q.webp";
-import stellarKing from "@/assets/chess-next/optimized/stellar-k.webp";
-import stellarNightPawn from "@/assets/chess-next/optimized/stellar-night-p.webp";
-import stellarNightKnight from "@/assets/chess-next/optimized/stellar-night-n.webp";
-import stellarNightBishop from "@/assets/chess-next/optimized/stellar-night-b.webp";
-import stellarNightRook from "@/assets/chess-next/optimized/stellar-night-r.webp";
-import stellarNightQueen from "@/assets/chess-next/optimized/stellar-night-q.webp";
-import stellarNightKing from "@/assets/chess-next/optimized/stellar-night-k.webp";
+import abyssalWhitePawn from "@/assets/chess/abyssal-legacy/abyssal-wp.webp.asset.json";
+import abyssalWhiteKnight from "@/assets/chess/abyssal-legacy/abyssal-wn.webp.asset.json";
+import abyssalWhiteBishop from "@/assets/chess/abyssal-legacy/abyssal-wb.webp.asset.json";
+import abyssalWhiteRook from "@/assets/chess/abyssal-legacy/abyssal-wr.webp.asset.json";
+import abyssalWhiteQueen from "@/assets/chess/abyssal-legacy/abyssal-wq.webp.asset.json";
+import abyssalWhiteKing from "@/assets/chess/abyssal-legacy/abyssal-wk.webp.asset.json";
+import abyssalBlackPawn from "@/assets/chess/abyssal-legacy/abyssal-bp.webp.asset.json";
+import abyssalBlackKnight from "@/assets/chess/abyssal-legacy/abyssal-bn.webp.asset.json";
+import abyssalBlackBishop from "@/assets/chess/abyssal-legacy/abyssal-bb.webp.asset.json";
+import abyssalBlackRook from "@/assets/chess/abyssal-legacy/abyssal-br.webp.asset.json";
+import abyssalBlackQueen from "@/assets/chess/abyssal-legacy/abyssal-bq.webp.asset.json";
+import abyssalBlackKing from "@/assets/chess/abyssal-legacy/abyssal-bk.webp.asset.json";
 import demonWhitePawnAsset from "@/assets/chess/demon-gold/demon-wp.webp";
 import demonWhiteKnightAsset from "@/assets/chess/demon-gold/demon-wn.webp";
 import demonWhiteBishopAsset from "@/assets/chess/demon-gold/demon-wb.webp";
@@ -62,23 +62,20 @@ export const CHESS_PIECE_ASSETS: Record<string, string> = {
   bk: obsidianKing,
 };
 
-/**
- * 星钻圣辉：水晶黄金原版（白方）+ 由原版衍生的夜幕蓝钻变体（黑方），
- * 均为 512×512 透明 WebP。
- */
-export const STELLAR_PIECE_ASSETS: Record<string, string> = {
-  wp: stellarPawn,
-  wn: stellarKnight,
-  wb: stellarBishop,
-  wr: stellarRook,
-  wq: stellarQueen,
-  wk: stellarKing,
-  bp: stellarNightPawn,
-  bn: stellarNightKnight,
-  bb: stellarNightBishop,
-  br: stellarNightRook,
-  bq: stellarNightQueen,
-  bk: stellarNightKing,
+/** 深渊遗族：古金翠玉（白方）+ 黑银幽绿（黑方）。 */
+export const ABYSSAL_LEGACY_PIECE_ASSETS: Record<string, string> = {
+  wp: abyssalWhitePawn.url,
+  wn: abyssalWhiteKnight.url,
+  wb: abyssalWhiteBishop.url,
+  wr: abyssalWhiteRook.url,
+  wq: abyssalWhiteQueen.url,
+  wk: abyssalWhiteKing.url,
+  bp: abyssalBlackPawn.url,
+  bn: abyssalBlackKnight.url,
+  bb: abyssalBlackBishop.url,
+  br: abyssalBlackRook.url,
+  bq: abyssalBlackQueen.url,
+  bk: abyssalBlackKing.url,
 };
 
 /** 魔皇古金：祖母绿古金原版（白方）+ 暗红黑金变体（黑方）。 */
