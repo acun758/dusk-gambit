@@ -160,7 +160,14 @@ export const saveAvatarImage = createServerFn({ method: "POST" })
     return row as ProfileRow;
   });
 
-const PIECE_SET_IDS = new Set(["sovereign", "stellar", "demon-gold", "dark-dragon"]);
+const PIECE_SET_IDS = new Set([
+  "obsidian-sovereignty",
+  "abyssal-legacy",
+  "dark-dragon",
+  "crimson-empress",
+  "temple-judgment",
+  "pale-court",
+]);
 
 /** 已登录玩家的装备以云端档案为准，保证换设备登录后仍保留。 */
 export const saveEquipment = createServerFn({ method: "POST" })
