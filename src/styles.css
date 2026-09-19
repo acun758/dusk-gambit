@@ -1504,7 +1504,9 @@
 }
 
 /* 首页军械预览直接展示当前套装棋子，并保留暗底上的清晰轮廓。 */
-.arsenal-home-piece img {
+.app-shell main .arsenal-home-piece img {
+  max-height: none;
+  object-fit: contain;
   filter: brightness(1.06) contrast(1.05) drop-shadow(0 7px 5px color-mix(in oklab, var(--color-surface-dim) 78%, transparent));
 }
 
