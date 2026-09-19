@@ -598,7 +598,7 @@ function Dynasty() {
                       } ${unlocked ? "" : "opacity-50"}`}
                       aria-hidden="true"
                     >
-                      <RankBadge rank={tier.id} className="h-9 w-9" label={`${tier.zh}段徽章`} />
+                      <RankBadge rank={tier.id} className="dynasty-tier-badge h-9 w-9" label={`${tier.zh}段徽章`} />
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className="cjk font-label-md text-label-md truncate">{t(tier.zh, tier.en)}</span>
