@@ -134,10 +134,7 @@ function RootComponent() {
       /* storage unavailable */
     }
     setShowEntrance(false);
-    if (router.state.location.pathname !== "/") {
-      void router.navigate({ to: "/" });
-    }
-  }, [router]);
+  }, []);
 
   // 引擎宿主接入（把浏览器 Worker 注入 core/engine；core 本身不认识浏览器）
   useEffect(() => {
@@ -184,8 +181,13 @@ function RootComponent() {
 
   useEffect(() => {
     try {
-      // 仅自动化检查使用的跳过开关；正常访问每次打开都会看到进入页
-      if (window.sessionStorage.getItem("bs.entrance.skip") === "1") setShowEntrance(false);
+      // 同一浏览器会话只展示一次；自动化检查仍可显式跳过。
+      if (
+        window.sessionStorage.getItem("bs.entrance.seen") === "1" ||
+        window.sessionStorage.getItem("bs.entrance.skip") === "1"
+      ) {
+        setShowEntrance(false);
+      }
     } catch {
       /* storage unavailable */
     }
