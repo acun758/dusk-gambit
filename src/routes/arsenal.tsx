@@ -112,11 +112,7 @@ function Arsenal() {
     } catch {
       /* storage unavailable */
     }
-    setNotice(
-      selected.pieceSetId
-        ? t(`${selected.zh}已装备，对弈棋盘立即切换为这套棋子。`, `${selected.en} equipped — the board switches to these pieces instantly.`)
-        : t(`${selected.zh}已装备为展示套装，棋盘棋子沿用当前套装。`, `${selected.en} equipped for display only; board pieces stay unchanged.`),
-    );
+    setNotice(t(`${selected.zh}已装备，对弈棋盘立即切换为这套棋子。`, `${selected.en} equipped — the board switches to these pieces instantly.`));
   };
 
   return (
