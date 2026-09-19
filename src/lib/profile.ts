@@ -54,7 +54,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   avatarPath: "",
   verifyStatus: "none",
   idTail: "",
-  equippedPieceSet: "sovereign",
+  equippedPieceSet: "obsidian-sovereignty",
   provisionalGames: 10,
   inPlacement: true,
 };
@@ -130,7 +130,7 @@ function fromCloud(row: CloudRow): PlayerProfile {
     avatarPath: avatar_url ?? "",
     verifyStatus: (verify_status as PlayerProfile["verifyStatus"]) || "none",
     idTail: id_tail ?? "",
-    equippedPieceSet: equipped_piece_set || "sovereign",
+    equippedPieceSet: equipped_piece_set || "obsidian-sovereignty",
     provisionalGames: pending,
     inPlacement: pending > 0,
     ...tierFor(row.elo),

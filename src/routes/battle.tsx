@@ -78,6 +78,9 @@ function Battle() {
   const myElo = session.ratings?.[session.state.you]?.elo ?? profile.elo;
   const oppElo = session.ratings?.[oppSide]?.elo ?? opponent.elo;
   const myClock = session.clock[session.state.you];
+  // 棋子套装是观看者的整盘视觉主题：选择一套后，白方与黑方都使用该套对应棋子。
+  // 真人双方的装备快照仍由服务端保留，但不再把两位玩家的套装混搭在同一棋盘。
+  const boardPieceSetId = signedIn ? profile.equippedPieceSet : undefined;
   // 求和 / 认输前的二次确认
   const [confirmAction, setConfirm] = useState<"draw" | "resign" | null>(null);
   const exportPgn = () => {
@@ -257,8 +260,8 @@ function Battle() {
               premove={ranked && session.state.status === "live"}
               myColor={session.state.you}
               onMove={session.playMove}
-              whitePieceSetId={session.ratings?.w?.pieceSetId ?? (session.state.you === "w" ? profile.equippedPieceSet : undefined)}
-              blackPieceSetId={session.ratings?.b?.pieceSetId ?? (session.state.you === "b" ? profile.equippedPieceSet : undefined)}
+              whitePieceSetId={boardPieceSetId}
+              blackPieceSetId={boardPieceSetId}
             />
           </div>
 
