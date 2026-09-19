@@ -26,12 +26,12 @@ export const Route = createFileRoute("/arsenal")({
 });
 
 import { PIECE_SET_EVENT, PIECE_SET_STORAGE_KEY } from "@/components/PlayableBoard";
-import obsidianKnightPreview from "@/assets/chess-next/optimized/obsidian-n.webp";
-import platinumQueenPreview from "@/assets/chess-next/optimized/platinum-q.webp";
-import abyssalKnightPreviewAsset from "@/assets/chess/abyssal-legacy/abyssal-bn.webp.asset.json";
-import demonKnightPreviewAsset from "@/assets/chess/demon-gold/demon-wn.webp";
-import darkDragonKnightPreviewAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
-import gildedBishopPreviewAsset from "@/assets/chess/gilded-b.webp";
+import obsidianKnightPreview from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wn.webp.asset.json";
+import crimsonQueenPreview from "@/assets/chess/crimson-empress/crimson-empress-wq.webp.asset.json";
+import templeBishopPreview from "@/assets/chess/temple-judgment/temple-judgment-wb.webp.asset.json";
+import paleKnightPreview from "@/assets/chess/pale-court/pale-court-wn.webp.asset.json";
+import abyssalKnightPreview from "@/assets/chess/abyssal-legacy/abyssal-legacy-wn.webp.asset.json";
+import darkDragonKnightPreview from "@/assets/chess/dark-dragon/dark-dragon-wn.webp.asset.json";
 import boardTempleAsset from "@/assets/boards/temple.webp.asset.json";
 import boardTrenchAsset from "@/assets/boards/trench.webp.asset.json";
 import boardPaleCourtAsset from "@/assets/boards/palecourt.webp.asset.json";
@@ -47,12 +47,12 @@ const KINDS = [
 ] as const;
 
 const SETS = [
-  { id: "shadow", zh: "黑曜龙骑", en: "Obsidian Vanguard", kind: "knight", image: obsidianKnightPreview, floor: 0, price: 0, pieceSetId: "sovereign" },
-  { id: "abyssal-legacy", zh: "深渊遗族", en: "Abyssal Legacy", kind: "knight", image: abyssalKnightPreviewAsset.url, floor: 0, price: 0, pieceSetId: "abyssal-legacy" },
-  { id: "demon-gold", zh: "魔皇古金", en: "Demon Emperor Antique Gold", kind: "knight", image: demonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "demon-gold" },
-  { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreviewAsset, floor: 0, price: 0, pieceSetId: "dark-dragon" },
-  { id: "classic", zh: "猩红女帝", en: "Crimson Sovereign", kind: "queen", image: platinumQueenPreview, floor: 1600, price: 1200, pieceSetId: null },
-  { id: "gilded", zh: "圣堂裁决", en: "Gilded Judgment", kind: "bishop", image: gildedBishopPreviewAsset, floor: 2200, price: 1800, pieceSetId: null },
+  { id: "obsidian-sovereignty", zh: "黑曜王权", en: "Obsidian Sovereignty", kind: "knight", image: obsidianKnightPreview.url, floor: 0, price: 0, pieceSetId: "obsidian-sovereignty" },
+  { id: "abyssal-legacy", zh: "深渊遗族", en: "Abyssal Legacy", kind: "knight", image: abyssalKnightPreview.url, floor: 0, price: 0, pieceSetId: "abyssal-legacy" },
+  { id: "dark-dragon", zh: "暗黑龙语", en: "Dark Dragon Tongue", kind: "knight", image: darkDragonKnightPreview.url, floor: 0, price: 0, pieceSetId: "dark-dragon" },
+  { id: "crimson-empress", zh: "猩红女帝", en: "Crimson Empress", kind: "queen", image: crimsonQueenPreview.url, floor: 1600, price: 1200, pieceSetId: "crimson-empress" },
+  { id: "temple-judgment", zh: "圣堂裁决", en: "Temple Judgment", kind: "bishop", image: templeBishopPreview.url, floor: 2200, price: 1800, pieceSetId: "temple-judgment" },
+  { id: "pale-court", zh: "苍白王庭", en: "Pale Court", kind: "knight", image: paleKnightPreview.url, floor: 2500, price: 0, pieceSetId: "pale-court" },
 ] as const;
 
 const BOARDS = [
@@ -68,8 +68,8 @@ function Arsenal() {
   const t = useT();
   const { profile, signedIn, setEquipment } = useProfile();
   const [filter, setFilter] = useState<string>("all");
-  const [selectedId, setSelectedId] = useState("shadow");
-  const [equippedId, setEquippedId] = useState("shadow");
+  const [selectedId, setSelectedId] = useState("obsidian-sovereignty");
+  const [equippedId, setEquippedId] = useState("obsidian-sovereignty");
   const [notice, setNotice] = useState("");
   const visible = useMemo(() => (filter === "all" ? SETS : SETS.filter((item) => item.kind === filter)), [filter]);
   const selected = SETS.find((item) => item.id === selectedId) ?? SETS[0];
@@ -87,8 +87,10 @@ function Arsenal() {
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem("bs.arsenal.equipped") ?? "shadow";
-      setEquippedId(signedIn ? (SETS.find((item) => item.pieceSetId === profile.equippedPieceSet)?.id ?? "shadow") : stored);
+      const stored = window.localStorage.getItem("bs.arsenal.equipped") ?? "obsidian-sovereignty";
+      const legacyIds: Record<string, string> = { shadow: "obsidian-sovereignty", sovereign: "obsidian-sovereignty", "demon-gold": "crimson-empress" };
+      const requested = signedIn ? profile.equippedPieceSet : stored;
+      setEquippedId(SETS.find((item) => item.pieceSetId === (legacyIds[requested] ?? requested))?.id ?? "obsidian-sovereignty");
     } catch {
       /* storage unavailable */
     }

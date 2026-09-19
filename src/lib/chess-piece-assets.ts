@@ -1,111 +1,86 @@
-import platinumPawn from "@/assets/chess-next/optimized/platinum-p.webp";
-import platinumKnight from "@/assets/chess-next/optimized/platinum-n.webp";
-import platinumBishop from "@/assets/chess-next/optimized/platinum-b.webp";
-import platinumRook from "@/assets/chess-next/optimized/platinum-r.webp";
-import platinumQueen from "@/assets/chess-next/optimized/platinum-q.webp";
-import platinumKing from "@/assets/chess-next/optimized/platinum-k.webp";
-import obsidianPawn from "@/assets/chess-next/optimized/obsidian-p.webp";
-import obsidianKnight from "@/assets/chess-next/optimized/obsidian-n.webp";
-import obsidianBishop from "@/assets/chess-next/optimized/obsidian-b.webp";
-import obsidianRook from "@/assets/chess-next/optimized/obsidian-r.webp";
-import obsidianQueen from "@/assets/chess-next/optimized/obsidian-q.webp";
-import obsidianKing from "@/assets/chess-next/optimized/obsidian-k.webp";
-import abyssalWhitePawn from "@/assets/chess/abyssal-legacy/abyssal-wp.webp.asset.json";
-import abyssalWhiteKnight from "@/assets/chess/abyssal-legacy/abyssal-wn.webp.asset.json";
-import abyssalWhiteBishop from "@/assets/chess/abyssal-legacy/abyssal-wb.webp.asset.json";
-import abyssalWhiteRook from "@/assets/chess/abyssal-legacy/abyssal-wr.webp.asset.json";
-import abyssalWhiteQueen from "@/assets/chess/abyssal-legacy/abyssal-wq.webp.asset.json";
-import abyssalWhiteKing from "@/assets/chess/abyssal-legacy/abyssal-wk.webp.asset.json";
-import abyssalBlackPawn from "@/assets/chess/abyssal-legacy/abyssal-bp.webp.asset.json";
-import abyssalBlackKnight from "@/assets/chess/abyssal-legacy/abyssal-bn.webp.asset.json";
-import abyssalBlackBishop from "@/assets/chess/abyssal-legacy/abyssal-bb.webp.asset.json";
-import abyssalBlackRook from "@/assets/chess/abyssal-legacy/abyssal-br.webp.asset.json";
-import abyssalBlackQueen from "@/assets/chess/abyssal-legacy/abyssal-bq.webp.asset.json";
-import abyssalBlackKing from "@/assets/chess/abyssal-legacy/abyssal-bk.webp.asset.json";
-import demonWhitePawnAsset from "@/assets/chess/demon-gold/demon-wp.webp";
-import demonWhiteKnightAsset from "@/assets/chess/demon-gold/demon-wn.webp";
-import demonWhiteBishopAsset from "@/assets/chess/demon-gold/demon-wb.webp";
-import demonWhiteRookAsset from "@/assets/chess/demon-gold/demon-wr.webp";
-import demonWhiteQueenAsset from "@/assets/chess/demon-gold/demon-wq.webp";
-import demonWhiteKingAsset from "@/assets/chess/demon-gold/demon-wk.webp";
-import demonBlackPawnAsset from "@/assets/chess/demon-gold/demon-bp.webp";
-import demonBlackKnightAsset from "@/assets/chess/demon-gold/demon-bn.webp";
-import demonBlackBishopAsset from "@/assets/chess/demon-gold/demon-bb.webp";
-import demonBlackRookAsset from "@/assets/chess/demon-gold/demon-br.webp";
-import demonBlackQueenAsset from "@/assets/chess/demon-gold/demon-bq.webp";
-import demonBlackKingAsset from "@/assets/chess/demon-gold/demon-bk.webp";
-import darkDragonWhitePawnAsset from "@/assets/chess/dark-dragon/dark-dragon-wp.webp";
-import darkDragonWhiteKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-wn.webp";
-import darkDragonWhiteBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-wb.webp";
-import darkDragonWhiteRookAsset from "@/assets/chess/dark-dragon/dark-dragon-wr.webp";
-import darkDragonWhiteQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-wq.webp";
-import darkDragonWhiteKingAsset from "@/assets/chess/dark-dragon/dark-dragon-wk.webp";
-import darkDragonBlackPawnAsset from "@/assets/chess/dark-dragon/dark-dragon-bp.webp";
-import darkDragonBlackKnightAsset from "@/assets/chess/dark-dragon/dark-dragon-bn.webp";
-import darkDragonBlackBishopAsset from "@/assets/chess/dark-dragon/dark-dragon-bb.webp";
-import darkDragonBlackRookAsset from "@/assets/chess/dark-dragon/dark-dragon-br.webp";
-import darkDragonBlackQueenAsset from "@/assets/chess/dark-dragon/dark-dragon-bq.webp";
-import darkDragonBlackKingAsset from "@/assets/chess/dark-dragon/dark-dragon-bk.webp";
+import obsidianWp from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wp.webp.asset.json";
+import obsidianWn from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wn.webp.asset.json";
+import obsidianWb from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wb.webp.asset.json";
+import obsidianWr from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wr.webp.asset.json";
+import obsidianWq from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wq.webp.asset.json";
+import obsidianWk from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wk.webp.asset.json";
+import obsidianBp from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-bp.webp.asset.json";
+import obsidianBn from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-bn.webp.asset.json";
+import obsidianBb from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-bb.webp.asset.json";
+import obsidianBr from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-br.webp.asset.json";
+import obsidianBq from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-bq.webp.asset.json";
+import obsidianBk from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-bk.webp.asset.json";
+import crimsonWp from "@/assets/chess/crimson-empress/crimson-empress-wp.webp.asset.json";
+import crimsonWn from "@/assets/chess/crimson-empress/crimson-empress-wn.webp.asset.json";
+import crimsonWb from "@/assets/chess/crimson-empress/crimson-empress-wb.webp.asset.json";
+import crimsonWr from "@/assets/chess/crimson-empress/crimson-empress-wr.webp.asset.json";
+import crimsonWq from "@/assets/chess/crimson-empress/crimson-empress-wq.webp.asset.json";
+import crimsonWk from "@/assets/chess/crimson-empress/crimson-empress-wk.webp.asset.json";
+import crimsonBp from "@/assets/chess/crimson-empress/crimson-empress-bp.webp.asset.json";
+import crimsonBn from "@/assets/chess/crimson-empress/crimson-empress-bn.webp.asset.json";
+import crimsonBb from "@/assets/chess/crimson-empress/crimson-empress-bb.webp.asset.json";
+import crimsonBr from "@/assets/chess/crimson-empress/crimson-empress-br.webp.asset.json";
+import crimsonBq from "@/assets/chess/crimson-empress/crimson-empress-bq.webp.asset.json";
+import crimsonBk from "@/assets/chess/crimson-empress/crimson-empress-bk.webp.asset.json";
+import templeWp from "@/assets/chess/temple-judgment/temple-judgment-wp.webp.asset.json";
+import templeWn from "@/assets/chess/temple-judgment/temple-judgment-wn.webp.asset.json";
+import templeWb from "@/assets/chess/temple-judgment/temple-judgment-wb.webp.asset.json";
+import templeWr from "@/assets/chess/temple-judgment/temple-judgment-wr.webp.asset.json";
+import templeWq from "@/assets/chess/temple-judgment/temple-judgment-wq.webp.asset.json";
+import templeWk from "@/assets/chess/temple-judgment/temple-judgment-wk.webp.asset.json";
+import templeBp from "@/assets/chess/temple-judgment/temple-judgment-bp.webp.asset.json";
+import templeBn from "@/assets/chess/temple-judgment/temple-judgment-bn.webp.asset.json";
+import templeBb from "@/assets/chess/temple-judgment/temple-judgment-bb.webp.asset.json";
+import templeBr from "@/assets/chess/temple-judgment/temple-judgment-br.webp.asset.json";
+import templeBq from "@/assets/chess/temple-judgment/temple-judgment-bq.webp.asset.json";
+import templeBk from "@/assets/chess/temple-judgment/temple-judgment-bk.webp.asset.json";
+import paleWp from "@/assets/chess/pale-court/pale-court-wp.webp.asset.json";
+import paleWn from "@/assets/chess/pale-court/pale-court-wn.webp.asset.json";
+import paleWb from "@/assets/chess/pale-court/pale-court-wb.webp.asset.json";
+import paleWr from "@/assets/chess/pale-court/pale-court-wr.webp.asset.json";
+import paleWq from "@/assets/chess/pale-court/pale-court-wq.webp.asset.json";
+import paleWk from "@/assets/chess/pale-court/pale-court-wk.webp.asset.json";
+import paleBp from "@/assets/chess/pale-court/pale-court-bp.webp.asset.json";
+import paleBn from "@/assets/chess/pale-court/pale-court-bn.webp.asset.json";
+import paleBb from "@/assets/chess/pale-court/pale-court-bb.webp.asset.json";
+import paleBr from "@/assets/chess/pale-court/pale-court-br.webp.asset.json";
+import paleBq from "@/assets/chess/pale-court/pale-court-bq.webp.asset.json";
+import paleBk from "@/assets/chess/pale-court/pale-court-bk.webp.asset.json";
+import abyssalWp from "@/assets/chess/abyssal-legacy/abyssal-legacy-wp.webp.asset.json";
+import abyssalWn from "@/assets/chess/abyssal-legacy/abyssal-legacy-wn.webp.asset.json";
+import abyssalWb from "@/assets/chess/abyssal-legacy/abyssal-legacy-wb.webp.asset.json";
+import abyssalWr from "@/assets/chess/abyssal-legacy/abyssal-legacy-wr.webp.asset.json";
+import abyssalWq from "@/assets/chess/abyssal-legacy/abyssal-legacy-wq.webp.asset.json";
+import abyssalWk from "@/assets/chess/abyssal-legacy/abyssal-legacy-wk.webp.asset.json";
+import abyssalBp from "@/assets/chess/abyssal-legacy/abyssal-legacy-bp.webp.asset.json";
+import abyssalBn from "@/assets/chess/abyssal-legacy/abyssal-legacy-bn.webp.asset.json";
+import abyssalBb from "@/assets/chess/abyssal-legacy/abyssal-legacy-bb.webp.asset.json";
+import abyssalBr from "@/assets/chess/abyssal-legacy/abyssal-legacy-br.webp.asset.json";
+import abyssalBq from "@/assets/chess/abyssal-legacy/abyssal-legacy-bq.webp.asset.json";
+import abyssalBk from "@/assets/chess/abyssal-legacy/abyssal-legacy-bk.webp.asset.json";
+import dragonWp from "@/assets/chess/dark-dragon/dark-dragon-wp.webp.asset.json";
+import dragonWn from "@/assets/chess/dark-dragon/dark-dragon-wn.webp.asset.json";
+import dragonWb from "@/assets/chess/dark-dragon/dark-dragon-wb.webp.asset.json";
+import dragonWr from "@/assets/chess/dark-dragon/dark-dragon-wr.webp.asset.json";
+import dragonWq from "@/assets/chess/dark-dragon/dark-dragon-wq.webp.asset.json";
+import dragonWk from "@/assets/chess/dark-dragon/dark-dragon-wk.webp.asset.json";
+import dragonBp from "@/assets/chess/dark-dragon/dark-dragon-bp.webp.asset.json";
+import dragonBn from "@/assets/chess/dark-dragon/dark-dragon-bn.webp.asset.json";
+import dragonBb from "@/assets/chess/dark-dragon/dark-dragon-bb.webp.asset.json";
+import dragonBr from "@/assets/chess/dark-dragon/dark-dragon-br.webp.asset.json";
+import dragonBq from "@/assets/chess/dark-dragon/dark-dragon-bq.webp.asset.json";
+import dragonBk from "@/assets/chess/dark-dragon/dark-dragon-bk.webp.asset.json";
 
-export const CHESS_PIECE_ASSETS: Record<string, string> = {
-  wp: platinumPawn,
-  wn: platinumKnight,
-  wb: platinumBishop,
-  wr: platinumRook,
-  wq: platinumQueen,
-  wk: platinumKing,
-  bp: obsidianPawn,
-  bn: obsidianKnight,
-  bb: obsidianBishop,
-  br: obsidianRook,
-  bq: obsidianQueen,
-  bk: obsidianKing,
-};
+type AssetPointer = { url: string };
 
-/** 深渊遗族：古金翠玉（白方）+ 黑银幽绿（黑方）。 */
-export const ABYSSAL_LEGACY_PIECE_ASSETS: Record<string, string> = {
-  wp: abyssalWhitePawn.url,
-  wn: abyssalWhiteKnight.url,
-  wb: abyssalWhiteBishop.url,
-  wr: abyssalWhiteRook.url,
-  wq: abyssalWhiteQueen.url,
-  wk: abyssalWhiteKing.url,
-  bp: abyssalBlackPawn.url,
-  bn: abyssalBlackKnight.url,
-  bb: abyssalBlackBishop.url,
-  br: abyssalBlackRook.url,
-  bq: abyssalBlackQueen.url,
-  bk: abyssalBlackKing.url,
-};
+function pieceAssets(items: AssetPointer[]): Record<string, string> {
+  const keys = ["wp", "wn", "wb", "wr", "wq", "wk", "bp", "bn", "bb", "br", "bq", "bk"];
+  return Object.fromEntries(keys.map((key, index) => [key, items[index]?.url ?? ""]));
+}
 
-/** 魔皇古金：祖母绿古金原版（白方）+ 暗红黑金变体（黑方）。 */
-export const DEMON_GOLD_PIECE_ASSETS: Record<string, string> = {
-  wp: demonWhitePawnAsset,
-  wn: demonWhiteKnightAsset,
-  wb: demonWhiteBishopAsset,
-  wr: demonWhiteRookAsset,
-  wq: demonWhiteQueenAsset,
-  wk: demonWhiteKingAsset,
-  bp: demonBlackPawnAsset,
-  bn: demonBlackKnightAsset,
-  bb: demonBlackBishopAsset,
-  br: demonBlackRookAsset,
-  bq: demonBlackQueenAsset,
-  bk: demonBlackKingAsset,
-};
-
-/** 暗黑龙语：冷银龙铠（白方）+ 暗黑龙甲原色（黑方）。 */
-export const DARK_DRAGON_PIECE_ASSETS: Record<string, string> = {
-  wp: darkDragonWhitePawnAsset,
-  wn: darkDragonWhiteKnightAsset,
-  wb: darkDragonWhiteBishopAsset,
-  wr: darkDragonWhiteRookAsset,
-  wq: darkDragonWhiteQueenAsset,
-  wk: darkDragonWhiteKingAsset,
-  bp: darkDragonBlackPawnAsset,
-  bn: darkDragonBlackKnightAsset,
-  bb: darkDragonBlackBishopAsset,
-  br: darkDragonBlackRookAsset,
-  bq: darkDragonBlackQueenAsset,
-  bk: darkDragonBlackKingAsset,
-};
+export const OBSIDIAN_SOVEREIGNTY_PIECE_ASSETS = pieceAssets([obsidianWp, obsidianWn, obsidianWb, obsidianWr, obsidianWq, obsidianWk, obsidianBp, obsidianBn, obsidianBb, obsidianBr, obsidianBq, obsidianBk]);
+export const CRIMSON_EMPRESS_PIECE_ASSETS = pieceAssets([crimsonWp, crimsonWn, crimsonWb, crimsonWr, crimsonWq, crimsonWk, crimsonBp, crimsonBn, crimsonBb, crimsonBr, crimsonBq, crimsonBk]);
+export const TEMPLE_JUDGMENT_PIECE_ASSETS = pieceAssets([templeWp, templeWn, templeWb, templeWr, templeWq, templeWk, templeBp, templeBn, templeBb, templeBr, templeBq, templeBk]);
+export const PALE_COURT_PIECE_ASSETS = pieceAssets([paleWp, paleWn, paleWb, paleWr, paleWq, paleWk, paleBp, paleBn, paleBb, paleBr, paleBq, paleBk]);
+export const ABYSSAL_LEGACY_PIECE_ASSETS = pieceAssets([abyssalWp, abyssalWn, abyssalWb, abyssalWr, abyssalWq, abyssalWk, abyssalBp, abyssalBn, abyssalBb, abyssalBr, abyssalBq, abyssalBk]);
+export const DARK_DRAGON_PIECE_ASSETS = pieceAssets([dragonWp, dragonWn, dragonWb, dragonWr, dragonWq, dragonWk, dragonBp, dragonBn, dragonBb, dragonBr, dragonBq, dragonBk]);
