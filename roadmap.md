@@ -1,5 +1,5 @@
 ## Current request
-- [x] “深渊遗族”12 枚棋子单套试装：统一尺寸与底座、接入军械典藏和全棋盘，供用户确认后再制作其余四套
+- [x] 六套棋子完整替换：72 枚统一尺寸与底座，接入军械典藏和全棋盘（含新版暗黑龙语）
 - [x] Unify highlighted controls with the global button corner-radius standard.
 - [x] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
 - [x] 31 号 R1：平板结构档下沿扩展到 600px

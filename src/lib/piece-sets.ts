@@ -1,4 +1,4 @@
-import { ABYSSAL_LEGACY_PIECE_ASSETS, CHESS_PIECE_ASSETS, DARK_DRAGON_PIECE_ASSETS, DEMON_GOLD_PIECE_ASSETS } from "./chess-piece-assets";
+import { ABYSSAL_LEGACY_PIECE_ASSETS, CRIMSON_EMPRESS_PIECE_ASSETS, DARK_DRAGON_PIECE_ASSETS, OBSIDIAN_SOVEREIGNTY_PIECE_ASSETS, PALE_COURT_PIECE_ASSETS, TEMPLE_JUDGMENT_PIECE_ASSETS } from "./chess-piece-assets";
 
 /**
  * 棋子套装登记表。
@@ -20,11 +20,11 @@ export interface PieceSet {
 
 export const PIECE_SETS: PieceSet[] = [
   {
-    id: "sovereign",
-    zh: "白金 · 黑曜绯红",
-    en: "Platinum & Obsidian Crimson",
-    assets: CHESS_PIECE_ASSETS,
-    source: "src/assets/chess-next/optimized",
+    id: "obsidian-sovereignty",
+    zh: "黑曜王权",
+    en: "Obsidian Sovereignty",
+    assets: OBSIDIAN_SOVEREIGNTY_PIECE_ASSETS,
+    source: "src/assets/chess/obsidian-sovereignty",
   },
   {
     id: "abyssal-legacy",
@@ -34,11 +34,25 @@ export const PIECE_SETS: PieceSet[] = [
     source: "src/assets/chess/abyssal-legacy",
   },
   {
-    id: "demon-gold",
-    zh: "魔皇古金",
-    en: "Demon Emperor Antique Gold",
-    assets: DEMON_GOLD_PIECE_ASSETS,
-    source: "src/assets/chess/demon-gold",
+    id: "crimson-empress",
+    zh: "猩红女帝",
+    en: "Crimson Empress",
+    assets: CRIMSON_EMPRESS_PIECE_ASSETS,
+    source: "src/assets/chess/crimson-empress",
+  },
+  {
+    id: "temple-judgment",
+    zh: "圣堂裁决",
+    en: "Temple Judgment",
+    assets: TEMPLE_JUDGMENT_PIECE_ASSETS,
+    source: "src/assets/chess/temple-judgment",
+  },
+  {
+    id: "pale-court",
+    zh: "苍白王庭",
+    en: "Pale Court",
+    assets: PALE_COURT_PIECE_ASSETS,
+    source: "src/assets/chess/pale-court",
   },
   {
     id: "dark-dragon",
@@ -49,8 +63,14 @@ export const PIECE_SETS: PieceSet[] = [
   },
 ];
 
-export const DEFAULT_PIECE_SET_ID = "sovereign";
+export const DEFAULT_PIECE_SET_ID = "obsidian-sovereignty";
+
+const LEGACY_PIECE_SET_IDS: Record<string, string> = {
+  sovereign: "obsidian-sovereignty",
+  "demon-gold": "crimson-empress",
+};
 
 export function pieceSet(id: string = DEFAULT_PIECE_SET_ID): PieceSet {
-  return PIECE_SETS.find((s) => s.id === id) ?? PIECE_SETS[0]!;
+  const currentId = LEGACY_PIECE_SET_IDS[id] ?? id;
+  return PIECE_SETS.find((set) => set.id === currentId) ?? PIECE_SETS[0]!;
 }
