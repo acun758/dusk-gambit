@@ -10,12 +10,12 @@ import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import { SoundToggle } from "@/components/SoundToggle";
+import obsidianKnightAsset from "@/assets/chess/obsidian-sovereignty/obsidian-sovereignty-wn.webp.asset.json";
+import crimsonQueenAsset from "@/assets/chess/crimson-empress/crimson-empress-wq.webp.asset.json";
 
 const HERO_PORTRAIT = GAME_ART.heroPortrait;
 const HERO_VIDEO = GAME_ART.heroVideo;
 const HERO = GAME_ART.hero;
-const RELIC_A = GAME_ART.matchArena;
-const RELIC_B = GAME_ART.reviewBoard;
 
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
@@ -327,12 +327,12 @@ function Index() {
             </div>
             <div className="grid grid-cols-2 gap-space-xs">
               {[
-                { img: RELIC_A, zh: "黑曜骑士", en: "Obsidian Knight", tagZh: "已装备", tagEn: "Equipped", locked: false },
-                { img: RELIC_B, zh: "猩红王后", en: "Crimson Queen", tagZh: "2200 分解锁", tagEn: "Unlock at 2200", locked: true },
+                { img: obsidianKnightAsset.url, zh: "黑曜王权", en: "Obsidian Sovereignty", tagZh: "已装备", tagEn: "Equipped", locked: false },
+                { img: crimsonQueenAsset.url, zh: "猩红女帝", en: "Crimson Empress", tagZh: "1600 分解锁", tagEn: "Unlock at 1600", locked: true },
               ].map((r) => (
                 <div key={r.en} className="home-glass-tile p-space-sm flex flex-col">
-                  <div className="home-glass-media aged-print-frame relative w-full h-36 mb-space-sm overflow-hidden">
-                    <img className="w-full h-full object-cover object-center" src={r.img} alt={t(r.zh, r.en)} loading="lazy" />
+                  <div className="home-glass-media aged-print-frame arsenal-home-piece relative w-full h-36 mb-space-sm overflow-hidden">
+                    <img className="w-full h-full object-contain object-center p-2" src={r.img} alt={t(r.zh, r.en)} loading="lazy" />
                   </div>
                   <span className="font-headline-sm text-headline-sm text-on-surface truncate">{t(r.zh, r.en)}</span>
                   <span className={`cjk font-label-sm text-label-sm mt-1 ${r.locked ? "text-primary" : "text-secondary"}`}>
