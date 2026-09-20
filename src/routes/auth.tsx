@@ -97,9 +97,9 @@ function AuthPage() {
         });
         verified = Boolean(saved);
       }
-      // 实名完成后直接进入约战大厅并自动按段位就近排队
+      // 实名完成后直接进入约战大厅；未认证则先去档案页完成实名，才能发起约战
       if (verified) window.location.assign("/battle?lobby=1");
-      else void navigate({ to: "/" });
+      else void navigate({ to: "/dynasty" });
     } else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
   }
 
