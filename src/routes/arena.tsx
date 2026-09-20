@@ -383,7 +383,7 @@ function Arena() {
               <div className="flex flex-wrap items-center gap-2">
                 <Button
                   type="button"
-                  disabled={false}
+                  disabled={busy}
                   onClick={() => setShowCreate((v) => !v)}
                   className="home-glass-action cjk h-11 px-4 font-label-md text-label-md disabled:opacity-50"
                 >
