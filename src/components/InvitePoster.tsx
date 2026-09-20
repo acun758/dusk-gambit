@@ -4,21 +4,23 @@ import { useProfile, tierLabel } from "@/lib/profile";
 import { RankBadge } from "@/components/RankBadge";
 import { UiIcon } from "@/components/UiIcon";
 import { rankOf } from "@/lib/ranks";
+import { useT } from "@/lib/i18n";
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
 export function InvitePoster({ className = "" }: { compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
+  const t = useT();
   const rank = rankOf(profile.elo);
   return (
     <section
-      aria-label="邀请对弈"
+      aria-label={t("邀请对弈", "Challenge invitation")}
       className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest sm:aspect-[16/9] ${className}`}
     >
       {/* 图片始终铺满整张卡片，文字压在图上（手机 / iPad / 桌面一致） */}
       <div className="aged-print-frame" style={{ position: "absolute", inset: 0 }}>
         <img
           src={poster}
-          alt="血誓王权邀请对弈海报"
+          alt={t("血誓王权邀请对弈海报", "Blood Sovereign challenge poster")}
           loading="lazy"
           width={1536}
           height={864}
@@ -31,21 +33,21 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
       <div className="relative flex flex-col justify-center gap-1.5 p-space-md sm:absolute sm:inset-0 sm:max-w-[68%] sm:gap-3 sm:p-8 lg:gap-4 lg:p-12">
 
         <div className="flex items-center gap-2 min-w-0 sm:gap-3 lg:gap-4">
-          <RankBadge rank={rank.id} className="h-10 w-10 shrink-0 sm:h-14 sm:w-14 lg:h-20 lg:w-20" label={`${rank.zh}段徽章`} />
-          <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate sm:text-headline-md lg:font-headline-lg lg:text-headline-lg">{tierLabel(profile).zh}</h2>
+          <RankBadge rank={rank.id} className="h-10 w-10 shrink-0 sm:h-14 sm:w-14 lg:h-20 lg:w-20" label={t(`${rank.zh}段徽章`, `${rank.en} tier badge`)} />
+          <h2 className="cjk font-headline-sm text-headline-sm text-on-surface truncate sm:text-headline-md lg:font-headline-lg lg:text-headline-lg">{t(tierLabel(profile).zh, tierLabel(profile).en)}</h2>
         </div>
         <p className="font-label-md text-label-md text-on-surface-variant tabular-nums sm:text-body-md lg:font-body-lg lg:text-body-lg">
-          {profile.elo} 分 · 胜率 {winRate}% · ♦ {profile.diamonds}
+          {t(`${profile.elo} 分 · 胜率 ${winRate}% · ♦ ${profile.diamonds}`, `${profile.elo} rating · ${winRate}% win rate · ♦ ${profile.diamonds}`)}
         </p>
         <p className="cjk font-label-sm text-label-sm text-secondary sm:text-label-md lg:text-label-lg">
-          实名认证可选 · 不影响约战与天梯
+          {t("实名认证可选 · 不影响约战与天梯", "ID verification optional · ranked play unaffected")}
         </p>
-        <p className="cjk font-body-sm text-body-sm text-on-surface-variant sm:text-body-md lg:text-body-lg">系统按段位就近匹配，段位相近者优先。</p>
+        <p className="cjk font-body-sm text-body-sm text-on-surface-variant sm:text-body-md lg:text-body-lg">{t("系统按段位就近匹配，段位相近者优先。", "Matchmaking pairs you with the closest ratings first.")}</p>
         <Link
           to="/battle"
           className="home-glass-action cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 px-4 text-on-primary-container font-label-sm text-label-sm sm:mt-2 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:mt-3 lg:min-h-14 lg:px-8 lg:text-label-lg"
         >
-          选择赛制发起约战
+          {t("选择赛制发起约战", "Choose a time control")}
           <UiIcon name="shield" className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
         </Link>
       </div>

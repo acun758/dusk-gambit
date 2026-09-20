@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LangToggle, useLang } from "@/lib/i18n";
+import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 import { UiIcon } from "@/components/UiIcon";
 import { NAV_ICONS, type NavIconKey } from "@/lib/nav-assets";
@@ -13,9 +13,9 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
-  { to: "/puzzles", icon: "bolt", zh: "战术谜题" },
-  { to: "/arsenal", icon: "forge", zh: "军械典藏" },
-  { to: "/archive", icon: "cards", zh: "绝杀典藏" },
+  { to: "/puzzles", icon: "bolt", zh: "战术谜题", en: "Puzzles" },
+  { to: "/arsenal", icon: "forge", zh: "军械典藏", en: "Arsenal" },
+  { to: "/archive", icon: "cards", zh: "绝杀典藏", en: "Archive" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -26,6 +26,7 @@ function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { signedIn } = useProfile();
+  const t = useT();
   // 实名认证为可选项，不再限制天梯入口
   const items = PRIMARY;
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
@@ -45,7 +46,7 @@ export function SovereignNav() {
               }`}
             >
               <UiIcon name={item.icon} className="h-4 w-4" />
-              <span>{item.zh}</span>
+              <span className={t("cjk", "")}>{t(item.zh, item.en)}</span>
             </Link>
           ))}
         </div>
@@ -80,10 +81,10 @@ export function SovereignNav() {
       <aside className="home-glass-header sovereign-rail hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col">
         <div className="rail-brand px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
           <div className="rail-brand-title cjk font-headline-sm text-headline-sm text-secondary">
-            玄弈棋竞
+            {t("玄弈棋竞", "DUSK GAMBIT")}
           </div>
           <div className="rail-brand-subtitle cjk font-label-sm text-label-sm text-on-surface-variant">
-            血誓王权
+            {t("血誓王权", "Blood Sovereign")}
           </div>
           <div className="rail-account flex flex-wrap items-center gap-space-xs mt-1">
             <LangToggle className="home-glass-control" />
@@ -128,7 +129,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="bolt" className="h-7 w-7" /><span className="rail-label">战术谜题</span>
+            <UiIcon name="bolt" className="h-7 w-7" /><span className="rail-label">{t("战术谜题", "Puzzles")}</span>
           </Link>
           <Link
             to="/arsenal"
@@ -138,7 +139,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">军械典藏</span>
+            <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">{t("军械典藏", "Arsenal")}</span>
           </Link>
           <Link
             to="/archive"
@@ -146,7 +147,7 @@ export function SovereignNav() {
                isActive("/archive") ? "home-glass-tile-active text-secondary" : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">绝杀典藏</span>
+            <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">{t("绝杀典藏", "Archive")}</span>
           </Link>
         </div>
       </aside>
