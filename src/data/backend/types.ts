@@ -77,6 +77,8 @@ export interface RealtimeGateway {
   onDuelFrames<M, V>(matchId: string, handlers: DuelFrameHandlers<M, V>): Unsubscribe;
   /** 对局内语音信令（仅双方，点对点音频不经服务器）。 */
   onVoiceSignal(matchId: string, selfId: string, cb: (signal: VoiceSignal) => void): VoiceLink;
+  /** 风控告警：某账号被判定异常走子时的即时推送。all=true 表示管理员监看全站。 */
+  onAuditAlert(scope: { userId?: string; all?: boolean }, cb: (frame: AuditAlertFrame) => void): Unsubscribe;
 }
 
 export class BackendNotWiredError extends Error {
