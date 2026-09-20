@@ -186,6 +186,11 @@ function Arena() {
     void queryClient.invalidateQueries({ queryKey: ["arena-rooms"] });
   }, [queryClient]);
 
+  const failNote = useCallback(
+    (err: Error) => setNote(/verify_required/.test(err.message) ? verifyHint : err.message),
+    [verifyHint],
+  );
+
 
   const onCreate = useCallback(() => {
     const gate = GATES.find((g) => g.id === gateId) ?? GATES[0]!;
