@@ -31,6 +31,17 @@ export const Route = createFileRoute("/auth")({
 
 const AVATAR_KEY = "bs.avatar.v1";
 
+function friendlyAuthError(raw: string, t: (zh: string, en: string) => string): string {
+  const s = raw.toLowerCase();
+  if (s.includes("invalid login credentials")) return t("邮箱或密码不正确，请重试。", "Email or password is incorrect. Please try again.");
+  if (s.includes("email not confirmed")) return t("邮箱尚未确认，请先点开邮件里的确认链接。", "Email not confirmed yet — open the confirmation link we sent you.");
+  if (s.includes("already registered") || s.includes("already been registered")) return t("该邮箱已注册，请直接登录。", "This email is already registered — sign in instead.");
+  if (s.includes("weak") || s.includes("password should be")) return t("密码太简单，请换一个更长、更独特的密码。", "That password is too weak — choose a longer, less common one.");
+  if (s.includes("rate limit") || s.includes("too many")) return t("尝试太频繁，请稍后再试。", "Too many attempts — please try again in a moment.");
+  if (s.includes("invalid email") || s.includes("unable to validate email")) return t("邮箱格式不正确。", "That email address is not valid.");
+  return raw;
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
