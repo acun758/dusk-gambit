@@ -144,7 +144,7 @@ export const createArenaRoom = createServerFn({ method: "POST" })
       p_per_move_ms: 0,
       p_rating_min: Math.round(data.ratingMin ?? 0),
       p_rating_max: Math.round(data.ratingMax ?? 100_000),
-      p_target_id: data.targetId ?? null,
+      p_target_id: data.targetId ?? undefined,
     });
     if (error) throw new Error(error.message);
     return room as { id: string; short_code: string; host_color: "w" | "b"; target_id: string | null } | null;
