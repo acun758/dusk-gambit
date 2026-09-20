@@ -754,6 +754,15 @@ export const createDuelInvite = createServerFn({ method: "POST" }).middleware([r
   .inputValidator((input: { invitedId?: string; tcBase?: number; tcInc?: number }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 发起约战需实名认证（接受邀请、匹配与 AI 陪练不受限）。
+    const { data: me } = await supabaseAdmin
+      .from("profiles")
+      .select("verify_status")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (me?.verify_status !== "verified") throw new Error("verify_required");
+
     const tc = normalizeTc(data.tcBase, data.tcInc);
     const args = {
       p_user_id: context.userId,
