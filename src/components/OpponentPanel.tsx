@@ -46,25 +46,11 @@ function OpponentPanelComponent({
   const [code, setCode] = useState("");
   const [myCode, setMyCode] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
-  const [realName, setRealName] = useState("");
-  const [realNameSaved, setRealNameSaved] = useState<string>("");
-  const [idNumber, setIdNumber] = useState("");
-  const [verifyStatus, setVerifyStatus] = useState<string>("none");
 
   useEffect(() => {
     void fetchSession().then((s) => setSignedIn(Boolean(s)));
   }, []);
 
-  const profileQ = useQuery({
-    queryKey: ["profile-realname", signedIn],
-    queryFn: () => (signedIn ? loadProfile() : Promise.resolve(null)),
-    enabled: signedIn === true,
-  });
-  useEffect(() => {
-    const saved = profileQ.data?.real_name ?? "";
-    if (saved) setRealNameSaved(saved);
-    setVerifyStatus(profileQ.data?.verify_status ?? "none");
-  }, [profileQ.data?.real_name, profileQ.data?.verify_status]);
 
   // 从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
   const [autoQueued, setAutoQueued] = useState(false);
@@ -106,8 +92,6 @@ function OpponentPanelComponent({
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
-  // 发起约战需实名认证（应战、系统匹配与 AI 陪练不受限）
-  const verified = verifyStatus === "verified" && realNameSaved.length >= 2;
 
   const accept = (inviteCode: string) => {
     setNotice(null);
@@ -128,16 +112,8 @@ function OpponentPanelComponent({
         setNotice(invitedId ? t("已向该玩家发出约战，对方在对弈页会看到提醒。", "Challenge sent — they will see it on the duel page.") : t("已生成对战码，发给对手即可开局。", "Code created — send it to your opponent to start."));
         void invitesQ.refetch();
       })
-      .catch((err: Error) =>
-        setNotice(
-          /verify_required/.test(err?.message ?? "")
-            ? t(
-                "完成实名认证后才能发起约战；应战与系统匹配不受影响。",
-                "Complete identity verification before starting a challenge; accepting and matchmaking are unaffected.",
-              )
-            : t("创建邀请失败，请稍后再试", "Could not create the challenge — try again"),
-        ),
-      );
+      .catch(() => setNotice(t("创建邀请失败，请稍后再试", "Could not create the challenge — try again")));
+
   };
 
   if (signedIn === false) {
