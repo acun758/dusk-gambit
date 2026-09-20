@@ -15,6 +15,7 @@ import { useProfile } from "@/lib/profile";
 import { useLang, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/guard")({
+  staticData: { sitemap: false },
   component: GuardPage,
   head: () => ({
     meta: [

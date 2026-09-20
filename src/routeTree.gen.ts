@@ -18,6 +18,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
 import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
+import { Route as GuardRouteImport } from './routes/guard'
 import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as PuzzlesRouteImport } from './routes/puzzles'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -68,6 +69,11 @@ const DynastyRoute = DynastyRouteImport.update({
   path: '/dynasty',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuardRoute = GuardRouteImport.update({
+  id: '/guard',
+  path: '/guard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HallOfFameRoute = HallOfFameRouteImport.update({
   id: '/hall-of-fame',
   path: '/hall-of-fame',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/battle': typeof BattleRoute
   '/crucible': typeof CrucibleRoute
   '/dynasty': typeof DynastyRoute
+  '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/guard'
     | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/guard'
     | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/battle'
     | '/crucible'
     | '/dynasty'
+    | '/guard'
     | '/hall-of-fame'
     | '/puzzles'
     | '/sitemap.xml'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   BattleRoute: typeof BattleRoute
   CrucibleRoute: typeof CrucibleRoute
   DynastyRoute: typeof DynastyRoute
+  GuardRoute: typeof GuardRoute
   HallOfFameRoute: typeof HallOfFameRoute
   PuzzlesRoute: typeof PuzzlesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DynastyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guard': {
+      id: '/guard'
+      path: '/guard'
+      fullPath: '/guard'
+      preLoaderRoute: typeof GuardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hall-of-fame': {
       id: '/hall-of-fame'
       path: '/hall-of-fame'
@@ -305,6 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   BattleRoute: BattleRoute,
   CrucibleRoute: CrucibleRoute,
   DynastyRoute: DynastyRoute,
+  GuardRoute: GuardRoute,
   HallOfFameRoute: HallOfFameRoute,
   PuzzlesRoute: PuzzlesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
