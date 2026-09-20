@@ -11,9 +11,9 @@
  * 仍由服务端权威判定；客户端排队不代表落子生效。
  */
 import { realtimeGateway } from "./backend";
-import type { ArenaPresencePlayer, ArenaPresenceSelf, DuelFrameHandlers, Unsubscribe } from "./backend";
+import type { ArenaPresencePlayer, ArenaPresenceSelf, DuelFrameHandlers, Unsubscribe, VoiceLink, VoiceSignal } from "./backend";
 
-export type { ArenaPresencePlayer, ArenaPresenceSelf };
+export type { ArenaPresencePlayer, ArenaPresenceSelf, VoiceLink, VoiceSignal };
 
 export type { Unsubscribe };
 export type LinkPhase = "live" | "offline" | "resyncing";
@@ -244,4 +244,9 @@ export function subscribeDuel<M, V>(matchId: string, handlers: DuelSubscribers<M
     () => realtimeGateway.onDuelFrames<M, V>(matchId, handlers),
     () => handlers.onProfiles(),
   );
+}
+
+/** 对局内一对一语音的信令链路（音频点对点，不经服务器，不留存）。 */
+export function openVoiceLink(matchId: string, selfId: string, cb: (signal: VoiceSignal) => void): VoiceLink {
+  return realtimeGateway.onVoiceSignal(matchId, selfId, cb);
 }

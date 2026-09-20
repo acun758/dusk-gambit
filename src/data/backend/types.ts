@@ -42,6 +42,19 @@ export interface ArenaPresencePlayer {
 
 export type ArenaPresenceSelf = ArenaPresencePlayer;
 
+/** 对局内一对一语音的信令帧（只在对战双方之间传递，不落库）。 */
+export interface VoiceSignal {
+  from: string;
+  kind: "hello" | "offer" | "answer" | "ice" | "bye";
+  data?: unknown;
+}
+
+/** 语音信令链路。 */
+export interface VoiceLink {
+  send: (signal: VoiceSignal) => void;
+  close: Unsubscribe;
+}
+
 /** 实时帧契约：各家云平台推送能力不同，只在适配器内部体现差异。 */
 export interface RealtimeGateway {
   /** 大厅在场名册（自己报到 + 名单变化）。 */
@@ -52,6 +65,8 @@ export interface RealtimeGateway {
   onMyProfileChanged(cb: () => void): Unsubscribe;
   /** 一局对局：对手落子、对局状态、双方资料变动。 */
   onDuelFrames<M, V>(matchId: string, handlers: DuelFrameHandlers<M, V>): Unsubscribe;
+  /** 对局内语音信令（仅双方，点对点音频不经服务器）。 */
+  onVoiceSignal(matchId: string, selfId: string, cb: (signal: VoiceSignal) => void): VoiceLink;
 }
 
 export class BackendNotWiredError extends Error {

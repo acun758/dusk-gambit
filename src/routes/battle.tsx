@@ -17,6 +17,8 @@ import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOv
 import { MatchReportOverlay, type MatchReportInput } from "@/components/MatchReportOverlay";
 import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
+import { DuelVoice } from "@/components/DuelVoice";
+import { currentUserId } from "@/data/db";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
 import { downloadPgn } from "@/lib/share-game";
 import {
@@ -71,6 +73,18 @@ function Battle() {
 
   const session = useDuelSession();
   const { profile, signedIn } = useProfile();
+  const [myUserId, setMyUserId] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    void currentUserId()
+      .then((id) => {
+        if (alive) setMyUserId(id ?? null);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [signedIn]);
   const t = useT();
   const { lang } = useLang();
   const waiting = session.state.status === "waiting";
@@ -492,6 +506,21 @@ function Battle() {
             <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{lang === "zh" ? aiLevel(session.aiLevelId).desc : aiLevel(session.aiLevelId).descEn}</p>
             <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">{t("准备好后在下方「找对手」选择赛制进入真人对局；四种赛制共用同一套 ELO 与段位。", "When you are ready, pick a time control under Find opponent to play a real person; all four controls share one rating and tier system.")}</p>
           </section>
+
+          {ranked && session.state.status === "live" && session.opponentOnline === false && (
+            <p className="cjk home-glass-card rounded-[12px] p-3 font-body-sm text-body-sm text-secondary">
+              {t("对手已离线，计时继续走；超时后由服务端判定胜负。", "Opponent is offline. The clock keeps running and the server decides on timeout.")}
+            </p>
+          )}
+
+          {ranked && session.state.status === "live" && myUserId && (
+            <DuelVoice
+              matchId={session.state.matchId}
+              selfId={myUserId}
+              initiator={session.state.you === "w"}
+              opponentName={opponent.name}
+            />
+          )}
 
           <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
         </section>

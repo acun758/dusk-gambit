@@ -248,6 +248,41 @@ export type Database = {
         }
         Relationships: []
       }
+      match_audit: {
+        Row: {
+          created_at: string
+          detail: Json
+          id: number
+          kind: string
+          match_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          id?: never
+          kind: string
+          match_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          id?: never
+          kind?: string
+          match_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_audit_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       match_invites: {
         Row: {
           code: string
@@ -402,8 +437,10 @@ export type Database = {
           black_delta: number | null
           black_elo: number
           black_id: string | null
+          black_move_at: string | null
           black_name: string
           black_piece_set: string
+          black_seen_at: string | null
           clock_b: number
           clock_w: number
           cp: number
@@ -426,8 +463,10 @@ export type Database = {
           white_avatar_path: string
           white_elo: number
           white_id: string | null
+          white_move_at: string | null
           white_name: string
           white_piece_set: string
+          white_seen_at: string | null
         }
         Insert: {
           black_avatar_key?: string
@@ -435,8 +474,10 @@ export type Database = {
           black_delta?: number | null
           black_elo?: number
           black_id?: string | null
+          black_move_at?: string | null
           black_name?: string
           black_piece_set?: string
+          black_seen_at?: string | null
           clock_b?: number
           clock_w?: number
           cp?: number
@@ -459,8 +500,10 @@ export type Database = {
           white_avatar_path?: string
           white_elo?: number
           white_id?: string | null
+          white_move_at?: string | null
           white_name?: string
           white_piece_set?: string
+          white_seen_at?: string | null
         }
         Update: {
           black_avatar_key?: string
@@ -468,8 +511,10 @@ export type Database = {
           black_delta?: number | null
           black_elo?: number
           black_id?: string | null
+          black_move_at?: string | null
           black_name?: string
           black_piece_set?: string
+          black_seen_at?: string | null
           clock_b?: number
           clock_w?: number
           cp?: number
@@ -492,8 +537,10 @@ export type Database = {
           white_avatar_path?: string
           white_elo?: number
           white_id?: string | null
+          white_move_at?: string | null
           white_name?: string
           white_piece_set?: string
+          white_seen_at?: string | null
         }
         Relationships: [
           {

@@ -49,6 +49,10 @@ export type MatchRow = {
   last_move_at: string;
   white_piece_set: string;
   black_piece_set: string;
+  white_seen_at?: string | null;
+  black_seen_at?: string | null;
+  white_move_at?: string | null;
+  black_move_at?: string | null;
 };
 
 export interface ProfileRow {
@@ -340,9 +344,41 @@ async function settle(
   return { w: result.rating_delta ?? 0, b: result.black_delta ?? 0 };
 }
 
+/**
+ * 风控留痕：只记录被服务端拦下的异常，不参与任何结算与积分。
+ * 记录失败绝不影响正常对局（异常吞掉）。
+ */
+async function auditMove(
+  admin: Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"],
+  matchId: string,
+  userId: string,
+  kind: string,
+  detail: Record<string, string | number | boolean | null>,
+) {
+  try {
+    await admin.from("match_audit").insert({ match_id: matchId, user_id: userId, kind, detail: detail as never });
+  } catch {
+    /* 留痕失败不影响对局 */
+  }
+}
+
 export const submitMove = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { matchId: string; uci: string; san: string; zh?: string; cp?: number }) => input)
+  .inputValidator(
+    (input: {
+      matchId: string;
+      uci: string;
+      san: string;
+      zh?: string;
+      cp?: number;
+      /** 客户端认为的局面序号；与服务端不一致说明棋谱分叉或重放 */
+      expectedSeq?: number;
+      /** 客户端认为的当前局面；用于校验棋谱一致性 */
+      baseFen?: string;
+      /** 客户端时钟（毫秒）；只用于检测异常，不参与计时 */
+      clientTs?: number;
+    }) => input,
+  )
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin.from("matches").select("*").eq("id", data.matchId).maybeSingle();
@@ -352,6 +388,31 @@ export const submitMove = createServerFn({ method: "POST" })
     if (!you) throw new Error("forbidden");
     if (m.status !== "live") return { code: "stale" as const, match: m };
     if (m.turn !== you) return { code: "not_your_turn" as const, match: m };
+
+    // 防作弊 1：客户端声明的序号 / 局面必须与服务端权威状态一致，
+    // 否则视为棋谱分叉（重放旧帧、伪造局面），拒绝并让客户端追帧。
+    if (typeof data.expectedSeq === "number" && data.expectedSeq !== m.seq) {
+      void auditMove(supabaseAdmin, m.id, context.userId, "seq_mismatch", {
+        client: data.expectedSeq,
+        server: m.seq,
+      });
+      return { code: "stale" as const, match: m };
+    }
+    if (data.baseFen && data.baseFen !== m.fen) {
+      void auditMove(supabaseAdmin, m.id, context.userId, "fen_mismatch", { client: data.baseFen, server: m.fen });
+      return { code: "stale" as const, match: m };
+    }
+    // 防作弊 2：客户端时间戳与服务端偏差过大（篡改本地时钟骗计时），只留痕，计时仍以服务端为准。
+    if (typeof data.clientTs === "number" && Math.abs(Date.now() - data.clientTs) > 120_000) {
+      void auditMove(supabaseAdmin, m.id, context.userId, "clock_skew", {
+        skewMs: Date.now() - data.clientTs,
+      });
+    }
+    // 防作弊 3：同一方连续落子间隔异常短（脚本刷手），留痕备查。
+    const myLastMoveAt = you === "w" ? m.white_move_at : m.black_move_at;
+    if (myLastMoveAt && Date.now() - new Date(myLastMoveAt).getTime() < 60) {
+      void auditMove(supabaseAdmin, m.id, context.userId, "move_burst", { sinceMs: Date.now() - new Date(myLastMoveAt).getTime() });
+    }
 
     const chess = new Chess(m.fen);
     let move;
@@ -379,8 +440,40 @@ export const submitMove = createServerFn({ method: "POST" })
     const { data: applied, error } = await supabaseAdmin.rpc("apply_ranked_move", rpcArgs);
     if (error) throw new Error(error.message);
     const result = applied as { code: string; seq?: number; ply?: number; clock_w?: number; clock_b?: number };
+    const nowIso = new Date().toISOString();
+    await supabaseAdmin
+      .from("matches")
+      .update(you === "w" ? { white_move_at: nowIso, white_seen_at: nowIso } : { black_move_at: nowIso, black_seen_at: nowIso })
+      .eq("id", m.id);
     const fresh = await supabaseAdmin.from("matches").select("*").eq("id", m.id).single();
     return { ...result, match: fresh.data as MatchRow, clock: { w: result.clock_w ?? m.clock_w, b: result.clock_b ?? m.clock_b } };
+  });
+
+/**
+ * 对局在线心跳：上报自己仍在场，并读取对手最近一次在线时间。
+ * 只影响“对手已断线”的提示，不改变计时与结算（超时仍由 claimTimeout 判定）。
+ */
+export const pingMatch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("matches")
+      .select("id,white_id,black_id,status,white_seen_at,black_seen_at")
+      .eq("id", data.matchId)
+      .maybeSingle();
+    if (!row) throw new Error("match not found");
+    const you = row.white_id === context.userId ? "w" : row.black_id === context.userId ? "b" : null;
+    if (!you) throw new Error("forbidden");
+    const nowIso = new Date().toISOString();
+    await supabaseAdmin
+      .from("matches")
+      .update(you === "w" ? { white_seen_at: nowIso } : { black_seen_at: nowIso })
+      .eq("id", row.id);
+    const oppSeen = you === "w" ? row.black_seen_at : row.white_seen_at;
+    const gapMs = oppSeen ? Date.now() - new Date(oppSeen).getTime() : null;
+    return { opponentSeenAt: oppSeen, opponentGapMs: gapMs, opponentOnline: gapMs !== null && gapMs < 20_000 };
   });
 
 export const resignMatch = createServerFn({ method: "POST" })

@@ -26,5 +26,7 @@ export type {
   RealtimeGateway,
   SessionInfo,
   Unsubscribe,
+  VoiceLink,
+  VoiceSignal,
 } from "./types";
 export { BackendNotWiredError } from "./types";
