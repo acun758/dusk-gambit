@@ -995,37 +995,6 @@ export const listDuelInvites = createServerFn({ method: "POST" })
     };
   });
 
-/** 实名填写：约战与天梯对局前记录真实姓名，仅自己与服务端可见。 */
-export const saveRealName = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: { realName: string }) => ({ realName: input.realName.trim().slice(0, 24) }))
-  .handler(async ({ data, context }) => {
-    if (data.realName.length < 2) throw new Error("real name too short");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
-      .from("profiles")
-      .update({ real_name: data.realName, updated_at: new Date().toISOString() })
-      .eq("id", context.userId)
-      .select("*")
-      .single();
-    if (error) throw new Error(error.message);
-    return row as ProfileRow;
-  });
-
-/** 退出登录前清除实名；积分与历史战绩保留在账号中。 */
-export const clearRealName = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data: row, error } = await context.supabase
-      .from("profiles")
-      .update({ real_name: "", updated_at: new Date().toISOString() })
-      .eq("id", context.userId)
-      .select("*")
-      .single();
-    if (error) throw new Error(error.message);
-    return row as ProfileRow;
-  });
-
 /* ------------------------------ lobby stats ------------------------------- */
 
 export interface LobbyStats {
@@ -1221,8 +1190,6 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
 export interface OpsSegments {
   /** 近 7 天注册 */
   newcomers: number;
-  /** 已完成实名认证 */
-  verified: number;
   /** 近 7 天有过动作 */
   active: number;
   /** 超过 30 天没动作 */
@@ -1290,7 +1257,7 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
     const monthAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
 
     const head = { count: "exact" as const, head: true };
-    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow, newcomers, verified, idle, high] =
+    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow, newcomers, idle, high] =
       await Promise.all([
         supabaseAdmin.from("profiles").select("id", head),
         supabaseAdmin.from("profiles").select("id", head).gte("updated_at", dayAgo),
@@ -1300,7 +1267,6 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
         supabaseAdmin.from("matches").select("id", head).gte("created_at", weekAgo),
         supabaseAdmin.from("matches").select("id", head).eq("status", "live"),
         supabaseAdmin.from("profiles").select("id", head).gte("created_at", weekAgo),
-        supabaseAdmin.from("profiles").select("id", head).eq("verify_status", "verified"),
         supabaseAdmin.from("profiles").select("id", head).lt("updated_at", monthAgo),
         supabaseAdmin.from("profiles").select("id", head).gte("elo", 1600),
       ]);
@@ -1338,7 +1304,6 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
       liveNow: liveNow.count ?? 0,
       segments: {
         newcomers: newcomers.count ?? 0,
-        verified: verified.count ?? 0,
         active: activeWeek.count ?? 0,
         idle: idle.count ?? 0,
         high: high.count ?? 0,
@@ -1368,7 +1333,6 @@ export const fetchOpsPlayers = createServerFn({ method: "POST" })
       .limit(data.limit);
 
     if (data.segment === "newcomers") q = q.gte("created_at", weekAgo).order("created_at", { ascending: false });
-    else if (data.segment === "verified") q = q.eq("verify_status", "verified").order("updated_at", { ascending: false });
     else if (data.segment === "active") q = q.gte("updated_at", weekAgo).order("updated_at", { ascending: false });
     else if (data.segment === "idle") q = q.lt("updated_at", monthAgo).order("updated_at", { ascending: true });
     else if (data.segment === "high") q = q.gte("elo", 1600).order("elo", { ascending: false });

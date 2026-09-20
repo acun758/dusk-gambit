@@ -71,8 +71,6 @@ export const defaultGateway = {
   saveAvatarKey: remote.saveAvatar,
   saveAvatarPath: remote.saveAvatarImage,
   saveEquipment: remote.saveEquipment,
-  saveRealName: remote.saveRealName,
-  clearRealName: remote.clearRealName,
 
   /* ---------------------------------- 对局 ---------------------------------- */
   findMatch: remote.findMatch,

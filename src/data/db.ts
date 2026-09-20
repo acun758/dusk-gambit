@@ -55,8 +55,6 @@ export const renameProfile = gateway.renameProfile;
 export const saveAvatarKey = gateway.saveAvatarKey;
 export const saveAvatarPath = gateway.saveAvatarPath;
 export const saveEquipment = gateway.saveEquipment;
-export const saveRealName = gateway.saveRealName;
-export const clearRealName = gateway.clearRealName;
 
 /* ---------------------------------- 对局 ---------------------------------- */
 
