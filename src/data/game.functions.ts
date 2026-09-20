@@ -49,6 +49,10 @@ export type MatchRow = {
   last_move_at: string;
   white_piece_set: string;
   black_piece_set: string;
+  white_seen_at?: string | null;
+  black_seen_at?: string | null;
+  white_move_at?: string | null;
+  black_move_at?: string | null;
 };
 
 export interface ProfileRow {
