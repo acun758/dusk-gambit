@@ -92,7 +92,7 @@ export function SovereignNav() {
                to={signedIn ? "/dynasty" : "/auth"}
               className="home-glass-action shrink-0 h-9 px-space-sm text-on-primary-container font-label-sm text-label-sm tracking-widest uppercase flex items-center cjk"
             >
-               {signedIn ? "档案" : "登录"}
+               {signedIn ? t("档案", "Profile") : t("登录", "Sign in")}
             </Link>
           </div>
         </div>

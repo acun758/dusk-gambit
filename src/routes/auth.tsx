@@ -15,9 +15,9 @@ export const Route = createFileRoute("/auth")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "血誓登录 · 玄弈棋竞 | Sovereign Sign In" },
+      { title: "血誓登录 | 玄弈棋竞" },
       { name: "description", content: "登录血誓王权，同步段位、钻石与天梯战绩。Sign in to sync your rank, diamonds and ranked record." },
-      { property: "og:title", content: "血誓登录 · 玄弈棋竞 | Sovereign Sign In" },
+      { property: "og:title", content: "血誓登录 | 玄弈棋竞" },
       { property: "og:description", content: "登录血誓王权，同步段位、钻石与天梯战绩。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

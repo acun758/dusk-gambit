@@ -14,12 +14,12 @@ export const Route = createFileRoute("/hall-of-fame")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "名人堂 · FIDE 等级分榜 | Hall of Fame" },
+      { title: "名人堂 · FIDE 等级分榜 | 玄弈棋竞" },
       {
         name: "description",
         content: "世界公开、世界女子、中国与中国女子四张 FIDE 标准棋等级分榜，按月度快照更新，可按姓名检索。",
       },
-      { property: "og:title", content: "名人堂 · FIDE 等级分榜 | Hall of Fame" },
+      { property: "og:title", content: "名人堂 · FIDE 等级分榜 | 玄弈棋竞" },
       { property: "og:description", content: "四张 FIDE 标准棋等级分榜，月度更新，支持姓名检索。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
