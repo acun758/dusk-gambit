@@ -21,8 +21,8 @@ export function auditAlertText(kind: AuditKind, lang: "zh" | "en"): { title: str
         : { title: "Device clock looks wrong", body: "Your device time is far from server time. The clock always follows the server; this has been logged." };
     case "move_burst":
       return zh
-        ? { title: "检测到异常连续落子", body: "落子间隔短得不像人手操作，此次已记录备查。" }
-        : { title: "Unusually fast moves detected", body: "Moves arrived faster than human play allows. This has been logged for review." };
+        ? { title: "落子节奏留痕", body: "本次落子间隔极短（预移位属正常玩法），仅作低严重度记录，不影响对局与积分。" }
+        : { title: "Move tempo noted", body: "An extremely short interval was logged. Premoves are legitimate play; this is a low-severity note only." };
     default:
       return zh
         ? { title: "检测到异常走子", body: "服务端已记录本次异常，对局结果仍以服务端判定为准。" }

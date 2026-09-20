@@ -114,7 +114,7 @@ function GuardPage() {
                             row.severity === "critical" ? "bg-secondary text-on-secondary" : "bg-surface-container text-on-surface-variant"
                           }`}
                         >
-                          {row.severity === "critical" ? t("严重", "Critical") : t("留痕", "Notice")}
+                          {row.severity === "critical" ? t("严重", "Critical") : row.severity === "info" ? t("低", "Low") : t("留痕", "Notice")}
                         </span>
                       </div>
                       <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{text.title}</p>
