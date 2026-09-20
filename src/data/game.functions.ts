@@ -1287,6 +1287,19 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
 
 /* --------------------------------- 运营看板 -------------------------------- */
 
+export interface OpsSegments {
+  /** 近 7 天注册 */
+  newcomers: number;
+  /** 已完成实名认证 */
+  verified: number;
+  /** 近 7 天有过动作 */
+  active: number;
+  /** 超过 30 天没动作 */
+  idle: number;
+  /** 1600 分以上 */
+  high: number;
+}
+
 export interface OpsStats {
   players: number;
   activeDay: number;
@@ -1297,6 +1310,39 @@ export interface OpsStats {
   avgDurationSec: number;
   avgPlies: number;
   liveNow: number;
+  segments: OpsSegments;
+}
+
+export type OpsSegment = keyof OpsSegments | "all";
+
+export interface OpsPlayerRow {
+  id: string;
+  name: string;
+  handle: string;
+  elo: number;
+  verifyStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  wins: number;
+  losses: number;
+  draws: number;
+}
+
+export interface OpsPlayerGame {
+  matchId: string;
+  createdAt: string;
+  side: "w" | "b";
+  opponent: string;
+  opponentElo: number;
+  result: "win" | "loss" | "draw" | "live";
+  delta: number | null;
+  plies: number;
+  reason: string | null;
+}
+
+export interface OpsPlayerDetail {
+  player: OpsPlayerRow & { diamonds: number; trainingPoints: number; provisionalGames: number };
+  games: OpsPlayerGame[];
 }
 
 /** 运营总览：全站注册数、活跃人数、对战次数与平均对局时长。仅管理员可读。 */
