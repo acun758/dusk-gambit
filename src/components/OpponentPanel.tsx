@@ -254,17 +254,17 @@ function OpponentPanelComponent({
             {results.map((p) => (
               <div key={p.id} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                 <span className="min-w-0"><strong className="block truncate">{p.name}</strong><small className="text-on-surface-variant">{p.elo} ELO</small></span>
-                <button disabled={!verified} onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0 disabled:opacity-50">{t("约战", "Challenge")}</button>
+                <button onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             {(friendsQ.data ?? []).filter((f) => f.friendshipStatus === "accepted").map((f) => (
               <div key={f.friendshipId} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                 <span className="min-w-0"><strong className="block truncate">{t(`好友 · ${f.name}`, `Friend · ${f.name}`)}</strong><small className="text-on-surface-variant">{f.elo} ELO</small></span>
-                <button disabled={!verified} onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0 disabled:opacity-50">{t("约战", "Challenge")}</button>
+                <button onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             <div className="grid gap-2 sm:grid-cols-2">
-               <Button type="button" disabled={!verified} onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md disabled:opacity-50">{t(`创建公开对战码（${timeControl(tcId).label}）`, `Create an open code (${timeControl(tcId).label})`)}</Button>
+               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">{t(`创建公开对战码（${timeControl(tcId).label}）`, `Create an open code (${timeControl(tcId).label})`)}</Button>
               <div className="field-row">
                 <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder={t("输入对战码", "Enter a code")} className="field-control uppercase" />
                  <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">{t("加入", "Join")}</Button>
