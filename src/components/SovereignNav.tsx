@@ -13,6 +13,7 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
+  { to: "/arena", icon: "forum", zh: "联网大厅", en: "Arena" },
   { to: "/puzzles", icon: "bolt", zh: "战术谜题", en: "Puzzles" },
   { to: "/arsenal", icon: "forge", zh: "军械典藏", en: "Arsenal" },
   { to: "/archive", icon: "cards", zh: "绝杀典藏", en: "Archive" },
