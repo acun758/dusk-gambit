@@ -349,7 +349,7 @@ async function settle(
  * 记录失败绝不影响正常对局（异常吞掉）。
  */
 /** 异常等级：critical 会实时告警给当事人与管理员，warn 只留痕备查。 */
-export type AuditSeverity = "warn" | "critical";
+export type AuditSeverity = "info" | "warn" | "critical";
 
 async function auditMove(
   admin: Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"],
