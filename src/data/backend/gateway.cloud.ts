@@ -46,4 +46,7 @@ export const cloudRealtime: RealtimeGateway = {
   onDuelFrames<M, V>(_matchId: string, _handlers: DuelFrameHandlers<M, V>) {
     return () => {};
   },
+  onVoiceSignal() {
+    return { send: () => {}, close: () => {} };
+  },
 };
