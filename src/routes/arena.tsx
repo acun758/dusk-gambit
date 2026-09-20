@@ -150,6 +150,20 @@ function Arena() {
     void navigate({ to: "/battle" });
   }, [navigate, rooms]);
 
+  // 朋友发来的链接：登录后自动入场一次
+  const linkTriedRef = useRef(false);
+  useEffect(() => {
+    if (!signedIn || !linkCode || linkTriedRef.current) return;
+    linkTriedRef.current = true;
+    handleJoin({ code: linkCode });
+  }, [handleJoin, linkCode, signedIn]);
+
+  const incoming = useMemo(
+    () => rooms.filter((r) => r.targetId && r.targetId === myId && r.status === "waiting" && !declined.includes(r.id)),
+    [declined, myId, rooms],
+  );
+  const outgoing = useMemo(() => rooms.filter((r) => r.targetId && r.mine && r.status === "waiting"), [rooms]);
+
   const shown = useMemo(() => {
     if (tab === "mine") return rooms.filter((r) => r.mine);
     if (tab === "playing") return rooms.filter((r) => r.status === "playing");
@@ -219,6 +233,62 @@ function Arena() {
         .finally(() => setBusy(false));
     },
     [navigate, refresh, t],
+  );
+
+  const inviteLink = useCallback(
+    (roomCode: string) =>
+      typeof window === "undefined" ? roomCode : `${window.location.origin}/arena?code=${roomCode}`,
+    [],
+  );
+
+  const copyInvite = useCallback(
+    (roomCode: string) => {
+      void navigator.clipboard?.writeText(inviteLink(roomCode));
+      setNote(t(`邀请链接已复制：${inviteLink(roomCode)}`, `Invite link copied: ${inviteLink(roomCode)}`));
+    },
+    [inviteLink, t],
+  );
+
+  /** 邀请好友：开一间凭链接进入的私密房，并把链接复制到剪贴板 */
+  const onInviteFriend = useCallback(() => {
+    setBusy(true);
+    setNote("");
+    void createArenaRoom({
+      data: { visibility: "private", color: "random", initialMs: initialMin * 60_000, incrementMs: incSec * 1000 },
+    })
+      .then((room) => {
+        setTab("mine");
+        refresh();
+        if (room) copyInvite(room.short_code);
+      })
+      .catch((err: Error) => setNote(err.message))
+      .finally(() => setBusy(false));
+  }, [copyInvite, incSec, initialMin, refresh]);
+
+  /** 定向约战：给名册里的某位玩家开一间只有他能进的房 */
+  const onChallenge = useCallback(
+    (target: ArenaPresencePlayer) => {
+      if (!target.uid) return;
+      setBusy(true);
+      setNote("");
+      void createArenaRoom({
+        data: {
+          visibility: "private",
+          color: "random",
+          initialMs: initialMin * 60_000,
+          incrementMs: incSec * 1000,
+          targetId: target.uid,
+        },
+      })
+        .then(() => {
+          setTab("mine");
+          refresh();
+          setNote(t(`已向 ${target.name} 发出约战，2 分钟内有效。`, `Challenge sent to ${target.name}; valid for 2 minutes.`));
+        })
+        .catch((err: Error) => setNote(err.message))
+        .finally(() => setBusy(false));
+    },
+    [incSec, initialMin, refresh, t],
   );
 
   const onClose = useCallback(
