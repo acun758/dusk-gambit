@@ -13,8 +13,8 @@ import { uploadAvatar } from "@/lib/avatar-upload";
 
 export const Route = createFileRoute("/auth")({
   staticData: { sitemap: false },
-  validateSearch: (search: Record<string, unknown>): { mode?: "in" | "up" } => ({
-    mode: search['mode'] === "up" ? "up" : search['mode'] === "in" ? "in" : undefined,
+  validateSearch: (search: Record<string, unknown>): { mode: "in" | "up" } => ({
+    mode: search['mode'] === "up" ? "up" : "in",
   }),
   head: () => ({
     meta: [
@@ -36,7 +36,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
   const { mode: initialMode } = Route.useSearch();
-  const [mode, setMode] = useState<"in" | "up">(initialMode ?? "in");
+  const [mode, setMode] = useState<"in" | "up">(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [realName, setRealName] = useState("");
