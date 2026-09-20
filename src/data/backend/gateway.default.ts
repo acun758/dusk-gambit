@@ -89,6 +89,8 @@ export const defaultGateway = {
   amIGuardAdmin: remote.amIGuardAdmin,
   listAuditAlerts: remote.listAuditAlerts,
   fetchOpsStats: remote.fetchOpsStats,
+  fetchOpsPlayers: remote.fetchOpsPlayers,
+  fetchOpsPlayer: remote.fetchOpsPlayer,
   fetchMyMatches: remote.listMyMatches,
   fetchMatchRatings: remote.getMatchRatings,
 

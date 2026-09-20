@@ -77,6 +77,10 @@ export const amIGuardAdmin = gateway.amIGuardAdmin;
 export const listAuditAlerts = gateway.listAuditAlerts;
 /** 运营总览统计（仅管理员）。 */
 export const fetchOpsStats = gateway.fetchOpsStats;
+/** 运营看板：按分层筛选玩家名单（仅管理员）。 */
+export const fetchOpsPlayers = gateway.fetchOpsPlayers;
+/** 运营看板：单个玩家档案与对战轨迹（仅管理员）。 */
+export const fetchOpsPlayer = gateway.fetchOpsPlayer;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;
 

@@ -135,6 +135,15 @@ export const createArenaRoom = createServerFn({ method: "POST" })
   }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 发起约战（开房 / 点名邀请）需要实名认证，服务端判定，前端改不掉。
+    const { data: me } = await supabaseAdmin
+      .from("profiles")
+      .select("verify_status")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (me?.verify_status !== "verified") throw new Error("verify_required");
+
     const { data: room, error } = await supabaseAdmin.rpc("create_arena_room", {
       p_user_id: context.userId,
       p_visibility: data.visibility === "private" ? "private" : "public",
