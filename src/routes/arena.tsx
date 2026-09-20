@@ -221,7 +221,7 @@ function Arena() {
       })
       .catch(failNote)
       .finally(() => setBusy(false));
-  }, [color, gateId, incSec, initialMin, isPublic, refresh, t]);
+  }, [color, failNote, gateId, incSec, initialMin, isPublic, refresh, t]);
 
   const handleJoin = useCallback(
     (args: { roomId?: string; code?: string }) => {
@@ -281,7 +281,7 @@ function Arena() {
       })
       .catch(failNote)
       .finally(() => setBusy(false));
-  }, [copyInvite, incSec, initialMin, refresh]);
+  }, [copyInvite, failNote, incSec, initialMin, refresh]);
 
   /** 定向约战：给名册里的某位玩家开一间只有他能进的房 */
   const onChallenge = useCallback(
