@@ -307,16 +307,26 @@ export class DuelClient {
     }
   }
 
-  // AI 搜索在 Worker 里跑，这里 await 结果，主线程期间照常渲染与走表
-  private async applyMove(requested?: string) {
-    // 只对 AI 自己的搜索加锁；玩家落子不受影响
-    if (!requested && this.thinking) return;
-    this.thinking = true;
-    try {
+  /**
+   * 串行化落子：AI 搜索是异步的，若玩家在搜索期间落子，两边会基于同一份旧局面
+   * 各自推演并互相覆盖，导致“点击格子与实际走子不符”。这里用队列保证一次只
+   * 处理一手，并在拿到锁之后重新核对轮次。
+   */
+  private applyMove(requested?: string) {
+    const run = this.queue.then(async () => {
+      if (this.state.status !== "live") return;
+      if (requested && this.state.turn !== this.you) {
+        this.emit(
+          { t: "rejected", seq: ++this.seq, ply: this.state.moves.length + 1, code: "not_your_turn", fen: this.state.fen },
+          "live",
+        );
+        return;
+      }
+      if (!requested && this.state.turn === this.you) return;
       await this.applyMoveInner(requested);
-    } finally {
-      this.thinking = false;
-    }
+    });
+    this.queue = run.catch(() => undefined);
+    return run;
   }
 
 
