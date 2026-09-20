@@ -6,7 +6,8 @@ import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { MiniBoard } from "@/components/MiniBoard";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
-import { closeArenaRoom, createArenaRoom, fetchArenaRooms, fetchLadder, joinArenaRoom } from "@/data/db";
+import { closeArenaRoom, createArenaRoom, currentUserId, fetchArenaRooms, fetchLadder, joinArenaRoom } from "@/data/db";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { subscribeArenaPresence, type ArenaPresencePlayer } from "@/data/realtime";
 import type { ArenaRoom } from "@/data/arena.functions";
 import { useT } from "@/lib/i18n";
@@ -14,6 +15,11 @@ import { useProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/arena")({
   staticData: { sitemap: true },
+  validateSearch: (search: Record<string, unknown>): { code?: string } => {
+    const raw = typeof search["code"] === "string" ? search["code"] : "";
+    const code = raw.trim().toUpperCase().slice(0, 8);
+    return code ? { code } : {};
+  },
   head: () => ({
     meta: [
       { title: "联网大厅 · 公开对局场 | 玄弈棋竞" },
@@ -63,6 +69,7 @@ function Arena() {
   const queryClient = useQueryClient();
   const { profile, signedIn } = useProfile();
 
+  const { code: linkCode } = Route.useSearch();
   const [tab, setTab] = useState<"waiting" | "playing" | "mine">("waiting");
   const [showCreate, setShowCreate] = useState(false);
   const [color, setColor] = useState<"w" | "b" | "random">("random");
@@ -70,7 +77,8 @@ function Arena() {
   const [initialMin, setInitialMin] = useState(10);
   const [incSec, setIncSec] = useState(3);
   const [gateId, setGateId] = useState("any");
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(linkCode ?? "");
+  const [declined, setDeclined] = useState<string[]>([]);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -84,6 +92,8 @@ function Arena() {
 
   // 在场名册：每个浏览会话报到一次，只带公开字段（昵称、积分、是否在对局）
   const [present, setPresent] = useState<ArenaPresencePlayer[]>([]);
+  const meQ = useQuery({ queryKey: ["arena-me"], queryFn: () => currentUserId(), enabled: signedIn, staleTime: 300_000 });
+  const myId = meQ.data ?? null;
   const inDuel = useMemo(() => rooms.some((r) => r.mine && r.status === "playing"), [rooms]);
   const seatId = useMemo(() => {
     if (typeof window === "undefined") return "guest";
@@ -99,10 +109,29 @@ function Arena() {
   useEffect(() => {
     if (!signedIn) return;
     return subscribeArenaPresence(
-      { id: seatId, name: profile.name, elo: profile.elo, state: inDuel ? "playing" : "idle" },
+      {
+        id: seatId,
+        uid: myId,
+        avatarKey: profile.avatarKey,
+        name: profile.name,
+        elo: profile.elo,
+        state: inDuel ? "playing" : "idle",
+      },
       setPresent,
     );
-  }, [inDuel, profile.elo, profile.name, seatId, signedIn]);
+  }, [inDuel, myId, profile.avatarKey, profile.elo, profile.name, seatId, signedIn]);
+
+  // 同一账号多标签只显示一次
+  const roster = useMemo(() => {
+    const seen = new Set<string>();
+    return present.filter((p) => {
+      const key = p.uid ?? p.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [present]);
+  const playingCount = useMemo(() => roster.filter((p) => p.state === "playing").length, [roster]);
 
   const ladderQ = useQuery({
     queryKey: ["arena-ladder"],
