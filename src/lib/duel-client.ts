@@ -341,6 +341,14 @@ export class DuelClient {
       const promotion = uci[4];
       played = chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
     } catch { played = null; }
+    if (!played && requested) {
+      // 玩家落子若不合法，只回退这一手并让棋盘重新对齐，绝不代替玩家改走别的着法
+      this.emit(
+        { t: "rejected", seq: ++this.seq, ply: idx + 1, code: "illegal_move", fen: this.state.fen },
+        "live",
+      );
+      return;
+    }
     if (!played) {
       const fallback = chess.moves({ verbose: true })[0];
       if (!fallback) return;
