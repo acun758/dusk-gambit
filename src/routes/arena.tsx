@@ -377,12 +377,26 @@ function Arena() {
               ))}
             </div>
 
+            {!verified ? (
+              <div className="home-glass-panel grid gap-2 p-space-md">
+                <h2 className="cjk font-label-md text-label-md text-secondary">{t("需要实名认证", "Verification required")}</h2>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{verifyHint}</p>
+                <Link
+                  to="/dynasty"
+                  className="home-glass-control cjk flex h-11 w-fit items-center bg-primary-container px-4 font-label-md text-label-md text-on-primary-container"
+                >
+                  {t("去实名认证", "Verify now")}
+                </Link>
+              </div>
+            ) : null}
+
             <div className="home-glass-panel grid gap-space-sm p-space-md">
               <div className="flex flex-wrap items-center gap-2">
                 <Button
                   type="button"
+                  disabled={!verified}
                   onClick={() => setShowCreate((v) => !v)}
-                  className="home-glass-action cjk h-11 px-4 font-label-md text-label-md"
+                  className="home-glass-action cjk h-11 px-4 font-label-md text-label-md disabled:opacity-50"
                 >
                   <UiIcon name="flame" className="mr-1.5 h-5 w-5" />
                   {t("开设对局场", "Open a room")}
@@ -398,9 +412,9 @@ function Arena() {
                 <Button
                   type="button"
                   variant="ghost"
-                  disabled={busy}
+                  disabled={busy || !verified}
                   onClick={onInviteFriend}
-                  className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant"
+                  className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant disabled:opacity-50"
                 >
                   <UiIcon name="forum" className="mr-1.5 h-5 w-5" />
                   {t("邀请好友", "Invite a friend")}
