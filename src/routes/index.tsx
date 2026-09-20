@@ -68,14 +68,7 @@ function Index() {
             <div className="flex min-w-0 items-center gap-2.5">
               <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈棋竞徽章", "Xuanyi Qijing emblem")} />
               <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
-                <span className="inline-flex min-w-0 items-baseline gap-1.5">
-                  <span className="cjk flex items-baseline gap-[0.18em] leading-tight text-on-surface">
-                    <span>玄</span>
-                    <span className="text-secondary/80">·</span>
-                    <span>弈</span>
-                  </span>
-                  <span className="whitespace-nowrap text-[0.72em] tracking-[0.14em] text-secondary">DUSK GAMBIT</span>
-                </span>
+                <span className="cjk whitespace-nowrap leading-tight text-on-surface">玄弈棋竞</span>
               </h1>
             </div>
             <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center gap-1.5 px-3 font-label-sm text-label-sm text-on-primary-container">
@@ -99,14 +92,9 @@ function Index() {
                   {t(tierLabel(profile).zh, tierLabel(profile).en)}
                 </span>
               </div>
-              {/* 品牌名与进入页一致：玄弈棋竞。桌面横排双语并列。 */}
-              <span className="flex min-w-0 flex-row items-baseline gap-1.5">
-                <span className="cjk flex items-baseline gap-[0.18em] font-headline-lg leading-tight tracking-[0.12em] text-on-surface">
-                  <span>玄</span>
-                  <span className="text-secondary/80">·</span>
-                  <span>弈</span>
-                </span>
-                <span className="whitespace-nowrap text-[0.8rem] uppercase tracking-[0.18em] text-secondary">DUSK GAMBIT</span>
+              {/* 品牌名统一为「玄弈棋竞」四字整体呈现 */}
+              <span className="flex min-w-0 flex-row items-baseline">
+                <span className="cjk whitespace-nowrap font-headline-lg leading-tight tracking-[0.12em] text-on-surface">玄弈棋竞</span>
               </span>
               <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
             </div>

@@ -79,11 +79,11 @@ export function SovereignNav() {
       {/* iPad landscape and desktop: left rail */}
       <aside className="home-glass-header sovereign-rail hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-56 flex-col">
         <div className="rail-brand px-space-md py-space-lg border-b border-outline-variant/40 flex flex-col gap-space-xs">
-          <div className="rail-brand-title font-headline-sm text-headline-sm uppercase text-secondary">
-            DUSK GAMBIT
+          <div className="rail-brand-title cjk font-headline-sm text-headline-sm text-secondary">
+            玄弈棋竞
           </div>
           <div className="rail-brand-subtitle cjk font-label-sm text-label-sm text-on-surface-variant">
-            玄弈 · 血誓王权
+            血誓王权
           </div>
           <div className="rail-account flex flex-wrap items-center gap-space-xs mt-1">
             <LangToggle className="home-glass-control" />
