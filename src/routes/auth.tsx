@@ -66,7 +66,7 @@ function AuthPage() {
         : await register(email, password, window.location.origin);
     setBusy(false);
     if (res.error) {
-      setMsg(res.error);
+      setMsg(friendlyAuthError(res.error, t));
       return;
     }
     if (res.signedIn) {
