@@ -13,6 +13,7 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
+  { to: "/arena", icon: "forum", zh: "联网大厅", en: "Arena" },
   { to: "/puzzles", icon: "bolt", zh: "战术谜题", en: "Puzzles" },
   { to: "/arsenal", icon: "forge", zh: "军械典藏", en: "Arsenal" },
   { to: "/archive", icon: "cards", zh: "绝杀典藏", en: "Archive" },
@@ -36,7 +37,7 @@ export function SovereignNav() {
     <>
       {/* Phones & iPad portrait: single bottom bar */}
       <div className="home-glass-header lg:hidden fixed bottom-0 inset-x-0 z-50 pb-safe">
-        <div className="px-gutter-mobile py-1 grid grid-cols-3 gap-space-xs border-b border-outline-variant/30">
+        <div className="px-gutter-mobile py-1 grid grid-cols-4 gap-space-xs border-b border-outline-variant/30">
           {SECONDARY.map((item) => (
             <Link
               key={item.to}
@@ -121,6 +122,16 @@ export function SovereignNav() {
         </nav>
 
         <div className="mt-auto px-space-sm pb-space-lg grid gap-1">
+          <Link
+            to="/arena"
+            className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${
+              isActive("/arena")
+                ? "home-glass-tile-active text-secondary"
+                : "text-on-surface-variant hover:text-secondary"
+            }`}
+          >
+            <UiIcon name="forum" className="h-7 w-7" /><span className="rail-label">{t("联网大厅", "Arena")}</span>
+          </Link>
           <Link
             to="/puzzles"
             className={`flex items-center gap-space-sm h-11 px-space-sm font-label-md text-label-md cjk transition-colors ${

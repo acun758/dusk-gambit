@@ -805,6 +805,74 @@ export type Database = {
         }
         Relationships: []
       }
+      rooms: {
+        Row: {
+          closed_at: string | null
+          color_choice: string
+          created_at: string
+          guest_id: string | null
+          host_color: string
+          host_id: string
+          id: string
+          increment_ms: number
+          initial_ms: number
+          match_id: string | null
+          per_move_ms: number
+          rating_max: number
+          rating_min: number
+          short_code: string
+          status: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          closed_at?: string | null
+          color_choice?: string
+          created_at?: string
+          guest_id?: string | null
+          host_color?: string
+          host_id: string
+          id?: string
+          increment_ms?: number
+          initial_ms?: number
+          match_id?: string | null
+          per_move_ms?: number
+          rating_max?: number
+          rating_min?: number
+          short_code: string
+          status?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          closed_at?: string | null
+          color_choice?: string
+          created_at?: string
+          guest_id?: string | null
+          host_color?: string
+          host_id?: string
+          id?: string
+          increment_ms?: number
+          initial_ms?: number
+          match_id?: string | null
+          per_move_ms?: number
+          rating_max?: number
+          rating_min?: number
+          short_code?: string
+          status?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rooms_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       endgame_levels_public: {
@@ -898,6 +966,47 @@ export type Database = {
         Args: { p_match_id: string; p_user_id: string }
         Returns: boolean
       }
+      close_arena_room: {
+        Args: { p_room_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      create_arena_room: {
+        Args: {
+          p_color?: string
+          p_increment_ms?: number
+          p_initial_ms?: number
+          p_per_move_ms?: number
+          p_rating_max?: number
+          p_rating_min?: number
+          p_user_id: string
+          p_visibility?: string
+        }
+        Returns: {
+          closed_at: string | null
+          color_choice: string
+          created_at: string
+          guest_id: string | null
+          host_color: string
+          host_id: string
+          id: string
+          increment_ms: number
+          initial_ms: number
+          match_id: string | null
+          per_move_ms: number
+          rating_max: number
+          rating_min: number
+          short_code: string
+          status: string
+          updated_at: string
+          visibility: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rooms"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_match_invite: {
         Args: {
           p_invited_id?: string
@@ -911,12 +1020,17 @@ export type Database = {
           match_id: string
         }[]
       }
+      expire_arena_rooms: { Args: never; Returns: undefined }
       find_or_create_ranked_match: {
         Args: { p_tc_base?: number; p_tc_inc?: number; p_user_id: string }
         Returns: {
           match_id: string
           side: string
         }[]
+      }
+      join_arena_room: {
+        Args: { p_code?: string; p_room_id?: string; p_user_id: string }
+        Returns: Json
       }
       join_match_invite: {
         Args: { p_code: string; p_user_id: string }
