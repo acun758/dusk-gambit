@@ -107,10 +107,10 @@ function Arena() {
   }, []);
 
   useEffect(() => {
-    if (!signedIn) return;
+    if (!signedIn || !myId) return;
     return subscribeArenaPresence(
       {
-        id: seatId,
+        id: myId,
         uid: myId,
         avatarKey: profile.avatarKey,
         name: profile.name,
@@ -139,7 +139,10 @@ function Arena() {
     enabled: signedIn,
     staleTime: 60_000,
   });
-  const topTen = useMemo(() => (ladderQ.data ?? []).slice(0, 10), [ladderQ.data]);
+  const topTen = useMemo(
+    () => [...(ladderQ.data ?? [])].sort((a, b) => b.elo - a.elo).slice(0, 10),
+    [ladderQ.data],
+  );
 
   // 房主在大厅等待时，有人入场即自动进入棋盘
   const enteredRef = useRef<string | null>(null);
@@ -517,8 +520,10 @@ function Arena() {
                   <ol className="grid gap-1">
                     {topTen.map((row, i) => (
                       <li key={row.id} className="flex items-center justify-between gap-2">
-                        <span className="truncate font-label-sm text-label-sm text-on-surface">
-                          <span className="text-secondary tabular-nums">{i + 1}.</span> {row.name}
+                        <span className="flex min-w-0 items-center gap-2 truncate font-label-sm text-label-sm text-on-surface">
+                          <span className="text-secondary tabular-nums">{i + 1}.</span>
+                          <PlayerAvatar className="h-7 w-7" avatarKey={row.avatarKey} avatarSrc={row.avatarUrl} seed={row.id} />
+                          <span className="truncate">{row.name}</span>
                         </span>
                         <span className="shrink-0 font-label-sm text-label-sm text-on-surface-variant tabular-nums">{row.elo}</span>
                       </li>
