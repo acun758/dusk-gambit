@@ -1284,3 +1284,82 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
       createdAt: r.created_at,
     }));
   });
+
+/* --------------------------------- 运营看板 -------------------------------- */
+
+export interface OpsStats {
+  players: number;
+  activeDay: number;
+  activeWeek: number;
+  matches: number;
+  matchesDay: number;
+  matchesWeek: number;
+  avgDurationSec: number;
+  avgPlies: number;
+  liveNow: number;
+}
+
+/** 运营总览：全站注册数、活跃人数、对战次数与平均对局时长。仅管理员可读。 */
+export const fetchOpsStats = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<OpsStats> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isAdmin !== true) throw new Error("forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const dayAgo = new Date(Date.now() - 86_400_000).toISOString();
+    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+
+    const countOf = async (
+      table: "profiles" | "matches",
+      build: (q: ReturnType<typeof supabaseAdmin.from>) => unknown,
+    ): Promise<number> => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const q: any = build(supabaseAdmin.from(table) as never);
+      const { count } = await q;
+      return count ?? 0;
+    };
+
+    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow] = await Promise.all([
+      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true })),
+      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("updated_at", dayAgo)),
+      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("updated_at", weekAgo)),
+      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true })),
+      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("created_at", dayAgo)),
+      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("created_at", weekAgo)),
+      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).eq("status", "live")),
+    ]);
+
+    const { data: finished } = await supabaseAdmin
+      .from("matches")
+      .select("created_at, last_move_at, ply")
+      .eq("status", "over")
+      .order("created_at", { ascending: false })
+      .limit(300);
+
+    let secSum = 0;
+    let plySum = 0;
+    let n = 0;
+    (finished ?? []).forEach((r) => {
+      const start = new Date(r.created_at).getTime();
+      const end = new Date(r.last_move_at).getTime();
+      const sec = Math.max(0, Math.round((end - start) / 1000));
+      if (sec > 0 && sec < 4 * 3600) {
+        secSum += sec;
+        plySum += r.ply ?? 0;
+        n += 1;
+      }
+    });
+
+    return {
+      players,
+      activeDay,
+      activeWeek,
+      matches,
+      matchesDay,
+      matchesWeek,
+      avgDurationSec: n ? Math.round(secSum / n) : 0,
+      avgPlies: n ? Math.round(plySum / n) : 0,
+      liveNow,
+    };
+  });
