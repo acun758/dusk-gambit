@@ -9,6 +9,7 @@
 import { supabase as sdk } from "@/integrations/supabase/client";
 import type {
   ArenaPresencePlayer,
+  AuditAlertFrame,
   ArenaPresenceSelf,
   DuelFrameHandlers,
   RealtimeGateway,

@@ -19,6 +19,7 @@ export const realtimeGateway: RealtimeGateway = provider === "cloud" ? cloudReal
 
 export type {
   ArenaPresencePlayer,
+  AuditAlertFrame,
   ArenaPresenceSelf,
   AuthResult,
   DataGateway,
