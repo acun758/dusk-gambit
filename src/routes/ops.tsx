@@ -47,7 +47,6 @@ function formatDate(iso: string, zh: boolean): string {
 
 const SEGMENTS: { id: OpsSegment; zh: string; en: string; noteZh: string; noteEn: string }[] = [
   { id: "newcomers", zh: "新注册", en: "New sign-ups", noteZh: "近 7 天建档", noteEn: "Joined in the last 7 days" },
-  { id: "verified", zh: "实名认证", en: "Verified", noteZh: "已完成实名认证", noteEn: "Identity verification complete" },
   { id: "active", zh: "活跃", en: "Active", noteZh: "近 7 天有动作", noteEn: "Active in the last 7 days" },
   { id: "idle", zh: "挂机", en: "Dormant", noteZh: "超过 30 天没有动作", noteEn: "No activity for over 30 days" },
   { id: "high", zh: "高分", en: "High rated", noteZh: "1600 分及以上", noteEn: "Rated 1600 and above" },
@@ -192,10 +191,6 @@ function OpsPage() {
                     [t("注册时间", "Registered"), formatDate(detail.player.createdAt, zh)],
                     [t("最近活动", "Last activity"), formatDate(detail.player.updatedAt, zh)],
                     [
-                      t("实名认证", "Verification"),
-                      detail.player.verifyStatus === "verified" ? t("已认证", "Verified") : t("未认证", "Not verified"),
-                    ],
-                    [
                       t("定级赛剩余", "Placement games left"),
                       String(detail.player.provisionalGames),
                     ],
@@ -317,7 +312,6 @@ function OpsPage() {
                         </span>
                         <span className="cjk font-label-sm text-label-sm text-on-surface-variant tabular-nums">
                           {p.elo} · {p.wins}/{p.draws}/{p.losses}
-                          {p.verifyStatus === "verified" ? t(" · 已实名", " · verified") : ""}
                         </span>
                       </Link>
                     </li>

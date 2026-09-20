@@ -8,7 +8,6 @@ import {
   saveAvatarKey as saveAvatar,
   saveAvatarPath as saveAvatarImage,
   saveEquipment,
-  submitVerification,
 } from "@/data/db";
 import { subscribeMyProfile } from "@/data/realtime";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -240,12 +239,6 @@ function useProfileStore() {
     void queryClient.invalidateQueries({ queryKey: ["my-matches"] });
   }, [queryClient]);
 
-  /** 实名认证：姓名 + 身份证号，通过后档案显示认证徽章。返回是否已接入实名核验接口。 */
-  const verifyIdentity = useCallback(async (realName: string, idNumber: string) => {
-    const res = await submitVerification({ data: { realName, idNumber } });
-    setProfile(fromCloud(res.profile as unknown as CloudRow));
-    return res.mode;
-  }, []);
 
 
   /** 未登录时的本地结算，仅用于演示；登录后由服务端仲裁写入。 */
@@ -267,7 +260,7 @@ function useProfileStore() {
     return next;
   }, []);
 
-  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, setEquipment, verifyIdentity, recordResult, winRate: winRate(profile) };
+  return { profile, signedIn, loading, refresh, rename, setAvatar, setAvatarImage, clearAvatarImage, setEquipment, recordResult, winRate: winRate(profile) };
 }
 
 type ProfileContextValue = ReturnType<typeof useProfileStore>;

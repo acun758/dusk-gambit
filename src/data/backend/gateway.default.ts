@@ -71,7 +71,6 @@ export const defaultGateway = {
   saveAvatarKey: remote.saveAvatar,
   saveAvatarPath: remote.saveAvatarImage,
   saveEquipment: remote.saveEquipment,
-  submitVerification: remote.submitVerification,
   saveRealName: remote.saveRealName,
   clearRealName: remote.clearRealName,
 

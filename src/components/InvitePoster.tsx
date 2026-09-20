@@ -40,7 +40,7 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
           {t(`${profile.elo} 分 · 胜率 ${winRate}% · ♦ ${profile.diamonds}`, `${profile.elo} rating · ${winRate}% win rate · ♦ ${profile.diamonds}`)}
         </p>
         <p className="cjk font-label-sm text-label-sm text-secondary sm:text-label-md lg:text-label-lg">
-          {t("实名认证可选 · 不影响约战与天梯", "ID verification optional · ranked play unaffected")}
+          {t("免费对弈 · 胜负实时结算天梯积分", "Free to play · ratings settle after every game")}
         </p>
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant sm:text-body-md lg:text-body-lg">{t("系统按段位就近匹配，段位相近者优先。", "Matchmaking pairs you with the closest ratings first.")}</p>
         <Link

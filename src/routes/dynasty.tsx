@@ -3,7 +3,6 @@ import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { InvitePoster } from "@/components/InvitePoster";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AvatarPicker } from "@/components/AvatarPicker";
-import { VerificationCard } from "@/components/VerificationCard";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
@@ -68,7 +67,7 @@ function Dynasty() {
   const t = useT();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile, winRate, signedIn, setAvatar, setAvatarImage, clearAvatarImage, verifyIdentity } = useProfile();
+  const { profile, winRate, signedIn, setAvatar, setAvatarImage, clearAvatarImage } = useProfile();
   const [avatarBusy, setAvatarBusy] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const uploadInput = useRef<HTMLInputElement>(null);
@@ -354,7 +353,6 @@ function Dynasty() {
                   onUpload={(file) => void uploadAvatarFile(file)}
                 />
               </section>
-              <VerificationCard profile={profile} onVerify={verifyIdentity} />
             </>
           )}
 

@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage, submitVerification } from "@/data/db";
+import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage } from "@/data/db";
 import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -29,7 +29,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const REAL_NAME_KEY = "bs.realname.v1";
 const AVATAR_KEY = "bs.avatar.v1";
 
 function AuthPage() {
@@ -39,8 +38,6 @@ function AuthPage() {
   const [mode, setMode] = useState<"in" | "up">(initialMode ?? "in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [realName, setRealName] = useState("");
-  const [idNumber, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState(DEFAULT_AVATAR_KEY);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
@@ -48,7 +45,8 @@ function AuthPage() {
 
   useEffect(() => {
     try {
-      setRealName(window.localStorage.getItem(REAL_NAME_KEY) ?? "");
+      window.localStorage.removeItem("bs.realname.v1");
+
       setAvatar(window.localStorage.getItem(AVATAR_KEY) ?? DEFAULT_AVATAR_KEY);
     } catch {
       /* storage unavailable */
@@ -83,23 +81,9 @@ function AuthPage() {
       } else {
         await saveAvatar({ data: { avatarKey: avatar } }).catch(() => null);
       }
-      const name = realName.trim();
-      let verified = false;
-      if (name.length >= 2 && idNumber.trim().length === 18) {
-        try {
-          window.localStorage.setItem(REAL_NAME_KEY, name);
-        } catch {
-          /* storage unavailable */
-        }
-        const saved = await submitVerification({ data: { realName: name, idNumber } }).catch((e: unknown) => {
-          setMsg(e instanceof Error ? e.message : t("实名认证失败。", "Verification failed."));
-          return null;
-        });
-        verified = Boolean(saved);
-      }
-      // 实名完成后直接进入约战大厅；未认证则先去档案页完成实名，才能发起约战
-      if (verified) window.location.assign("/battle?lobby=1");
-      else void navigate({ to: "/dynasty" });
+      // 实名认证已下线：注册后直接进入约战大厅
+      window.location.assign("/battle?lobby=1");
+
     } else setMsg(t("请到邮箱确认后再登录。", "Check your inbox to confirm, then sign in."));
   }
 
@@ -155,27 +139,6 @@ function AuthPage() {
               className="field-control auth-field-control h-12 w-full"
             />
           </label>
-          <label className="relative block">
-            <UiIcon name="signature" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
-            <input
-              type="text"
-              value={realName}
-              onChange={(e) => setRealName(e.target.value)}
-              placeholder={t("真实姓名（实名认证）", "Real name (verification)")}
-              className="field-control auth-field-control cjk h-12 w-full"
-            />
-          </label>
-          <label className="relative block">
-            <UiIcon name="badge-hex" className="pointer-events-none absolute left-3 top-1/2 z-10 h-6 w-6 -translate-y-1/2 opacity-80" />
-            <input
-              type="text"
-              maxLength={18}
-              value={idNumber}
-              onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
-              placeholder={t("身份证号（18 位，用于实名认证）", "ID number (18 digits)")}
-              className="field-control auth-field-control h-12 w-full"
-            />
-          </label>
           <AvatarPicker
             value={avatarFile ? "upload" : avatar}
             onSelect={(key) => {
@@ -185,9 +148,7 @@ function AuthPage() {
             }}
             onUpload={(file) => setAvatarFile(file)}
           />
-          <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-            {t("姓名与身份证号校验通过后即完成实名认证，账户安全页会显示认证徽章；证件号只保留后四位。", "Once your name and ID pass validation you are verified; only the last four digits are stored.")}
-          </p>
+
           <button
             type="submit"
             disabled={busy}

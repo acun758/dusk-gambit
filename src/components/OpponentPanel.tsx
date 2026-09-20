@@ -11,7 +11,6 @@ import {
   fetchSession,
   joinDuelInvite,
   searchPlayers,
-  submitVerification,
 } from "@/data/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
 import { useLang, useT } from "@/lib/i18n";
@@ -47,25 +46,11 @@ function OpponentPanelComponent({
   const [code, setCode] = useState("");
   const [myCode, setMyCode] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
-  const [realName, setRealName] = useState("");
-  const [realNameSaved, setRealNameSaved] = useState<string>("");
-  const [idNumber, setIdNumber] = useState("");
-  const [verifyStatus, setVerifyStatus] = useState<string>("none");
 
   useEffect(() => {
     void fetchSession().then((s) => setSignedIn(Boolean(s)));
   }, []);
 
-  const profileQ = useQuery({
-    queryKey: ["profile-realname", signedIn],
-    queryFn: () => (signedIn ? loadProfile() : Promise.resolve(null)),
-    enabled: signedIn === true,
-  });
-  useEffect(() => {
-    const saved = profileQ.data?.real_name ?? "";
-    if (saved) setRealNameSaved(saved);
-    setVerifyStatus(profileQ.data?.verify_status ?? "none");
-  }, [profileQ.data?.real_name, profileQ.data?.verify_status]);
 
   // 从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
   const [autoQueued, setAutoQueued] = useState(false);
@@ -107,8 +92,6 @@ function OpponentPanelComponent({
   const open = invitesQ.data?.open ?? [];
   const mine = invitesQ.data?.mine ?? null;
 
-  // 发起约战需实名认证（应战、系统匹配与 AI 陪练不受限）
-  const verified = verifyStatus === "verified" && realNameSaved.length >= 2;
 
   const accept = (inviteCode: string) => {
     setNotice(null);
@@ -129,16 +112,8 @@ function OpponentPanelComponent({
         setNotice(invitedId ? t("已向该玩家发出约战，对方在对弈页会看到提醒。", "Challenge sent — they will see it on the duel page.") : t("已生成对战码，发给对手即可开局。", "Code created — send it to your opponent to start."));
         void invitesQ.refetch();
       })
-      .catch((err: Error) =>
-        setNotice(
-          /verify_required/.test(err?.message ?? "")
-            ? t(
-                "完成实名认证后才能发起约战；应战与系统匹配不受影响。",
-                "Complete identity verification before starting a challenge; accepting and matchmaking are unaffected.",
-              )
-            : t("创建邀请失败，请稍后再试", "Could not create the challenge — try again"),
-        ),
-      );
+      .catch(() => setNotice(t("创建邀请失败，请稍后再试", "Could not create the challenge — try again")));
+
   };
 
   if (signedIn === false) {
@@ -261,52 +236,6 @@ function OpponentPanelComponent({
 
         {tab === "invite" && (
           <div className="space-y-space-sm">
-            <div className="home-glass-tile p-3">
-              <p className="cjk font-label-md text-label-md text-on-surface">
-                {t("实名认证（发起约战必需）", "Identity verification (required to challenge)")}
-                {verified && <span className="text-secondary"> · {t("已认证", "Verified")}</span>}
-              </p>
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                {t(
-                  "完成实名认证后才能发起约战（点名邀请或创建对战码）。应战、系统匹配与 AI 陪练不受影响；证件号仅保留后四位。",
-                  "Verification is required before you can start a challenge (invite a player or create a code). Accepting challenges, matchmaking and AI practice are unaffected. Only the last four digits of the ID are kept.",
-                )}
-              </p>
-              {!verified && (
-                <>
-                  <div className="field-row mt-2">
-                    <input
-                      value={realName || realNameSaved}
-                      onChange={(e) => setRealName(e.target.value)}
-                      placeholder={t("真实姓名", "Legal name")}
-                      className="field-control cjk"
-                    />
-                  </div>
-                  <div className="field-row mt-2">
-                    <input
-                      value={idNumber}
-                      maxLength={18}
-                      onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
-                      placeholder={t("身份证号（18 位）", "ID number (18 digits)")}
-                      className="field-control"
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => void submitVerification({ data: { realName: realName || realNameSaved, idNumber } })
-                        .then((r) => {
-                          setRealNameSaved(r.profile.real_name ?? "");
-                          setVerifyStatus(r.profile.verify_status ?? "verified");
-                          setNotice(t("实名认证通过，档案中将显示认证徽章。", "Verified — the badge now shows on your profile."));
-                        })
-                        .catch(() => setNotice(t("认证失败，请核对姓名与 18 位身份证号", "Verification failed — check the name and the 18-digit ID number")))}
-                       className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
-                    >
-                      {t("认证", "Verify")}
-                    </Button>
-                  </div>
-                </>
-              )}
-            </div>
             <div className="field-row">
               <input
                 value={query}
@@ -325,17 +254,17 @@ function OpponentPanelComponent({
             {results.map((p) => (
               <div key={p.id} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                 <span className="min-w-0"><strong className="block truncate">{p.name}</strong><small className="text-on-surface-variant">{p.elo} ELO</small></span>
-                <button disabled={!verified} onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0 disabled:opacity-50">{t("约战", "Challenge")}</button>
+                <button onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             {(friendsQ.data ?? []).filter((f) => f.friendshipStatus === "accepted").map((f) => (
               <div key={f.friendshipId} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                 <span className="min-w-0"><strong className="block truncate">{t(`好友 · ${f.name}`, `Friend · ${f.name}`)}</strong><small className="text-on-surface-variant">{f.elo} ELO</small></span>
-                <button disabled={!verified} onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0 disabled:opacity-50">{t("约战", "Challenge")}</button>
+                <button onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             <div className="grid gap-2 sm:grid-cols-2">
-               <Button type="button" disabled={!verified} onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md disabled:opacity-50">{t(`创建公开对战码（${timeControl(tcId).label}）`, `Create an open code (${timeControl(tcId).label})`)}</Button>
+               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">{t(`创建公开对战码（${timeControl(tcId).label}）`, `Create an open code (${timeControl(tcId).label})`)}</Button>
               <div className="field-row">
                 <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder={t("输入对战码", "Enter a code")} className="field-control uppercase" />
                  <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">{t("加入", "Join")}</Button>
