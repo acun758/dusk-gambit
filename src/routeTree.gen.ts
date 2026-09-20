@@ -20,6 +20,7 @@ import { Route as CrucibleRouteImport } from './routes/crucible'
 import { Route as DynastyRouteImport } from './routes/dynasty'
 import { Route as GuardRouteImport } from './routes/guard'
 import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
+import { Route as OpsRouteImport } from './routes/ops'
 import { Route as PuzzlesRouteImport } from './routes/puzzles'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ApiPublicCronFideSyncRouteImport } from './routes/api/public/cron/fide-sync'
@@ -79,6 +80,11 @@ const HallOfFameRoute = HallOfFameRouteImport.update({
   path: '/hall-of-fame',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsRoute = OpsRouteImport.update({
+  id: '/ops',
+  path: '/ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PuzzlesRoute = PuzzlesRouteImport.update({
   id: '/puzzles',
   path: '/puzzles',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dynasty': typeof DynastyRoute
   '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/dynasty': typeof DynastyRoute
   '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/dynasty': typeof DynastyRoute
   '/guard': typeof GuardRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/dynasty'
     | '/guard'
     | '/hall-of-fame'
+    | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
     | '/api/public/cron/fide-sync'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/dynasty'
     | '/guard'
     | '/hall-of-fame'
+    | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
     | '/api/public/cron/fide-sync'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/dynasty'
     | '/guard'
     | '/hall-of-fame'
+    | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
     | '/api/public/cron/fide-sync'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   DynastyRoute: typeof DynastyRoute
   GuardRoute: typeof GuardRoute
   HallOfFameRoute: typeof HallOfFameRoute
+  OpsRoute: typeof OpsRoute
   PuzzlesRoute: typeof PuzzlesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiPublicCronFideSyncRoute: typeof ApiPublicCronFideSyncRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HallOfFameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ops': {
+      id: '/ops'
+      path: '/ops'
+      fullPath: '/ops'
+      preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/puzzles': {
       id: '/puzzles'
       path: '/puzzles'
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   DynastyRoute: DynastyRoute,
   GuardRoute: GuardRoute,
   HallOfFameRoute: HallOfFameRoute,
+  OpsRoute: OpsRoute,
   PuzzlesRoute: PuzzlesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiPublicCronFideSyncRoute: ApiPublicCronFideSyncRoute,
