@@ -75,6 +75,8 @@ export const claimTimeout = gateway.claimTimeout;
 export const pingMatch = gateway.pingMatch;
 export const amIGuardAdmin = gateway.amIGuardAdmin;
 export const listAuditAlerts = gateway.listAuditAlerts;
+/** 运营总览统计（仅管理员）。 */
+export const fetchOpsStats = gateway.fetchOpsStats;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;
 
