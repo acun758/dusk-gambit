@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import { closeArenaRoom, createArenaRoom, currentUserId, fetchArenaRooms, fetchLadder, joinArenaRoom } from "@/data/db";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
-import { subscribeArenaPresence, type ArenaPresencePlayer } from "@/data/realtime";
+import { subscribeArenaPresence, subscribeLadder, type ArenaPresencePlayer } from "@/data/realtime";
 import type { ArenaRoom } from "@/data/arena.functions";
 import { useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
@@ -137,8 +137,18 @@ function Arena() {
     queryKey: ["arena-ladder"],
     queryFn: () => fetchLadder(),
     enabled: signedIn,
-    staleTime: 60_000,
+    staleTime: 5_000,
+    refetchInterval: 30_000,
   });
+  // 积分来自每位玩家的真实对局结算，任一局结束都会立刻刷新榜单与在场名册积分
+  useEffect(() => {
+    if (!signedIn) return;
+    return subscribeLadder(() => {
+      void queryClient.invalidateQueries({ queryKey: ["arena-ladder"] });
+      void queryClient.invalidateQueries({ queryKey: ["arena-rooms"] });
+    });
+  }, [queryClient, signedIn]);
+
   const topTen = useMemo(
     () => [...(ladderQ.data ?? [])].sort((a, b) => b.elo - a.elo).slice(0, 10),
     [ladderQ.data],
@@ -512,6 +522,9 @@ function Arena() {
 
               <section className="home-glass-panel grid gap-2 p-space-md">
                 <h2 className="cjk font-label-md text-label-md text-on-surface">{t("积分前十", "Top ten by rating")}</h2>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                  {t("积分随每局胜负实时结算（胜/和/负）。", "Ratings settle after every game (win/draw/loss).")}
+                </p>
                 {topTen.length === 0 ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
                     {t("榜单载入中…", "Loading the ladder…")}
@@ -525,7 +538,12 @@ function Arena() {
                           <PlayerAvatar className="h-7 w-7" avatarKey={row.avatarKey} avatarSrc={row.avatarUrl} seed={row.id} />
                           <span className="truncate">{row.name}</span>
                         </span>
-                        <span className="shrink-0 font-label-sm text-label-sm text-on-surface-variant tabular-nums">{row.elo}</span>
+                        <span className="shrink-0 text-right font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                          {row.elo}
+                          <span className="ml-2 text-body-sm text-secondary">
+                            {row.wins}/{row.draws}/{row.losses}
+                          </span>
+                        </span>
                       </li>
                     ))}
                   </ol>
