@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/sonner";
 import {
   Outlet,
   Link,
@@ -112,6 +113,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body className="bg-surface text-on-surface min-h-screen">
         {children}
+        <Toaster position="top-center" richColors closeButton />
         <Scripts />
       </body>
     </html>

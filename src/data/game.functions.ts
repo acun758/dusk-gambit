@@ -348,15 +348,26 @@ async function settle(
  * 风控留痕：只记录被服务端拦下的异常，不参与任何结算与积分。
  * 记录失败绝不影响正常对局（异常吞掉）。
  */
+/** 异常等级：critical 会实时告警给当事人与管理员，warn 只留痕备查。 */
+export type AuditSeverity = "warn" | "critical";
+
 async function auditMove(
   admin: Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"],
   matchId: string,
   userId: string,
   kind: string,
   detail: Record<string, string | number | boolean | null>,
+  severity: AuditSeverity = "warn",
 ) {
   try {
-    await admin.from("match_audit").insert({ match_id: matchId, user_id: userId, kind, detail: detail as never });
+    await admin.from("match_audit").insert({
+      match_id: matchId,
+      user_id: userId,
+      kind,
+      severity,
+      reported_by: userId,
+      detail: detail as never,
+    });
   } catch {
     /* 留痕失败不影响对局 */
   }
@@ -395,23 +406,23 @@ export const submitMove = createServerFn({ method: "POST" })
       void auditMove(supabaseAdmin, m.id, context.userId, "seq_mismatch", {
         client: data.expectedSeq,
         server: m.seq,
-      });
+      }, "critical");
       return { code: "stale" as const, match: m };
     }
     if (data.baseFen && data.baseFen !== m.fen) {
-      void auditMove(supabaseAdmin, m.id, context.userId, "fen_mismatch", { client: data.baseFen, server: m.fen });
+      void auditMove(supabaseAdmin, m.id, context.userId, "fen_mismatch", { client: data.baseFen, server: m.fen }, "critical");
       return { code: "stale" as const, match: m };
     }
     // 防作弊 2：客户端时间戳与服务端偏差过大（篡改本地时钟骗计时），只留痕，计时仍以服务端为准。
     if (typeof data.clientTs === "number" && Math.abs(Date.now() - data.clientTs) > 120_000) {
       void auditMove(supabaseAdmin, m.id, context.userId, "clock_skew", {
         skewMs: Date.now() - data.clientTs,
-      });
+      }, "critical");
     }
     // 防作弊 3：同一方连续落子间隔异常短（脚本刷手），留痕备查。
     const myLastMoveAt = you === "w" ? m.white_move_at : m.black_move_at;
     if (myLastMoveAt && Date.now() - new Date(myLastMoveAt).getTime() < 60) {
-      void auditMove(supabaseAdmin, m.id, context.userId, "move_burst", { sinceMs: Date.now() - new Date(myLastMoveAt).getTime() });
+      void auditMove(supabaseAdmin, m.id, context.userId, "move_burst", { sinceMs: Date.now() - new Date(myLastMoveAt).getTime() }, "critical");
     }
 
     const chess = new Chess(m.fen);
@@ -1209,3 +1220,64 @@ export const listPromotionRivals = createServerFn({ method: "GET" }).handler(asy
     })
     .filter(Boolean) as PromotionRival[];
 });
+
+
+/** 风控告警行（面向当事人与管理员，不含任何联系方式）。 */
+export interface AuditAlertRow {
+  id: number;
+  matchId: string | null;
+  userId: string | null;
+  playerName: string | null;
+  kind: string;
+  severity: string;
+  detail: Record<string, string | number | boolean | null> | null;
+  createdAt: string;
+}
+
+/** 当前账号是否为管理员。 */
+export const amIGuardAdmin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<boolean> => {
+    const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    return data === true;
+  });
+
+/** 管理员查看全站风控告警；非管理员一律拒绝。 */
+export const listAuditAlerts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { limit?: number; onlyCritical?: boolean }) => ({
+    limit: Math.min(200, Math.max(10, input?.limit ?? 100)),
+    onlyCritical: input?.onlyCritical === true,
+  }))
+  .handler(async ({ data, context }): Promise<AuditAlertRow[]> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isAdmin !== true) throw new Error("forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    let q = supabaseAdmin
+      .from("match_audit")
+      .select("id, match_id, user_id, kind, severity, detail, created_at")
+      .order("created_at", { ascending: false })
+      .limit(data.limit);
+    if (data.onlyCritical) q = q.eq("severity", "critical");
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+
+    const ids = Array.from(new Set((rows ?? []).map((r) => r.user_id).filter((v): v is string => !!v)));
+    const names = new Map<string, string>();
+    if (ids.length) {
+      const { data: profiles } = await supabaseAdmin.from("profiles").select("id, name").in("id", ids);
+      (profiles ?? []).forEach((p) => names.set(p.id, p.name));
+    }
+
+    return (rows ?? []).map((r) => ({
+      id: Number(r.id),
+      matchId: r.match_id,
+      userId: r.user_id,
+      playerName: r.user_id ? (names.get(r.user_id) ?? null) : null,
+      kind: r.kind,
+      severity: r.severity ?? "warn",
+      detail: (r.detail as Record<string, string | number | boolean | null> | null) ?? null,
+      createdAt: r.created_at,
+    }));
+  });

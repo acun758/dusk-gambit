@@ -86,6 +86,8 @@ export const defaultGateway = {
   respondDraw: remote.respondDraw,
   claimTimeout: remote.claimTimeout,
   pingMatch: remote.pingMatch,
+  amIGuardAdmin: remote.amIGuardAdmin,
+  listAuditAlerts: remote.listAuditAlerts,
   fetchMyMatches: remote.listMyMatches,
   fetchMatchRatings: remote.getMatchRatings,
 

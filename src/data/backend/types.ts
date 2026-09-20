@@ -55,6 +55,16 @@ export interface VoiceLink {
   close: Unsubscribe;
 }
 
+/** 风控告警帧：异常走子被服务端判定后即时推送给当事人与管理员。 */
+export interface AuditAlertFrame {
+  id: number;
+  matchId: string;
+  userId: string | null;
+  kind: string;
+  severity: string;
+  createdAt: string;
+}
+
 /** 实时帧契约：各家云平台推送能力不同，只在适配器内部体现差异。 */
 export interface RealtimeGateway {
   /** 大厅在场名册（自己报到 + 名单变化）。 */
@@ -67,6 +77,8 @@ export interface RealtimeGateway {
   onDuelFrames<M, V>(matchId: string, handlers: DuelFrameHandlers<M, V>): Unsubscribe;
   /** 对局内语音信令（仅双方，点对点音频不经服务器）。 */
   onVoiceSignal(matchId: string, selfId: string, cb: (signal: VoiceSignal) => void): VoiceLink;
+  /** 风控告警：某账号被判定异常走子时的即时推送。all=true 表示管理员监看全站。 */
+  onAuditAlert(scope: { userId?: string; all?: boolean }, cb: (frame: AuditAlertFrame) => void): Unsubscribe;
 }
 
 export class BackendNotWiredError extends Error {

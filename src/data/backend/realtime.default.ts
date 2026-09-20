@@ -9,6 +9,7 @@
 import { supabase as sdk } from "@/integrations/supabase/client";
 import type {
   ArenaPresencePlayer,
+  AuditAlertFrame,
   ArenaPresenceSelf,
   DuelFrameHandlers,
   RealtimeGateway,
@@ -40,6 +41,42 @@ export const defaultRealtime: RealtimeGateway = {
       .subscribe((status) => {
         if (status === "SUBSCRIBED") void channel.track(me);
       });
+    return () => {
+      void sdk.removeChannel(channel);
+    };
+  },
+
+  onAuditAlert(scope: { userId?: string; all?: boolean }, cb: (frame: AuditAlertFrame) => void): Unsubscribe {
+    const channel = sdk
+      .channel(uniqueName("audit-alert"))
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "match_audit",
+          ...(scope.all || !scope.userId ? {} : { filter: `user_id=eq.${scope.userId}` }),
+        },
+        (payload) => {
+          const row = payload.new as {
+            id: number;
+            match_id: string;
+            user_id: string | null;
+            kind: string;
+            severity: string | null;
+            created_at: string;
+          };
+          cb({
+            id: Number(row.id),
+            matchId: row.match_id,
+            userId: row.user_id,
+            kind: row.kind,
+            severity: row.severity ?? "warn",
+            createdAt: row.created_at,
+          });
+        },
+      )
+      .subscribe();
     return () => {
       void sdk.removeChannel(channel);
     };
