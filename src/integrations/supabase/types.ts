@@ -973,84 +973,45 @@ export type Database = {
         Args: { p_room_id: string; p_user_id: string }
         Returns: boolean
       }
-      create_arena_room:
-        | {
-            Args: {
-              p_color?: string
-              p_increment_ms?: number
-              p_initial_ms?: number
-              p_per_move_ms?: number
-              p_rating_max?: number
-              p_rating_min?: number
-              p_user_id: string
-              p_visibility?: string
-            }
-            Returns: {
-              closed_at: string | null
-              color_choice: string
-              created_at: string
-              guest_id: string | null
-              host_color: string
-              host_id: string
-              id: string
-              increment_ms: number
-              initial_ms: number
-              match_id: string | null
-              per_move_ms: number
-              rating_max: number
-              rating_min: number
-              short_code: string
-              status: string
-              target_id: string | null
-              updated_at: string
-              visibility: string
-            }
-            SetofOptions: {
-              from: "*"
-              to: "rooms"
-              isOneToOne: true
-              isSetofReturn: false
-            }
-          }
-        | {
-            Args: {
-              p_color?: string
-              p_increment_ms?: number
-              p_initial_ms?: number
-              p_per_move_ms?: number
-              p_rating_max?: number
-              p_rating_min?: number
-              p_target_id?: string
-              p_user_id: string
-              p_visibility?: string
-            }
-            Returns: {
-              closed_at: string | null
-              color_choice: string
-              created_at: string
-              guest_id: string | null
-              host_color: string
-              host_id: string
-              id: string
-              increment_ms: number
-              initial_ms: number
-              match_id: string | null
-              per_move_ms: number
-              rating_max: number
-              rating_min: number
-              short_code: string
-              status: string
-              target_id: string | null
-              updated_at: string
-              visibility: string
-            }
-            SetofOptions: {
-              from: "*"
-              to: "rooms"
-              isOneToOne: true
-              isSetofReturn: false
-            }
-          }
+      create_arena_room: {
+        Args: {
+          p_color?: string
+          p_increment_ms?: number
+          p_initial_ms?: number
+          p_per_move_ms?: number
+          p_rating_max?: number
+          p_rating_min?: number
+          p_target_id?: string
+          p_user_id: string
+          p_visibility?: string
+        }
+        Returns: {
+          closed_at: string | null
+          color_choice: string
+          created_at: string
+          guest_id: string | null
+          host_color: string
+          host_id: string
+          id: string
+          increment_ms: number
+          initial_ms: number
+          match_id: string | null
+          per_move_ms: number
+          rating_max: number
+          rating_min: number
+          short_code: string
+          status: string
+          target_id: string | null
+          updated_at: string
+          visibility: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rooms"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_match_invite: {
         Args: {
           p_invited_id?: string
