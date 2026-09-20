@@ -94,10 +94,13 @@ function Battle() {
   useEffect(() => {
     if (!myUserId) return;
     return subscribeAuditAlerts({ userId: myUserId }, (frame) => {
+      // 低严重度（手速类）只后台留痕，不打扰玩家
+      if (frame.severity === "info") return;
       const text = auditAlertText(frame.kind, lang);
       if (frame.severity === "critical") toast.error(text.title, { description: text.body, duration: 8000 });
       else toast.warning(text.title, { description: text.body });
     });
+
   }, [lang, myUserId]);
 
   const waiting = session.state.status === "waiting";
