@@ -25,9 +25,13 @@ export interface ArenaRoom {
   hostId: string;
   hostName: string;
   hostElo: number;
+  hostAvatarKey: string;
   guestId: string | null;
   guestName: string | null;
   guestElo: number | null;
+  guestAvatarKey: string | null;
+  /** 定向约战的受邀人（公开房为 null）。 */
+  targetId: string | null;
   fen: string | null;
   ply: number;
   mine: boolean;
@@ -53,7 +57,11 @@ export const listArenaRooms = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
 
     const list = (rows ?? []).filter(
-      (r) => r.visibility === "public" || r.host_id === context.userId || r.guest_id === context.userId,
+      (r) =>
+        (r.visibility === "public" && !r.target_id) ||
+        r.host_id === context.userId ||
+        r.guest_id === context.userId ||
+        r.target_id === context.userId,
     );
     if (!list.length) return [];
 
@@ -61,7 +69,7 @@ export const listArenaRooms = createServerFn({ method: "POST" })
     const matchIds = list.map((r) => r.match_id).filter(Boolean) as string[];
 
     const [{ data: profiles }, matchRes] = await Promise.all([
-      supabaseAdmin.from("profiles").select("id,name,elo").in("id", playerIds),
+      supabaseAdmin.from("profiles").select("id,name,elo,avatar_key").in("id", playerIds),
       matchIds.length
         ? supabaseAdmin.from("matches").select("id,fen,ply,white_id,black_id,status").in("id", matchIds)
         : Promise.resolve({ data: [] as { id: string; fen: string; ply: number; white_id: string | null; black_id: string | null; status: string }[] }),
@@ -99,9 +107,12 @@ export const listArenaRooms = createServerFn({ method: "POST" })
         hostId: r.host_id,
         hostName: host?.name ?? "Sovereign",
         hostElo: host?.elo ?? 1000,
+        hostAvatarKey: host?.avatar_key ?? "knight-azure",
         guestId: r.guest_id,
         guestName: guest?.name ?? null,
         guestElo: guest?.elo ?? null,
+        guestAvatarKey: guest?.avatar_key ?? null,
+        targetId: r.target_id ?? null,
         fen: match?.fen ?? (r.status === "playing" ? START_FEN : null),
         ply: match?.ply ?? 0,
         mine,
@@ -119,6 +130,8 @@ export const createArenaRoom = createServerFn({ method: "POST" })
     incrementMs?: number;
     ratingMin?: number;
     ratingMax?: number;
+    /** 定向约战：只有该玩家能进这一间 */
+    targetId?: string | null;
   }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -131,9 +144,10 @@ export const createArenaRoom = createServerFn({ method: "POST" })
       p_per_move_ms: 0,
       p_rating_min: Math.round(data.ratingMin ?? 0),
       p_rating_max: Math.round(data.ratingMax ?? 100_000),
+      p_target_id: data.targetId ?? null,
     });
     if (error) throw new Error(error.message);
-    return room as { id: string; short_code: string; host_color: "w" | "b" } | null;
+    return room as { id: string; short_code: string; host_color: "w" | "b"; target_id: string | null } | null;
   });
 
 /** 加入房间：服务端原子判定房间是否仍空、积分是否达标，先到先得。 */
