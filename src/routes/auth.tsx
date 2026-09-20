@@ -29,7 +29,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const REAL_NAME_KEY = "bs.realname.v1";
 const AVATAR_KEY = "bs.avatar.v1";
 
 function AuthPage() {
@@ -46,7 +45,8 @@ function AuthPage() {
 
   useEffect(() => {
     try {
-      setRealName(window.localStorage.getItem(REAL_NAME_KEY) ?? "");
+      window.localStorage.removeItem("bs.realname.v1");
+
       setAvatar(window.localStorage.getItem(AVATAR_KEY) ?? DEFAULT_AVATAR_KEY);
     } catch {
       /* storage unavailable */
