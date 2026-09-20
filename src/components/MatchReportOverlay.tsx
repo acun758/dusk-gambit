@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import { reviewGame } from "@/core/review";
+import { useLang, useT } from "@/lib/i18n";
 import { analyzeMind, isSignedIn, recordMatchReport } from "@/data/db";
 import type { MindReport, ReportComparison } from "@/data/mind.functions";
 
@@ -55,6 +56,8 @@ export function MatchReportOverlay({
   onJumpToPly?: (ply: number) => void;
 }) {
   const [progress, setProgress] = useState(0);
+  const t = useT();
+  const { lang } = useLang();
   const [report, setReport] = useState<MindReport | null>(null);
   const [comparison, setComparison] = useState<ReportComparison | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -188,7 +191,7 @@ export function MatchReportOverlay({
                   <div className="h-1.5 w-full bg-surface-container-high overflow-hidden rounded-full">
                     <div className="h-full bg-secondary-fixed transition-[width]" style={{ width: `${f.value}%` }} />
                   </div>
-                  <span className="cjk font-body-sm text-body-sm text-on-surface-variant">{f.note}</span>
+                  <span className="cjk font-body-sm text-body-sm text-on-surface-variant">{lang === "zh" ? f.note : f.noteEn}</span>
                 </div>
               ))}
             </div>
