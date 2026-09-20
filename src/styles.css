@@ -1731,3 +1731,11 @@
   .promotion-title,
   .promotion-sub { animation: none; }
 }
+
+/* 手机与触屏设备：关闭棋盘上常驻的光扫与浮尘。
+   这两处动画每帧都要重绘整块棋框，在手机上是明显的掉帧来源，
+   落子高亮、走子轨迹等与下棋相关的动效全部保留。 */
+@media (max-width: 600px), (pointer: coarse) {
+  .board-stage::before { animation: none; opacity: 0; }
+  .board-ambient { display: none; }
+}
