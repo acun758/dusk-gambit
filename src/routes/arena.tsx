@@ -219,7 +219,7 @@ function Arena() {
           );
         }
       })
-      .catch((err: Error) => setNote(err.message))
+      .catch(failNote)
       .finally(() => setBusy(false));
   }, [color, gateId, incSec, initialMin, isPublic, refresh, t]);
 
@@ -247,7 +247,7 @@ function Arena() {
           const m = msgs[res.code] ?? ["无法加入这间对局场。", "Unable to join this room."];
           setNote(t(m[0], m[1]));
         })
-        .catch((err: Error) => setNote(err.message))
+        .catch(failNote)
         .finally(() => setBusy(false));
     },
     [navigate, refresh, t],
@@ -279,7 +279,7 @@ function Arena() {
         refresh();
         if (room) copyInvite(room.short_code);
       })
-      .catch((err: Error) => setNote(err.message))
+      .catch(failNote)
       .finally(() => setBusy(false));
   }, [copyInvite, incSec, initialMin, refresh]);
 
@@ -303,7 +303,7 @@ function Arena() {
           refresh();
           setNote(t(`已向 ${target.name} 发出约战，2 分钟内有效。`, `Challenge sent to ${target.name}; valid for 2 minutes.`));
         })
-        .catch((err: Error) => setNote(err.message))
+        .catch(failNote)
         .finally(() => setBusy(false));
     },
     [incSec, initialMin, refresh, t],
