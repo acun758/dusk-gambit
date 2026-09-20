@@ -310,7 +310,7 @@ function Index() {
           {/* 军械库 */}
           <section className="mt-space-lg flex flex-col gap-space-sm">
             <div className="section-heading-row">
-              <h2 className="font-headline-sm text-headline-sm text-on-surface"><Bi zh="军械典藏" en="Arsenal Collection" /></h2>
+              <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">{t("军械典藏", "Arsenal Collection")}</h2>
               <Link to="/arsenal" className="cjk min-h-11 flex items-center text-secondary font-label-sm text-label-sm">{t("查看全部 →", "View all →")}</Link>
             </div>
             <div className="grid grid-cols-2 gap-space-xs">
