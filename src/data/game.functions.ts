@@ -353,10 +353,10 @@ async function auditMove(
   matchId: string,
   userId: string,
   kind: string,
-  detail: Record<string, unknown>,
+  detail: Record<string, string | number | boolean | null>,
 ) {
   try {
-    await admin.from("match_audit").insert({ match_id: matchId, user_id: userId, kind, detail });
+    await admin.from("match_audit").insert({ match_id: matchId, user_id: userId, kind, detail: detail as never });
   } catch {
     /* 留痕失败不影响对局 */
   }
