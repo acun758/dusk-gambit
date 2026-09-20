@@ -46,7 +46,7 @@ export function SovereignNav() {
               }`}
             >
               <UiIcon name={item.icon} className="h-4 w-4" />
-              <span>{item.zh}</span>
+              <span className={t("cjk", "")}>{t(item.zh, item.en)}</span>
             </Link>
           ))}
         </div>
