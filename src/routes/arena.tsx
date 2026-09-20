@@ -150,14 +150,6 @@ function Arena() {
     void navigate({ to: "/battle" });
   }, [navigate, rooms]);
 
-  // 朋友发来的链接：登录后自动入场一次
-  const linkTriedRef = useRef(false);
-  useEffect(() => {
-    if (!signedIn || !linkCode || linkTriedRef.current) return;
-    linkTriedRef.current = true;
-    handleJoin({ code: linkCode });
-  }, [handleJoin, linkCode, signedIn]);
-
   const incoming = useMemo(
     () => rooms.filter((r) => r.targetId && r.targetId === myId && r.status === "waiting" && !declined.includes(r.id)),
     [declined, myId, rooms],
@@ -300,6 +292,14 @@ function Arena() {
     },
     [refresh],
   );
+
+  // 朋友发来的链接：登录后自动入场一次
+  const linkTriedRef = useRef(false);
+  useEffect(() => {
+    if (!signedIn || !linkCode || linkTriedRef.current) return;
+    linkTriedRef.current = true;
+    handleJoin({ code: linkCode });
+  }, [handleJoin, linkCode, signedIn]);
 
   return (
     <div className="relative min-h-dvh">
