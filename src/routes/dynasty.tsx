@@ -8,7 +8,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PromotionOverlay, usePromotionCeremony } from "@/components/PromotionOverlay";
 import {
   createDuelInvite,
-  clearRealName,
   fetchEndgameLevels as listEndgameLevels,
   fetchEndgameProgress as loadEndgameProgress,
   fetchLadder as listLadder,
@@ -147,7 +146,6 @@ function Dynasty() {
   };
 
   const signOut = async () => {
-    await clearRealName().catch(() => null);
     await queryClient.cancelQueries();
     queryClient.clear();
     for (const k of ["bs.profile.v1", "bs.tier.v1", "bs.realname.v1"]) {
