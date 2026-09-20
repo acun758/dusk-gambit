@@ -1310,24 +1310,15 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
     const dayAgo = new Date(Date.now() - 86_400_000).toISOString();
     const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
-    const countOf = async (
-      table: "profiles" | "matches",
-      build: (q: ReturnType<typeof supabaseAdmin.from>) => unknown,
-    ): Promise<number> => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const q: any = build(supabaseAdmin.from(table) as never);
-      const { count } = await q;
-      return count ?? 0;
-    };
-
+    const head = { count: "exact" as const, head: true };
     const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow] = await Promise.all([
-      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true })),
-      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("updated_at", dayAgo)),
-      countOf("profiles", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("updated_at", weekAgo)),
-      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true })),
-      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("created_at", dayAgo)),
-      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).gte("created_at", weekAgo)),
-      countOf("matches", (t) => (t as never as { select: Function }).select("id", { count: "exact", head: true }).eq("status", "live")),
+      supabaseAdmin.from("profiles").select("id", head),
+      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", dayAgo),
+      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", weekAgo),
+      supabaseAdmin.from("matches").select("id", head),
+      supabaseAdmin.from("matches").select("id", head).gte("created_at", dayAgo),
+      supabaseAdmin.from("matches").select("id", head).gte("created_at", weekAgo),
+      supabaseAdmin.from("matches").select("id", head).eq("status", "live"),
     ]);
 
     const { data: finished } = await supabaseAdmin
@@ -1352,14 +1343,14 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
     });
 
     return {
-      players,
-      activeDay,
-      activeWeek,
-      matches,
-      matchesDay,
-      matchesWeek,
+      players: players.count ?? 0,
+      activeDay: activeDay.count ?? 0,
+      activeWeek: activeWeek.count ?? 0,
+      matches: matches.count ?? 0,
+      matchesDay: matchesDay.count ?? 0,
+      matchesWeek: matchesWeek.count ?? 0,
       avgDurationSec: n ? Math.round(secSum / n) : 0,
       avgPlies: n ? Math.round(plySum / n) : 0,
-      liveNow,
+      liveNow: liveNow.count ?? 0,
     };
   });
