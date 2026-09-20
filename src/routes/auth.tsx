@@ -6,7 +6,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Bi, useT } from "@/lib/i18n";
 import { GameIcon } from "@/components/GameIcon";
 import { UiIcon } from "@/components/UiIcon";
-import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage, submitVerification } from "@/data/db";
+import { saveAvatarKey as saveAvatar, saveAvatarPath as saveAvatarImage } from "@/data/db";
 import { DEFAULT_AVATAR_KEY } from "@/lib/avatar-assets";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { uploadAvatar } from "@/lib/avatar-upload";
@@ -39,8 +39,6 @@ function AuthPage() {
   const [mode, setMode] = useState<"in" | "up">(initialMode ?? "in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [realName, setRealName] = useState("");
-  const [idNumber, setIdNumber] = useState("");
   const [avatar, setAvatar] = useState(DEFAULT_AVATAR_KEY);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
