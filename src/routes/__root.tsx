@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1.0, viewport-fit=cover",
       },
-      { property: "og:site_name", content: "玄弈 · DUSK GAMBIT" },
+      { property: "og:site_name", content: "玄弈棋竞" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

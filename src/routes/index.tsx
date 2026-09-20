@@ -21,12 +21,12 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "玄弈 · DUSK GAMBIT | 血誓王权 Blood Sovereign" },
+      { title: "玄弈棋竞 | 血誓王权 Blood Sovereign" },
       {
         name: "description",
-        content: "玄弈 DUSK GAMBIT：天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。Ranked chess conquest, blitz duels and endgame trials.",
+        content: "玄弈棋竞：天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。Ranked chess conquest, blitz duels and endgame trials.",
       },
-      { property: "og:title", content: "玄弈 · DUSK GAMBIT | 血誓王权 Blood Sovereign" },
+      { property: "og:title", content: "玄弈棋竞 | 血誓王权 Blood Sovereign" },
       { property: "og:description", content: "天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -66,7 +66,7 @@ function Index() {
           </div>
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
-              <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈徽章", "Dusk Gambit emblem")} />
+              <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈棋竞徽章", "Xuanyi Qijing emblem")} />
               <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
                 <span className="inline-flex min-w-0 items-baseline gap-1.5">
                   <span className="cjk flex items-baseline gap-[0.18em] leading-tight text-on-surface">
@@ -87,7 +87,7 @@ function Index() {
         <div className="hidden h-24 px-margin-mobile items-center justify-between gap-space-sm sm:flex">
           <div className="flex items-center gap-space-sm sm:gap-space-md min-w-0">
             <div className="home-glass-control w-12 h-12 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
-              <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈徽章", "Dusk Gambit emblem")} />
+              <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈棋竞徽章", "Xuanyi Qijing emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -99,7 +99,7 @@ function Index() {
                   {t(tierLabel(profile).zh, tierLabel(profile).en)}
                 </span>
               </div>
-              {/* 品牌名与进入页一致：玄弈 · DUSK GAMBIT。桌面横排双语并列。 */}
+              {/* 品牌名与进入页一致：玄弈棋竞。桌面横排双语并列。 */}
               <span className="flex min-w-0 flex-row items-baseline gap-1.5">
                 <span className="cjk flex items-baseline gap-[0.18em] font-headline-lg leading-tight tracking-[0.12em] text-on-surface">
                   <span>玄</span>

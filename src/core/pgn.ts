@@ -94,8 +94,8 @@ export function toPgn(
     : sanLine(moves.map((m) => m.uci ?? ""), startFen);
   const result = meta.result ?? "*";
   const tags: [string, string][] = [
-    ["Event", meta.event ?? "Dusk Gambit 3+2"],
-    ["Site", meta.site ?? "Dusk Gambit"],
+    ["Event", meta.event ?? "玄弈棋竞 3+2"],
+    ["Site", meta.site ?? "玄弈棋竞"],
     ["Date", pgnDate(meta.date)],
     ["Round", meta.round ?? "-"],
     ["White", meta.white ?? "White"],
