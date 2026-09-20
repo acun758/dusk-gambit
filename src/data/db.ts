@@ -71,6 +71,8 @@ export const offerDraw = gateway.offerDraw;
 /** 回应对手的求和：同意即按和棋结算。 */
 export const respondDraw = gateway.respondDraw;
 export const claimTimeout = gateway.claimTimeout;
+/** 对局在线心跳：上报自己在场，并得知对手是否掉线。 */
+export const pingMatch = gateway.pingMatch;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;
 
@@ -118,7 +120,9 @@ function looksOffline(): boolean {
  */
 export async function submitMove(args: SubmitMoveArgs): Promise<SubmitMoveResult | QueuedMove> {
   if (!isLinkUp() || looksOffline() || pendingOutbound(MOVE_KIND) > 0) {
-    queueOutbound(MOVE_KIND, args);
+    // 补传时序号/局面早已过期，去掉一致性声明，交由服务端重新裁定合法性
+    const { expectedSeq: _s, baseFen: _f, ...rest } = args as SubmitMoveArgs & { expectedSeq?: number; baseFen?: string };
+    queueOutbound(MOVE_KIND, rest as SubmitMoveArgs);
     return { code: "queued", queued: pendingOutbound(MOVE_KIND) };
   }
   try {
