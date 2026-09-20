@@ -57,8 +57,8 @@ export class DuelClient {
   private lastTs = 0;
   private phase: ConnectionPhase = "idle";
   private paused = false;
-  /** AI 正在 Worker 里搜索，避免同一手重复触发 */
-  private thinking = false;
+  /** 落子串行队列：AI 搜索与玩家落子不得并发改写同一份局面 */
+  private queue: Promise<void> = Promise.resolve();
 
   private readonly url: string | undefined;
 
