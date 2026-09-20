@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LangToggle, useLang } from "@/lib/i18n";
+import { LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 import { UiIcon } from "@/components/UiIcon";
 import { NAV_ICONS, type NavIconKey } from "@/lib/nav-assets";
@@ -13,9 +13,9 @@ const PRIMARY = [
 ] as const;
 
 const SECONDARY = [
-  { to: "/puzzles", icon: "bolt", zh: "战术谜题" },
-  { to: "/arsenal", icon: "forge", zh: "军械典藏" },
-  { to: "/archive", icon: "cards", zh: "绝杀典藏" },
+  { to: "/puzzles", icon: "bolt", zh: "战术谜题", en: "Puzzles" },
+  { to: "/arsenal", icon: "forge", zh: "军械典藏", en: "Arsenal" },
+  { to: "/archive", icon: "cards", zh: "绝杀典藏", en: "Archive" },
 ] as const;
 
 function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
@@ -26,6 +26,7 @@ function PrimaryLabel({ en, zh }: { en: string; zh: string }) {
 export function SovereignNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { signedIn } = useProfile();
+  const t = useT();
   // 实名认证为可选项，不再限制天梯入口
   const items = PRIMARY;
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
