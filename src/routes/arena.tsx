@@ -654,6 +654,12 @@ function Arena() {
                           <MiniBoard fen={room.fen ?? START_FEN} flipped={room.hostColor === "b" && room.mine} />
                         </div>
                         <div className="grid min-w-0 flex-1 gap-1">
+                          <div className="flex items-center gap-1">
+                            <PlayerAvatar className="h-7 w-7" avatarKey={room.hostAvatarKey} seed={room.hostId} />
+                            {room.guestId ? (
+                              <PlayerAvatar className="h-7 w-7" avatarKey={room.guestAvatarKey} seed={room.guestId} />
+                            ) : null}
+                          </div>
                           <p className="cjk truncate font-label-md text-label-md text-on-surface">
                             {t("白：", "White: ")}
                             {room.hostColor === "w"
