@@ -175,21 +175,12 @@ function Arena() {
     return rooms.filter((r) => r.status === "waiting" && r.visibility === "public");
   }, [rooms, tab]);
 
-  /** 发起约战（开房 / 邀请 / 点名）需实名认证；接受邀请与 AI 陪练不受限。 */
-  const verified = profile.verifyStatus === "verified";
-  const verifyHint = t(
-    "完成实名认证后才能发起约战。认证前仍可接受别人的约战、凭口令入场，或在对弈页与 AI 陪练。",
-    "Complete identity verification before you can start a challenge. You can still accept invitations, join by code, or practise against the AI.",
-  );
-
   const refresh = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: ["arena-rooms"] });
   }, [queryClient]);
 
-  const failNote = useCallback(
-    (err: Error) => setNote(/verify_required/.test(err.message) ? verifyHint : err.message),
-    [verifyHint],
-  );
+  const failNote = useCallback((err: Error) => setNote(err.message), []);
+
 
 
   const onCreate = useCallback(() => {
@@ -377,24 +368,12 @@ function Arena() {
               ))}
             </div>
 
-            {!verified ? (
-              <div className="home-glass-panel grid gap-2 p-space-md">
-                <h2 className="cjk font-label-md text-label-md text-secondary">{t("需要实名认证", "Verification required")}</h2>
-                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{verifyHint}</p>
-                <Link
-                  to="/dynasty"
-                  className="home-glass-control cjk flex h-11 w-fit items-center bg-primary-container px-4 font-label-md text-label-md text-on-primary-container"
-                >
-                  {t("去实名认证", "Verify now")}
-                </Link>
-              </div>
-            ) : null}
 
             <div className="home-glass-panel grid gap-space-sm p-space-md">
               <div className="flex flex-wrap items-center gap-2">
                 <Button
                   type="button"
-                  disabled={!verified}
+                  disabled={false}
                   onClick={() => setShowCreate((v) => !v)}
                   className="home-glass-action cjk h-11 px-4 font-label-md text-label-md disabled:opacity-50"
                 >
@@ -412,7 +391,8 @@ function Arena() {
                 <Button
                   type="button"
                   variant="ghost"
-                  disabled={busy || !verified}
+                  disabled={busy}
+
                   onClick={onInviteFriend}
                   className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant disabled:opacity-50"
                 >
@@ -543,9 +523,9 @@ function Arena() {
                             <Button
                               type="button"
                               variant="ghost"
-                              disabled={busy || !verified}
+                              disabled={busy}
                               onClick={() => onChallenge(p)}
-                              title={verified ? undefined : verifyHint}
+
                               className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant disabled:opacity-50"
                             >
                               {t("约战", "Challenge")}
@@ -576,13 +556,17 @@ function Arena() {
                           <PlayerAvatar className="h-7 w-7" avatarKey={row.avatarKey} avatarSrc={row.avatarUrl} seed={row.id} />
                           <span className="truncate">{row.name}</span>
                         </span>
-                        <span className="shrink-0 text-right font-label-sm text-label-sm text-on-surface-variant tabular-nums">
-                          {row.elo}
-                          <span className="ml-2 text-body-sm text-secondary">
-                            {row.wins}/{row.draws}/{row.losses}
+                        <span className="flex shrink-0 items-baseline gap-2 text-right font-label-sm text-label-sm text-on-surface-variant">
+                          <span className="tabular-nums">
+                            {row.elo}
+                            <span className="ml-0.5 text-body-sm">{t("分", "pts")}</span>
+                          </span>
+                          <span className="text-body-sm text-secondary tabular-nums">
+                            {t(`${row.wins} 胜 ${row.draws} 和 ${row.losses} 负`, `${row.wins}W ${row.draws}D ${row.losses}L`)}
                           </span>
                         </span>
                       </li>
+
                     ))}
                   </ol>
                 )}
