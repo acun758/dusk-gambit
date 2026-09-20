@@ -194,78 +194,8 @@ export const saveEquipment = createServerFn({ method: "POST" })
     return row as ProfileRow;
   });
 
-/* --------------------------- real-name verification ------------------------- */
+/* 实名认证已于 35 号文档下线：H5 线不再自采姓名/身份证，改由平台侧（微信小游戏）与领奖环节 KYC 承担。 */
 
-const ID_WEIGHTS = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
-const ID_CHECK = ["1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"];
-
-function validChineseId(id: string): boolean {
-  const value = id.toUpperCase();
-  if (!/^\d{17}[\dX]$/.test(value)) return false;
-  const sum = ID_WEIGHTS.reduce((acc, w, i) => acc + Number(value[i]) * w, 0);
-  return ID_CHECK[sum % 11] === value[17];
-}
-
-/**
- * 实名认证：先做姓名与身份证号格式（含校验位）校验，再调用实名核验接口。
- * 配置 ID_VERIFY_API_URL + ID_VERIFY_API_KEY 后走真实「姓名 + 身份证号」二要素核验；
- * 未配置时只能完成格式校验，返回 mode="checksum" 由前端中文提示说明。
- */
-export const submitVerification = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: { realName: string; idNumber: string }) => ({
-    realName: input.realName.trim().slice(0, 24),
-    idNumber: input.idNumber.trim().toUpperCase().slice(0, 18),
-  }))
-  .handler(async ({ data, context }) => {
-    if (data.realName.length < 2) throw new Error("请填写真实姓名（至少 2 个字）");
-    if (!/^[\u4e00-\u9fa5·]{2,24}$|^[A-Za-z .'-]{2,24}$/.test(data.realName)) throw new Error("姓名格式不正确");
-    if (!validChineseId(data.idNumber)) throw new Error("身份证号格式或校验位不正确");
-
-    const endpoint = process.env["ID_VERIFY_API_URL"];
-    const apiKey = process.env["ID_VERIFY_API_KEY"];
-    let mode: "provider" | "checksum" = "checksum";
-    if (endpoint && apiKey) {
-      mode = "provider";
-      let ok = false;
-      try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
-          body: JSON.stringify({ name: data.realName, idCard: data.idNumber }),
-        });
-        if (!res.ok) throw new Error(`status ${res.status}`);
-        const body = (await res.json()) as { result?: number | string; success?: boolean; match?: boolean };
-        ok = body.success === true || body.match === true || body.result === 0 || body.result === "0";
-      } catch {
-        throw new Error("实名核验服务暂时不可用，请稍后再试");
-      }
-      if (!ok) {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        await supabaseAdmin
-          .from("profiles")
-          .update({ verify_status: "rejected", updated_at: new Date().toISOString() })
-          .eq("id", context.userId);
-        throw new Error("姓名与身份证号不一致，实名核验未通过");
-      }
-    }
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
-      .from("profiles")
-      .update({
-        real_name: data.realName,
-        id_tail: data.idNumber.slice(-4),
-        verify_status: "verified",
-        verified_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", context.userId)
-      .select("*")
-      .single();
-    if (error) throw new Error(error.message);
-    return { profile: row as ProfileRow, mode };
-  });
 
 
 /* ---------------------------------- match ---------------------------------- */
@@ -754,14 +684,6 @@ export const createDuelInvite = createServerFn({ method: "POST" }).middleware([r
   .inputValidator((input: { invitedId?: string; tcBase?: number; tcInc?: number }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // 发起约战需实名认证（接受邀请、匹配与 AI 陪练不受限）。
-    const { data: me } = await supabaseAdmin
-      .from("profiles")
-      .select("verify_status")
-      .eq("id", context.userId)
-      .maybeSingle();
-    if (me?.verify_status !== "verified") throw new Error("verify_required");
 
     const tc = normalizeTc(data.tcBase, data.tcInc);
     const args = {
