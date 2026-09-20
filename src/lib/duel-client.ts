@@ -239,6 +239,12 @@ export class DuelClient {
     this.scheduleBot();
   }
 
+  /** 时钟显示粒度：读秒阶段 0.1 秒，其余 1 秒。用于抑制无意义的界面刷新。 */
+  private clockKey(ms: number): number {
+    return ms < 20_000 ? Math.floor(ms / 100) : Math.ceil(ms / 1000);
+  }
+  private lastClockKey = -1;
+
   private tickClock() {
     if (this.state.status !== "live" || this.paused) return;
     const now = Date.now();
@@ -246,17 +252,23 @@ export class DuelClient {
     this.lastTs = now;
     const turn = this.state.turn;
     this.state.clock[turn] = Math.max(0, this.state.clock[turn] - dt);
-    this.emit(
-      {
-        t: "clock",
-        seq: ++this.seq,
-        w: this.state.clock.w,
-        b: this.state.clock.b,
-        turn,
-        serverTs: now,
-      },
-      "live",
-    );
+    // 内部计时保持 250ms 精度，但只有显示值真的变了才推帧，
+    // 否则整页会以 4 次/秒无谓重绘（手机端明显卡顿）。
+    const key = this.clockKey(this.state.clock[turn]);
+    const changed = key !== this.lastClockKey;
+    this.lastClockKey = key;
+    if (changed)
+      this.emit(
+        {
+          t: "clock",
+          seq: ++this.seq,
+          w: this.state.clock.w,
+          b: this.state.clock.b,
+          turn,
+          serverTs: now,
+        },
+        "live",
+      );
     if (this.state.clock[turn] === 0) {
       this.state.status = "over";
       this.emit(

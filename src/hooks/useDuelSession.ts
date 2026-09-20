@@ -396,11 +396,25 @@ export function useDuelSession(): DuelSession {
 
 
 
-  // 本地插值时钟（250ms），到点后请求服务端判负
+  // 本地插值时钟：读秒阶段（剩余 <20 秒，显示到 0.1 秒）才 250ms 刷新，
+  // 其余时间 1 秒一次即可——显示精度不变，整页重绘从 4 次/秒降到 1 次/秒。
+  // 页面隐藏时不刷新。到点后仍由服务端判负。
   useEffect(() => {
     if (mode !== "cloud") return;
-    const id = setInterval(() => setTick((n) => n + 1), 250);
-    return () => clearInterval(id);
+    let timer: ReturnType<typeof setTimeout>;
+    const loop = () => {
+      if (document.visibilityState === "visible") setTick((n) => n + 1);
+      const m = matchRef.current;
+      let delay = 1000;
+      if (m?.status === "live") {
+        const elapsed = Date.now() - new Date(m.last_move_at).getTime();
+        const remaining = (m.turn === "w" ? m.clock_w : m.clock_b) - elapsed;
+        if (remaining < 20_000) delay = 250;
+      }
+      timer = setTimeout(loop, delay);
+    };
+    timer = setTimeout(loop, 250);
+    return () => clearTimeout(timer);
   }, [mode]);
 
   const claimedRef = useRef(false);

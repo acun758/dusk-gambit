@@ -6,7 +6,7 @@
  *  - 声音走点对点直连，服务器只转交连接信息，不经过、不留存任何音频。
  *  - 与棋局逻辑完全无关：本组件不读棋盘状态，也不影响计时与结算。
  */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Mic, MicOff, PhoneOff, Radio } from "lucide-react";
 import { openVoiceLink, type VoiceLink, type VoiceSignal } from "@/data/realtime";
 import { useT } from "@/lib/i18n";
@@ -17,7 +17,7 @@ const ICE: RTCConfiguration = {
   iceServers: [{ urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] }],
 };
 
-export function DuelVoice({
+function DuelVoiceComponent({
   matchId,
   selfId,
   initiator,
@@ -214,3 +214,6 @@ export function DuelVoice({
     </div>
   );
 }
+
+/** 语音连接与时钟无关，memo 避免每次时钟刷新重绘。 */
+export const DuelVoice = memo(DuelVoiceComponent);

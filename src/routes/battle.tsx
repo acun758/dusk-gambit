@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { rankOf } from "@/lib/ranks";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { playSound, primeSounds } from "@/lib/sound";
 
 import { EndgameDrill } from "@/components/EndgameDrill";
@@ -108,7 +108,8 @@ function Battle() {
   const opponent = session.state.you === "w" ? session.state.players.b : session.state.players.w;
   const me = session.state.players[session.state.you];
   const ranked = session.transport === "cloud";
-  const coach = getCoachInsight(session.state.fen, session.moves, ranked);
+  // 每次时钟刷新都重算教练提示会新建一副棋盘，这里按局面缓存。
+  const coach = useMemo(() => getCoachInsight(session.state.fen, session.moves, ranked), [session.state.fen, session.moves, ranked]);
   const oppSide = session.state.you === "w" ? "b" : "w";
   // 本方积分只认服务端档案；陪练/离线时也用档案分，不再显示占位值
   const myElo = session.ratings?.[session.state.you]?.elo ?? profile.elo;
@@ -547,7 +548,7 @@ function Battle() {
   );
 }
 
-function PlayerBar({ name, elo, clock, active, dark = false, seed, avatarKey, avatarPath, avatarSrc }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean; seed?: string; avatarKey?: string; avatarPath?: string; avatarSrc?: string | null }) {
+function PlayerBarComponent({ name, elo, clock, active, dark = false, seed, avatarKey, avatarPath, avatarSrc }: { name: string; elo: number; clock: string; active: boolean; dark?: boolean; seed?: string; avatarKey?: string; avatarPath?: string; avatarSrc?: string | null }) {
   return (
     <div className={`battle-core-width home-glass-panel min-h-14 px-space-sm py-2 flex items-center justify-between gap-3 ${active ? "home-glass-tile-active" : ""}`}>
       <div className="flex items-center gap-3 min-w-0"><PlayerAvatar className="h-10 w-10" seed={seed} avatarKey={avatarKey} avatarPath={avatarPath} avatarSrc={avatarSrc} /><div className="min-w-0"><p className="font-label-md text-label-md truncate">{name}</p><p className="font-label-sm text-label-sm text-on-surface-variant">{elo} ELO</p></div></div>
@@ -555,3 +556,5 @@ function PlayerBar({ name, elo, clock, active, dark = false, seed, avatarKey, av
     </div>
   );
 }
+
+const PlayerBar = memo(PlayerBarComponent);
