@@ -57,8 +57,8 @@ export class DuelClient {
   private lastTs = 0;
   private phase: ConnectionPhase = "idle";
   private paused = false;
-  /** AI 正在 Worker 里搜索，避免同一手重复触发 */
-  private thinking = false;
+  /** 落子串行队列：AI 搜索与玩家落子不得并发改写同一份局面 */
+  private queue: Promise<void> = Promise.resolve();
 
   private readonly url: string | undefined;
 
@@ -307,16 +307,26 @@ export class DuelClient {
     }
   }
 
-  // AI 搜索在 Worker 里跑，这里 await 结果，主线程期间照常渲染与走表
-  private async applyMove(requested?: string) {
-    // 只对 AI 自己的搜索加锁；玩家落子不受影响
-    if (!requested && this.thinking) return;
-    this.thinking = true;
-    try {
+  /**
+   * 串行化落子：AI 搜索是异步的，若玩家在搜索期间落子，两边会基于同一份旧局面
+   * 各自推演并互相覆盖，导致“点击格子与实际走子不符”。这里用队列保证一次只
+   * 处理一手，并在拿到锁之后重新核对轮次。
+   */
+  private applyMove(requested?: string) {
+    const run = this.queue.then(async () => {
+      if (this.state.status !== "live") return;
+      if (requested && this.state.turn !== this.you) {
+        this.emit(
+          { t: "rejected", seq: ++this.seq, ply: this.state.moves.length + 1, code: "not_your_turn", fen: this.state.fen },
+          "live",
+        );
+        return;
+      }
+      if (!requested && this.state.turn === this.you) return;
       await this.applyMoveInner(requested);
-    } finally {
-      this.thinking = false;
-    }
+    });
+    this.queue = run.catch(() => undefined);
+    return run;
   }
 
 
@@ -331,6 +341,14 @@ export class DuelClient {
       const promotion = uci[4];
       played = chess.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(promotion ? { promotion } : {}) });
     } catch { played = null; }
+    if (!played && requested) {
+      // 玩家落子若不合法，只回退这一手并让棋盘重新对齐，绝不代替玩家改走别的着法
+      this.emit(
+        { t: "rejected", seq: ++this.seq, ply: idx + 1, code: "illegal", fen: this.state.fen },
+        "live",
+      );
+      return;
+    }
     if (!played) {
       const fallback = chess.moves({ verbose: true })[0];
       if (!fallback) return;
