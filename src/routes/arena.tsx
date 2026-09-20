@@ -175,9 +175,17 @@ function Arena() {
     return rooms.filter((r) => r.status === "waiting" && r.visibility === "public");
   }, [rooms, tab]);
 
+  /** 发起约战（开房 / 邀请 / 点名）需实名认证；接受邀请与 AI 陪练不受限。 */
+  const verified = profile.verifyStatus === "verified";
+  const verifyHint = t(
+    "完成实名认证后才能发起约战。认证前仍可接受别人的约战、凭口令入场，或在对弈页与 AI 陪练。",
+    "Complete identity verification before you can start a challenge. You can still accept invitations, join by code, or practise against the AI.",
+  );
+
   const refresh = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: ["arena-rooms"] });
   }, [queryClient]);
+
 
   const onCreate = useCallback(() => {
     const gate = GATES.find((g) => g.id === gateId) ?? GATES[0]!;
