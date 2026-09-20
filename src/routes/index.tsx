@@ -21,12 +21,12 @@ export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "玄弈棋竞 | 血誓王权 Blood Sovereign" },
+      { title: "玄弈棋竞 · 血誓王权 Blood Sovereign" },
       {
         name: "description",
         content: "玄弈棋竞：天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。Ranked chess conquest, blitz duels and endgame trials.",
       },
-      { property: "og:title", content: "玄弈棋竞 | 血誓王权 Blood Sovereign" },
+      { property: "og:title", content: "玄弈棋竞 · 血誓王权 Blood Sovereign" },
       { property: "og:description", content: "天梯段位、3+2 快棋对弈、残局试炼与圣物军械库。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -16,12 +16,12 @@ export const Route = createFileRoute("/puzzles")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "战术谜题 · 每日一题 | Tactics Puzzles" },
+      { title: "战术谜题 · 每日一题 | 玄弈棋竞" },
       {
         name: "description",
         content: "四档难度的战术谜题与每日一题：服务端持有正解并逐手校验，答错给出正解与讲解，通关奖励训练点与钻石。",
       },
-      { property: "og:title", content: "战术谜题 · 每日一题 | Tactics Puzzles" },
+      { property: "og:title", content: "战术谜题 · 每日一题 | 玄弈棋竞" },
       { property: "og:description", content: "逐手校验的战术谜题训练，含每日一题与连胜天数。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

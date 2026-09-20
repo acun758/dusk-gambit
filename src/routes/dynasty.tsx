@@ -31,12 +31,12 @@ export const Route = createFileRoute("/dynasty")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "天梯段位殿堂 · 血誓王权 | Dynasty Sanctum" },
+      { title: "天梯段位殿堂 | 玄弈棋竞" },
       {
         name: "description",
         content: "天梯段位殿堂：段位进度、胜率战绩、赛季奖赏，与残局试炼解锁联动。",
       },
-      { property: "og:title", content: "天梯段位殿堂 · 血誓王权 | Dynasty Sanctum" },
+      { property: "og:title", content: "天梯段位殿堂 | 玄弈棋竞" },
       { property: "og:description", content: "段位进度、胜率战绩与残局试炼解锁联动。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -17,9 +17,9 @@ export const Route = createFileRoute("/archive")({
   staticData: { sitemap: false },
   head: () => ({
     meta: [
-      { title: "绝杀典藏 · 血誓王权 | Victory Archive" },
+      { title: "绝杀典藏 | 玄弈棋竞" },
       { name: "description", content: "将已完成的精彩对局制作成典藏海报，保存棋谱、段位与胜负记录。" },
-      { property: "og:title", content: "绝杀典藏 · 血誓王权" },
+      { property: "og:title", content: "绝杀典藏 | 玄弈棋竞" },
       { property: "og:description", content: "将精彩对局制作成可保存的典藏海报。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -14,9 +14,9 @@ export const Route = createFileRoute("/arsenal")({
   staticData: { sitemap: true },
   head: () => ({
     meta: [
-      { title: "军械典藏 · 血誓王权 | Arsenal Collection" },
+      { title: "军械典藏 | 玄弈棋竞" },
       { name: "description", content: "浏览血誓王权棋子套装、战盘与残局试炼卡片。" },
-      { property: "og:title", content: "军械典藏 · 血誓王权" },
+      { property: "og:title", content: "军械典藏 | 玄弈棋竞" },
       { property: "og:description", content: "浏览棋子套装、战盘与残局试炼卡片。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

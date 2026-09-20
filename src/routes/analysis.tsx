@@ -43,9 +43,9 @@ export const Route = createFileRoute("/analysis")({
   },
   head: () => ({
     meta: [
-      { title: "对局复盘与点评 · 血誓王权" },
+      { title: "对局复盘与点评 | 玄弈棋竞" },
       { name: "description", content: "逐手回放自己的天梯对局，查看引擎评分、失误标注与关键转折点讲解。" },
-      { property: "og:title", content: "对局复盘与点评 · 血誓王权" },
+      { property: "og:title", content: "对局复盘与点评 | 玄弈棋竞" },
       { property: "og:description", content: "逐手回放自己的天梯对局，查看引擎评分、失误标注与关键转折点讲解。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
