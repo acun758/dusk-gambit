@@ -754,6 +754,15 @@ export const createDuelInvite = createServerFn({ method: "POST" }).middleware([r
   .inputValidator((input: { invitedId?: string; tcBase?: number; tcInc?: number }) => input)
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // 发起约战需实名认证（接受邀请、匹配与 AI 陪练不受限）。
+    const { data: me } = await supabaseAdmin
+      .from("profiles")
+      .select("verify_status")
+      .eq("id", context.userId)
+      .maybeSingle();
+    if (me?.verify_status !== "verified") throw new Error("verify_required");
+
     const tc = normalizeTc(data.tcBase, data.tcInc);
     const args = {
       p_user_id: context.userId,
@@ -1287,6 +1296,19 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
 
 /* --------------------------------- 运营看板 -------------------------------- */
 
+export interface OpsSegments {
+  /** 近 7 天注册 */
+  newcomers: number;
+  /** 已完成实名认证 */
+  verified: number;
+  /** 近 7 天有过动作 */
+  active: number;
+  /** 超过 30 天没动作 */
+  idle: number;
+  /** 1600 分以上 */
+  high: number;
+}
+
 export interface OpsStats {
   players: number;
   activeDay: number;
@@ -1297,6 +1319,39 @@ export interface OpsStats {
   avgDurationSec: number;
   avgPlies: number;
   liveNow: number;
+  segments: OpsSegments;
+}
+
+export type OpsSegment = keyof OpsSegments | "all";
+
+export interface OpsPlayerRow {
+  id: string;
+  name: string;
+  handle: string;
+  elo: number;
+  verifyStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  wins: number;
+  losses: number;
+  draws: number;
+}
+
+export interface OpsPlayerGame {
+  matchId: string;
+  createdAt: string;
+  side: "w" | "b";
+  opponent: string;
+  opponentElo: number;
+  result: "win" | "loss" | "draw" | "live";
+  delta: number | null;
+  plies: number;
+  reason: string | null;
+}
+
+export interface OpsPlayerDetail {
+  player: OpsPlayerRow & { diamonds: number; trainingPoints: number; provisionalGames: number };
+  games: OpsPlayerGame[];
 }
 
 /** 运营总览：全站注册数、活跃人数、对战次数与平均对局时长。仅管理员可读。 */
@@ -1310,16 +1365,23 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
     const dayAgo = new Date(Date.now() - 86_400_000).toISOString();
     const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
+    const monthAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
+
     const head = { count: "exact" as const, head: true };
-    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow] = await Promise.all([
-      supabaseAdmin.from("profiles").select("id", head),
-      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", dayAgo),
-      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", weekAgo),
-      supabaseAdmin.from("matches").select("id", head),
-      supabaseAdmin.from("matches").select("id", head).gte("created_at", dayAgo),
-      supabaseAdmin.from("matches").select("id", head).gte("created_at", weekAgo),
-      supabaseAdmin.from("matches").select("id", head).eq("status", "live"),
-    ]);
+    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow, newcomers, verified, idle, high] =
+      await Promise.all([
+        supabaseAdmin.from("profiles").select("id", head),
+        supabaseAdmin.from("profiles").select("id", head).gte("updated_at", dayAgo),
+        supabaseAdmin.from("profiles").select("id", head).gte("updated_at", weekAgo),
+        supabaseAdmin.from("matches").select("id", head),
+        supabaseAdmin.from("matches").select("id", head).gte("created_at", dayAgo),
+        supabaseAdmin.from("matches").select("id", head).gte("created_at", weekAgo),
+        supabaseAdmin.from("matches").select("id", head).eq("status", "live"),
+        supabaseAdmin.from("profiles").select("id", head).gte("created_at", weekAgo),
+        supabaseAdmin.from("profiles").select("id", head).eq("verify_status", "verified"),
+        supabaseAdmin.from("profiles").select("id", head).lt("updated_at", monthAgo),
+        supabaseAdmin.from("profiles").select("id", head).gte("elo", 1600),
+      ]);
 
     const { data: finished } = await supabaseAdmin
       .from("matches")
@@ -1352,5 +1414,121 @@ export const fetchOpsStats = createServerFn({ method: "POST" })
       avgDurationSec: n ? Math.round(secSum / n) : 0,
       avgPlies: n ? Math.round(plySum / n) : 0,
       liveNow: liveNow.count ?? 0,
+      segments: {
+        newcomers: newcomers.count ?? 0,
+        verified: verified.count ?? 0,
+        active: activeWeek.count ?? 0,
+        idle: idle.count ?? 0,
+        high: high.count ?? 0,
+      },
+    };
+  });
+
+/** 运营看板：按分层筛选玩家名单。仅管理员可读。 */
+export const fetchOpsPlayers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { segment?: OpsSegment; q?: string; limit?: number }) => ({
+    segment: (input?.segment ?? "all") as OpsSegment,
+    q: (input?.q ?? "").trim().slice(0, 40),
+    limit: Math.min(100, Math.max(10, input?.limit ?? 40)),
+  }))
+  .handler(async ({ data, context }): Promise<OpsPlayerRow[]> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isAdmin !== true) throw new Error("forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    const monthAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
+
+    let q = supabaseAdmin
+      .from("profiles")
+      .select("id,name,handle,elo,verify_status,created_at,updated_at,wins,losses,draws")
+      .limit(data.limit);
+
+    if (data.segment === "newcomers") q = q.gte("created_at", weekAgo).order("created_at", { ascending: false });
+    else if (data.segment === "verified") q = q.eq("verify_status", "verified").order("updated_at", { ascending: false });
+    else if (data.segment === "active") q = q.gte("updated_at", weekAgo).order("updated_at", { ascending: false });
+    else if (data.segment === "idle") q = q.lt("updated_at", monthAgo).order("updated_at", { ascending: true });
+    else if (data.segment === "high") q = q.gte("elo", 1600).order("elo", { ascending: false });
+    else q = q.order("updated_at", { ascending: false });
+
+    if (data.q) q = q.or(`name.ilike.%${data.q}%,handle.ilike.%${data.q}%`);
+
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+
+    return (rows ?? []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      handle: r.handle,
+      elo: r.elo,
+      verifyStatus: r.verify_status ?? "none",
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+      wins: r.wins,
+      losses: r.losses,
+      draws: r.draws,
+    }));
+  });
+
+/** 运营看板：单个玩家的档案与最近对战轨迹。仅管理员可读。 */
+export const fetchOpsPlayer = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string }) => ({ userId: String(input?.userId ?? "") }))
+  .handler(async ({ data, context }): Promise<OpsPlayerDetail | null> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isAdmin !== true) throw new Error("forbidden");
+    if (!data.userId) return null;
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: p } = await supabaseAdmin
+      .from("profiles")
+      .select("id,name,handle,elo,verify_status,created_at,updated_at,wins,losses,draws,diamonds,training_points,provisional_games")
+      .eq("id", data.userId)
+      .maybeSingle();
+    if (!p) return null;
+
+    const { data: rows } = await supabaseAdmin
+      .from("matches")
+      .select("id,created_at,white_id,black_id,white_name,black_name,white_elo,black_elo,outcome,reason,status,ply,rating_delta,black_delta")
+      .or(`white_id.eq.${data.userId},black_id.eq.${data.userId}`)
+      .order("created_at", { ascending: false })
+      .limit(30);
+
+    const games: OpsPlayerGame[] = (rows ?? []).map((m) => {
+      const side: "w" | "b" = m.white_id === data.userId ? "w" : "b";
+      const mine = side === "w" ? "white" : "black";
+      const result: OpsPlayerGame["result"] =
+        m.status !== "over" ? "live" : m.outcome === "draw" ? "draw" : m.outcome === mine ? "win" : "loss";
+      return {
+        matchId: m.id,
+        createdAt: m.created_at,
+        side,
+        opponent: side === "w" ? m.black_name : m.white_name,
+        opponentElo: side === "w" ? m.black_elo : m.white_elo,
+        result,
+        delta: side === "w" ? (m.rating_delta ?? null) : (m.black_delta ?? null),
+        plies: m.ply ?? 0,
+        reason: m.reason ?? null,
+      };
+    });
+
+    return {
+      player: {
+        id: p.id,
+        name: p.name,
+        handle: p.handle,
+        elo: p.elo,
+        verifyStatus: p.verify_status ?? "none",
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+        wins: p.wins,
+        losses: p.losses,
+        draws: p.draws,
+        diamonds: p.diamonds,
+        trainingPoints: p.training_points,
+        provisionalGames: p.provisional_games,
+      },
+      games,
     };
   });

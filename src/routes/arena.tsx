@@ -175,9 +175,22 @@ function Arena() {
     return rooms.filter((r) => r.status === "waiting" && r.visibility === "public");
   }, [rooms, tab]);
 
+  /** 发起约战（开房 / 邀请 / 点名）需实名认证；接受邀请与 AI 陪练不受限。 */
+  const verified = profile.verifyStatus === "verified";
+  const verifyHint = t(
+    "完成实名认证后才能发起约战。认证前仍可接受别人的约战、凭口令入场，或在对弈页与 AI 陪练。",
+    "Complete identity verification before you can start a challenge. You can still accept invitations, join by code, or practise against the AI.",
+  );
+
   const refresh = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: ["arena-rooms"] });
   }, [queryClient]);
+
+  const failNote = useCallback(
+    (err: Error) => setNote(/verify_required/.test(err.message) ? verifyHint : err.message),
+    [verifyHint],
+  );
+
 
   const onCreate = useCallback(() => {
     const gate = GATES.find((g) => g.id === gateId) ?? GATES[0]!;
@@ -206,9 +219,9 @@ function Arena() {
           );
         }
       })
-      .catch((err: Error) => setNote(err.message))
+      .catch(failNote)
       .finally(() => setBusy(false));
-  }, [color, gateId, incSec, initialMin, isPublic, refresh, t]);
+  }, [color, failNote, gateId, incSec, initialMin, isPublic, refresh, t]);
 
   const handleJoin = useCallback(
     (args: { roomId?: string; code?: string }) => {
@@ -234,7 +247,7 @@ function Arena() {
           const m = msgs[res.code] ?? ["无法加入这间对局场。", "Unable to join this room."];
           setNote(t(m[0], m[1]));
         })
-        .catch((err: Error) => setNote(err.message))
+        .catch(failNote)
         .finally(() => setBusy(false));
     },
     [navigate, refresh, t],
@@ -266,9 +279,9 @@ function Arena() {
         refresh();
         if (room) copyInvite(room.short_code);
       })
-      .catch((err: Error) => setNote(err.message))
+      .catch(failNote)
       .finally(() => setBusy(false));
-  }, [copyInvite, incSec, initialMin, refresh]);
+  }, [copyInvite, failNote, incSec, initialMin, refresh]);
 
   /** 定向约战：给名册里的某位玩家开一间只有他能进的房 */
   const onChallenge = useCallback(
@@ -290,10 +303,10 @@ function Arena() {
           refresh();
           setNote(t(`已向 ${target.name} 发出约战，2 分钟内有效。`, `Challenge sent to ${target.name}; valid for 2 minutes.`));
         })
-        .catch((err: Error) => setNote(err.message))
+        .catch(failNote)
         .finally(() => setBusy(false));
     },
-    [incSec, initialMin, refresh, t],
+    [failNote, incSec, initialMin, refresh, t],
   );
 
   const onClose = useCallback(
@@ -364,12 +377,26 @@ function Arena() {
               ))}
             </div>
 
+            {!verified ? (
+              <div className="home-glass-panel grid gap-2 p-space-md">
+                <h2 className="cjk font-label-md text-label-md text-secondary">{t("需要实名认证", "Verification required")}</h2>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{verifyHint}</p>
+                <Link
+                  to="/dynasty"
+                  className="home-glass-control cjk flex h-11 w-fit items-center bg-primary-container px-4 font-label-md text-label-md text-on-primary-container"
+                >
+                  {t("去实名认证", "Verify now")}
+                </Link>
+              </div>
+            ) : null}
+
             <div className="home-glass-panel grid gap-space-sm p-space-md">
               <div className="flex flex-wrap items-center gap-2">
                 <Button
                   type="button"
+                  disabled={!verified}
                   onClick={() => setShowCreate((v) => !v)}
-                  className="home-glass-action cjk h-11 px-4 font-label-md text-label-md"
+                  className="home-glass-action cjk h-11 px-4 font-label-md text-label-md disabled:opacity-50"
                 >
                   <UiIcon name="flame" className="mr-1.5 h-5 w-5" />
                   {t("开设对局场", "Open a room")}
@@ -385,9 +412,9 @@ function Arena() {
                 <Button
                   type="button"
                   variant="ghost"
-                  disabled={busy}
+                  disabled={busy || !verified}
                   onClick={onInviteFriend}
-                  className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant"
+                  className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant disabled:opacity-50"
                 >
                   <UiIcon name="forum" className="mr-1.5 h-5 w-5" />
                   {t("邀请好友", "Invite a friend")}
@@ -516,9 +543,10 @@ function Arena() {
                             <Button
                               type="button"
                               variant="ghost"
-                              disabled={busy}
+                              disabled={busy || !verified}
                               onClick={() => onChallenge(p)}
-                              className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
+                              title={verified ? undefined : verifyHint}
+                              className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant disabled:opacity-50"
                             >
                               {t("约战", "Challenge")}
                             </Button>
