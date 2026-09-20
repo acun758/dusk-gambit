@@ -149,6 +149,17 @@ export const joinDuelInvite = gateway.joinDuelInvite;
 export const fetchDuelInvites = gateway.fetchDuelInvites;
 export const fetchLobbyStats = gateway.fetchLobbyStats;
 
+/* --------------------------------- 联网大厅 -------------------------------- */
+
+/** 公开房间与我参与的房间（服务端顺带清理超时房）。 */
+export const fetchArenaRooms = gateway.fetchArenaRooms;
+/** 建房：执子、公开性、时制与积分门槛由服务端校验。 */
+export const createArenaRoom = gateway.createArenaRoom;
+/** 加入房间（房号或短码），服务端原子判定先到先得。 */
+export const joinArenaRoom = gateway.joinArenaRoom;
+/** 房主取消尚未开始的房间。 */
+export const closeArenaRoom = gateway.closeArenaRoom;
+
 /* -------------------------------- 天梯与残局 -------------------------------- */
 
 export const fetchLadder = gateway.fetchLadder;

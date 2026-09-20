@@ -9,6 +9,7 @@ import * as remote from "@/data/game.functions";
 import * as puzzleRemote from "@/data/puzzle.functions";
 import * as mindRemote from "@/data/mind.functions";
 import * as hallRemote from "@/data/hall.functions";
+import * as arenaRemote from "@/data/arena.functions";
 import type { AuthResult, SessionInfo } from "./types";
 import { STORAGE_CONFIG } from "@/config/app-config";
 
@@ -96,6 +97,12 @@ export const defaultGateway = {
   joinDuelInvite: remote.joinDuelInvite,
   fetchDuelInvites: remote.listDuelInvites,
   fetchLobbyStats: remote.getLobbyStats,
+
+  /* -------------------------------- 联网大厅 -------------------------------- */
+  fetchArenaRooms: arenaRemote.listArenaRooms,
+  createArenaRoom: arenaRemote.createArenaRoom,
+  joinArenaRoom: arenaRemote.joinArenaRoom,
+  closeArenaRoom: arenaRemote.closeArenaRoom,
 
   /* -------------------------------- 天梯与残局 -------------------------------- */
   fetchLadder: remote.listLadder,
