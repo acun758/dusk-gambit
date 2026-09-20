@@ -73,6 +73,8 @@ export const respondDraw = gateway.respondDraw;
 export const claimTimeout = gateway.claimTimeout;
 /** 对局在线心跳：上报自己在场，并得知对手是否掉线。 */
 export const pingMatch = gateway.pingMatch;
+export const amIGuardAdmin = gateway.amIGuardAdmin;
+export const listAuditAlerts = gateway.listAuditAlerts;
 export const fetchMyMatches = gateway.fetchMyMatches;
 export const fetchMatchRatings = gateway.fetchMatchRatings;
 

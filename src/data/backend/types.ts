@@ -55,6 +55,16 @@ export interface VoiceLink {
   close: Unsubscribe;
 }
 
+/** 风控告警帧：异常走子被服务端判定后即时推送给当事人与管理员。 */
+export interface AuditAlertFrame {
+  id: number;
+  matchId: string;
+  userId: string | null;
+  kind: string;
+  severity: string;
+  createdAt: string;
+}
+
 /** 实时帧契约：各家云平台推送能力不同，只在适配器内部体现差异。 */
 export interface RealtimeGateway {
   /** 大厅在场名册（自己报到 + 名单变化）。 */
