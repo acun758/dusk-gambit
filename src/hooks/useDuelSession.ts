@@ -184,6 +184,7 @@ export function useDuelSession(): DuelSession {
   const [phase, setPhase] = useState<ConnectionPhase>("idle");
   const [mode, setMode] = useState<"unknown" | "cloud" | "local" | "error">("unknown");
   const [notice, setNotice] = useState<string | null>(null);
+  const [opponentOnline, setOpponentOnline] = useState<boolean | null>(null);
   const [movePending, setMovePending] = useState(false);
   const [levelId, setLevelId] = useState<AiLevelId>("club");
   const [tick, setTick] = useState(0);
