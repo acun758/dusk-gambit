@@ -419,11 +419,14 @@ export const submitMove = createServerFn({ method: "POST" })
         skewMs: Date.now() - data.clientTs,
       }, "critical");
     }
-    // 防作弊 3：同一方连续落子间隔异常短（脚本刷手），留痕备查。
+    // 防作弊 3：手速只作低严重度留痕，不作判定依据。
+    // 国际象棋存在 premove（预移位），高手 0.2–0.5 秒回子完全真实，
+    // 因此阈值压到 15ms（人手与 UI 渲染物理下限之下），且只记 info，不推送、不计入严重告警。
     const myLastMoveAt = you === "w" ? m.white_move_at : m.black_move_at;
-    if (myLastMoveAt && Date.now() - new Date(myLastMoveAt).getTime() < 60) {
-      void auditMove(supabaseAdmin, m.id, context.userId, "move_burst", { sinceMs: Date.now() - new Date(myLastMoveAt).getTime() }, "critical");
+    if (myLastMoveAt && Date.now() - new Date(myLastMoveAt).getTime() < 15) {
+      void auditMove(supabaseAdmin, m.id, context.userId, "move_burst", { sinceMs: Date.now() - new Date(myLastMoveAt).getTime() }, "info");
     }
+
 
     const chess = new Chess(m.fen);
     let move;
