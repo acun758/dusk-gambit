@@ -20,12 +20,13 @@ const ICE: RTCConfiguration = {
 export function DuelVoice({
   matchId,
   selfId,
-  peerId,
+  initiator,
   opponentName,
 }: {
   matchId: string;
   selfId: string;
-  peerId: string;
+  /** 由执白一方发起连接，避免双方同时发起撞车 */
+  initiator: boolean;
   opponentName: string;
 }) {
   const t = useT();
@@ -38,8 +39,6 @@ export function DuelVoice({
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // 双方同时开启时，由 id 较小的一方发起连接，避免互相发 offer 撞车
-  const polite = selfId > peerId;
 
   const teardown = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -99,7 +98,7 @@ export function DuelVoice({
       if (!peer) return;
       if (signal.kind === "hello") {
         setPeerReady(true);
-        if (!polite) await makeOffer();
+        if (initiator) await makeOffer();
         return;
       }
       if (signal.kind === "offer") {
@@ -139,7 +138,7 @@ export function DuelVoice({
     }
 
     link.send({ from: selfId, kind: "hello" });
-  }, [matchId, polite, selfId]);
+  }, [initiator, matchId, selfId]);
 
   const setMic = useCallback((on: boolean) => {
     streamRef.current?.getAudioTracks().forEach((track) => (track.enabled = on));
