@@ -14,6 +14,7 @@ import {
   submitVerification,
 } from "@/data/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
+import { useLang, useT } from "@/lib/i18n";
 import { DEFAULT_TIME_CONTROL, TIME_CONTROLS, timeControl, type TimeControlId } from "@/lib/time-controls";
 
 function mmss(sec: number) {
@@ -36,6 +37,8 @@ export function OpponentPanel({
   ranked: boolean;
   waiting: boolean;
 }) {
+  const t = useT();
+  const { lang } = useLang();
   const [tcId, setTcId] = useState<TimeControlId>(DEFAULT_TIME_CONTROL);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>("auto");
@@ -71,7 +74,7 @@ export function OpponentPanel({
     if (!new URLSearchParams(window.location.search).has("lobby")) return;
     setAutoQueued(true);
     setTab("auto");
-    setNotice("正在为你匹配段位相近的对手…");
+    setNotice(t("正在为你匹配段位相近的对手…", "Finding an opponent near your rating…"));
     if (!ranked) onStartRanked(DEFAULT_TIME_CONTROL);
   }, [autoQueued, signedIn, ranked, onStartRanked]);
 
@@ -111,10 +114,10 @@ export function OpponentPanel({
     setNotice(null);
     void joinDuelInvite({ data: { code: inviteCode } })
       .then(() => {
-        setNotice("已加入对局，正在进入棋盘…");
+        setNotice(t("已加入对局，正在进入棋盘…", "Joined — opening the board…"));
         window.location.assign("/battle");
       })
-      .catch(() => setNotice("对战码无效或已过期"));
+      .catch(() => setNotice(t("对战码无效或已过期", "That code is invalid or has expired")));
   };
 
   const makeInvite = (invitedId?: string) => {
@@ -123,28 +126,32 @@ export function OpponentPanel({
     void createDuelInvite({ data: { ...(invitedId ? { invitedId } : {}), tcBase: tc.base, tcInc: tc.inc } })
       .then((r) => {
         setMyCode(r?.code ?? "");
-        setNotice(invitedId ? "已向该玩家发出约战，对方在对弈页会看到提醒。" : "已生成对战码，发给对手即可开局。");
+        setNotice(invitedId ? t("已向该玩家发出约战，对方在对弈页会看到提醒。", "Challenge sent — they will see it on the duel page.") : t("已生成对战码，发给对手即可开局。", "Code created — send it to your opponent to start."));
         void invitesQ.refetch();
       })
-      .catch(() => setNotice("创建邀请失败，请稍后再试"));
+      .catch(() => setNotice(t("创建邀请失败，请稍后再试", "Could not create the challenge — try again")));
   };
 
   if (signedIn === false) {
     return (
-      <section aria-label="找对手" className="battle-core-width home-glass-panel p-space-sm">
-        <h2 className="cjk font-label-md text-label-md text-on-surface">找对手</h2>
-        <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-1">登录后即可系统匹配、点名邀请好友，或用对战码约战。当前为本地 AI 陪练。</p>
-        <a href="/auth" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">去登录 →</a>
+      <section aria-label={t("找对手", "Find an opponent")} className="battle-core-width home-glass-panel p-space-sm">
+        <h2 className="cjk font-label-md text-label-md text-on-surface">{t("找对手", "Find an opponent")}</h2>
+        <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-1">{t("登录后即可系统匹配、点名邀请好友，或用对战码约战。当前为本地 AI 陪练。", "Sign in to use matchmaking, challenge a friend by name, or play with a code. You are currently facing the local AI.")}</p>
+        <a href="/auth" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">{t("去登录 →", "Sign in →")}</a>
       </section>
     );
   }
 
   return (
-    <section aria-label="找对手" className="battle-core-width home-glass-panel p-space-sm">
+    <section aria-label={t("找对手", "Find an opponent")} className="battle-core-width home-glass-panel p-space-sm">
       <div className="section-heading-row">
-        <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">找对手</h2>
+        <h2 className="cjk font-headline-sm text-headline-sm text-on-surface">{t("找对手", "Find an opponent")}</h2>
         <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
-          {incoming.length ? `${incoming.length} 条约战邀请` : open.length ? `大厅 ${open.length} 人等待` : `${timeControl(tcId).label} ${timeControl(tcId).zh}`}
+          {incoming.length
+            ? t(`${incoming.length} 条约战邀请`, `${incoming.length} challenge${incoming.length > 1 ? "s" : ""}`)
+            : open.length
+              ? t(`大厅 ${open.length} 人等待`, `${open.length} waiting in the lobby`)
+              : `${timeControl(tcId).label} ${lang === "zh" ? timeControl(tcId).zh : timeControl(tcId).en}`}
         </span>
       </div>
 
@@ -153,17 +160,17 @@ export function OpponentPanel({
           {incoming.map((i) => (
             <li key={i.code} className="min-h-14 px-3 py-2 bg-primary-container/30 flex items-center justify-between gap-3 gold-hairline">
               <span className="min-w-0">
-                <strong className="cjk block truncate font-label-md text-label-md text-on-surface">{i.hostName} 向你约战</strong>
-                <small className="block font-label-sm text-label-sm text-on-surface-variant">{i.hostElo} ELO · 对战码 {i.code}</small>
+                <strong className="cjk block truncate font-label-md text-label-md text-on-surface">{t(`${i.hostName} 向你约战`, `${i.hostName} challenges you`)}</strong>
+                <small className="block font-label-sm text-label-sm text-on-surface-variant">{i.hostElo} ELO · {t("对战码", "Code")} {i.code}</small>
               </span>
-              <Button onClick={() => accept(i.code)} className="home-glass-action h-11 bg-secondary text-on-secondary px-4 shrink-0 cjk">应战</Button>
+              <Button onClick={() => accept(i.code)} className="home-glass-action h-11 bg-secondary text-on-secondary px-4 shrink-0 cjk">{t("应战", "Accept")}</Button>
             </li>
           ))}
         </ul>
       )}
 
       <div className="mt-space-sm grid grid-cols-3 gap-1" role="tablist">
-        {([["auto", "系统匹配"], ["invite", "邀请对手"], ["lobby", "约战大厅"]] as [Tab, string][]).map(([id, label]) => (
+        {([["auto", t("系统匹配", "Matchmaking")], ["invite", t("邀请对手", "Invite")], ["lobby", t("约战大厅", "Lobby")]] as [Tab, string][]).map(([id, label]) => (
           <button
             key={id}
             role="tab"
@@ -180,37 +187,43 @@ export function OpponentPanel({
         {tab === "auto" && (
           <div className="space-y-space-sm">
             <div>
-              <p className="cjk font-label-sm text-label-sm text-on-surface">选择赛制</p>
-              <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-1" role="radiogroup" aria-label="赛制">
-                {TIME_CONTROLS.map((t) => (
+              <p className="cjk font-label-sm text-label-sm text-on-surface">{t("选择赛制", "Choose a time control")}</p>
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-1" role="radiogroup" aria-label={t("赛制", "Time control")}>
+                {TIME_CONTROLS.map((tc) => (
                   <button
-                    key={t.id}
+                    key={tc.id}
                     role="radio"
-                    aria-checked={tcId === t.id}
+                    aria-checked={tcId === tc.id}
                     disabled={ranked}
-                    onClick={() => setTcId(t.id)}
+                    onClick={() => setTcId(tc.id)}
                     className={`home-glass-control cjk min-h-12 px-2 py-1 font-label-sm text-label-sm transition-colors disabled:opacity-60 ${
-                      tcId === t.id
+                      tcId === tc.id
                         ? "home-glass-tile-active bg-primary-container text-on-primary-container"
                         : "bg-surface-container text-on-surface-variant hover:text-secondary"
                     }`}
                   >
-                    <span className="block tabular-nums">{t.label}</span>
-                    <span className="block">{t.zh}</span>
+                    <span className="block tabular-nums">{tc.label}</span>
+                    <span className="block">{lang === "zh" ? tc.zh : tc.en}</span>
                   </button>
                 ))}
               </div>
-              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{timeControl(tcId).descZh} · 四种赛制共用同一套天梯分</p>
+              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{t(`${timeControl(tcId).descZh} · 四种赛制共用同一套天梯分`, `${timeControl(tcId).descEn} · All four share one ladder rating`)}</p>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
                 {ranked && waiting
-                  ? "正在按积分就近排队，只会配到选了同一赛制的对手，匹配成功自动开局。"
-                  : `系统按积分就近匹配真人 ${timeControl(tcId).label}，段位相近者优先，胜负结算段位与钻石。`}
+                  ? t(
+                      "正在按积分就近排队，只会配到选了同一赛制的对手，匹配成功自动开局。",
+                      "Queuing by rating. You will only meet players on the same time control, and the game starts automatically.",
+                    )
+                  : t(
+                      `系统按积分就近匹配真人 ${timeControl(tcId).label}，段位相近者优先，胜负结算段位与钻石。`,
+                      `Matchmaking pairs you with a human at ${timeControl(tcId).label}, closest rating first. Results settle rank and diamonds.`,
+                    )}
               </p>
               <Button onClick={() => onStartRanked(tcId)} disabled={ranked} className="home-glass-action h-12 text-on-primary-container px-space-md shrink-0">
                 <UiIcon name="shield" className="h-7 w-7" />
-                {ranked ? (waiting ? "排队中…" : "对局进行中") : "开始匹配"}
+                {ranked ? (waiting ? t("排队中…", "In queue…") : t("对局进行中", "Game in progress")) : t("开始匹配", "Start matchmaking")}
               </Button>
             </div>
             {ranked && waiting && (
@@ -218,14 +231,21 @@ export function OpponentPanel({
                 <span className="flex items-center gap-2 min-w-0">
                   <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0" />
                   <span className="cjk font-label-sm text-label-sm text-on-surface truncate">
-                    {queueSec < 30 ? "正在寻找同段位对手…" : queueSec < 90 ? "同段位偏少，正在放宽积分区间…" : "正在全服范围内匹配，稍候即可开局"}
+                    {queueSec < 30
+                      ? t("正在寻找同段位对手…", "Looking for an opponent at your rank…")
+                      : queueSec < 90
+                        ? t("同段位偏少，正在放宽积分区间…", "Few players at your rank — widening the rating range…")
+                        : t("正在全服范围内匹配，稍候即可开局", "Searching across all ranks — a game will start shortly")}
                   </span>
                 </span>
                 <span className="font-label-md text-label-md text-secondary tabular-nums shrink-0">{mmss(queueSec)}</span>
               </div>
             )}
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              当前 {statsQ.data?.queueing ?? 0} 人排队 · {statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.openInvites ?? 0} 条公开约战
+              {t(
+                `当前 ${statsQ.data?.queueing ?? 0} 人排队 · ${statsQ.data?.online ?? 0} 人在线 · ${statsQ.data?.openInvites ?? 0} 条公开约战`,
+                `${statsQ.data?.queueing ?? 0} in queue · ${statsQ.data?.online ?? 0} online · ${statsQ.data?.openInvites ?? 0} open challenges`,
+              )}
             </p>
           </div>
         )}
@@ -234,10 +254,14 @@ export function OpponentPanel({
           <div className="space-y-space-sm">
             <div className="home-glass-tile p-3">
               <p className="cjk font-label-md text-label-md text-on-surface">
-                实名认证（可选）{verified && <span className="text-secondary"> · 已认证</span>}
+                {t("实名认证（可选）", "Identity verification (optional)")}
+                {verified && <span className="text-secondary"> · {t("已认证", "Verified")}</span>}
               </p>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                认证纯属自愿，完成后在档案中显示认证徽章，不影响对弈与天梯。证件号仅保留后四位。
+                {t(
+                  "认证纯属自愿，完成后在档案中显示认证徽章，不影响对弈与天梯。证件号仅保留后四位。",
+                  "Verification is voluntary. It adds a badge to your profile and changes nothing about play or the ladder. Only the last four digits of the ID are kept.",
+                )}
               </p>
               {!verified && (
                 <>
@@ -245,7 +269,7 @@ export function OpponentPanel({
                     <input
                       value={realName || realNameSaved}
                       onChange={(e) => setRealName(e.target.value)}
-                      placeholder="真实姓名"
+                      placeholder={t("真实姓名", "Legal name")}
                       className="field-control cjk"
                     />
                   </div>
@@ -254,7 +278,7 @@ export function OpponentPanel({
                       value={idNumber}
                       maxLength={18}
                       onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
-                      placeholder="身份证号（18 位）"
+                      placeholder={t("身份证号（18 位）", "ID number (18 digits)")}
                       className="field-control"
                     />
                     <Button
@@ -263,12 +287,12 @@ export function OpponentPanel({
                         .then((r) => {
                           setRealNameSaved(r.profile.real_name ?? "");
                           setVerifyStatus(r.profile.verify_status ?? "verified");
-                          setNotice("实名认证通过，档案中将显示认证徽章。");
+                          setNotice(t("实名认证通过，档案中将显示认证徽章。", "Verified — the badge now shows on your profile."));
                         })
-                        .catch(() => setNotice("认证失败，请核对姓名与 18 位身份证号"))}
+                        .catch(() => setNotice(t("认证失败，请核对姓名与 18 位身份证号", "Verification failed — check the name and the 18-digit ID number")))}
                        className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
                     >
-                      认证
+                      {t("认证", "Verify")}
                     </Button>
                   </div>
                 </>
@@ -278,39 +302,39 @@ export function OpponentPanel({
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="搜索玩家名或账号"
+                placeholder={t("搜索玩家名或账号", "Search by player name or handle")}
                 className="field-control cjk"
               />
               <Button
                 type="button"
-                onClick={() => void searchPlayers({ data: { query } }).then((r) => { setResults(r as typeof results); if (!r.length) setNotice("没有找到该玩家"); }).catch(() => setNotice("搜索失败"))}
+                onClick={() => void searchPlayers({ data: { query } }).then((r) => { setResults(r as typeof results); if (!r.length) setNotice(t("没有找到该玩家", "No such player")); }).catch(() => setNotice(t("搜索失败", "Search failed")))}
                  className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
               >
-                搜索
+                {t("搜索", "Search")}
               </Button>
             </div>
             {results.map((p) => (
               <div key={p.id} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                 <span className="min-w-0"><strong className="block truncate">{p.name}</strong><small className="text-on-surface-variant">{p.elo} ELO</small></span>
-                <button onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">约战</button>
+                <button onClick={() => makeInvite(p.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             {(friendsQ.data ?? []).filter((f) => f.friendshipStatus === "accepted").map((f) => (
               <div key={f.friendshipId} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
-                <span className="min-w-0"><strong className="block truncate">好友 · {f.name}</strong><small className="text-on-surface-variant">{f.elo} ELO</small></span>
-                <button onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">约战</button>
+                <span className="min-w-0"><strong className="block truncate">{t(`好友 · ${f.name}`, `Friend · ${f.name}`)}</strong><small className="text-on-surface-variant">{f.elo} ELO</small></span>
+                <button onClick={() => makeInvite(f.id)} className="cjk h-11 px-3 text-primary font-label-sm text-label-sm shrink-0">{t("约战", "Challenge")}</button>
               </div>
             ))}
             <div className="grid gap-2 sm:grid-cols-2">
-               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">创建公开对战码（{timeControl(tcId).label}）</Button>
+               <Button type="button" onClick={() => makeInvite()} className="home-glass-control cjk h-12 bg-primary-container text-on-primary-container font-label-md text-label-md">{t(`创建公开对战码（${timeControl(tcId).label}）`, `Create an open code (${timeControl(tcId).label})`)}</Button>
               <div className="field-row">
-                <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="输入对战码" className="field-control uppercase" />
-                 <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">加入</Button>
+                <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder={t("输入对战码", "Enter a code")} className="field-control uppercase" />
+                 <Button type="button" onClick={() => accept(code)} className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md">{t("加入", "Join")}</Button>
               </div>
             </div>
             {(myCode || mine) && (
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-                我的对战码：<span className="tracking-widest text-secondary">{myCode || mine?.code}</span> · 10 分钟内有效
+                {t("我的对战码：", "Your code: ")}<span className="tracking-widest text-secondary">{myCode || mine?.code}</span> · {t("10 分钟内有效", "valid for 10 minutes")}
               </p>
             )}
           </div>
@@ -319,26 +343,26 @@ export function OpponentPanel({
         {tab === "lobby" && (
           <div className="space-y-space-sm">
             <div className="home-glass-media aged-print-frame relative overflow-hidden">
-              <img src={lobbyBanner} alt="约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章" loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
+              <img src={lobbyBanner} alt={t("约战大厅：白金王与黑曜绯红骑士对峙，两侧为段位徽章", "Lobby banner: a platinum king faces an obsidian crimson knight, flanked by rank badges")} loading="lazy" width={1536} height={640} className="w-full h-24 sm:h-32 object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface-container-lowest/90 via-surface-container-lowest/40 to-transparent" />
               <div className="absolute inset-0 p-3 flex flex-col justify-center">
-                <span className="cjk font-label-md text-label-md text-primary">约战大厅</span>
-                <span className="cjk font-label-md text-label-md text-on-surface">{statsQ.data?.online ?? 0} 人在线 · {statsQ.data?.queueing ?? 0} 人排队</span>
+                <span className="cjk font-label-md text-label-md text-primary">{t("约战大厅", "Challenge lobby")}</span>
+                <span className="cjk font-label-md text-label-md text-on-surface">{t(`${statsQ.data?.online ?? 0} 人在线 · ${statsQ.data?.queueing ?? 0} 人排队`, `${statsQ.data?.online ?? 0} online · ${statsQ.data?.queueing ?? 0} in queue`)}</span>
               </div>
             </div>
 
             <div className="home-glass-tile p-3">
-              <p className="cjk font-label-sm text-label-sm text-on-surface">段位分布</p>
+              <p className="cjk font-label-sm text-label-sm text-on-surface">{t("段位分布", "Rank distribution")}</p>
               <ul className="mt-2 space-y-1.5">
-                {(statsQ.data?.tiers ?? []).map((t) => {
+                {(statsQ.data?.tiers ?? []).map((tier) => {
                   const total = Math.max(1, (statsQ.data?.tiers ?? []).reduce((s, x) => s + x.count, 0));
                   return (
-                    <li key={t.tier} className="flex items-center gap-2">
-                      <span className="cjk font-label-sm text-label-sm text-on-surface-variant w-24 shrink-0 truncate">{t.tierZh}</span>
+                    <li key={tier.tier} className="flex items-center gap-2">
+                      <span className="cjk font-label-sm text-label-sm text-on-surface-variant w-24 shrink-0 truncate">{lang === "zh" ? tier.tierZh : tier.tier}</span>
                       <span className="h-2 flex-1 bg-surface-container-highest overflow-hidden">
-                        <span className="block h-full bg-secondary/70" style={{ width: `${(t.count / total) * 100}%` }} />
+                        <span className="block h-full bg-secondary/70" style={{ width: `${(tier.count / total) * 100}%` }} />
                       </span>
-                      <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums w-8 text-right">{t.count}</span>
+                      <span className="font-label-sm text-label-sm text-on-surface-variant tabular-nums w-8 text-right">{tier.count}</span>
                     </li>
                   );
                 })}
@@ -346,23 +370,23 @@ export function OpponentPanel({
             </div>
 
             <div className="space-y-2">
-              <p className="cjk font-label-sm text-label-sm text-on-surface">公开约战</p>
-              {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。</p>}
+              <p className="cjk font-label-sm text-label-sm text-on-surface">{t("公开约战", "Open challenges")}</p>
+              {open.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("现在没有公开约战。可以创建一个对战码，或直接用系统匹配排队。", "No open challenges right now. Create a code, or join the matchmaking queue.")}</p>}
               {open.map((i) => (
                 <div key={i.code} className="min-h-12 px-3 bg-surface-container flex items-center justify-between gap-2">
                   <span className="min-w-0"><strong className="block truncate">{i.hostName}</strong><small className="text-on-surface-variant">{i.hostElo} ELO · {i.code}</small></span>
-                  <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">应战</button>
+                  <button onClick={() => accept(i.code)} className="cjk h-11 px-3 text-secondary font-label-sm text-label-sm shrink-0">{t("应战", "Accept")}</button>
                 </div>
               ))}
             </div>
 
             <div className="space-y-1">
-              <p className="cjk font-label-sm text-label-sm text-on-surface">最近战报</p>
-              {(statsQ.data?.recent ?? []).length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有已结算的对局。</p>}
+              <p className="cjk font-label-sm text-label-sm text-on-surface">{t("最近战报", "Recent results")}</p>
+              {(statsQ.data?.recent ?? []).length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("还没有已结算的对局。", "No finished games yet.")}</p>}
               {(statsQ.data?.recent ?? []).map((m) => (
                 <p key={m.id} className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
-                  {m.white} vs {m.black} · {m.outcome === "1-0" ? "白胜" : m.outcome === "0-1" ? "黑胜" : "和棋"}
-                  {m.ratingDelta !== null && <span className="text-secondary tabular-nums"> · ±{Math.abs(m.ratingDelta)} 分</span>}
+                  {m.white} vs {m.black} · {m.outcome === "1-0" ? t("白胜", "White wins") : m.outcome === "0-1" ? t("黑胜", "Black wins") : t("和棋", "Draw")}
+                  {m.ratingDelta !== null && <span className="text-secondary tabular-nums"> · ±{Math.abs(m.ratingDelta)} {t("分", "pts")}</span>}
                 </p>
               ))}
             </div>

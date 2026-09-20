@@ -359,7 +359,7 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
               const v = Math.round((session?.mind ?? STATIC_MIND)[m.key] ?? 0);
               return (
                 <div key={m.en} className="flex items-center gap-space-sm">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">{m.zh}</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">{lang === "zh" ? m.zh : m.en}</span>
                   <div className="h-1 flex-1 bg-surface-container-high overflow-hidden">
                     <div
                       className="h-full bg-secondary-fixed transition-[width] duration-500"

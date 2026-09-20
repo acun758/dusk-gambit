@@ -3,6 +3,7 @@ import { Chess, type Square } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_PIECE_SET_ID, pieceSet } from "@/lib/piece-sets";
 import { playSound } from "@/lib/sound";
+import { useLang } from "@/lib/i18n";
 
 
 export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
@@ -54,6 +55,15 @@ export function BoardPiece({
   );
 }
 
+const PIECE_NAME: Record<string, { zh: string; en: string }> = {
+  k: { zh: "王", en: "king" },
+  q: { zh: "后", en: "queen" },
+  r: { zh: "车", en: "rook" },
+  b: { zh: "象", en: "bishop" },
+  n: { zh: "马", en: "knight" },
+  p: { zh: "兵", en: "pawn" },
+};
+
 const GLYPH: Record<string, string> = {
   wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
   bk: "♚", bq: "♛", br: "♜", bb: "♝", bn: "♞", bp: "♟",
@@ -90,6 +100,7 @@ function PlayableBoardComponent({
   premove?: boolean;
   myColor?: "w" | "b" | undefined;
 }) {
+  const { lang } = useLang();
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
@@ -178,7 +189,7 @@ function PlayableBoardComponent({
 
 
   return (
-    <div className="board-stage game-board ipad-board" aria-label="国际象棋棋盘">
+    <div className="board-stage game-board ipad-board" aria-label={lang === "zh" ? "国际象棋棋盘" : "Chessboard"}>
       <div className="board-ambient" aria-hidden="true">
         <i /><i /><i /><i /><i /><i />
       </div>
@@ -208,7 +219,12 @@ function PlayableBoardComponent({
               type="button"
               variant="ghost"
               onClick={() => click(square)}
-              aria-label={`${square}${piece ? ` ${piece.color === "w" ? "白方" : "黑方"}${GLYPH[`${piece.color}${piece.type}`]}` : " 空格"}`}
+              aria-label={
+                square +
+                (piece
+                  ? ` ${lang === "zh" ? (piece.color === "w" ? "白方" : "黑方") : piece.color === "w" ? "White" : "Black"} ${PIECE_NAME[piece.type]?.[lang === "zh" ? "zh" : "en"] ?? ""}`
+                  : lang === "zh" ? " 空格" : " empty")
+              }
               className={`board-square group relative h-auto min-h-0 w-auto rounded-none p-0 text-[clamp(29px,7.2vw,54px)] leading-none focus-visible:z-30 focus-visible:ring-2 focus-visible:ring-secondary ${
                 (file + rank) % 2 ? "board-square-light" : "board-square-dark"
               } ${active ? "is-selected" : ""} ${isLastMove ? "is-last-move" : ""} ${isLastDestination ? "is-last-destination" : ""} ${isLastDestination && lastMoveWasCapture ? "is-capture-impact" : ""} ${isChecked ? "is-check" : ""} ${isPremove ? "is-premove" : ""}`}

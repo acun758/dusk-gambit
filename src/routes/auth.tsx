@@ -13,6 +13,9 @@ import { uploadAvatar } from "@/lib/avatar-upload";
 
 export const Route = createFileRoute("/auth")({
   staticData: { sitemap: false },
+  validateSearch: (search: Record<string, unknown>): { mode?: "in" | "up" | undefined } => ({
+    mode: search['mode'] === "up" ? "up" : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "血誓登录 | 玄弈棋竞" },
@@ -32,7 +35,8 @@ const AVATAR_KEY = "bs.avatar.v1";
 function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const { mode: initialMode } = Route.useSearch();
+  const [mode, setMode] = useState<"in" | "up">(initialMode ?? "in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [realName, setRealName] = useState("");

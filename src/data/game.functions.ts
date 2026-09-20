@@ -1284,3 +1284,73 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
       createdAt: r.created_at,
     }));
   });
+
+/* --------------------------------- 运营看板 -------------------------------- */
+
+export interface OpsStats {
+  players: number;
+  activeDay: number;
+  activeWeek: number;
+  matches: number;
+  matchesDay: number;
+  matchesWeek: number;
+  avgDurationSec: number;
+  avgPlies: number;
+  liveNow: number;
+}
+
+/** 运营总览：全站注册数、活跃人数、对战次数与平均对局时长。仅管理员可读。 */
+export const fetchOpsStats = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<OpsStats> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (isAdmin !== true) throw new Error("forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const dayAgo = new Date(Date.now() - 86_400_000).toISOString();
+    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+
+    const head = { count: "exact" as const, head: true };
+    const [players, activeDay, activeWeek, matches, matchesDay, matchesWeek, liveNow] = await Promise.all([
+      supabaseAdmin.from("profiles").select("id", head),
+      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", dayAgo),
+      supabaseAdmin.from("profiles").select("id", head).gte("updated_at", weekAgo),
+      supabaseAdmin.from("matches").select("id", head),
+      supabaseAdmin.from("matches").select("id", head).gte("created_at", dayAgo),
+      supabaseAdmin.from("matches").select("id", head).gte("created_at", weekAgo),
+      supabaseAdmin.from("matches").select("id", head).eq("status", "live"),
+    ]);
+
+    const { data: finished } = await supabaseAdmin
+      .from("matches")
+      .select("created_at, last_move_at, ply")
+      .eq("status", "over")
+      .order("created_at", { ascending: false })
+      .limit(300);
+
+    let secSum = 0;
+    let plySum = 0;
+    let n = 0;
+    (finished ?? []).forEach((r) => {
+      const start = new Date(r.created_at).getTime();
+      const end = new Date(r.last_move_at).getTime();
+      const sec = Math.max(0, Math.round((end - start) / 1000));
+      if (sec > 0 && sec < 4 * 3600) {
+        secSum += sec;
+        plySum += r.ply ?? 0;
+        n += 1;
+      }
+    });
+
+    return {
+      players: players.count ?? 0,
+      activeDay: activeDay.count ?? 0,
+      activeWeek: activeWeek.count ?? 0,
+      matches: matches.count ?? 0,
+      matchesDay: matchesDay.count ?? 0,
+      matchesWeek: matchesWeek.count ?? 0,
+      avgDurationSec: n ? Math.round(secSum / n) : 0,
+      avgPlies: n ? Math.round(plySum / n) : 0,
+      liveNow: liveNow.count ?? 0,
+    };
+  });

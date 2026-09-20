@@ -71,7 +71,7 @@ function ArchiveChronicle() {
           <section className="grid gap-space-sm">
             <div className="section-heading-row">
               <div className="min-w-0">
-                <p className="cjk font-label-sm text-label-sm text-primary">{t("对局高光 · PERSONAL ARCHIVE", "Personal archive · 对局高光")}</p>
+                <p className="cjk font-label-sm text-label-sm text-primary">{t("对局高光 · PERSONAL ARCHIVE", "PERSONAL ARCHIVE · GAME HIGHLIGHTS")}</p>
                 <h2 className="cjk font-headline-md text-headline-md truncate">{t("王权战报典藏", "Sovereign Battle Archive")}</h2>
               </div>
               <Link to="/analysis" className="cjk flex min-h-11 items-center px-3 text-secondary">{t("选择对局 →", "Pick a match →")}</Link>

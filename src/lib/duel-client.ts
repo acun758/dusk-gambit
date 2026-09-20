@@ -1,3 +1,4 @@
+import { currentLang } from "@/lib/i18n";
 import {
   BLITZ_3_2,
   type ClientMessage,
@@ -39,8 +40,8 @@ function baseState(matchId: string, you: Color, levelId: AiLevelId): DuelState {
     depth: level.depth,
     mind: { load: 46, anxiety: 22, structure: 71, instinct: 58 },
     players: {
-      w: { name: "你", elo: 1000 },
-      b: { name: `AI · ${level.zh}`, elo: level.elo },
+      w: { name: currentLang() === "zh" ? "你" : "You", elo: 1000 },
+      b: { name: `AI · ${currentLang() === "zh" ? level.zh : level.name}`, elo: level.elo },
     },
     status: "live",
   };

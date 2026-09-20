@@ -323,14 +323,24 @@ function Arena() {
         {!signedIn ? (
           <div className="home-glass-panel p-space-md grid gap-2">
             <p className="cjk font-body-md text-body-md text-on-surface-variant">
-              {t("登录后才能开设或加入公开对局场。", "Sign in to open or join public rooms.")}
+              {t("登录后才能开设或加入公开对局场。新玩家可直接在此注册账号。", "Sign in to open or join public rooms. New here? Create an account first.")}
             </p>
-            <Link
-              to="/auth"
-              className="home-glass-control cjk flex h-11 w-fit items-center bg-primary-container px-4 font-label-md text-label-md text-on-primary-container"
-            >
-              {t("去登录", "Sign in")}
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to="/auth"
+                search={{ mode: "up" }}
+                className="home-glass-control cjk flex h-11 w-fit items-center bg-primary-container px-4 font-label-md text-label-md text-on-primary-container"
+              >
+                {t("注册账号", "Create account")}
+              </Link>
+              <Link
+                to="/auth"
+                search={{ mode: "in" }}
+                className="home-glass-control cjk flex h-11 w-fit items-center px-4 font-label-md text-label-md text-secondary"
+              >
+                {t("已有账号，去登录", "I have an account")}
+              </Link>
+            </div>
           </div>
         ) : (
           <>

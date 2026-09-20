@@ -19,13 +19,15 @@ export interface TimeControl {
   en: string;
   /** 一句话说明 */
   descZh: string;
+  /** 一句话说明（英文） */
+  descEn: string;
 }
 
 export const TIME_CONTROLS: TimeControl[] = [
-  { id: "bullet", base: 60_000, inc: 0, label: "1+0", zh: "超快棋", en: "Bullet", descZh: "一分钟定胜负，考验直觉" },
-  { id: "blitz", base: 180_000, inc: 2_000, label: "3+2", zh: "快棋", en: "Blitz", descZh: "默认赛制，节奏紧凑" },
-  { id: "rapid", base: 600_000, inc: 0, label: "10+0", zh: "快速", en: "Rapid", descZh: "有时间算清战术" },
-  { id: "classical", base: 900_000, inc: 10_000, label: "15+10", zh: "慢棋", en: "Classical", descZh: "适合完整构思与长考" },
+  { id: "bullet", base: 60_000, inc: 0, label: "1+0", zh: "超快棋", en: "Bullet", descZh: "一分钟定胜负，考验直觉", descEn: "One minute each — pure instinct" },
+  { id: "blitz", base: 180_000, inc: 2_000, label: "3+2", zh: "快棋", en: "Blitz", descZh: "默认赛制，节奏紧凑", descEn: "The default pace — tight and sharp" },
+  { id: "rapid", base: 600_000, inc: 0, label: "10+0", zh: "快速", en: "Rapid", descZh: "有时间算清战术", descEn: "Room to calculate tactics" },
+  { id: "classical", base: 900_000, inc: 10_000, label: "15+10", zh: "慢棋", en: "Classical", descZh: "适合完整构思与长考", descEn: "For full plans and deep thought" },
 ];
 
 export const DEFAULT_TIME_CONTROL: TimeControlId = "blitz";

@@ -4,6 +4,7 @@ import type { MoveFrame } from "@/lib/duel-protocol";
 export interface CoachInsight {
   phase: "opening" | "middlegame" | "endgame";
   eyebrow: string;
+  eyebrowEn: string;
   title: string;
   titleEn: string;
   body: string;
@@ -68,6 +69,7 @@ function openingInsight(moves: MoveFrame[]): CoachInsight {
   return {
     phase: "opening",
     eyebrow: "开局讲解 · Opening",
+    eyebrowEn: "Opening notes",
     title: match?.name ?? "开局三原则",
     titleEn: match?.nameEn ?? "Three opening principles",
     body: match?.principle ?? "先控制中心、发展马象、尽早保护王；不要连续移动同一枚棋子。",
@@ -97,6 +99,7 @@ export function getCoachInsight(fen: string, moves: MoveFrame[], ranked: boolean
     return {
       phase: "endgame",
       eyebrow: "残局解析 · Endgame",
+      eyebrowEn: "Endgame notes",
       title: queens === 0 ? "王要主动参战" : "先制造通路兵",
       titleEn: queens === 0 ? "Activate your king" : "Create a passed pawn",
       body: "残局中先激活王，再固定对方弱兵。计算交换后，确认自己的通路兵是否更快升变。",
@@ -110,6 +113,7 @@ export function getCoachInsight(fen: string, moves: MoveFrame[], ranked: boolean
     return {
       phase: "middlegame",
       eyebrow: "战术提示 · Tactics",
+      eyebrowEn: "Tactics",
       title: "先处理将军",
       titleEn: "Answer the check first",
       body: ranked ? "真人天梯只提示局面主题：检查移王、吃子与挡将三类应对。" : "逐一检查移王、吃掉进攻子和挡住攻击线，再比较哪种应对损失最小。",
@@ -125,6 +129,7 @@ export function getCoachInsight(fen: string, moves: MoveFrame[], ranked: boolean
     return {
       phase: "middlegame",
       eyebrow: "战术提示 · Tactics",
+      eyebrowEn: "Tactics",
       title: "交换后重新扫描",
       titleEn: "Rescan after every trade",
       body: ranked ? "确认双方王的安全与未保护棋子，再决定下一步。" : "每次吃子后按“将军、吃子、威胁”重新扫描，避免只看到眼前交换。",
@@ -138,6 +143,7 @@ export function getCoachInsight(fen: string, moves: MoveFrame[], ranked: boolean
   return {
     phase: "middlegame",
     eyebrow: "战术提示 · Tactics",
+    eyebrowEn: "Tactics",
     title: "先看对手的威胁",
     titleEn: "Look at your opponent's threats",
     body: ranked ? "真人天梯不提供推荐着，只提醒检查王安全、未保护棋子与开放线。" : "落子前依次检查将军、吃子和直接威胁，再改善最差的一枚棋子。",

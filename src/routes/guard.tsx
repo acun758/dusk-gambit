@@ -88,7 +88,15 @@ function GuardPage() {
           </div>
         ) : (
           <section className="home-glass-panel grid gap-2 p-space-md">
-            <h2 className="cjk font-label-md text-label-md text-on-surface">{t("最近告警", "Recent alerts")}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="cjk font-label-md text-label-md text-on-surface">{t("最近告警", "Recent alerts")}</h2>
+              <Link
+                to="/ops"
+                className="home-glass-control cjk flex h-9 items-center px-3 font-label-sm text-label-sm text-secondary"
+              >
+                {t("运营总览", "Operations")}
+              </Link>
+            </div>
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
               {t(
                 "服务端判定的异常走子会即时推送到这里，同时提示给当事人。",

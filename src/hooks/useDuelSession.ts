@@ -19,6 +19,7 @@ import {
 import { subscribeDuel, watchLink, type LinkPhase } from "@/data/realtime";
 
 import type { ConnectionPhase, Color, DuelState, MoveFrame, ServerMessage } from "@/lib/duel-protocol";
+import { currentLang } from "@/lib/i18n";
 import { aiLevel, type AiLevelId } from "@/core/ai";
 import { BLITZ_3_2 } from "@/lib/duel-protocol";
 import {
@@ -738,7 +739,7 @@ export function useDuelSession(): DuelSession {
       cp: 18,
       depth: 6,
       mind: mindFor(0),
-      players: { w: { name: "你", elo: 1000 }, b: { name: `AI · ${aiLevel(levelId).zh}`, elo: aiLevel(levelId).elo } },
+      players: { w: { name: currentLang() === "zh" ? "你" : "You", elo: 1000 }, b: { name: `AI · ${currentLang() === "zh" ? aiLevel(levelId).zh : aiLevel(levelId).name}`, elo: aiLevel(levelId).elo } },
       status: mode === "error" ? "waiting" : "live",
     };
     return {
