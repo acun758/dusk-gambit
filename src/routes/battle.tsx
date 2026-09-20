@@ -485,7 +485,7 @@ function Battle() {
            <section aria-label={t("棋局教练", "Coach")} className="battle-core-width home-glass-panel p-space-sm flex items-start gap-space-sm">
             <UiIcon name={(coach.phase === "opening" ? "quill" : coach.phase === "endgame" ? "flame" : coach.icon === "target" ? "bolt" : "lotus") as UiIconName} className="h-8 w-8 mt-0.5" />
             <div className="min-w-0">
-              <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
+              <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{lang === "zh" ? coach.eyebrow : coach.eyebrowEn}</p>
               <h2 className="cjk font-label-lg text-label-lg text-on-surface mt-0.5">{lang === "zh" ? coach.title : coach.titleEn}</h2>
               <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">{lang === "zh" ? coach.body : coach.bodyEn}</p>
               {coach.phase === "endgame" && <Link to="/crucible" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">{t("去残局试炼（心算）强化此主题", "Train this theme in blindfold endgame trials")} →</Link>}
