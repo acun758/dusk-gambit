@@ -543,9 +543,10 @@ function Arena() {
                             <Button
                               type="button"
                               variant="ghost"
-                              disabled={busy}
+                              disabled={busy || !verified}
                               onClick={() => onChallenge(p)}
-                              className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
+                              title={verified ? undefined : verifyHint}
+                              className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant disabled:opacity-50"
                             >
                               {t("约战", "Challenge")}
                             </Button>
