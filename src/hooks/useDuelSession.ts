@@ -11,6 +11,7 @@ import {
   findMatch,
   offerDraw as offerDrawRemote,
   pendingMoves,
+  pingMatch,
   resignMatch,
   respondDraw as respondDrawRemote,
   submitMove,
@@ -58,6 +59,8 @@ export interface DuelSession {
   aiLevelId: AiLevelId;
   /** 真人对局中双方的实时积分，每一步与重连后都会刷新 */
   ratings: DuelRatings | null;
+  /** 真人对局中对手是否在线（本地陪练为 null） */
+  opponentOnline: boolean | null;
   resumed: boolean;
   /** 本地陪练可暂停；真人天梯由服务端仲裁，不可暂停 */
   canPause: boolean;
@@ -509,7 +512,19 @@ export function useDuelSession(): DuelSession {
     const s = { uci, san: uci, zh: "实战落子", cp: m.cp };
     setMovePending(true);
     setNotice(null);
-    void submitMove({ data: { matchId: m.id, uci: s.uci, san: s.san, zh: s.zh, cp: s.cp } })
+    void submitMove({
+      data: {
+        matchId: m.id,
+        uci: s.uci,
+        san: s.san,
+        zh: s.zh,
+        cp: s.cp,
+        // 一致性声明：服务端据此确认双方棋谱同源，不一致即拒绝并追帧
+        expectedSeq: m.seq,
+        baseFen: m.fen,
+        clientTs: Date.now(),
+      },
+    })
       .then(async (result) => {
         if (result.code === "ok") {
           // 服务端已接受这一手：立刻用返回的权威局面更新，
@@ -656,6 +671,7 @@ export function useDuelSession(): DuelSession {
         movePending,
         aiLevelId: levelId,
         ratings,
+        opponentOnline,
         resumed,
         canPause: false,
         paused: false,
@@ -710,6 +726,7 @@ export function useDuelSession(): DuelSession {
       movePending,
       aiLevelId: levelId,
       ratings: null,
+      opponentOnline: null,
       resumed: false,
       canPause: mode === "local",
       paused,
@@ -732,5 +749,5 @@ export function useDuelSession(): DuelSession {
       rematch: restart,
     };
     // tick 驱动时钟插值刷新
-  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, timeControlId, levelId, tick, ratings, resumed, paused, togglePause, restart, offerDraw, cancelDrawOffer, answerDraw, takeback]);
+  }, [mode, cloud, moves, phase, localState, notice, movePending, playMove, resign, simulateDrop, useLocalPractice, setAiLevel, startRanked, timeControlId, levelId, tick, ratings, opponentOnline, resumed, paused, togglePause, restart, offerDraw, cancelDrawOffer, answerDraw, takeback]);
 }
