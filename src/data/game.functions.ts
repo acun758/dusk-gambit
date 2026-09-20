@@ -1225,12 +1225,12 @@ export const listPromotionRivals = createServerFn({ method: "GET" }).handler(asy
 /** 风控告警行（面向当事人与管理员，不含任何联系方式）。 */
 export interface AuditAlertRow {
   id: number;
-  matchId: string;
+  matchId: string | null;
   userId: string | null;
   playerName: string | null;
   kind: string;
   severity: string;
-  detail: Record<string, unknown> | null;
+  detail: Record<string, string | number | boolean | null> | null;
   createdAt: string;
 }
 
@@ -1277,7 +1277,7 @@ export const listAuditAlerts = createServerFn({ method: "POST" })
       playerName: r.user_id ? (names.get(r.user_id) ?? null) : null,
       kind: r.kind,
       severity: r.severity ?? "warn",
-      detail: (r.detail as Record<string, unknown> | null) ?? null,
+      detail: (r.detail as Record<string, string | number | boolean | null> | null) ?? null,
       createdAt: r.created_at,
     }));
   });
