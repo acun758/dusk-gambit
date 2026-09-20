@@ -149,6 +149,16 @@ function Arena() {
     });
   }, [queryClient, signedIn]);
 
+  // 自检：榜单内本人分数必须与档案 ELO 同源一致，不一致即在控制台告警
+  useEffect(() => {
+    if (!myId || !ladderQ.data) return;
+    const row = ladderQ.data.find((r) => r.id === myId);
+    if (row && row.elo !== profile.elo) {
+      console.warn(`[ladder] rating mismatch: ladder=${row.elo} profile=${profile.elo}`);
+    }
+  }, [ladderQ.data, myId, profile.elo]);
+
+
   const topTen = useMemo(
     () => [...(ladderQ.data ?? [])].sort((a, b) => b.elo - a.elo).slice(0, 10),
     [ladderQ.data],
