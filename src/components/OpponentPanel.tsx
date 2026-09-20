@@ -11,7 +11,6 @@ import {
   fetchSession,
   joinDuelInvite,
   searchPlayers,
-  submitVerification,
 } from "@/data/db";
 import lobbyBanner from "@/assets/lobby-banner.jpg";
 import { useLang, useT } from "@/lib/i18n";
@@ -261,52 +260,6 @@ function OpponentPanelComponent({
 
         {tab === "invite" && (
           <div className="space-y-space-sm">
-            <div className="home-glass-tile p-3">
-              <p className="cjk font-label-md text-label-md text-on-surface">
-                {t("实名认证（发起约战必需）", "Identity verification (required to challenge)")}
-                {verified && <span className="text-secondary"> · {t("已认证", "Verified")}</span>}
-              </p>
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                {t(
-                  "完成实名认证后才能发起约战（点名邀请或创建对战码）。应战、系统匹配与 AI 陪练不受影响；证件号仅保留后四位。",
-                  "Verification is required before you can start a challenge (invite a player or create a code). Accepting challenges, matchmaking and AI practice are unaffected. Only the last four digits of the ID are kept.",
-                )}
-              </p>
-              {!verified && (
-                <>
-                  <div className="field-row mt-2">
-                    <input
-                      value={realName || realNameSaved}
-                      onChange={(e) => setRealName(e.target.value)}
-                      placeholder={t("真实姓名", "Legal name")}
-                      className="field-control cjk"
-                    />
-                  </div>
-                  <div className="field-row mt-2">
-                    <input
-                      value={idNumber}
-                      maxLength={18}
-                      onChange={(e) => setIdNumber(e.target.value.toUpperCase())}
-                      placeholder={t("身份证号（18 位）", "ID number (18 digits)")}
-                      className="field-control"
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => void submitVerification({ data: { realName: realName || realNameSaved, idNumber } })
-                        .then((r) => {
-                          setRealNameSaved(r.profile.real_name ?? "");
-                          setVerifyStatus(r.profile.verify_status ?? "verified");
-                          setNotice(t("实名认证通过，档案中将显示认证徽章。", "Verified — the badge now shows on your profile."));
-                        })
-                        .catch(() => setNotice(t("认证失败，请核对姓名与 18 位身份证号", "Verification failed — check the name and the 18-digit ID number")))}
-                       className="field-action home-glass-action bg-secondary text-on-secondary cjk font-label-md text-label-md"
-                    >
-                      {t("认证", "Verify")}
-                    </Button>
-                  </div>
-                </>
-              )}
-            </div>
             <div className="field-row">
               <input
                 value={query}
