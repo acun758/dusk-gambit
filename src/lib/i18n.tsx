@@ -39,6 +39,16 @@ export function LangProvider({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
+/** 非 React 场景读取当前语言（默认 zh）。 */
+export function currentLang(): Lang {
+  try {
+    const saved = window.localStorage.getItem(KEY);
+    return saved === "en" ? "en" : "zh";
+  } catch {
+    return "zh";
+  }
+}
+
 export function useLang() {
   return useContext(Ctx);
 }
