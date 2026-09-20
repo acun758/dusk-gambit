@@ -440,8 +440,40 @@ export const submitMove = createServerFn({ method: "POST" })
     const { data: applied, error } = await supabaseAdmin.rpc("apply_ranked_move", rpcArgs);
     if (error) throw new Error(error.message);
     const result = applied as { code: string; seq?: number; ply?: number; clock_w?: number; clock_b?: number };
+    const nowIso = new Date().toISOString();
+    await supabaseAdmin
+      .from("matches")
+      .update(you === "w" ? { white_move_at: nowIso, white_seen_at: nowIso } : { black_move_at: nowIso, black_seen_at: nowIso })
+      .eq("id", m.id);
     const fresh = await supabaseAdmin.from("matches").select("*").eq("id", m.id).single();
     return { ...result, match: fresh.data as MatchRow, clock: { w: result.clock_w ?? m.clock_w, b: result.clock_b ?? m.clock_b } };
+  });
+
+/**
+ * 对局在线心跳：上报自己仍在场，并读取对手最近一次在线时间。
+ * 只影响“对手已断线”的提示，不改变计时与结算（超时仍由 claimTimeout 判定）。
+ */
+export const pingMatch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { matchId: string }) => input)
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("matches")
+      .select("id,white_id,black_id,status,white_seen_at,black_seen_at")
+      .eq("id", data.matchId)
+      .maybeSingle();
+    if (!row) throw new Error("match not found");
+    const you = row.white_id === context.userId ? "w" : row.black_id === context.userId ? "b" : null;
+    if (!you) throw new Error("forbidden");
+    const nowIso = new Date().toISOString();
+    await supabaseAdmin
+      .from("matches")
+      .update(you === "w" ? { white_seen_at: nowIso } : { black_seen_at: nowIso })
+      .eq("id", row.id);
+    const oppSeen = you === "w" ? row.black_seen_at : row.white_seen_at;
+    const gapMs = oppSeen ? Date.now() - new Date(oppSeen).getTime() : null;
+    return { opponentSeenAt: oppSeen, opponentGapMs: gapMs, opponentOnline: gapMs !== null && gapMs < 20_000 };
   });
 
 export const resignMatch = createServerFn({ method: "POST" })
