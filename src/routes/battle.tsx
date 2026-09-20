@@ -38,9 +38,9 @@ export const Route = createFileRoute("/battle")({
     typeof search['drill'] === "string" ? { drill: search['drill'] as string } : {},
   head: () => ({
     meta: [
-      { title: "实时对弈 · 玄弈 DUSK GAMBIT" },
+      { title: "实时对弈 · 玄弈棋竞" },
       { name: "description", content: "1+0 / 3+2 / 10+0 / 15+10 四种赛制，服务端仲裁时钟与胜负的实时天梯对弈。" },
-      { property: "og:title", content: "实时对弈 · 玄弈 DUSK GAMBIT" },
+      { property: "og:title", content: "实时对弈 · 玄弈棋竞" },
       { property: "og:description", content: "1+0 / 3+2 / 10+0 / 15+10 四种赛制，服务端仲裁时钟与胜负的实时天梯对弈。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

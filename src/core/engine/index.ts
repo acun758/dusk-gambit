@@ -1,5 +1,5 @@
 /**
- * 端内引擎单例（Dusk/Ashborn 引擎 v0.1）。
+ * 端内引擎单例（玄弈棋竞引擎 v0.1）。
  *
  * core 内不认识浏览器：worker 工厂由宿主注入
  *   - Web：src/lib/engine-host.ts 注入 Vite 打包的 worker chunk

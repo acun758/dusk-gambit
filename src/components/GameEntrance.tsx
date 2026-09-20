@@ -73,8 +73,8 @@ export function GameEntrance({ onEntered }: { onEntered: () => void }) {
       <div className="game-entrance-photo-frame">
         <EntrancePicture
           alt={t(
-            "玄弈棋局海报：雄狮、城堡与黑金国王棋子",
-            "Dusk Gambit poster with a lion, castle and black-gold king"
+            "玄弈棋竞海报：雄狮、城堡与黑金国王棋子",
+            "Xuanyi Qijing poster with a lion, castle and black-gold king"
           )}
         />
       </div>
