@@ -30,6 +30,9 @@ export interface DuelFrameHandlers<M, V> {
 
 /** 大厅在场玩家（仅公开展示字段，不含任何联系方式）。 */
 export interface ArenaPresencePlayer {
+  /** 登录账号 id，用于定向约战；未登录为 null */
+  uid?: string | null;
+  avatarKey?: string | null;
   id: string;
   name: string;
   elo: number;
