@@ -822,6 +822,7 @@ export type Database = {
           rating_min: number
           short_code: string
           status: string
+          target_id: string | null
           updated_at: string
           visibility: string
         }
@@ -841,6 +842,7 @@ export type Database = {
           rating_min?: number
           short_code: string
           status?: string
+          target_id?: string | null
           updated_at?: string
           visibility?: string
         }
@@ -860,6 +862,7 @@ export type Database = {
           rating_min?: number
           short_code?: string
           status?: string
+          target_id?: string | null
           updated_at?: string
           visibility?: string
         }
@@ -978,6 +981,7 @@ export type Database = {
           p_per_move_ms?: number
           p_rating_max?: number
           p_rating_min?: number
+          p_target_id?: string
           p_user_id: string
           p_visibility?: string
         }
@@ -997,6 +1001,7 @@ export type Database = {
           rating_min: number
           short_code: string
           status: string
+          target_id: string | null
           updated_at: string
           visibility: string
         }
