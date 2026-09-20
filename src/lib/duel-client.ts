@@ -344,7 +344,7 @@ export class DuelClient {
     if (!played && requested) {
       // 玩家落子若不合法，只回退这一手并让棋盘重新对齐，绝不代替玩家改走别的着法
       this.emit(
-        { t: "rejected", seq: ++this.seq, ply: idx + 1, code: "illegal_move", fen: this.state.fen },
+        { t: "rejected", seq: ++this.seq, ply: idx + 1, code: "illegal", fen: this.state.fen },
         "live",
       );
       return;
