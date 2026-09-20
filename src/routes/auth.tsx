@@ -31,6 +31,17 @@ export const Route = createFileRoute("/auth")({
 
 const AVATAR_KEY = "bs.avatar.v1";
 
+function friendlyAuthError(raw: string, t: (zh: string, en: string) => string): string {
+  const s = raw.toLowerCase();
+  if (s.includes("invalid login credentials")) return t("邮箱或密码不正确，请重试。", "Email or password is incorrect. Please try again.");
+  if (s.includes("email not confirmed")) return t("邮箱尚未确认，请先点开邮件里的确认链接。", "Email not confirmed yet — open the confirmation link we sent you.");
+  if (s.includes("already registered") || s.includes("already been registered")) return t("该邮箱已注册，请直接登录。", "This email is already registered — sign in instead.");
+  if (s.includes("weak") || s.includes("password should be")) return t("密码太简单，请换一个更长、更独特的密码。", "That password is too weak — choose a longer, less common one.");
+  if (s.includes("rate limit") || s.includes("too many")) return t("尝试太频繁，请稍后再试。", "Too many attempts — please try again in a moment.");
+  if (s.includes("invalid email") || s.includes("unable to validate email")) return t("邮箱格式不正确。", "That email address is not valid.");
+  return raw;
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
@@ -66,7 +77,7 @@ function AuthPage() {
         : await register(email, password, window.location.origin);
     setBusy(false);
     if (res.error) {
-      setMsg(res.error);
+      setMsg(friendlyAuthError(res.error, t));
       return;
     }
     if (res.signedIn) {
@@ -108,11 +119,16 @@ function AuthPage() {
             Blood Sovereign
           </span>
           <h1 className="font-headline-md text-headline-md text-secondary">
-            <Bi zh="血誓登录" en="Sovereign Sign In" block />
+            {mode === "in"
+              ? <Bi zh="血誓登录" en="Sovereign Sign In" block />
+              : <Bi zh="立誓注册" en="Swear the Oath" block />}
           </h1>
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            <Bi zh="登录后段位、钻石与天梯战绩由服务端结算。" en="Once signed in, rank, diamonds and ranked results are settled server-side." block />
+            {mode === "in"
+              ? <Bi zh="登录后段位、钻石与天梯战绩由服务端结算。" en="Once signed in, rank, diamonds and ranked results are settled server-side." block />
+              : <Bi zh="注册后即可开设对局场、点名约战，段位与天梯战绩由服务端结算。" en="After signing up you can open a table, challenge players directly, and have rank and ranked results settled server-side." block />}
           </p>
+
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-space-sm">
