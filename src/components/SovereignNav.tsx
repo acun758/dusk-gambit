@@ -129,7 +129,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="bolt" className="h-7 w-7" /><span className="rail-label">战术谜题</span>
+            <UiIcon name="bolt" className="h-7 w-7" /><span className="rail-label">{t("战术谜题", "Puzzles")}</span>
           </Link>
           <Link
             to="/arsenal"
@@ -139,7 +139,7 @@ export function SovereignNav() {
                 : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">军械典藏</span>
+            <UiIcon name="forge" className="h-7 w-7" /><span className="rail-label">{t("军械典藏", "Arsenal")}</span>
           </Link>
           <Link
             to="/archive"
@@ -147,7 +147,7 @@ export function SovereignNav() {
                isActive("/archive") ? "home-glass-tile-active text-secondary" : "text-on-surface-variant hover:text-secondary"
             }`}
           >
-            <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">绝杀典藏</span>
+            <UiIcon name="cards" className="h-7 w-7" /><span className="rail-label">{t("绝杀典藏", "Archive")}</span>
           </Link>
         </div>
       </aside>
