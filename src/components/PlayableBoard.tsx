@@ -100,6 +100,7 @@ function PlayableBoardComponent({
   premove?: boolean;
   myColor?: "w" | "b" | undefined;
 }) {
+  const { lang } = useLang();
   const chess = useMemo(() => {
     try { return new Chess(fen); } catch { return new Chess(); }
   }, [fen]);
