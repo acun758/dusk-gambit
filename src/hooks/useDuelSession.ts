@@ -354,6 +354,32 @@ export function useDuelSession(): DuelSession {
     };
   }, [cloud?.match.id]);
 
+  // 对局在线心跳（10 秒）：上报自己在场，并得知对手是否掉线。
+  // 只做提示，计时与结算仍完全由服务端裁定。
+  useEffect(() => {
+    const id = cloud?.match.id;
+    if (mode !== "cloud" || !id || cloud?.match.status !== "live") {
+      setOpponentOnline(null);
+      return;
+    }
+    let alive = true;
+    const beat = () => {
+      void pingMatch({ data: { matchId: id } })
+        .then((r) => {
+          if (alive) setOpponentOnline(r.opponentOnline);
+        })
+        .catch(() => {
+          /* 心跳失败不影响对局 */
+        });
+    };
+    beat();
+    const timer = window.setInterval(beat, 10_000);
+    return () => {
+      alive = false;
+      window.clearInterval(timer);
+    };
+  }, [cloud?.match.id, cloud?.match.status, mode]);
+
   // 链路状态：断网显示离线、补传完成回到在线
   useEffect(() => {
     if (mode !== "cloud") return;
