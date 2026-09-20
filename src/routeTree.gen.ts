@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as ArchiveRouteImport } from './routes/archive'
+import { Route as ArenaRouteImport } from './routes/arena'
 import { Route as ArsenalRouteImport } from './routes/arsenal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BattleRouteImport } from './routes/battle'
@@ -35,6 +36,11 @@ const AnalysisRoute = AnalysisRouteImport.update({
 const ArchiveRoute = ArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArenaRoute = ArenaRouteImport.update({
+  id: '/arena',
+  path: '/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArsenalRoute = ArsenalRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
+  '/arena': typeof ArenaRoute
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
+  '/arena': typeof ArenaRoute
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
   '/archive': typeof ArchiveRoute
+  '/arena': typeof ArenaRoute
   '/arsenal': typeof ArsenalRoute
   '/auth': typeof AuthRoute
   '/battle': typeof BattleRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analysis'
     | '/archive'
+    | '/arena'
     | '/arsenal'
     | '/auth'
     | '/battle'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analysis'
     | '/archive'
+    | '/arena'
     | '/arsenal'
     | '/auth'
     | '/battle'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analysis'
     | '/archive'
+    | '/arena'
     | '/arsenal'
     | '/auth'
     | '/battle'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalysisRoute: typeof AnalysisRoute
   ArchiveRoute: typeof ArchiveRoute
+  ArenaRoute: typeof ArenaRoute
   ArsenalRoute: typeof ArsenalRoute
   AuthRoute: typeof AuthRoute
   BattleRoute: typeof BattleRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/archive'
       fullPath: '/archive'
       preLoaderRoute: typeof ArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arena': {
+      id: '/arena'
+      path: '/arena'
+      fullPath: '/arena'
+      preLoaderRoute: typeof ArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/arsenal': {
@@ -279,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalysisRoute: AnalysisRoute,
   ArchiveRoute: ArchiveRoute,
+  ArenaRoute: ArenaRoute,
   ArsenalRoute: ArsenalRoute,
   AuthRoute: AuthRoute,
   BattleRoute: BattleRoute,

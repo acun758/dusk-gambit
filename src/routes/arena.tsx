@@ -164,8 +164,8 @@ function Arena() {
 
   return (
     <div className="relative min-h-dvh">
-      <ThemeBackdrop theme="black-gold" />
-      <SovereignPageHeader icon="nav-battle" titleZh="联网大厅" titleEn="Arena" backTo="/" />
+      <ThemeBackdrop theme="blackGold" />
+      <SovereignPageHeader icon="nav-duel" titleZh="联网大厅" titleEn="Arena" backTo="/" />
 
       <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm">
         {!signedIn ? (
