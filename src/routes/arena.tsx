@@ -359,6 +359,16 @@ function Arena() {
                 >
                   {t("刷新", "Refresh")}
                 </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={onInviteFriend}
+                  className="home-glass-control cjk h-11 bg-surface-container px-4 font-label-md text-label-md text-on-surface-variant"
+                >
+                  <UiIcon name="forum" className="mr-1.5 h-5 w-5" />
+                  {t("邀请好友", "Invite a friend")}
+                </Button>
                 <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
                   {t(`我的积分 ${profile.elo}`, `Your rating ${profile.elo}`)}
                 </span>
@@ -386,25 +396,113 @@ function Arena() {
               {note ? <p className="cjk font-body-sm text-body-sm text-secondary">{note}</p> : null}
             </div>
 
+            <div className="home-glass-panel grid grid-cols-3 gap-space-xs p-space-md">
+              {([
+                [t("在场玩家", "In the hall"), roster.length],
+                [t("对局中", "In duel"), playingCount],
+                [t("待加入对局场", "Open rooms"), rooms.filter((r) => r.status === "waiting" && r.visibility === "public").length],
+              ] as const).map(([label, value]) => (
+                <div key={label} className="grid gap-0.5">
+                  <span className="cjk font-label-sm text-label-sm text-on-surface-variant">{label}</span>
+                  <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{value}</span>
+                </div>
+              ))}
+            </div>
+
+            {incoming.length > 0 ? (
+              <div className="home-glass-panel grid gap-2 p-space-md">
+                <h2 className="cjk font-label-md text-label-md text-on-surface">{t("收到的约战", "Challenges for you")}</h2>
+                {incoming.map((room) => (
+                  <div key={room.id} className="flex flex-wrap items-center gap-2">
+                    <PlayerAvatar className="h-9 w-9" avatarKey={room.hostAvatarKey} seed={room.hostId} />
+                    <span className="cjk font-label-md text-label-md text-on-surface">
+                      {t(
+                        `${room.hostName}（${room.hostElo}）邀你对弈 · ${Math.round(room.initialMs / 60000)} 分 +${Math.round(room.incrementMs / 1000)} 秒`,
+                        `${room.hostName} (${room.hostElo}) invites you · ${Math.round(room.initialMs / 60000)} min +${Math.round(room.incrementMs / 1000)}s`,
+                      )}
+                    </span>
+                    <Button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => handleJoin({ roomId: room.id })}
+                      className="home-glass-action cjk h-10 px-4 font-label-md text-label-md"
+                    >
+                      {t("接受约战", "Accept")}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setDeclined((v) => [...v, room.id])}
+                      className="home-glass-control cjk h-10 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
+                    >
+                      {t("谢绝", "Decline")}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {outgoing.length > 0 ? (
+              <div className="home-glass-panel flex flex-wrap items-center gap-2 p-space-md">
+                <span className="cjk font-label-md text-label-md text-on-surface-variant">
+                  {t("已发出的约战，等待对方接受…", "Challenge sent — waiting for them to accept…")}
+                </span>
+                {outgoing.map((room) => (
+                  <Button
+                    key={room.id}
+                    type="button"
+                    variant="ghost"
+                    disabled={busy}
+                    onClick={() => onClose(room.id)}
+                    className="home-glass-control cjk h-10 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
+                  >
+                    {t("撤回", "Withdraw")}
+                  </Button>
+                ))}
+              </div>
+            ) : null}
+
             <div className="grid gap-space-sm sm:grid-cols-2">
               <section className="home-glass-panel grid gap-2 p-space-md">
                 <h2 className="cjk font-label-md text-label-md text-on-surface">
-                  {t(`在场玩家 · ${present.length} 人`, `In the hall · ${present.length}`)}
+                  {t(`在场玩家 · ${roster.length} 人`, `In the hall · ${roster.length}`)}
                 </h2>
-                {present.length === 0 ? (
+                {roster.length === 0 ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
                     {t("正在接入在场名册…", "Connecting to the hall roster…")}
                   </p>
                 ) : (
                   <ul className="grid gap-1">
-                    {present.slice(0, 12).map((p) => (
-                      <li key={p.id} className="flex items-center justify-between gap-2">
-                        <span className="truncate font-label-sm text-label-sm text-on-surface">{p.name}</span>
-                        <span className="cjk shrink-0 font-label-sm text-label-sm text-on-surface-variant tabular-nums">
-                          {p.elo} · {p.state === "playing" ? t("对局中", "In duel") : t("大厅中", "In hall")}
-                        </span>
-                      </li>
-                    ))}
+                    {roster.slice(0, 12).map((p) => {
+                      const isMe = p.id === seatId || (Boolean(p.uid) && p.uid === myId);
+                      return (
+                        <li key={p.id} className="flex items-center gap-2">
+                          <PlayerAvatar className="h-9 w-9" avatarKey={p.avatarKey ?? null} seed={p.uid ?? p.id} />
+                          <span className="min-w-0 flex-1 truncate font-label-sm text-label-sm text-on-surface">
+                            {p.name}
+                            {isMe ? <span className="cjk text-on-surface-variant"> · {t("我", "You")}</span> : null}
+                          </span>
+                          <span
+                            className={`cjk shrink-0 font-label-sm text-label-sm tabular-nums ${
+                              p.state === "playing" ? "text-primary" : "text-on-surface-variant"
+                            }`}
+                          >
+                            {p.elo} · {p.state === "playing" ? t("对局中", "In duel") : t("大厅中", "In hall")}
+                          </span>
+                          {!isMe && p.uid && p.state === "idle" ? (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              disabled={busy}
+                              onClick={() => onChallenge(p)}
+                              className="home-glass-control cjk h-9 shrink-0 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
+                            >
+                              {t("约战", "Challenge")}
+                            </Button>
+                          ) : null}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </section>
@@ -612,10 +710,10 @@ function Arena() {
                             <Button
                               type="button"
                               variant="ghost"
-                              onClick={() => void navigator.clipboard?.writeText(room.shortCode)}
+                              onClick={() => copyInvite(room.shortCode)}
                               className="home-glass-control cjk h-10 bg-surface-container px-3 font-label-sm text-label-sm text-on-surface-variant"
                             >
-                              {t("复制口令", "Copy code")}
+                              {t("复制邀请链接", "Copy invite link")}
                             </Button>
                             <Button
                               type="button"
