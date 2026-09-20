@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
 import { reviewGame } from "@/core/review";
+import { useLang, useT } from "@/lib/i18n";
 import { analyzeMind, isSignedIn, recordMatchReport } from "@/data/db";
 import type { MindReport, ReportComparison } from "@/data/mind.functions";
 
@@ -19,7 +20,11 @@ export interface MatchReportInput {
   ranked: boolean;
 }
 
-const OUTCOME_ZH: Record<string, string> = { white: "白方胜", black: "黑方胜", draw: "和棋" };
+const OUTCOME_LABEL: Record<string, { zh: string; en: string }> = {
+  white: { zh: "白方胜", en: "White wins" },
+  black: { zh: "黑方胜", en: "Black wins" },
+  draw: { zh: "和棋", en: "Draw" },
+};
 
 function Delta({ label, value, base }: { label: string; value: number; base: number | null }) {
   const diff = base === null ? null : Math.round((value - base) * 10) / 10;
@@ -51,6 +56,8 @@ export function MatchReportOverlay({
   onJumpToPly?: (ply: number) => void;
 }) {
   const [progress, setProgress] = useState(0);
+  const t = useT();
+  const { lang } = useLang();
   const [report, setReport] = useState<MindReport | null>(null);
   const [comparison, setComparison] = useState<ReportComparison | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +109,7 @@ export function MatchReportOverlay({
           setReport(await analyzeMind({ data: payload }));
         }
       } catch (e) {
-        setError(e instanceof Error ? e.message : "战报生成失败");
+        setError(e instanceof Error ? e.message : "report failed");
       }
     })();
   }, [input]);
@@ -112,20 +119,22 @@ export function MatchReportOverlay({
       <div className="home-glass-panel w-full max-w-lg max-h-[86vh] overflow-y-auto overscroll-contain rounded-2xl p-space-md flex flex-col gap-space-sm">
         <div className="flex items-start justify-between gap-space-sm">
           <div className="flex flex-col min-w-0">
-            <span className="cjk font-title-md text-title-md text-on-surface">心智战报 · Match Report</span>
+            <span className="cjk font-title-md text-title-md text-on-surface">{t("心智战报 · Match Report", "Match Report")}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-              {input.outcome ? (OUTCOME_ZH[input.outcome] ?? input.outcome) : "本局结束"} ·{" "}
-              {input.ranked ? "天梯对局" : "陪练对局 · 不计分"}
+              {input.outcome
+                ? (lang === "zh" ? OUTCOME_LABEL[input.outcome]?.zh : OUTCOME_LABEL[input.outcome]?.en) ?? input.outcome
+                : t("本局结束", "Game over")}{" "}
+              · {input.ranked ? t("天梯对局", "Ranked") : t("陪练对局 · 不计分", "Practice · unrated")}
             </span>
           </div>
-          <button onClick={onClose} aria-label="关闭战报" className="shrink-0 h-9 w-9 flex items-center justify-center">
+          <button onClick={onClose} aria-label={t("关闭战报", "Close report")} className="shrink-0 h-9 w-9 flex items-center justify-center">
             <UiIcon name="eye" className="h-5 w-5 opacity-80" />
           </button>
         </div>
 
         {!report && !error && (
           <div className="flex flex-col gap-2 py-6">
-            <span className="cjk font-body-sm text-body-sm text-on-surface-variant">正在逐手复盘 {progress}%</span>
+            <span className="cjk font-body-sm text-body-sm text-on-surface-variant">{t(`正在逐手复盘 ${progress}%`, `Analysing move by move ${progress}%`)}</span>
             <div className="h-1.5 w-full bg-surface-container-high overflow-hidden rounded-full">
               <div className="h-full bg-secondary-fixed transition-[width]" style={{ width: `${progress}%` }} />
             </div>
@@ -138,54 +147,58 @@ export function MatchReportOverlay({
           <>
             <div className="grid grid-cols-3 gap-space-xs">
               <div className="flex flex-col gap-0.5 bg-primary-container/40 px-2 py-2 rounded-xl">
-                <span className="font-label-sm text-label-sm text-on-surface-variant">本局准确率</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant">{t("本局准确率", "Accuracy")}</span>
                 <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">
                   {report.accuracy.toFixed(1)}
                 </span>
               </div>
               <div className="flex flex-col gap-0.5 bg-surface-container px-2 py-2 rounded-xl">
-                <span className="font-label-sm text-label-sm text-on-surface-variant">平均失分</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant">{t("平均失分", "Avg. loss")}</span>
                 <span className="font-label-md text-label-md text-on-surface tabular-nums">
-                  {(report.acpl / 100).toFixed(2)} 子
+                  {t(`${(report.acpl / 100).toFixed(2)} 子`, `${(report.acpl / 100).toFixed(2)} pawns`)}
                 </span>
               </div>
               <div className="flex flex-col gap-0.5 bg-surface-container px-2 py-2 rounded-xl">
-                <span className="font-label-sm text-label-sm text-on-surface-variant">本方着法</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant">{t("本方着法", "Your moves")}</span>
                 <span className="font-label-md text-label-md text-on-surface tabular-nums">{report.moveCount}</span>
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-space-xs">
-              <Delta label="上一局" value={report.accuracy} base={comparison?.previousAccuracy ?? null} />
-              <Delta label="个人最好" value={report.accuracy} base={comparison?.personalBest ?? null} />
+              <Delta label={t("上一局", "Last game")} value={report.accuracy} base={comparison?.previousAccuracy ?? null} />
+              <Delta label={t("个人最好", "Personal best")} value={report.accuracy} base={comparison?.personalBest ?? null} />
               <Delta
-                label={comparison ? `${comparison.rankZh}段平均` : "段位平均"}
+                label={
+                  comparison
+                    ? t(`${comparison.rankZh}段平均`, `${comparison.rankEn} average`)
+                    : t("段位平均", "Tier average")
+                }
                 value={report.accuracy}
                 base={comparison?.rankAverage ?? null}
               />
             </div>
 
             <div className="flex flex-col gap-space-xs">
-              <span className="cjk font-label-md text-label-md text-on-surface">心智四维</span>
+              <span className="cjk font-label-md text-label-md text-on-surface">{t("心智四维", "Four mental dimensions")}</span>
               {report.facets.map((f) => (
                 <div key={f.key} className="flex flex-col gap-1">
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="cjk font-label-md text-label-md text-on-surface">
-                      {f.zh} <span className="text-on-surface-variant">{f.en}</span>
+                      {lang === "zh" ? f.zh : f.en}{lang === "zh" ? <span className="text-on-surface-variant"> {f.en}</span> : null}
                     </span>
                     <span className="font-label-sm text-label-sm text-secondary tabular-nums">{f.value}</span>
                   </div>
                   <div className="h-1.5 w-full bg-surface-container-high overflow-hidden rounded-full">
                     <div className="h-full bg-secondary-fixed transition-[width]" style={{ width: `${f.value}%` }} />
                   </div>
-                  <span className="cjk font-body-sm text-body-sm text-on-surface-variant">{f.note}</span>
+                  <span className="cjk font-body-sm text-body-sm text-on-surface-variant">{lang === "zh" ? f.note : f.noteEn}</span>
                 </div>
               ))}
             </div>
 
             {report.worst.length > 0 && (
               <div className="flex flex-col gap-1">
-                <span className="cjk font-label-md text-label-md text-on-surface">本局最大失分</span>
+                <span className="cjk font-label-md text-label-md text-on-surface">{t("本局最大失分", "Biggest losses")}</span>
                 {report.worst.map((w) => (
                   <button
                     key={w.ply}
@@ -197,7 +210,7 @@ export function MatchReportOverlay({
                     </span>
                     <span className="font-label-md text-label-md text-on-surface shrink-0">{w.san}</span>
                     <span className="cjk font-body-sm text-body-sm text-on-surface-variant truncate flex-1">
-                      少算 {(w.loss / 100).toFixed(2)} 子
+                      {t(`少算 ${(w.loss / 100).toFixed(2)} 子`, `Missed ${(w.loss / 100).toFixed(2)} pawns`)}
                     </span>
                     <UiIcon name="equalizer" className="h-4 w-4 opacity-70 shrink-0" />
                   </button>
@@ -206,7 +219,10 @@ export function MatchReportOverlay({
             )}
 
             <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
-              以上只描述本局的下棋行为，不构成任何心理评估，也不影响积分与段位。
+              {t(
+                "以上只描述本局的下棋行为，不构成任何心理评估，也不影响积分与段位。",
+                "This only describes how you played this game. It is not a psychological assessment and does not affect rating or tier.",
+              )}
             </p>
           </>
         )}
@@ -219,14 +235,14 @@ export function MatchReportOverlay({
             }}
             className="h-11 rounded-xl font-label-md text-label-md"
           >
-            再来一局
+            {t("再来一局", "Rematch")}
           </Button>
           <Button
             variant="ghost"
             onClick={() => openReview()}
             className="home-glass-control h-11 rounded-xl bg-surface-container-high font-label-md text-label-md"
           >
-            看完整复盘
+            {t("看完整复盘", "Full review")}
           </Button>
         </div>
       </div>

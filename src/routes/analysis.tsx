@@ -11,8 +11,13 @@ import { explainMatch } from "@/data/ai-review.functions";
 import { reviewGame, type ReviewTag } from "@/core/review";
 import { UiIcon } from "@/components/UiIcon";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
+import { useLang, useT } from "@/lib/i18n";
 
-const PHASE_ZH: Record<string, string> = { opening: "开局", middlegame: "中局", endgame: "残局" };
+const PHASE_LABEL: Record<string, { zh: string; en: string }> = {
+  opening: { zh: "开局", en: "Opening" },
+  middlegame: { zh: "中局", en: "Middlegame" },
+  endgame: { zh: "残局", en: "Endgame" },
+};
 
 interface AnalysisSearch {
   match?: string;
@@ -65,12 +70,12 @@ interface Step {
   tag: ReviewTag;
 }
 
-const TAG_META: Record<ReviewTag, { zh: string; mark: string; tone: string }> = {
-  best: { zh: "最佳", mark: "!", tone: "text-secondary" },
-  good: { zh: "正着", mark: "", tone: "text-on-surface-variant" },
-  inaccuracy: { zh: "不准确", mark: "?!", tone: "text-secondary-fixed" },
-  mistake: { zh: "失误", mark: "?", tone: "text-primary" },
-  blunder: { zh: "漏着", mark: "??", tone: "text-primary" },
+const TAG_META: Record<ReviewTag, { zh: string; en: string; mark: string; tone: string }> = {
+  best: { zh: "最佳", en: "Best", mark: "!", tone: "text-secondary" },
+  good: { zh: "正着", en: "Good", mark: "", tone: "text-on-surface-variant" },
+  inaccuracy: { zh: "不准确", en: "Inaccuracy", mark: "?!", tone: "text-secondary-fixed" },
+  mistake: { zh: "失误", en: "Mistake", mark: "?", tone: "text-primary" },
+  blunder: { zh: "漏着", en: "Blunder", mark: "??", tone: "text-primary" },
 };
 
 function cpText(cp: number) {
@@ -78,14 +83,16 @@ function cpText(cp: number) {
   return `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
 }
 
-function matchResult(match: { outcome: string | null; you: string }) {
-  if (!match.outcome) return "进行中";
-  if (match.outcome === "draw") return "和棋";
-  return match.outcome === (match.you === "w" ? "white" : "black") ? "胜" : "负";
+function matchResult(match: { outcome: string | null; you: string }, lang: "zh" | "en") {
+  const zh = !match.outcome ? "进行中" : match.outcome === "draw" ? "和棋" : match.outcome === (match.you === "w" ? "white" : "black") ? "胜" : "负";
+  const en = !match.outcome ? "In progress" : match.outcome === "draw" ? "Draw" : match.outcome === (match.you === "w" ? "white" : "black") ? "Win" : "Loss";
+  return lang === "zh" ? zh : en;
 }
 
 function Analysis() {
   const search = Route.useSearch();
+  const t = useT();
+  const { lang } = useLang();
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [matchId, setMatchId] = useState<string | null>(search.match ?? null);
   const [index, setIndex] = useState(0);
@@ -125,7 +132,7 @@ function Analysis() {
   const detailQ = useQuery({
     queryKey: ["match-review", activeId],
     queryFn: () => {
-      if (!activeId) throw new Error("尚未选择对局");
+      if (!activeId) throw new Error("no match selected");
       return getMatch({ data: { matchId: activeId, lastSeq: 0 } });
     },
     enabled: !!activeId,
@@ -208,20 +215,24 @@ function Analysis() {
 
       <main className="page-main-dashboard">
         <div className="desktop-page-container w-full px-margin-mobile py-space-sm md:py-space-md grid gap-space-sm md:gap-space-md">
-          <section aria-label="对局历史" className="review-history home-glass-panel">
+          <section aria-label={t("对局历史", "Match history")} className="review-history home-glass-panel">
             <div className="section-heading-row p-space-sm">
               <div className="min-w-0">
-                 <h2 className="cjk font-headline-sm text-headline-sm">对局历史</h2>
+                 <h2 className="cjk font-headline-sm text-headline-sm">{t("对局历史", "Match history")}</h2>
                 {lastGame ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
-                    刚结束的这一局 · {lastGame.ranked ? "天梯对局" : "陪练对局 · 不计分"} · {lastGame.uciLine.length} 手
+                    {t("刚结束的这一局", "Your latest game")} ·{" "}
+                    {lastGame.ranked ? t("天梯对局", "Ranked") : t("陪练对局 · 不计分", "Practice · unrated")} ·{" "}
+                    {t(`${lastGame.uciLine.length} 手`, `${lastGame.uciLine.length} moves`)}
                   </p>
                 ) : activeMatch ? (
                   <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">
-                    对手 {activeMatch.opponent} · {matchResult(activeMatch)} · {activeMatch.ply} 手 · {new Date(activeMatch.playedAt).toLocaleDateString("zh-CN")}
+                    {t("对手", "Opponent")} {activeMatch.opponent} · {matchResult(activeMatch, lang)} ·{" "}
+                    {t(`${activeMatch.ply} 手`, `${activeMatch.ply} moves`)} ·{" "}
+                    {new Date(activeMatch.playedAt).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US")}
                   </p>
                 ) : (
-                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">选择一局已完成或进行中的对局</p>
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{t("选择一局已完成或进行中的对局", "Pick a finished or ongoing game")}</p>
                 )}
               </div>
               {signedIn === true && matches.length > 0 && (
@@ -234,21 +245,21 @@ function Analysis() {
                   className="home-glass-control h-11 px-3 text-secondary shrink-0"
                 >
                   <UiIcon name={historyOpen ? "eye" : "scroll"} className="h-5 w-5" />
-                  <span className="cjk">{historyOpen ? "收起" : "选择对局"}</span>
+                  <span className="cjk">{historyOpen ? t("收起", "Close") : t("选择对局", "Pick a game")}</span>
                 </Button>
               )}
             </div>
             {signedIn === false && (
               <div className="grid gap-2 px-space-sm pb-space-sm">
-                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">登录后这里会列出你的每一局天梯对局，可逐手回放并查看点评。</p>
-                <Link to="/auth" className="home-glass-action h-11 flex items-center justify-center bg-secondary text-on-secondary cjk font-label-md text-label-md">去登录</Link>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("登录后这里会列出你的每一局天梯对局，可逐手回放并查看点评。", "Sign in to list every ranked game here, replay it move by move and read the notes.")}</p>
+                <Link to="/auth" className="home-glass-action h-11 flex items-center justify-center bg-secondary text-on-secondary cjk font-label-md text-label-md">{t("去登录", "Sign in")}</Link>
               </div>
             )}
-            {signedIn === true && listQ.isLoading && <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">正在读取…</p>}
+            {signedIn === true && listQ.isLoading && <p className="cjk px-space-sm pb-space-sm font-body-sm text-body-sm text-on-surface-variant">{t("正在读取…", "Loading…")}</p>}
             {signedIn === true && !listQ.isLoading && matches.length === 0 && (
               <div className="grid gap-2 px-space-sm pb-space-sm">
-                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">还没有对局记录，先完成一局 AI 陪练或真人对弈。</p>
-                <Link to="/battle" className="home-glass-action flex h-11 items-center justify-center bg-primary-container text-on-primary-container cjk font-label-md text-label-md">开始对弈</Link>
+                <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("还没有对局记录，先完成一局 AI 陪练或真人对弈。", "No games yet — play an AI practice game or a live opponent first.")}</p>
+                <Link to="/battle" className="home-glass-action flex h-11 items-center justify-center bg-primary-container text-on-primary-container cjk font-label-md text-label-md">{t("开始对弈", "Start playing")}</Link>
               </div>
             )}
             <div
@@ -258,7 +269,7 @@ function Analysis() {
             >
               {matches.map((m) => {
                 const active = m.id === activeId;
-                const result = matchResult(m);
+                const result = matchResult(m, lang);
                 return (
                   <button
                     key={m.id}
@@ -269,9 +280,9 @@ function Analysis() {
                     }}
                     className={`min-h-14 px-2 py-2 text-left transition-colors ${active ? "bg-primary-container text-on-primary-container" : "bg-surface-container text-on-surface-variant hover:text-secondary"}`}
                   >
-                    <span className="cjk block font-label-md text-label-md truncate">对手 {m.opponent}</span>
+                    <span className="cjk block font-label-md text-label-md truncate">{t("对手", "Opponent")} {m.opponent}</span>
                     <span className="cjk block font-label-sm text-label-sm">
-                      {result} · {m.ply} 手 · {new Date(m.playedAt).toLocaleDateString("zh-CN")}
+                      {result} · {t(`${m.ply} 手`, `${m.ply} moves`)} · {new Date(m.playedAt).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US")}
                       {m.ratingDelta !== null ? ` · ${m.ratingDelta >= 0 ? "+" : ""}${m.ratingDelta} ELO` : ""}
                     </span>
                   </button>
@@ -280,7 +291,7 @@ function Analysis() {
             </div>
           </section>
 
-          <section aria-label="逐手复盘" className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,640px)_minmax(320px,1fr)] xl:items-start">
+          <section aria-label={t("逐手复盘", "Move-by-move review")} className="review-layout grid gap-space-sm min-w-0 xl:grid-cols-[minmax(0,640px)_minmax(320px,1fr)] xl:items-start">
             <div className="review-playback grid gap-space-sm min-w-0">
               {detailQ.data && (
                 <div className="home-glass-panel p-space-sm grid grid-cols-2 gap-space-sm">
@@ -295,10 +306,10 @@ function Analysis() {
                         <div className="min-w-0">
                           <p className="cjk font-label-md text-label-md truncate">
                             {name}
-                            {side === detailQ.data.you ? "（你）" : ""}
+                            {side === detailQ.data.you ? t("（你）", " (you)") : ""}
                           </p>
                           <p className="font-label-sm text-label-sm text-on-surface-variant tabular-nums">
-                            {side === "w" ? "白方" : "黑方"} · {elo} ELO
+                            {side === "w" ? t("白方", "White") : t("黑方", "Black")} · {elo} ELO
                           </p>
                         </div>
                       </div>
@@ -321,36 +332,39 @@ function Analysis() {
               <div className="review-controls home-glass-panel p-space-sm grid gap-2">
               <div className="flex items-center justify-between gap-2">
                 <span className="cjk font-label-md text-label-md">
-                  {current ? `第 ${current.ply} 手 ${current.san}` : "起始局面"}
+                  {current ? t(`第 ${current.ply} 手 ${current.san}`, `Move ${current.ply} · ${current.san}`) : t("起始局面", "Starting position")}
                 </span>
                 <span className="font-label-md text-label-md tabular-nums text-secondary">{cpText(current?.cp ?? 0)}</span>
               </div>
               {current && (
                 <p className={`cjk font-body-sm text-body-sm ${TAG_META[current.tag].tone}`}>
-                  {TAG_META[current.tag].zh} {TAG_META[current.tag].mark} · 这一手让{current.by === "w" ? "白方" : "黑方"}
-                  {current.swing >= 0 ? `多得 ${(current.swing / 100).toFixed(2)} 兵的优势` : `损失 ${(Math.abs(current.swing) / 100).toFixed(2)} 兵的优势`}
+                  {lang === "zh" ? TAG_META[current.tag].zh : TAG_META[current.tag].en} {TAG_META[current.tag].mark} ·{" "}
+                  {t(
+                    `这一手让${current.by === "w" ? "白方" : "黑方"}${current.swing >= 0 ? `多得 ${(current.swing / 100).toFixed(2)} 兵的优势` : `损失 ${(Math.abs(current.swing) / 100).toFixed(2)} 兵的优势`}`,
+                    `${current.by === "w" ? "White" : "Black"} ${current.swing >= 0 ? `gained ${(current.swing / 100).toFixed(2)} pawns` : `lost ${(Math.abs(current.swing) / 100).toFixed(2)} pawns`} here`,
+                  )}
                 </p>
               )}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                 <Button onClick={() => setIndex(0)} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />起始</Button>
-                 <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />上一手</Button>
-                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="home-glass-action h-12 bg-secondary text-on-secondary"><UiIcon name="play-motion" className="h-5 w-5" />下一手</Button>
-                 <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />终局</Button>
+                 <Button onClick={() => setIndex(0)} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />{t("起始", "Start")}</Button>
+                 <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />{t("上一手", "Previous")}</Button>
+                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="home-glass-action h-12 bg-secondary text-on-secondary"><UiIcon name="play-motion" className="h-5 w-5" />{t("下一手", "Next")}</Button>
+                 <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />{t("终局", "Final")}</Button>
               </div>
               </div>
             </div>
 
             <div className="review-insights grid gap-space-sm tab:grid-cols-2 xl:grid-cols-1">
               <div className="home-glass-panel p-space-sm">
-                <h3 className="cjk font-label-lg text-label-lg mb-2">棋谱</h3>
+                <h3 className="cjk font-label-lg text-label-lg mb-2">{t("棋谱", "Move list")}</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
                   {steps.length === 0 && (
                     <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
                       {reviewPct > 0
-                        ? `复盘计算中 ${reviewPct}%`
+                        ? t(`复盘计算中 ${reviewPct}%`, `Analysing ${reviewPct}%`)
                         : activeMatch
-                          ? "这局没有着法记录，换一局或先去对弈一局。"
-                          : "选择一局对局后显示棋谱。"}
+                          ? t("这局没有着法记录，换一局或先去对弈一局。", "This game has no recorded moves — pick another or play one first.")
+                          : t("选择一局对局后显示棋谱。", "Pick a game to see its move list.")}
                     </p>
                   )}
                   {steps.map((s) => (
@@ -367,16 +381,19 @@ function Analysis() {
               </div>
 
               <div className="home-glass-panel p-space-sm">
-                <h3 className="cjk font-label-lg text-label-lg mb-2">关键转折</h3>
-                {worst.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">本局没有明显失误，继续保持。</p>}
+                <h3 className="cjk font-label-lg text-label-lg mb-2">{t("关键转折", "Turning points")}</h3>
+                {worst.length === 0 && <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("本局没有明显失误，继续保持。", "No clear mistakes this game — keep it up.")}</p>}
                 <div className="grid gap-2">
                   {worst.map((s) => (
                     <button key={s.ply} onClick={() => setIndex(s.ply)} className="bg-surface-container px-2 py-2 text-left min-h-14">
                       <span className="cjk block font-label-md text-label-md">
-                        第 {s.ply} 手 {s.san} · {TAG_META[s.tag].zh}
+                        {t(`第 ${s.ply} 手 ${s.san}`, `Move ${s.ply} · ${s.san}`)} · {lang === "zh" ? TAG_META[s.tag].zh : TAG_META[s.tag].en}
                       </span>
                       <span className="cjk block font-body-sm text-body-sm text-on-surface-variant">
-                        {s.by === "w" ? "白方" : "黑方"}在此丢掉约 {(Math.abs(s.swing) / 100).toFixed(1)} 兵，点这里回到该局面重新推演。
+                        {t(
+                          `${s.by === "w" ? "白方" : "黑方"}在此丢掉约 ${(Math.abs(s.swing) / 100).toFixed(1)} 兵，点这里回到该局面重新推演。`,
+                          `${s.by === "w" ? "White" : "Black"} dropped about ${(Math.abs(s.swing) / 100).toFixed(1)} pawns here — tap to replay this position.`,
+                        )}
                       </span>
                     </button>
                   ))}
@@ -385,18 +402,18 @@ function Analysis() {
 
               <div className="home-glass-panel p-space-sm grid gap-2 tab:col-span-2 xl:col-span-1">
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="cjk font-label-lg text-label-lg">AI 分段讲解</h3>
+                  <h3 className="cjk font-label-lg text-label-lg">{t("AI 分段讲解", "AI phase commentary")}</h3>
                   <Button
                     type="button"
                     onClick={() => narrative.mutate()}
                     disabled={steps.length === 0 || narrative.isPending}
                     className="home-glass-action h-11 bg-secondary text-on-secondary cjk shrink-0"
                   >
-                    {narrative.isPending ? "生成中…" : narrative.data ? "重新生成" : "生成讲解"}
+                    {narrative.isPending ? t("生成中…", "Generating…") : narrative.data ? t("重新生成", "Regenerate") : t("生成讲解", "Generate")}
                   </Button>
                 </div>
                 {steps.length === 0 && (
-                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">这局还没有着法，下一局结束后即可生成开局、中局、残局讲解。</p>
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">{t("这局还没有着法，下一局结束后即可生成开局、中局、残局讲解。", "No moves yet — after your next game you can generate opening, middlegame and endgame commentary.")}</p>
                 )}
                 {narrative.isError && (
                   <p className="cjk font-body-sm text-body-sm text-primary">{(narrative.error as Error).message}</p>
@@ -407,7 +424,7 @@ function Analysis() {
                     {narrative.data.segments.map((seg, i) => (
                       <article key={`${seg.phase}-${i}`} className="bg-surface-container p-space-sm grid gap-1">
                         <h4 className="cjk font-label-md text-label-md">
-                          {PHASE_ZH[seg.phase] ?? seg.phase} · {seg.title}
+                          {(lang === "zh" ? PHASE_LABEL[seg.phase]?.zh : PHASE_LABEL[seg.phase]?.en) ?? seg.phase} · {seg.title}
                         </h4>
                         <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed">{seg.summary}</p>
                         {seg.keyMoves.length > 0 && (
@@ -426,7 +443,7 @@ function Analysis() {
                             })}
                           </div>
                         )}
-                        <p className="cjk font-body-sm text-body-sm text-secondary-fixed">建议：{seg.advice}</p>
+                        <p className="cjk font-body-sm text-body-sm text-secondary-fixed">{t("建议：", "Advice: ")}{seg.advice}</p>
                       </article>
                     ))}
                   </div>
@@ -435,7 +452,7 @@ function Analysis() {
 
               {steps.length > 0 && (
                 <Link to="/archive" className="home-glass-action min-h-12 px-space-md flex items-center justify-between gap-space-sm text-secondary tab:col-span-2 xl:col-span-1">
-                  <span className="cjk font-label-md text-label-md">将本局制作成绝杀典藏</span>
+                  <span className="cjk font-label-md text-label-md">{t("将本局制作成绝杀典藏", "Turn this game into a collectible poster")}</span>
                   <UiIcon name="cards" className="h-7 w-7" />
                 </Link>
               )}

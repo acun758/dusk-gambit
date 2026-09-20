@@ -7,6 +7,9 @@
  */
 import { accuracyFromAcpl, tagForLoss } from "./review";
 
+const NO_MOVE_ZH = "本局本方没有落子，无法评定";
+const NO_MOVE_EN = "You made no moves this game, so this cannot be rated";
+
 export type MindKey = "composure" | "resilience" | "discipline" | "audacity";
 
 export interface MindFacet {
@@ -16,6 +19,7 @@ export interface MindFacet {
   value: number;
   /** 一句话解释：说明这个分数来自哪些着法 */
   note: string;
+  noteEn: string;
 }
 
 export interface MindReport {
@@ -69,10 +73,10 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
       moveCount: 0,
       worst: [],
       facets: [
-        { key: "composure", zh: "冷静", en: "Composure", value: 0, note: "本局本方没有落子，无法评定" },
-        { key: "resilience", zh: "韧性", en: "Resilience", value: 0, note: "本局本方没有落子，无法评定" },
-        { key: "discipline", zh: "纪律", en: "Discipline", value: 0, note: "本局本方没有落子，无法评定" },
-        { key: "audacity", zh: "冒险", en: "Audacity", value: 0, note: "本局本方没有落子，无法评定" },
+        { key: "composure", zh: "冷静", en: "Composure", value: 0, note: NO_MOVE_ZH, noteEn: NO_MOVE_EN },
+        { key: "resilience", zh: "韧性", en: "Resilience", value: 0, note: NO_MOVE_ZH, noteEn: NO_MOVE_EN },
+        { key: "discipline", zh: "纪律", en: "Discipline", value: 0, note: NO_MOVE_ZH, noteEn: NO_MOVE_EN },
+        { key: "audacity", zh: "冒险", en: "Audacity", value: 0, note: NO_MOVE_ZH, noteEn: NO_MOVE_EN },
       ],
     };
   }
@@ -90,6 +94,9 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
   const composureNote = behind.length
     ? `落后时走了 ${behind.length} 手，平均失分 ${(behindAvg / 100).toFixed(2)} 子`
     : "本局未出现一子以上的落后局面，按全局平均失分折算";
+  const composureNoteEn = behind.length
+    ? `Played ${behind.length} moves while behind, losing ${(behindAvg / 100).toFixed(2)} pawns on average`
+    : "Never fell a pawn behind, so the whole-game average loss is used";
 
   // 韧性：从最劣局面到终局的回升幅度 + 结果加成
   const worstEval = mine.length ? Math.min(...mine.map((x) => x.before)) : 0;
@@ -103,6 +110,9 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
   const resilienceNote = worstEval >= -100
     ? "全程没有陷入明显劣势，局面始终握在手里"
     : `最差时落后 ${(Math.abs(worstEval) / 100).toFixed(2)} 子，收官时为 ${(finalEval / 100).toFixed(2)} 子`;
+  const resilienceNoteEn = worstEval >= -100
+    ? "Never clearly worse — the position stayed under control"
+    : `Worst point was ${(Math.abs(worstEval) / 100).toFixed(2)} pawns down, finishing at ${(finalEval / 100).toFixed(2)}`;
 
   // 纪律：失分在「良好」以内（≤90）的着法占比
   const solid = mine.filter((x) => x.m.loss <= 90).length;
@@ -110,6 +120,9 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
   const disciplineNote = mine.length
     ? `${mine.length} 手里有 ${solid} 手保持在良好以内`
     : "本局着法太少，暂不评定";
+  const disciplineNoteEn = mine.length
+    ? `${solid} of ${mine.length} moves stayed within a good margin`
+    : "Too few moves to rate";
 
   // 冒险：主动吃子/将军等攻势着法占比，再看这些手是否真的站得住
   const aggressive = mine.filter((x) => /[x+#]/.test(x.m.san));
@@ -120,6 +133,9 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
   const audacityNote = aggressive.length
     ? `${aggressive.length} 手吃子或将军，其中 ${success} 手站得住`
     : "本局没有主动吃子或将军，走的是稳守路线";
+  const audacityNoteEn = aggressive.length
+    ? `${aggressive.length} captures or checks, ${success} of them sound`
+    : "No captures or checks — a solid, defensive approach";
 
   const worst = mine
     .slice()
@@ -134,10 +150,10 @@ export function computeMind(moves: MoveInput[], you: "w" | "b", outcome: string 
     moveCount: mine.length,
     worst,
     facets: [
-      { key: "composure", zh: "冷静", en: "Composure", value: composure, note: composureNote },
-      { key: "resilience", zh: "韧性", en: "Resilience", value: resilience, note: resilienceNote },
-      { key: "discipline", zh: "纪律", en: "Discipline", value: discipline, note: disciplineNote },
-      { key: "audacity", zh: "冒险", en: "Audacity", value: audacity, note: audacityNote },
+      { key: "composure", zh: "冷静", en: "Composure", value: composure, note: composureNote, noteEn: composureNoteEn },
+      { key: "resilience", zh: "韧性", en: "Resilience", value: resilience, note: resilienceNote, noteEn: resilienceNoteEn },
+      { key: "discipline", zh: "纪律", en: "Discipline", value: discipline, note: disciplineNote, noteEn: disciplineNoteEn },
+      { key: "audacity", zh: "冒险", en: "Audacity", value: audacity, note: audacityNote, noteEn: audacityNoteEn },
     ],
   };
 }

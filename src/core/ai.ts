@@ -16,6 +16,8 @@ export interface AiLevel {
   name: string;
   zh: string;
   desc: string;
+  /** 英文描述 */
+  descEn: string;
   depth: number;
   /** 引擎技能档位 0~20 */
   skill: number;
@@ -37,10 +39,10 @@ export interface AiLevel {
  * 相邻档实测间距 ≈ 270 / 315 / 185，标称一律取区间保守侧，不虚标。
  */
 export const AI_LEVELS: AiLevel[] = [
-  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", depth: 2, skill: 2, movetimeMs: 250 },
-  { id: "club", elo: 1200, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", depth: 3, skill: 7, movetimeMs: 350 },
-  { id: "expert", elo: 1550, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", depth: 4, skill: 10, movetimeMs: 400 },
-  { id: "master", elo: 1750, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", depth: 10, skill: 20, movetimeMs: 1800 },
+  { id: "novice", elo: 800, name: "Novice", zh: "习棋者", desc: "会基本吃子，常有漏着，适合刚入门", descEn: "Knows basic captures, blunders often — good for beginners", depth: 2, skill: 2, movetimeMs: 250 },
+  { id: "club", elo: 1200, name: "Club", zh: "棋社客", desc: "懂战术组合，偶尔失算", descEn: "Handles tactical patterns, miscalculates now and then", depth: 3, skill: 7, movetimeMs: 350 },
+  { id: "expert", elo: 1550, name: "Expert", zh: "行家", desc: "少有明显失误，会惩罚你的松手", descEn: "Few clear mistakes, punishes careless moves", depth: 4, skill: 10, movetimeMs: 400 },
+  { id: "master", elo: 1750, name: "Master", zh: "大师", desc: "稳健深算，适合考验计算力", descEn: "Solid and deep — a real calculation test", depth: 10, skill: 20, movetimeMs: 1800 },
 ];
 
 /** 兼容旧调用；实际预算以各档位 movetimeMs 为准 */

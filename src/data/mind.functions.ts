@@ -16,6 +16,7 @@ export interface ReportComparison {
   rankAverage: number | null;
   rankId: string;
   rankZh: string;
+  rankEn: string;
   saved: boolean;
 }
 
@@ -97,6 +98,7 @@ export const recordMatchReport = createServerFn({ method: "POST" })
         rankAverage,
         rankId: tier.id,
         rankZh: tier.zh,
+        rankEn: tier.en,
         saved: !error,
       },
     };

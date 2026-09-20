@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
 import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { MiniBoard } from "@/components/MiniBoard";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
-import { closeArenaRoom, createArenaRoom, fetchArenaRooms, joinArenaRoom } from "@/data/db";
+import { closeArenaRoom, createArenaRoom, fetchArenaRooms, fetchLadder, joinArenaRoom } from "@/data/db";
+import { subscribeArenaPresence, type ArenaPresencePlayer } from "@/data/realtime";
 import type { ArenaRoom } from "@/data/arena.functions";
 import { useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
@@ -80,6 +81,45 @@ function Arena() {
     refetchInterval: 3000,
   });
   const rooms = useMemo<ArenaRoom[]>(() => (roomsQ.data as ArenaRoom[] | undefined) ?? [], [roomsQ.data]);
+
+  // 在场名册：每个浏览会话报到一次，只带公开字段（昵称、积分、是否在对局）
+  const [present, setPresent] = useState<ArenaPresencePlayer[]>([]);
+  const inDuel = useMemo(() => rooms.some((r) => r.mine && r.status === "playing"), [rooms]);
+  const seatId = useMemo(() => {
+    if (typeof window === "undefined") return "guest";
+    const key = "bs.arena.seat";
+    let id = window.sessionStorage.getItem(key);
+    if (!id) {
+      id = Math.random().toString(36).slice(2, 10);
+      window.sessionStorage.setItem(key, id);
+    }
+    return id;
+  }, []);
+
+  useEffect(() => {
+    if (!signedIn) return;
+    return subscribeArenaPresence(
+      { id: seatId, name: profile.name, elo: profile.elo, state: inDuel ? "playing" : "idle" },
+      setPresent,
+    );
+  }, [inDuel, profile.elo, profile.name, seatId, signedIn]);
+
+  const ladderQ = useQuery({
+    queryKey: ["arena-ladder"],
+    queryFn: () => fetchLadder(),
+    enabled: signedIn,
+    staleTime: 60_000,
+  });
+  const topTen = useMemo(() => (ladderQ.data ?? []).slice(0, 10), [ladderQ.data]);
+
+  // 房主在大厅等待时，有人入场即自动进入棋盘
+  const enteredRef = useRef<string | null>(null);
+  useEffect(() => {
+    const live = rooms.find((r) => r.mine && r.status === "playing" && r.matchId);
+    if (!live || enteredRef.current === live.id) return;
+    enteredRef.current = live.id;
+    void navigate({ to: "/battle" });
+  }, [navigate, rooms]);
 
   const shown = useMemo(() => {
     if (tab === "mine") return rooms.filter((r) => r.mine);
@@ -245,6 +285,50 @@ function Arena() {
               </div>
 
               {note ? <p className="cjk font-body-sm text-body-sm text-secondary">{note}</p> : null}
+            </div>
+
+            <div className="grid gap-space-sm sm:grid-cols-2">
+              <section className="home-glass-panel grid gap-2 p-space-md">
+                <h2 className="cjk font-label-md text-label-md text-on-surface">
+                  {t(`在场玩家 · ${present.length} 人`, `In the hall · ${present.length}`)}
+                </h2>
+                {present.length === 0 ? (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                    {t("正在接入在场名册…", "Connecting to the hall roster…")}
+                  </p>
+                ) : (
+                  <ul className="grid gap-1">
+                    {present.slice(0, 12).map((p) => (
+                      <li key={p.id} className="flex items-center justify-between gap-2">
+                        <span className="truncate font-label-sm text-label-sm text-on-surface">{p.name}</span>
+                        <span className="cjk shrink-0 font-label-sm text-label-sm text-on-surface-variant tabular-nums">
+                          {p.elo} · {p.state === "playing" ? t("对局中", "In duel") : t("大厅中", "In hall")}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+
+              <section className="home-glass-panel grid gap-2 p-space-md">
+                <h2 className="cjk font-label-md text-label-md text-on-surface">{t("积分前十", "Top ten by rating")}</h2>
+                {topTen.length === 0 ? (
+                  <p className="cjk font-body-sm text-body-sm text-on-surface-variant">
+                    {t("榜单载入中…", "Loading the ladder…")}
+                  </p>
+                ) : (
+                  <ol className="grid gap-1">
+                    {topTen.map((row, i) => (
+                      <li key={row.id} className="flex items-center justify-between gap-2">
+                        <span className="truncate font-label-sm text-label-sm text-on-surface">
+                          <span className="text-secondary tabular-nums">{i + 1}.</span> {row.name}
+                        </span>
+                        <span className="shrink-0 font-label-sm text-label-sm text-on-surface-variant tabular-nums">{row.elo}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </section>
             </div>
 
             {showCreate ? (

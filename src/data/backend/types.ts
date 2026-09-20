@@ -28,8 +28,21 @@ export interface DuelFrameHandlers<M, V> {
   onStatus?: (status: "live" | "degraded") => void;
 }
 
+/** 大厅在场玩家（仅公开展示字段，不含任何联系方式）。 */
+export interface ArenaPresencePlayer {
+  id: string;
+  name: string;
+  elo: number;
+  /** 在场状态：idle 在大厅，playing 对局中。 */
+  state: "idle" | "playing";
+}
+
+export type ArenaPresenceSelf = ArenaPresencePlayer;
+
 /** 实时帧契约：各家云平台推送能力不同，只在适配器内部体现差异。 */
 export interface RealtimeGateway {
+  /** 大厅在场名册（自己报到 + 名单变化）。 */
+  onArenaPresence(me: ArenaPresenceSelf, cb: (players: ArenaPresencePlayer[]) => void): Unsubscribe;
   /** 任意玩家档案变动（段位榜、晋升进度据此刷新）。 */
   onLadderChanged(cb: () => void): Unsubscribe;
   /** 自己的档案变动（积分、头像、装备）。 */

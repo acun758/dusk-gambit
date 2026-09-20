@@ -3,6 +3,7 @@ import type { DuelSession } from "@/hooks/useDuelSession";
 import { fmtClock } from "@/hooks/useDuelSession";
 import { Button } from "@/components/ui/button";
 import { UiIcon, type UiIconName } from "@/components/UiIcon";
+import { useLang, useT } from "@/lib/i18n";
 
 type TabKey = "log" | "mind" | "spoils" | "review";
 export type PanelVariant = "duel" | "review";
@@ -15,9 +16,9 @@ const TABS: { key: TabKey; label: string; zh: string; icon: UiIconName }[] = [
 ];
 
 const MISTAKES = [
-  { ply: "23", tag: "?!", zh: "过早交换中心兵", tone: "text-secondary" },
-  { ply: "31", tag: "!", zh: "弃象抢占开放线", tone: "text-secondary-fixed" },
-  { ply: "38", tag: "?", zh: "漏算对方后翼突进", tone: "text-primary" },
+  { ply: "23", tag: "?!", zh: "过早交换中心兵", en: "Traded central pawns too early", tone: "text-secondary" },
+  { ply: "31", tag: "!", zh: "弃象抢占开放线", en: "Sacrificed a bishop for the open file", tone: "text-secondary-fixed" },
+  { ply: "38", tag: "?", zh: "漏算对方后翼突进", en: "Missed the queenside breakthrough", tone: "text-primary" },
 ];
 
 const STATIC_MOVES = [
@@ -42,12 +43,12 @@ function cpLabel(cp: number) {
   return `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
 }
 
-const PHASE_LABEL: Record<string, string> = {
-  idle: "待命",
-  connecting: "连接中",
-  live: "实时同步",
-  resyncing: "追帧中",
-  offline: "断线重连",
+const PHASE_LABEL: Record<string, { zh: string; en: string }> = {
+  idle: { zh: "待命", en: "Idle" },
+  connecting: { zh: "连接中", en: "Connecting" },
+  live: { zh: "实时同步", en: "Live" },
+  resyncing: { zh: "追帧中", en: "Resyncing" },
+  offline: { zh: "断线重连", en: "Reconnecting" },
 };
 
 function Clocks({ session }: { session?: DuelSession | undefined }) {
@@ -82,6 +83,8 @@ function Clocks({ session }: { session?: DuelSession | undefined }) {
 }
 
 function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | undefined }) {
+  const t = useT();
+  const { lang } = useLang();
   const logRef = useRef<HTMLDivElement>(null);
   const count = session?.moves.length ?? 0;
 
@@ -113,7 +116,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
           className="max-h-[38vh] lg:max-h-[46vh] overflow-y-auto overscroll-contain flex flex-col gap-1 pr-0.5"
         >
           {rows.length === 0 && (
-            <p className="font-body-sm text-body-sm text-on-surface-variant py-3">等待第一步 · Waiting for first move</p>
+            <p className="font-body-sm text-body-sm text-on-surface-variant py-3">{t("等待第一步 · Waiting for first move", "Waiting for the first move")}</p>
           )}
           {rows.map((m) => (
             <div
@@ -138,14 +141,14 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
               variant="ghost"
               className="home-glass-control col-span-2 h-11 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest"
             >
-              测试断线追帧
+              {t("测试断线追帧", "Test resync")}
             </Button>}
             <Button
               onClick={session.resign}
               variant="ghost"
               className={`home-glass-control ${import.meta.env.DEV ? "" : "col-span-3"} h-11 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest`}
             >
-              认输
+              {t("认输", "Resign")}
             </Button>
           </div>
         )}
@@ -162,7 +165,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
           return (
             <div key={m.en} className="flex flex-col gap-1">
               <div className="flex items-baseline justify-between">
-                <span className="font-label-md text-label-md text-on-surface">{m.zh}</span>
+                <span className="font-label-md text-label-md text-on-surface">{lang === "zh" ? m.zh : m.en}</span>
                 <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
                   {m.en} · {v}
                 </span>
@@ -177,7 +180,10 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
           );
         })}
         <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-          压力峰值出现在弃子之后，心率与用时同步抬升；随后数手保持稳定，说明算路已经收敛。
+          {t(
+            "压力峰值出现在弃子之后，心率与用时同步抬升；随后数手保持稳定，说明算路已经收敛。",
+            "Pressure peaked right after the sacrifice, with pace and time use rising together; the following moves stayed steady, so the calculation had settled.",
+          )}
         </p>
       </div>
     );
@@ -187,8 +193,8 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
     return (
       <div className="flex flex-col gap-space-sm">
         <div className="flex items-center justify-between">
-          <span className="font-label-md text-label-md text-on-surface">引擎评分曲线</span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant">云端深度 32</span>
+          <span className="font-label-md text-label-md text-on-surface">{t("引擎评分曲线", "Engine evaluation curve")}</span>
+            <span className="font-label-sm text-label-sm text-on-surface-variant">{t("云端深度 32", "Cloud depth 32")}</span>
         </div>
         <div className="h-16 w-full bg-surface-container flex items-end gap-0.5 p-1">
           {[38, 44, 40, 52, 61, 48, 70, 66, 82, 74, 90, 96].map((v, i) => (
@@ -202,7 +208,7 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
                 #{m.ply}
               </span>
               <span className={`font-label-md text-label-md font-bold w-6 shrink-0 ${m.tone}`}>{m.tag}</span>
-              <span className="font-body-sm text-body-sm text-on-surface-variant truncate">{m.zh}</span>
+              <span className="font-body-sm text-body-sm text-on-surface-variant truncate">{lang === "zh" ? m.zh : m.en}</span>
             </div>
           ))}
         </div>
@@ -225,7 +231,9 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
 }
 
 export function DuelPanel({ variant = "duel", session }: { variant?: PanelVariant; session?: DuelSession | undefined }) {
-  const tabs = variant === "review" ? TABS : TABS.filter((t) => t.key !== "review");
+  const t = useT();
+  const { lang } = useLang();
+  const tabs = variant === "review" ? TABS : TABS.filter((item) => item.key !== "review");
   const [tab, setTab] = useState<TabKey>("log");
   const [open, setOpen] = useState(false);
   const [drag, setDrag] = useState(0);
@@ -252,22 +260,22 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
 
   const tabStrip = (
     <div className={`grid gap-1 ${variant === "review" ? "grid-cols-4" : "grid-cols-3"}`}>
-      {tabs.map((t) => (
+      {tabs.map((item) => (
         <button
-          key={t.key}
+          key={item.key}
           onClick={() => {
-            setTab(t.key);
+            setTab(item.key);
             setOpen(true);
           }}
-          aria-pressed={tab === t.key}
+          aria-pressed={tab === item.key}
           className={`h-11 min-w-0 flex items-center justify-center gap-1.5 px-1 transition-colors ${
-            tab === t.key
+            tab === item.key
               ? "bg-primary-container text-on-surface"
               : "bg-surface-container-high text-on-surface-variant hover:text-secondary"
           }`}
         >
-          <UiIcon name={t.icon} className="h-5 w-5" />
-          <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{t.zh}</span>
+          <UiIcon name={item.icon} className="h-5 w-5" />
+          <span className="cjk font-label-sm text-label-sm tracking-[0.06em] whitespace-nowrap">{lang === "zh" ? item.zh : item.label}</span>
         </button>
       ))}
     </div>
@@ -302,7 +310,9 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
               </span>
               <span className="w-px h-4 bg-outline-variant/50 shrink-0" />
               <span className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                {variant === "review" ? "棋谱 · 心智 · 战利 · 分析" : "棋谱 · 心智 · 战利品"}
+                {variant === "review"
+                  ? t("棋谱 · 心智 · 战利 · 分析", "Log · Mind · Spoils · Review")
+                  : t("棋谱 · 心智 · 战利品", "Log · Mind · Spoils")}
               </span>
             </span>
             <UiIcon name={open ? "eye" : "sliders"} className="h-6 w-6 opacity-80" />
@@ -335,7 +345,12 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
           <div className="flex items-baseline justify-between">
             <span className="font-headline-sm text-headline-sm text-secondary tabular-nums">{evalText}</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
-              {session ? `${PHASE_LABEL[session.phase]} · ${session.transport === "cloud" ? "云端" : "本地"}` : "云端深算 32 层"}
+              {session
+                ? t(
+                    `${PHASE_LABEL[session.phase]?.zh ?? session.phase} · ${session.transport === "cloud" ? "云端" : "本地"}`,
+                    `${PHASE_LABEL[session.phase]?.en ?? session.phase} · ${session.transport === "cloud" ? "Cloud" : "Local"}`,
+                  )
+                : t("云端深算 32 层", "Cloud depth 32")}
             </span>
           </div>
           <Clocks session={session} />

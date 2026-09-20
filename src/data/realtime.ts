@@ -11,7 +11,9 @@
  * 仍由服务端权威判定；客户端排队不代表落子生效。
  */
 import { realtimeGateway } from "./backend";
-import type { DuelFrameHandlers, Unsubscribe } from "./backend";
+import type { ArenaPresencePlayer, ArenaPresenceSelf, DuelFrameHandlers, Unsubscribe } from "./backend";
+
+export type { ArenaPresencePlayer, ArenaPresenceSelf };
 
 export type { Unsubscribe };
 export type LinkPhase = "live" | "offline" | "resyncing";
@@ -221,6 +223,17 @@ export function subscribeLadder(onChange: () => void): Unsubscribe {
 /** 自己的档案变动（积分、头像、装备）。 */
 export function subscribeMyProfile(onChange: () => void): Unsubscribe {
   return manage(() => realtimeGateway.onMyProfileChanged(onChange), onChange);
+}
+
+/** 大厅在场名册：把自己报到，并持续收到当前在场玩家名单。 */
+export function subscribeArenaPresence(
+  me: ArenaPresenceSelf,
+  onChange: (players: ArenaPresencePlayer[]) => void,
+): Unsubscribe {
+  return manage(
+    () => realtimeGateway.onArenaPresence(me, onChange),
+    () => {},
+  );
 }
 
 export type DuelSubscribers<M, V> = DuelFrameHandlers<M, V>;
