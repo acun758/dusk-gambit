@@ -7,7 +7,15 @@
  * 三类帧会一起失效（对手落子推不到、时钟不同步）——分开订阅即可互不牵连。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
-import type { ArenaPresencePlayer, ArenaPresenceSelf, DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";
+import type {
+  ArenaPresencePlayer,
+  ArenaPresenceSelf,
+  DuelFrameHandlers,
+  RealtimeGateway,
+  Unsubscribe,
+  VoiceLink,
+  VoiceSignal,
+} from "./types";
 
 function uniqueName(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2)}`;
@@ -91,6 +99,25 @@ export const defaultRealtime: RealtimeGateway = {
       void sdk.removeChannel(moveChannel);
       void sdk.removeChannel(matchChannel);
       void sdk.removeChannel(profileChannel);
+    };
+  },
+
+  onVoiceSignal(matchId: string, selfId: string, cb: (signal: VoiceSignal) => void): VoiceLink {
+    // 语音只借这条通道交换连接信息，声音本身走点对点，不经服务器、不落库。
+    const channel = sdk.channel(`duel-voice-${matchId}`, { config: { broadcast: { self: false } } });
+    channel
+      .on("broadcast", { event: "signal" }, ({ payload }) => {
+        const signal = payload as VoiceSignal;
+        if (signal?.from && signal.from !== selfId) cb(signal);
+      })
+      .subscribe();
+    return {
+      send: (signal: VoiceSignal) => {
+        void channel.send({ type: "broadcast", event: "signal", payload: signal });
+      },
+      close: () => {
+        void sdk.removeChannel(channel);
+      },
     };
   },
 };
