@@ -19,6 +19,9 @@ import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
 import { DuelVoice } from "@/components/DuelVoice";
 import { currentUserId } from "@/data/db";
+import { subscribeAuditAlerts } from "@/data/realtime";
+import { toast } from "sonner";
+import { auditAlertText } from "@/lib/audit-alerts";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
 import { downloadPgn } from "@/lib/share-game";
 import {
@@ -87,6 +90,16 @@ function Battle() {
   }, [signedIn]);
   const t = useT();
   const { lang } = useLang();
+  // 防作弊告警：服务端判定异常走子后，当事人立刻收到提示（不只是后台留痕）
+  useEffect(() => {
+    if (!myUserId) return;
+    return subscribeAuditAlerts({ userId: myUserId }, (frame) => {
+      const text = auditAlertText(frame.kind, lang);
+      if (frame.severity === "critical") toast.error(text.title, { description: text.body, duration: 8000 });
+      else toast.warning(text.title, { description: text.body });
+    });
+  }, [lang, myUserId]);
+
   const waiting = session.state.status === "waiting";
   const myTurn = session.state.turn === session.state.you && session.state.status === "live" && !session.movePending;
   const opponent = session.state.you === "w" ? session.state.players.b : session.state.players.w;
