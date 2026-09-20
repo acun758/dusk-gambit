@@ -3,6 +3,7 @@ import { Chess, type Square } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_PIECE_SET_ID, pieceSet } from "@/lib/piece-sets";
 import { playSound } from "@/lib/sound";
+import { useLang } from "@/lib/i18n";
 
 
 export const PIECE_SET_STORAGE_KEY = "bs.pieceSet";
@@ -53,6 +54,15 @@ export function BoardPiece({
     </span>
   );
 }
+
+const PIECE_NAME: Record<string, { zh: string; en: string }> = {
+  k: { zh: "王", en: "king" },
+  q: { zh: "后", en: "queen" },
+  r: { zh: "车", en: "rook" },
+  b: { zh: "象", en: "bishop" },
+  n: { zh: "马", en: "knight" },
+  p: { zh: "兵", en: "pawn" },
+};
 
 const GLYPH: Record<string, string> = {
   wk: "♔", wq: "♕", wr: "♖", wb: "♗", wn: "♘", wp: "♙",
