@@ -284,7 +284,7 @@ function Battle() {
           />
 
           <div className="battle-board-wrap relative w-full flex items-stretch justify-center">
-            <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title="实时评估">
+            <div className="battle-eval hidden sm:flex w-3 overflow-hidden bg-surface-container-highest/80 border border-outline-variant/40 flex-col justify-end absolute inset-y-0 -left-5" title={t("实时评估", "Live evaluation")}>
               <div className="absolute left-0 right-0 top-1/2 h-px bg-outline-variant/60" />
               <div className="bg-secondary/70 transition-[height] duration-500" style={{ height: `${Math.max(8, Math.min(92, 50 + session.cp / 20))}%` }} />
             </div>
