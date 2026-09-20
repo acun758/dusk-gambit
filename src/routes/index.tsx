@@ -66,9 +66,9 @@ function Index() {
           </div>
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
-              <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈棋竞徽章", "Xuanyi Qijing emblem")} />
+              <GameIcon name="brand-emblem" className="h-12 w-12 shrink-0" label={t("玄弈棋竞徽章", "Dusk Gambit emblem")} />
               <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
-                <span className="cjk whitespace-nowrap leading-tight text-on-surface">玄弈棋竞</span>
+                <span className="cjk whitespace-nowrap leading-tight text-on-surface">{t("玄弈棋竞", "DUSK GAMBIT")}</span>
               </h1>
             </div>
             <Link to={signedIn ? "/dynasty" : "/auth"} className="home-glass-action cjk flex h-10 shrink-0 items-center gap-1.5 px-3 font-label-sm text-label-sm text-on-primary-container">
@@ -80,7 +80,7 @@ function Index() {
         <div className="hidden h-24 px-margin-mobile items-center justify-between gap-space-sm sm:flex">
           <div className="flex items-center gap-space-sm sm:gap-space-md min-w-0">
             <div className="home-glass-control w-12 h-12 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center shrink-0 overflow-hidden">
-              <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈棋竞徽章", "Xuanyi Qijing emblem")} />
+              <GameIcon name="brand-emblem" className="h-10 w-10 sm:h-16 sm:w-16" label={t("玄弈棋竞徽章", "Dusk Gambit emblem")} />
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-space-xs">
@@ -92,9 +92,9 @@ function Index() {
                   {t(tierLabel(profile).zh, tierLabel(profile).en)}
                 </span>
               </div>
-              {/* 品牌名统一为「玄弈棋竞」四字整体呈现 */}
+              {/* 双牌制：中文态「玄弈棋竞」，英文态国际名 DUSK GAMBIT */}
               <span className="flex min-w-0 flex-row items-baseline">
-                <span className="cjk whitespace-nowrap font-headline-lg leading-tight tracking-[0.12em] text-on-surface">玄弈棋竞</span>
+                <span className="cjk whitespace-nowrap font-headline-lg leading-tight tracking-[0.12em] text-on-surface">{t("玄弈棋竞", "DUSK GAMBIT")}</span>
               </span>
               <span className="h-px w-24 mt-1 bg-gradient-to-r from-secondary/80 to-transparent" aria-hidden="true" />
             </div>
@@ -335,6 +335,9 @@ function Index() {
             <UiIcon name="equalizer" className="h-6 w-6" />
             <p className="cjk font-body-md text-body-md text-on-surface-variant tracking-[0.2em]">
               {t("今日的每一步，都在铸造明日的王座。", "Every move today shapes your throne tomorrow.")}
+            </p>
+            <p className="cjk font-label-sm text-label-sm text-on-surface-variant/80 tracking-[0.12em]">
+              {t("玄弈棋竞 · 国际名 DUSK GAMBIT", "DUSK GAMBIT · Chinese name 玄弈棋竞")}
             </p>
           </footer>
         </div>
