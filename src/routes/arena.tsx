@@ -306,7 +306,7 @@ function Arena() {
         .catch(failNote)
         .finally(() => setBusy(false));
     },
-    [incSec, initialMin, refresh, t],
+    [failNote, incSec, initialMin, refresh, t],
   );
 
   const onClose = useCallback(
