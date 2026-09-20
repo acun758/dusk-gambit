@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { UiIcon } from "@/components/UiIcon";
@@ -28,7 +28,7 @@ type Tab = "auto" | "invite" | "lobby";
  * 对弈页的「找对手」面板：系统匹配、点名邀请（好友 / 搜索 / 对战码）、
  * 以及别人发出的约战大厅，10 秒轮询刷新。
  */
-export function OpponentPanel({
+function OpponentPanelComponent({
   onStartRanked,
   ranked,
   waiting,
@@ -407,3 +407,6 @@ export function OpponentPanel({
     </section>
   );
 }
+
+/** 对弈页时钟每秒刷新，本面板与时钟无关，memo 阻断无谓重绘。 */
+export const OpponentPanel = memo(OpponentPanelComponent);
