@@ -108,11 +108,16 @@ function AuthPage() {
             Blood Sovereign
           </span>
           <h1 className="font-headline-md text-headline-md text-secondary">
-            <Bi zh="血誓登录" en="Sovereign Sign In" block />
+            {mode === "in"
+              ? <Bi zh="血誓登录" en="Sovereign Sign In" block />
+              : <Bi zh="立誓注册" en="Swear the Oath" block />}
           </h1>
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            <Bi zh="登录后段位、钻石与天梯战绩由服务端结算。" en="Once signed in, rank, diamonds and ranked results are settled server-side." block />
+            {mode === "in"
+              ? <Bi zh="登录后段位、钻石与天梯战绩由服务端结算。" en="Once signed in, rank, diamonds and ranked results are settled server-side." block />
+              : <Bi zh="注册后即可开设对局场、点名约战，段位与天梯战绩由服务端结算。" en="After signing up you can open a table, challenge players directly, and have rank and ranked results settled server-side." block />}
           </p>
+
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-space-sm">
