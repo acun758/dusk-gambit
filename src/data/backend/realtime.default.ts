@@ -7,7 +7,7 @@
  * 三类帧会一起失效（对手落子推不到、时钟不同步）——分开订阅即可互不牵连。
  */
 import { supabase as sdk } from "@/integrations/supabase/client";
-import type { DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";
+import type { ArenaPresencePlayer, ArenaPresenceSelf, DuelFrameHandlers, RealtimeGateway, Unsubscribe } from "./types";
 
 function uniqueName(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2)}`;
@@ -16,6 +16,27 @@ function uniqueName(prefix: string) {
 type Status = "SUBSCRIBED" | "CHANNEL_ERROR" | "TIMED_OUT" | "CLOSED" | string;
 
 export const defaultRealtime: RealtimeGateway = {
+  onArenaPresence(me: ArenaPresenceSelf, cb: (players: ArenaPresencePlayer[]) => void): Unsubscribe {
+    const channel = sdk.channel("arena-presence", { config: { presence: { key: me.id } } });
+    const push = () => {
+      const state = channel.presenceState<ArenaPresencePlayer>();
+      const players = Object.values(state)
+        .map((entries) => entries[0])
+        .filter(Boolean) as ArenaPresencePlayer[];
+      cb(players.sort((a, b) => b.elo - a.elo));
+    };
+    channel
+      .on("presence", { event: "sync" }, push)
+      .on("presence", { event: "join" }, push)
+      .on("presence", { event: "leave" }, push)
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") void channel.track(me);
+      });
+    return () => {
+      void sdk.removeChannel(channel);
+    };
+  },
+
   onLadderChanged(cb: () => void): Unsubscribe {
     const channel = sdk
       .channel(uniqueName("ladder-live"))

@@ -34,6 +34,9 @@ export const cloudGateway: DataGateway = new Proxy({} as DataGateway, {
 
 /** 云开发的实时能力（watch / 订阅）待接；未接入前返回空订阅，页面不会崩。 */
 export const cloudRealtime: RealtimeGateway = {
+  onArenaPresence() {
+    return () => {};
+  },
   onLadderChanged() {
     return () => {};
   },

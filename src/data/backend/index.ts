@@ -17,5 +17,14 @@ export const provider: BackendProvider = BACKEND_PROVIDER;
 export const gateway: DataGateway = provider === "cloud" ? cloudGateway : defaultGateway;
 export const realtimeGateway: RealtimeGateway = provider === "cloud" ? cloudRealtime : defaultRealtime;
 
-export type { AuthResult, DataGateway, DuelFrameHandlers, RealtimeGateway, SessionInfo, Unsubscribe } from "./types";
+export type {
+  ArenaPresencePlayer,
+  ArenaPresenceSelf,
+  AuthResult,
+  DataGateway,
+  DuelFrameHandlers,
+  RealtimeGateway,
+  SessionInfo,
+  Unsubscribe,
+} from "./types";
 export { BackendNotWiredError } from "./types";

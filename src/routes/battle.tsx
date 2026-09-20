@@ -49,7 +49,13 @@ export const Route = createFileRoute("/battle")({
   component: Battle,
 });
 
-const PHASE: Record<string, string> = { idle: "待命", connecting: "连接中", live: "实时同步", resyncing: "追帧中", offline: "断线重连" };
+const PHASE: Record<string, { zh: string; en: string }> = {
+  idle: { zh: "待命", en: "Idle" },
+  connecting: { zh: "连接中", en: "Connecting" },
+  live: { zh: "实时同步", en: "Live" },
+  resyncing: { zh: "追帧中", en: "Resyncing" },
+  offline: { zh: "断线重连", en: "Reconnecting" },
+};
 
 function Battle() {
   const { drill } = Route.useSearch();
@@ -186,7 +192,7 @@ function Battle() {
           </div>
           <div className="mobile-royal-main">
             <div className="flex min-w-0 items-center gap-2.5">
-              <Link to="/" aria-label="返回王座" className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary"><UiIcon name="play-motion" className="h-6 w-6 rotate-180" /></Link>
+              <Link to="/" aria-label={t("返回王座", "Back to the throne")} className="home-glass-control grid h-10 w-10 shrink-0 place-items-center text-secondary"><UiIcon name="play-motion" className="h-6 w-6 rotate-180" /></Link>
               <h1 className="min-w-0 font-headline-sm text-headline-sm leading-tight text-on-surface">
                 <Bi zh="实时对弈" en="Live Duel" />
               </h1>
@@ -194,15 +200,15 @@ function Battle() {
             {ranked && (
               <span className="flex min-w-0 shrink-0 items-center gap-1.5">
                 <span className={`h-2 w-2 shrink-0 rounded-full ${session.phase === "live" ? "bg-secondary animate-pulse" : "bg-primary"}`} />
-                <span className={`truncate text-right font-label-sm text-label-sm text-on-surface-variant ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("等待玩家加入", "Waiting for player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)}</span>
+                <span className={`truncate text-right font-label-sm text-label-sm text-on-surface-variant ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("等待玩家加入", "Waiting for player") : t(`服务端仲裁 · ${PHASE[session.phase]?.zh ?? session.phase}`, `Server-arbitrated · ${PHASE[session.phase]?.en ?? session.phase}`)}</span>
               </span>
             )}
           </div>
         </div>
         <div className="hidden h-20 px-margin-mobile items-center justify-between gap-3 sm:flex">
-           <Link to="/" aria-label="返回王座" className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
+           <Link to="/" aria-label={t("返回王座", "Back to the throne")} className="home-glass-control w-11 h-11 flex items-center justify-center text-secondary"><UiIcon name="play-motion" className="h-7 w-7 rotate-180" /></Link>
           <div className="flex flex-1 flex-col min-w-0">
-            {ranked && <span className={`truncate font-label-sm text-label-sm uppercase text-secondary tracking-widest ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]}`, `Server-arbitrated · ${session.phase}`)}</span>}
+            {ranked && <span className={`truncate font-label-sm text-label-sm uppercase text-secondary tracking-widest ${lang === "zh" ? "cjk" : ""}`}>{waiting ? t("正在等待另一位玩家加入", "Waiting for another player") : t(`服务端仲裁 · ${PHASE[session.phase]?.zh ?? session.phase}`, `Server-arbitrated · ${PHASE[session.phase]?.en ?? session.phase}`)}</span>}
             <h1 className="min-w-0 font-headline-md text-headline-md leading-tight truncate">
               <Bi zh="实时对弈" en="Live Duel" />
             </h1>
@@ -277,17 +283,35 @@ function Battle() {
           />
           <div className="battle-core-width home-glass-panel p-space-sm flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over" ? "本局已结束" : waiting ? "等待对手加入" : session.movePending ? "正在确认落子" : myTurn ? "轮到你落子" : "等待对手落子"}</p>
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{waiting ? "保持页面开启，匹配成功后自动开局" : `点击棋子，再点击高亮目标格 · 评估 ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`}</p>
+              <p className="font-label-md text-label-md text-on-surface">{session.state.status === "over"
+                ? t("本局已结束", "Game over")
+                : waiting
+                  ? t("等待对手加入", "Waiting for an opponent")
+                  : session.movePending
+                    ? t("正在确认落子", "Confirming your move")
+                    : myTurn
+                      ? t("轮到你落子", "Your move")
+                      : t("等待对手落子", "Waiting for your opponent")}</p>
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant truncate">{waiting
+                ? t("保持页面开启，匹配成功后自动开局", "Keep this page open — the game starts as soon as you are paired")
+                : t(
+                    `点击棋子，再点击高亮目标格 · 评估 ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`,
+                    `Tap a piece, then a highlighted square · Eval ${session.cp >= 0 ? "+" : ""}${(session.cp / 100).toFixed(2)}`,
+                  )}</p>
             </div>
             <span className={`font-label-md text-label-md tabular-nums shrink-0 ${timeLevel === "critical" ? "text-primary animate-pulse" : timeLevel === "warn" ? "text-secondary" : "text-on-surface-variant"}`}>
-              {session.state.tc.label} · 余 {fmtClock(myClock)}
+              {session.state.tc.label} · {t("余", "left")} {fmtClock(myClock)}
             </span>
           </div>
 
           {timeLevel !== "calm" && session.state.status === "live" && (
             <p role="status" className={`battle-core-width home-glass-panel cjk px-space-sm py-2 font-body-sm text-body-sm ${timeLevel === "critical" ? "text-on-primary-container" : "text-on-surface-variant"}`}>
-              {timeLevel === "critical" ? `只剩 ${Math.ceil(myClock / 1000)} 秒，先落子保时间，每步加 2 秒。` : "剩余时间不足 1 分钟，注意读秒节奏。"}
+              {timeLevel === "critical"
+                ? t(
+                    `只剩 ${Math.ceil(myClock / 1000)} 秒，先落子保时间，每步加 2 秒。`,
+                    `Only ${Math.ceil(myClock / 1000)}s left — move first to bank time; each move adds 2s.`,
+                  )
+                : t("剩余时间不足 1 分钟，注意读秒节奏。", "Under a minute left — watch your pace.")}
             </p>
           )}
 
@@ -299,7 +323,7 @@ function Battle() {
                className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name={session.paused ? "play-motion" : "equalizer"} className="h-6 w-6" />
-              {session.paused ? "继续" : "暂停"}
+              {session.paused ? t("继续", "Resume") : t("暂停", "Pause")}
             </Button>
             <Button
               onClick={() => setConfirm("resign")}
@@ -308,11 +332,11 @@ function Battle() {
                className="home-glass-control h-12 text-primary cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name="skull" className="h-6 w-6" />
-              结束本局
+              {t("结束本局", "End game")}
             </Button>
              <Button onClick={session.restart} variant="ghost" className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm">
               <UiIcon name="spinner" className="h-6 w-6" />
-              重新开始
+              {t("重新开始", "Restart")}
             </Button>
           </div>
           <div className="battle-core-width grid grid-cols-3 gap-2">
@@ -323,17 +347,17 @@ function Battle() {
               className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name="laurel" className="h-6 w-6" />
-              {session.drawOffer === "mine" ? "撤回求和" : "提和"}
+              {session.drawOffer === "mine" ? t("撤回求和", "Withdraw draw") : t("提和", "Offer draw")}
             </Button>
             <Button
               onClick={session.takeback}
               disabled={!session.canTakeback}
               variant="ghost"
               className="home-glass-control h-12 text-on-surface cjk font-label-sm text-label-sm disabled:opacity-40"
-              title={session.canTakeback ? "陪练局可悔棋" : "天梯对局不可悔棋"}
+              title={session.canTakeback ? t("陪练局可悔棋", "Takebacks allowed in practice") : t("天梯对局不可悔棋", "No takebacks in ranked play")}
             >
               <UiIcon name="spinner" className="h-6 w-6" />
-              悔棋
+              {t("悔棋", "Takeback")}
             </Button>
             <Button
               onClick={exportPgn}
@@ -342,22 +366,22 @@ function Battle() {
               className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm disabled:opacity-40"
             >
               <UiIcon name="scroll" className="h-6 w-6" />
-              导出棋谱
+              {t("导出棋谱", "Export PGN")}
             </Button>
           </div>
 
           <AlertDialog open={confirmAction !== null} onOpenChange={(open) => !open && setConfirm(null)}>
             <AlertDialogContent className="home-glass-panel fixed! w-[calc(100%-2rem)] max-w-md max-h-[85dvh] overflow-y-auto">
               <AlertDialogHeader>
-                <AlertDialogTitle className="cjk">{confirmAction === "resign" ? "确认认输？" : "向对手提和？"}</AlertDialogTitle>
+                <AlertDialogTitle className="cjk">{confirmAction === "resign" ? t("确认认输？", "Resign this game?") : t("向对手提和？", "Offer a draw?")}</AlertDialogTitle>
                 <AlertDialogDescription className="cjk">
                   {confirmAction === "resign"
-                    ? "认输后本局立即结束，并按天梯规则结算扣分。"
-                    : "对手接受后本局按和棋结算；在对手回应前你可以随时撤回。"}
+                    ? t("认输后本局立即结束，并按天梯规则结算扣分。", "Resigning ends the game at once and settles rating by ladder rules.")
+                    : t("对手接受后本局按和棋结算；在对手回应前你可以随时撤回。", "If accepted the game is scored as a draw; you can withdraw the offer any time before they answer.")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="cjk">再想想</AlertDialogCancel>
+                <AlertDialogCancel className="cjk">{t("再想想", "Not yet")}</AlertDialogCancel>
                 <AlertDialogAction
                   className="cjk"
                   onClick={() => {
@@ -366,7 +390,7 @@ function Battle() {
                     setConfirm(null);
                   }}
                 >
-                  {confirmAction === "resign" ? "确认认输" : "发出提和"}
+                  {confirmAction === "resign" ? t("确认认输", "Resign") : t("发出提和", "Send offer")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -374,70 +398,80 @@ function Battle() {
 
           {session.drawOffer === "theirs" && (
             <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
-              <p className="cjk font-body-sm text-body-sm text-on-surface">对手提出和棋，是否接受？</p>
+              <p className="cjk font-body-sm text-body-sm text-on-surface">{t("对手提出和棋，是否接受？", "Your opponent offers a draw — accept?")}</p>
               <div className="flex gap-2 shrink-0">
-                <Button onClick={() => session.answerDraw(true)} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 cjk">接受</Button>
-                <Button onClick={() => session.answerDraw(false)} variant="ghost" className="home-glass-control h-11 px-3 cjk">拒绝</Button>
+                <Button onClick={() => session.answerDraw(true)} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 cjk">{t("接受", "Accept")}</Button>
+                <Button onClick={() => session.answerDraw(false)} variant="ghost" className="home-glass-control h-11 px-3 cjk">{t("拒绝", "Decline")}</Button>
               </div>
             </div>
           )}
 
           {session.drawOffer === "mine" && (
-            <p role="status" className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">已提出和棋，等待对手回应。</p>
+            <p role="status" className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">{t("已提出和棋，等待对手回应。", "Draw offered — waiting for your opponent.")}</p>
           )}
 
           {signedIn && profile.inPlacement && (
             <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">
-              {placementLabel(profile).zh} · 定级赛期间涨跌分加倍，打满 10 局后公布段位。
+              {lang === "zh" ? placementLabel(profile).zh : placementLabel(profile).en}{" "}
+              {t("· 定级赛期间涨跌分加倍，打满 10 局后公布段位。", "· Rating swings are doubled during placement; your tier is revealed after 10 games.")}
             </p>
           )}
 
           {!session.canPause && (
-            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。</p>
+            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">{t("真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。", "Ranked clocks are arbitrated by the server and cannot be paused; Restart leaves the live game and returns to AI practice.")}</p>
           )}
           {session.notice && (
              <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
               <p className="cjk font-body-sm text-body-sm text-on-primary-container">{session.notice}</p>
-              {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 shrink-0">本地陪练</Button>}
+              {session.phase === "offline" && <Button onClick={session.useLocalPractice} className="home-glass-action h-11 bg-secondary text-on-secondary px-3 shrink-0">{t("本地陪练", "Local practice")}</Button>}
             </div>
           )}
 
           {ranked && session.state.status === "over" && (
              <section role="status" aria-live="polite" className="battle-core-width home-glass-panel p-space-md text-center">
-              <p className="cjk font-label-sm text-label-sm text-secondary">天梯结算完成</p>
+              <p className="cjk font-label-sm text-label-sm text-secondary">{t("天梯结算完成", "Ladder settled")}</p>
               <p className="cjk mt-1 font-headline-md text-headline-md text-on-surface">
-                {session.state.outcome === "draw" ? "和棋" : session.state.outcome === (session.state.you === "w" ? "white" : "black") ? "胜利" : "败北"}
+                {session.state.outcome === "draw"
+                  ? t("和棋", "Draw")
+                  : session.state.outcome === (session.state.you === "w" ? "white" : "black")
+                    ? t("胜利", "Victory")
+                    : t("败北", "Defeat")}
               </p>
               <p className={`mt-1 font-label-lg text-label-lg tabular-nums ${ratingDelta >= 0 ? "text-secondary" : "text-primary"}`}>
-                {ratingDelta >= 0 ? "+" : ""}{ratingDelta} ELO · 当前 {myElo}
+                {ratingDelta >= 0 ? "+" : ""}{ratingDelta} ELO · {t("当前", "now")} {myElo}
               </p>
-              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">积分、段位徽章与战绩已同步到首页和天梯榜。</p>
-              <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">查看段位变化 →</Link>
-              <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">复盘本局 →</Link>
+              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{t("积分、段位徽章与战绩已同步到首页和天梯榜。", "Rating, tier badge and record are synced to the home page and the ladder.")}</p>
+              <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("查看段位变化", "See tier change")} →</Link>
+              <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("复盘本局", "Review this game")} →</Link>
               <div className="mt-3">
                 <Button onClick={session.rematch} className="home-glass-action h-12 bg-secondary text-on-secondary px-5 cjk font-label-sm text-label-sm">
                   <UiIcon name="spinner" className="h-6 w-6" />
-                  再战一局
+                  {t("再战一局", "Rematch")}
                 </Button>
               </div>
             </section>
           )}
 
-           <section aria-label="棋局教练" className="battle-core-width home-glass-panel p-space-sm flex items-start gap-space-sm">
+           <section aria-label={t("棋局教练", "Coach")} className="battle-core-width home-glass-panel p-space-sm flex items-start gap-space-sm">
             <UiIcon name={(coach.phase === "opening" ? "quill" : coach.phase === "endgame" ? "flame" : coach.icon === "target" ? "bolt" : "lotus") as UiIconName} className="h-8 w-8 mt-0.5" />
             <div className="min-w-0">
               <p className="cjk font-label-sm text-label-sm text-primary tracking-widest">{coach.eyebrow}</p>
-              <h2 className="cjk font-label-lg text-label-lg text-on-surface mt-0.5">{coach.title}</h2>
-              <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">{coach.body}</p>
-              {coach.phase === "endgame" && <Link to="/crucible" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">去残局试炼（心算）强化此主题 →</Link>}
+              <h2 className="cjk font-label-lg text-label-lg text-on-surface mt-0.5">{lang === "zh" ? coach.title : coach.titleEn}</h2>
+              <p className="cjk font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">{lang === "zh" ? coach.body : coach.bodyEn}</p>
+              {coach.phase === "endgame" && <Link to="/crucible" className="cjk inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm mt-1">{t("去残局试炼（心算）强化此主题", "Train this theme in blindfold endgame trials")} →</Link>}
             </div>
           </section>
 
-           <section aria-label="AI 陪练段位" className="battle-core-width home-glass-panel p-space-sm">
+           <section aria-label={t("AI 陪练段位", "AI practice levels")} className="battle-core-width home-glass-panel p-space-sm">
             <div className="flex items-baseline justify-between gap-2 mb-2">
-              <h2 className="cjk flex items-baseline gap-2 font-label-md text-label-md text-on-surface">AI 分级陪练<span className="font-label-md text-label-md text-on-surface-variant">不计分</span></h2>
+              <h2 className="cjk flex items-baseline gap-2 font-label-md text-label-md text-on-surface">{t("AI 分级陪练", "AI practice")}<span className="font-label-md text-label-md text-on-surface-variant">{t("不计分", "Unrated")}</span></h2>
               <span className="cjk font-label-sm text-label-sm text-on-surface-variant">
-                {ranked ? "当前为真人天梯，选择段位即切换陪练" : `默认模式 · ${aiLevel(session.aiLevelId).zh} ${aiLevel(session.aiLevelId).elo}`}
+                {ranked
+                  ? t("当前为真人天梯，选择段位即切换陪练", "Ranked game in progress — picking a level switches to practice")
+                  : t(
+                      `默认模式 · ${aiLevel(session.aiLevelId).zh} ${aiLevel(session.aiLevelId).elo}`,
+                      `Default · ${aiLevel(session.aiLevelId).name} ${aiLevel(session.aiLevelId).elo}`,
+                    )}
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -449,14 +483,14 @@ function Battle() {
                     onClick={() => session.setAiLevel(lv.id)}
                      className={`home-glass-tile min-h-14 px-2 py-2 text-left transition-colors ${active ? "home-glass-tile-active text-on-primary-container" : "text-on-surface-variant hover:text-secondary"}`}
                   >
-                    <span className="cjk block font-label-md text-label-md">{lv.zh}</span>
+                    <span className="cjk block font-label-md text-label-md">{lang === "zh" ? lv.zh : lv.name}</span>
                     <span className="block font-label-sm text-label-sm tabular-nums">{lv.elo}</span>
                   </button>
                 );
               })}
             </div>
-            <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{aiLevel(session.aiLevelId).desc}</p>
-            <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">准备好后在下方「找对手」选择赛制进入真人对局；四种赛制共用同一套 ELO 与段位。</p>
+            <p className="cjk mt-2 font-body-sm text-body-sm text-on-surface-variant">{lang === "zh" ? aiLevel(session.aiLevelId).desc : aiLevel(session.aiLevelId).descEn}</p>
+            <p className="cjk mt-space-sm pt-space-sm border-t border-outline-variant/40 font-body-sm text-body-sm text-on-surface-variant">{t("准备好后在下方「找对手」选择赛制进入真人对局；四种赛制共用同一套 ELO 与段位。", "When you are ready, pick a time control under Find opponent to play a real person; all four controls share one rating and tier system.")}</p>
           </section>
 
           <OpponentPanel onStartRanked={session.startRanked} ranked={ranked} waiting={waiting} />
