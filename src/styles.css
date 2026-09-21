@@ -355,12 +355,15 @@
 
 .game-entrance-action {
   position: absolute;
-  left: 50%;
+  right: 0;
+  left: 0;
   bottom: clamp(3rem, 11vh, 6rem);
   z-index: 2;
+  width: fit-content;
   min-width: 10.5rem;
   height: 3rem;
-  transform: translateX(-50%);
+  margin-inline: auto;
+  transform: none;
   border: 1px solid color-mix(in oklab, var(--color-secondary) 58%, transparent);
   border-radius: 0.25rem;
   background: color-mix(in oklab, var(--color-surface-container-lowest) 76%, transparent);
