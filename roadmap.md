@@ -1,7 +1,7 @@
 ## Current request
-- [ ] 校正五套进入页按钮，使其严格对齐画面中心线
-- [ ] 清理昨日语音截图遗留的测试对局与房间，并还原测试账号积分战绩
-- [ ] 四类视口验证进入页居中与交互
+- [x] 校正五套进入页按钮，使其严格对齐画面中心线
+- [x] 清理昨日语音截图遗留的测试对局与房间，并还原测试账号积分战绩
+- [x] 四类视口验证进入页居中与交互
 - [x] 六套棋子完整替换：72 枚统一尺寸与底座，接入军械典藏和全棋盘（含新版暗黑龙语）
 - [x] Unify highlighted controls with the global button corner-radius standard.
 - [x] Audit and fix whole-app click/interaction latency; verify key pages and gameplay.
