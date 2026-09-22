@@ -153,7 +153,10 @@ function DuelVoiceComponent({
           ? t("正在接通…", "Connecting…")
           : t("等待对手开启语音…", "Waiting for opponent to join voice…")
         : phase === "denied"
-          ? t("麦克风未授权，请在系统设置里允许后重试。", "Microphone blocked. Allow access and try again.")
+          ? t(
+              "麦克风未授权：请在浏览器地址栏或系统设置中允许麦克风，然后点「开启语音」重试。仅你与对手两人，可随时挂断。",
+              "Microphone blocked: allow mic access in the address bar or system settings, then tap “Turn on voice” to retry. Just you and your opponent; hang up anytime.",
+            )
           : phase === "failed"
             ? t("语音连接失败，可重试。", "Voice connection failed. Try again.")
             : t("对局语音默认关闭，仅你与对手两人。", "Voice is off by default, just you and your opponent.");
