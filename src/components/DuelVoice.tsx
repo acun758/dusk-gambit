@@ -99,6 +99,8 @@ function DuelVoiceComponent({
       if (signal.kind === "hello") {
         setPeerReady(true);
         if (initiator) await makeOffer();
+        // 对方后到：回一声招呼，确保先开语音的一方的 hello 丢失后仍能接通
+        else linkRef.current?.send({ from: selfId, kind: "hello" });
         return;
       }
       if (signal.kind === "offer") {

@@ -164,10 +164,15 @@ function Arena() {
     [ladderQ.data],
   );
 
-  // 房主在大厅等待时，有人入场即自动进入棋盘
+  // 房主在大厅等待时，有人入场即自动进入棋盘：只在本页亲眼看到 waiting→playing 时跳转，
+  // 已在进行中的对局不强制弹回，玩家可停留浏览大厅。
+  const waitingSeenRef = useRef<Set<string>>(new Set());
   const enteredRef = useRef<string | null>(null);
   useEffect(() => {
-    const live = rooms.find((r) => r.mine && r.status === "playing" && r.matchId);
+    for (const r of rooms) if (r.mine && r.status === "waiting") waitingSeenRef.current.add(r.id);
+    const live = rooms.find(
+      (r) => r.mine && r.status === "playing" && r.matchId && waitingSeenRef.current.has(r.id),
+    );
     if (!live || enteredRef.current === live.id) return;
     enteredRef.current = live.id;
     void navigate({ to: "/battle" });
