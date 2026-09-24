@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { fetchMatch as getMatch, fetchMyMatches as listMyMatches, fetchSession } from "@/data/db";
 import { explainMatch } from "@/data/ai-review.functions";
 import { reviewGame, type ReviewTag } from "@/core/review";
+import { identifyOpening, type EcoHit } from "@/lib/eco";
+import { WinRateChart, winPct } from "@/components/WinRateChart";
 import { UiIcon } from "@/components/UiIcon";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { useLang, useT } from "@/lib/i18n";
@@ -193,6 +195,19 @@ function Analysis() {
   const current = steps[index - 1];
   const fen = current?.fen ?? new Chess().fen();
   const worst = useMemo(() => [...steps].sort((a, b) => a.swing - b.swing).slice(0, 3).filter((s) => s.swing < -40), [steps]);
+  const cps = useMemo(() => steps.map((s) => s.cp), [steps]);
+
+  const [opening, setOpening] = useState<EcoHit | null>(null);
+  useEffect(() => {
+    setOpening(null);
+    let live = true;
+    void identifyOpening(sourceKey ? sourceKey.split(" ") : []).then((hit) => {
+      if (live) setOpening(hit);
+    });
+    return () => {
+      live = false;
+    };
+  }, [sourceKey]);
 
   const narrative = useMutation({
     mutationFn: () =>
@@ -355,6 +370,29 @@ function Analysis() {
             </div>
 
             <div className="review-insights grid gap-space-sm tab:grid-cols-2 xl:grid-cols-1">
+              {(opening || steps.length > 0) && (
+                <div className="home-glass-panel p-space-sm tab:col-span-2 xl:col-span-1 grid gap-2">
+                  {opening && (
+                    <button type="button" onClick={() => setIndex(Math.min(steps.length || opening.ply, opening.ply))} className="text-left">
+                      <span className="cjk block font-label-sm text-label-sm text-on-surface-variant">
+                        {t(`开局 · 第 ${opening.ply} 手定型`, `Opening · set by move ${opening.ply}`)}
+                      </span>
+                      <span className="block font-label-lg text-label-lg">
+                        <span className="tabular-nums text-secondary">{opening.eco}</span> {opening.name}
+                      </span>
+                    </button>
+                  )}
+                  {steps.length > 0 && (
+                    <div>
+                      <div className="flex justify-between cjk font-label-sm text-label-sm text-on-surface-variant">
+                        <span>{t("白方胜率走势", "White win chance")}</span>
+                        <span className="tabular-nums">{Math.round(winPct(current?.cp ?? 0))}%</span>
+                      </div>
+                      <WinRateChart cps={cps} index={index} onPick={setIndex} label={t("胜率折线图，点击跳到对应手", "Win-chance graph, tap to jump to a move")} />
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="home-glass-panel p-space-sm">
                 <h3 className="cjk font-label-lg text-label-lg mb-2">{t("棋谱", "Move list")}</h3>
                 <div className="max-h-[36vh] overflow-y-auto overscroll-contain grid gap-1">
