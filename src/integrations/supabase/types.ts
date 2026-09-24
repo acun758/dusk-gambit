@@ -566,6 +566,10 @@ export type Database = {
           diamonds: number
           draws: number
           elo: number
+          elo_blitz: number | null
+          elo_bullet: number | null
+          elo_classical: number | null
+          elo_rapid: number | null
           equipped_piece_set: string
           handle: string
           id: string
@@ -594,6 +598,10 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          elo_blitz?: number | null
+          elo_bullet?: number | null
+          elo_classical?: number | null
+          elo_rapid?: number | null
           equipped_piece_set?: string
           handle: string
           id: string
@@ -622,6 +630,10 @@ export type Database = {
           diamonds?: number
           draws?: number
           elo?: number
+          elo_blitz?: number | null
+          elo_bullet?: number | null
+          elo_classical?: number | null
+          elo_rapid?: number | null
           equipped_piece_set?: string
           handle?: string
           id?: string

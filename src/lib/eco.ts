@@ -33,7 +33,7 @@ export async function identifyOpening(ucis: string[]): Promise<EcoHit | null> {
   for (let i = 0; i < Math.min(ucis.length, 40); i++) {
     const u = ucis[i]!;
     try {
-      c.move({ from: u.slice(0, 2), to: u.slice(2, 4), promotion: u[4] });
+      c.move(u[4] ? { from: u.slice(0, 2), to: u.slice(2, 4), promotion: u[4] } : { from: u.slice(0, 2), to: u.slice(2, 4) });
     } catch {
       break;
     }
