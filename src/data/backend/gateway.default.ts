@@ -55,14 +55,17 @@ export const defaultGateway = {
 
   /* --------------------------------- 头像文件 --------------------------------- */
   async putAvatarFile(path: string, blob: Blob, contentType = "image/webp"): Promise<void> {
-    const { error } = await sdk.storage.from(AVATAR_BUCKET).upload(path, blob, { contentType, upsert: true });
+    // 长效缓存 24h：头像按时间戳命名（换头像即换路径），可安全长缓存
+    const { error } = await sdk.storage
+      .from(AVATAR_BUCKET)
+      .upload(path, blob, { contentType, upsert: true, cacheControl: "86400" });
     if (error) throw new Error(error.message);
   },
 
-  async fetchAvatarUrl(path: string, ttlSeconds = 3600): Promise<string | null> {
-    const { data, error } = await sdk.storage.from(AVATAR_BUCKET).createSignedUrl(path, ttlSeconds);
-    if (error || !data?.signedUrl) return null;
-    return data.signedUrl;
+  async fetchAvatarUrl(path: string): Promise<string | null> {
+    // 桶已公开：直接用公开地址，浏览器/CDN 可按 cacheControl 长效缓存
+    const { data } = sdk.storage.from(AVATAR_BUCKET).getPublicUrl(path);
+    return data?.publicUrl ?? null;
   },
 
   /* --------------------------------- 档案与装备 -------------------------------- */
