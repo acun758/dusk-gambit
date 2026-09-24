@@ -1,0 +1,1 @@
+drop policy if exists avatars_probe_delete_temp on storage.objects;
