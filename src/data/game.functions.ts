@@ -632,9 +632,24 @@ export const listEndgameLevels = createServerFn({ method: "GET" }).handler(async
   });
   const { data } = await client
     .from("endgame_levels")
-    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward, depth, theme_zh, theme_en, hint_zh, hint_en, explanation_zh, explanation_en")
+    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward, depth, theme_zh, theme_en")
     .order("id");
-  return data ?? [];
+  // 提示与讲解在服务端专用表，由服务端拼好再发给玩家（客户端无法直接访问该表）
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: answers } = await supabaseAdmin
+    .from("endgame_answers")
+    .select("level_id, hint_zh, hint_en, explanation_zh, explanation_en");
+  const byId = new Map((answers ?? []).map((a) => [a.level_id as number, a]));
+  return (data ?? []).map((l) => {
+    const a = byId.get(l.id as number);
+    return {
+      ...l,
+      hint_zh: a?.hint_zh ?? "",
+      hint_en: a?.hint_en ?? "",
+      explanation_zh: a?.explanation_zh ?? "",
+      explanation_en: a?.explanation_en ?? "",
+    };
+  });
 });
 
 /* -------------------------------- friends -------------------------------- */
