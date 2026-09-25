@@ -114,3 +114,50 @@ export const refreshMyThrone = createServerFn({ method: "POST" })
     if (error) throw new Error((error as { message: string }).message);
     return map(data as unknown as Raw);
   });
+
+export interface QualifierGame {
+  at: string;
+  opponent: string;
+  result: "W" | "D" | "L";
+  points: number;
+  total: number;
+}
+
+/** 公开：某位入围者资格赛窗口内逐局积分（与数据库函数同一口径：已结束、非中止、≥10 手）。只返回对手名、胜负与时间。 */
+export const listQualifierGames = createServerFn({ method: "GET" })
+  .inputValidator((d: { userId: string }) => {
+    if (!/^[0-9a-f-]{36}$/i.test(d?.userId ?? "")) throw new Error("bad id");
+    return d;
+  })
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: c } = await supabaseAdmin
+      .from("throne_candidates" as never)
+      .select("qualified_at,window_end")
+      .eq("season", season())
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    const w = c as unknown as { qualified_at: string | null; window_end: string | null } | null;
+    if (!w?.qualified_at || !w.window_end) return [] as QualifierGame[];
+    const { data: ms, error } = await supabaseAdmin
+      .from("matches")
+      .select("created_at,white_id,black_id,white_name,black_name,outcome")
+      .eq("status", "over")
+      .gte("ply", 10)
+      .gte("created_at", w.qualified_at)
+      .lt("created_at", w.window_end)
+      .or(`white_id.eq.${data.userId},black_id.eq.${data.userId}`)
+      .or("reason.is.null,reason.neq.abort")
+      .order("created_at", { ascending: true })
+      .limit(500);
+    if (error) throw new Error(error.message);
+    let total = 0;
+    return (ms ?? []).map((m) => {
+      const white = m.white_id === data.userId;
+      const result: QualifierGame["result"] =
+        m.outcome === "draw" ? "D" : (m.outcome === "white") === white ? "W" : "L";
+      const points = result === "W" ? 1 : result === "D" ? 0.5 : 0;
+      total += points;
+      return { at: m.created_at, opponent: white ? m.black_name : m.white_name, result, points, total };
+    });
+  });

@@ -131,4 +131,5 @@ export const defaultGateway = {
   fetchFideRatings: hallRemote.listFideRatings,
   fetchThroneCandidates: throneRemote.listThroneCandidates,
   refreshMyThrone: throneRemote.refreshMyThrone,
+  fetchQualifierGames: throneRemote.listQualifierGames,
 };

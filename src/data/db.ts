@@ -102,6 +102,8 @@ export const fetchFideRatings = gateway.fetchFideRatings;
 export const fetchThroneCandidates = gateway.fetchThroneCandidates;
 /** 重算自己的王座资格与评分并存档。 */
 export const refreshMyThrone = gateway.refreshMyThrone;
+/** 某位入围者资格赛逐局积分（公开）。 */
+export const fetchQualifierGames = gateway.fetchQualifierGames;
 
 type SubmitMoveArgs = Parameters<typeof gateway.submitMove>[0];
 type SubmitMoveResult = Awaited<ReturnType<typeof gateway.submitMove>>;
