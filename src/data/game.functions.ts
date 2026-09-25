@@ -523,11 +523,16 @@ export const submitEndgame = createServerFn({ method: "POST" })
 
     const { data: level } = await supabaseAdmin
       .from("endgame_levels")
-      .select("fen, elo_reward, diamond_reward, elo_required, explanation_zh, explanation_en, move_annotations")
+      .select("fen, elo_reward, diamond_reward, elo_required")
       .eq("id", data.levelId)
       .maybeSingle();
-
     if (!level) throw new Error("level not found");
+    // 提示/讲解/着法标注已拆至服务端专用表 endgame_answers
+    const { data: answers } = await supabaseAdmin
+      .from("endgame_answers")
+      .select("explanation_zh, explanation_en, move_annotations")
+      .eq("level_id", data.levelId)
+      .maybeSingle();
     const legal = candidates.some((line) => {
       if (line.length !== given.length || !line.every((m, i) => m === given[i])) return false;
       try {
@@ -555,7 +560,7 @@ export const submitEndgame = createServerFn({ method: "POST" })
       expectedLength: expected.length,
       reward: firstSolve ? { trainingPoints: level?.elo_reward ?? 0, diamonds: level?.diamond_reward ?? 0 } : null,
       profile: profile as ProfileRow | null,
-      explanation: { zh: level.explanation_zh, en: level.explanation_en, annotations: level.move_annotations },
+      explanation: { zh: answers?.explanation_zh ?? "", en: answers?.explanation_en ?? "", annotations: answers?.move_annotations ?? [] },
     };
   });
 
