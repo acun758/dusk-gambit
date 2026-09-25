@@ -164,7 +164,14 @@ export async function flushOutbound(): Promise<{ sent: number; left: number }> {
         queue.shift();
         sent += 1;
         persist();
-      } catch {
+      } catch (err) {
+        // 服务端明确拒收（已不合法/已超时）：不再重试，立即丢弃并通知玩家
+        if (err && typeof err === "object" && (err as { rejected?: boolean }).rejected) {
+          queue.shift();
+          persist();
+          notifyDrop(item);
+          continue;
+        }
         item.tries += 1;
         persist();
         // 连续失败 5 次判为无法补传（多半已被服务端拒绝），丢弃但必须通知玩家
