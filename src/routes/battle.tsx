@@ -103,15 +103,19 @@ function Battle() {
 
   }, [lang, myUserId]);
 
-  // 断网补传失败：落子连续补传失败被丢弃时明确提示，绝不静默丢着
+  // 断网补传失败：落子补传被拒或连续失败被丢弃时明确提示，绝不静默丢着。
+  // 提示常驻到玩家手动关闭，避免被终局战报遮住后错过。
   useEffect(() => {
-    return watchOutboundDrops(() => {
+    return watchOutboundDrops((item) => {
+      const san = (item.payload as { data?: { san?: string } } | undefined)?.data?.san;
+      console.info("[outbox] dropped", item.kind, san ?? "", "tries", item.tries);
       toast.error(t("这一步棋没能送到服务器", "This move could not reach the server"), {
+        id: `outbox-drop-${item.id}`,
         description: t(
-          "网络恢复后多次重试仍失败，该手未生效。请刷新页面对齐棋局，确认局面后再继续。",
-          "Retries after reconnect all failed and the move was not applied. Refresh to resync the board before continuing.",
+          `断网期间走的${san ? `「${san}」` : "这一手"}未生效：恢复联网时棋局已结束或局面已变化，服务端拒收。棋盘已按服务端棋谱对齐。`,
+          `The move${san ? ` ${san}` : ""} made while offline was not applied: by the time you reconnected the game had ended or the position had changed, so the server rejected it. The board now follows the server record.`,
         ),
-        duration: 10000,
+        duration: Infinity,
       });
     });
   }, [t]);
