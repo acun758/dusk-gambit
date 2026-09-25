@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      endgame_answers: {
+        Row: {
+          created_at: string
+          explanation_en: string
+          explanation_zh: string
+          hint_en: string
+          hint_zh: string
+          level_id: number
+          move_annotations: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          explanation_en?: string
+          explanation_zh?: string
+          hint_en?: string
+          hint_zh?: string
+          level_id: number
+          move_annotations?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          explanation_en?: string
+          explanation_zh?: string
+          hint_en?: string
+          hint_zh?: string
+          level_id?: number
+          move_annotations?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "endgame_answers_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: true
+            referencedRelation: "endgame_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       endgame_levels: {
         Row: {
           brief_en: string
@@ -23,13 +64,8 @@ export type Database = {
           diamond_reward: number
           elo_required: number
           elo_reward: number
-          explanation_en: string
-          explanation_zh: string
           fen: string
-          hint_en: string
-          hint_zh: string
           id: number
-          move_annotations: Json
           moves_to_mate: number
           name_en: string
           name_zh: string
@@ -46,13 +82,8 @@ export type Database = {
           diamond_reward?: number
           elo_required?: number
           elo_reward?: number
-          explanation_en?: string
-          explanation_zh?: string
           fen: string
-          hint_en?: string
-          hint_zh?: string
           id: number
-          move_annotations?: Json
           moves_to_mate?: number
           name_en: string
           name_zh: string
@@ -69,13 +100,8 @@ export type Database = {
           diamond_reward?: number
           elo_required?: number
           elo_reward?: number
-          explanation_en?: string
-          explanation_zh?: string
           fen?: string
-          hint_en?: string
-          hint_zh?: string
           id?: number
-          move_annotations?: Json
           moves_to_mate?: number
           name_en?: string
           name_zh?: string
@@ -134,13 +160,6 @@ export type Database = {
             referencedRelation: "endgame_levels"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "endgame_progress_level_id_fkey"
-            columns: ["level_id"]
-            isOneToOne: false
-            referencedRelation: "endgame_levels_public"
-            referencedColumns: ["id"]
-          },
         ]
       }
       endgame_solutions: {
@@ -165,13 +184,6 @@ export type Database = {
             columns: ["level_id"]
             isOneToOne: true
             referencedRelation: "endgame_levels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "endgame_solutions_level_id_fkey"
-            columns: ["level_id"]
-            isOneToOne: true
-            referencedRelation: "endgame_levels_public"
             referencedColumns: ["id"]
           },
         ]
@@ -990,72 +1002,7 @@ export type Database = {
       }
     }
     Views: {
-      endgame_levels_public: {
-        Row: {
-          brief_en: string | null
-          brief_zh: string | null
-          code: string | null
-          depth: number | null
-          diamond_reward: number | null
-          elo_required: number | null
-          elo_reward: number | null
-          fen: string | null
-          hint_en: string | null
-          hint_zh: string | null
-          id: number | null
-          moves_to_mate: number | null
-          name_en: string | null
-          name_zh: string | null
-          objective_en: string | null
-          objective_zh: string | null
-          solution_length: number | null
-          theme_en: string | null
-          theme_zh: string | null
-        }
-        Insert: {
-          brief_en?: string | null
-          brief_zh?: string | null
-          code?: string | null
-          depth?: number | null
-          diamond_reward?: number | null
-          elo_required?: number | null
-          elo_reward?: number | null
-          fen?: string | null
-          hint_en?: string | null
-          hint_zh?: string | null
-          id?: number | null
-          moves_to_mate?: number | null
-          name_en?: string | null
-          name_zh?: string | null
-          objective_en?: string | null
-          objective_zh?: string | null
-          solution_length?: never
-          theme_en?: string | null
-          theme_zh?: string | null
-        }
-        Update: {
-          brief_en?: string | null
-          brief_zh?: string | null
-          code?: string | null
-          depth?: number | null
-          diamond_reward?: number | null
-          elo_required?: number | null
-          elo_reward?: number | null
-          fen?: string | null
-          hint_en?: string | null
-          hint_zh?: string | null
-          id?: number | null
-          moves_to_mate?: number | null
-          name_en?: string | null
-          name_zh?: string | null
-          objective_en?: string | null
-          objective_zh?: string | null
-          solution_length?: never
-          theme_en?: string | null
-          theme_zh?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       apply_match_result: {
