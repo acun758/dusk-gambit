@@ -261,7 +261,7 @@ function Analysis() {
                   className="home-glass-control h-11 px-3 text-secondary shrink-0"
                 >
                   <UiIcon name={historyOpen ? "eye" : "scroll"} className="h-5 w-5" />
-                  <span className="cjk">{historyOpen ? t("收起", "Close") : t("选择对局", "Pick a game")}</span>
+                  <span className="cjk">{historyOpen ? t("收起", "Close") : t(`全部对局（${matches.length}）`, `All games (${matches.length})`)}</span>
                 </Button>
               )}
             </div>
