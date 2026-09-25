@@ -5,6 +5,8 @@ import { UiIcon } from "@/components/UiIcon";
 import { Bi, currentLang, useT } from "@/lib/i18n";
 import { pieceSet } from "@/lib/piece-sets";
 import { ThroneStandings } from "@/components/ThroneStandings";
+import heroDesk from "@/assets/throne-desk.webp.asset.json";
+import heroMob from "@/assets/throne-mob.webp.asset.json";
 
 export const Route = createFileRoute("/throne")({
   staticData: { sitemap: true },
@@ -135,25 +137,26 @@ function ThronePage() {
 
       <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm md:pb-space-lg">
         {/* S1 · Hero */}
-        <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col items-center gap-space-sm text-center">
-          <div className="flex items-end justify-center gap-2" aria-hidden="true">
-            <img src={OBSIDIAN["wq"]} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
-            <img src={OBSIDIAN["wk"]} alt="" className="h-24 w-24 sm:h-32 sm:w-32 object-contain drop-shadow-[0_0_24px_rgba(233,195,73,0.35)]" decoding="async" />
-            <img src={OBSIDIAN["wn"]} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
+        <section className="home-glass-panel relative min-w-0 overflow-hidden rounded-2xl">
+          <picture aria-hidden="true">
+            <source media="(min-width: 768px)" srcSet={heroDesk.url} />
+            <img src={heroMob.url} alt="" className="block aspect-[4/3] w-full object-cover md:aspect-[1920/620] md:object-[center_40%]" decoding="async" fetchPriority="high" />
+          </picture>
+          <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 bg-gradient-to-t from-background via-background/70 to-transparent px-space-md pb-space-sm pt-space-lg text-center">
+            <h2 className="font-headline-lg text-headline-lg tracking-wider text-on-surface">
+              <Bi zh="王座" en="THE THRONE" />
+            </h2>
+            <p className="cjk font-label-md text-label-md tracking-[0.3em] text-secondary">
+              {t("一年 · 一套 · 一人", "One Year · One Set · One Player")}
+            </p>
           </div>
-          <h2 className="font-headline-lg text-headline-lg tracking-wider text-on-surface">
-            <Bi zh="王座" en="THE THRONE" />
-          </h2>
-          <p className="cjk font-label-md text-label-md tracking-[0.3em] text-secondary">
-            {t("一年 · 一套 · 一人", "One Year · One Set · One Player")}
-          </p>
-          <p className="cjk max-w-prose font-body-sm text-body-sm text-on-surface-variant">
-            {t(
-              "每个王，都曾是一个兵。王座不奖励冲得快的人，奖励守得住的人。",
-              "Every king was once a pawn. The Throne does not reward those who rush — it rewards those who hold.",
-            )}
-          </p>
         </section>
+        <p className="cjk -mt-1 px-1 text-center font-body-sm text-body-sm text-on-surface-variant">
+          {t(
+            "每个王，都曾是一个兵。王座不奖励冲得快的人，奖励守得住的人。",
+            "Every king was once a pawn. The Throne does not reward those who rush — it rewards those who hold.",
+          )}
+        </p>
 
         {/* S2 · 奖品展示 */}
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col gap-space-sm">
