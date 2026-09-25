@@ -86,13 +86,17 @@ export const listPuzzles = createServerFn({ method: "POST" })
       .order("difficulty", { ascending: true })
       .order("rating", { ascending: true });
     if (error) throw new Error(error.message);
+    const { data: answers } = await supabaseAdmin.from("puzzle_answers").select("*");
+    const ansById = new Map((answers ?? []).map((a) => [a.puzzle_id, a]));
     const { data: progress } = await supabaseAdmin
       .from("puzzle_progress")
       .select("puzzle_id, solved, attempts, best_ms")
       .eq("user_id", context.userId);
     const byId = new Map((progress ?? []).map((p) => [p.puzzle_id, p]));
     return {
-      puzzles: (rows ?? []).map((r) => toCard(r as PuzzleRow, byId.get((r as PuzzleRow).id) as never)),
+      puzzles: (rows ?? []).map((r) =>
+        toCard(mergeAnswer(r, ansById.get(r.id)), byId.get(r.id) as never),
+      ),
     };
   });
 
