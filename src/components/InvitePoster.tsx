@@ -55,10 +55,10 @@ export function InvitePoster({ showThrone = false, className = "" }: { showThron
         {showThrone && (
           <Link
             to="/throne"
-            aria-label={t("玄弈年度尊享 · 王座年度荣誉奖励规则", "The Throne · annual honor award rules")}
-            className="cjk pulse-glow-crimson inline-flex w-full min-h-11 items-center justify-between gap-1 rounded-xl border border-crimson-700 bg-crimson-glow px-4 text-on-primary-container font-label-sm text-label-sm transition-colors hover:bg-crimson-700 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:min-h-14 lg:px-8 lg:text-label-lg"
+            aria-label={t("玄弈王座 · 年度一人 · 王座年度荣誉奖励规则", "The Throne · one a year · annual honor award rules")}
+            className="cjk inline-flex w-full min-h-11 items-center justify-between gap-1 rounded-xl border border-dawnGold/70 bg-transparent px-4 text-dawnGold font-label-sm text-label-sm transition-colors hover:bg-dawnGold/10 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:min-h-14 lg:px-8 lg:text-label-lg"
           >
-            {t("玄弈年度尊享", "The Throne · Annual Honor")}
+            {t("玄弈王座 · 年度一人", "The Throne · One a Year")}
             <UiIcon name="crown" className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
           </Link>
         )}
