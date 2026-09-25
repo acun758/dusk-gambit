@@ -93,7 +93,28 @@ function DuelVoiceComponent({
       if (event.candidate) link.send({ from: selfId, kind: "ice", data: event.candidate.toJSON() });
     };
 
-    async function handleSignal(signal: VoiceSignal) {
+    // 信令是异步到达的：远端描述设置好之前到达的 ICE 候选先排队，否则会被丢弃导致永远接不通；
+    // 发起方只发一次 offer，避免双方互相回招呼时重复协商互相覆盖。
+    const pendingIce: RTCIceCandidateInit[] = [];
+    let offered = false;
+    let chain: Promise<void> = Promise.resolve();
+    const flushIce = async (peer: RTCPeerConnection) => {
+      while (pendingIce.length) {
+        try {
+          await peer.addIceCandidate(pendingIce.shift()!);
+        } catch {
+          /* 过期候选忽略 */
+        }
+      }
+    };
+
+    function handleSignal(signal: VoiceSignal) {
+      // 串行处理，保证 offer/answer 与候选的先后顺序
+      chain = chain.then(() => handleSignalInner(signal)).catch(() => undefined);
+      return chain;
+    }
+
+    async function handleSignalInner(signal: VoiceSignal) {
       const peer = pcRef.current;
       if (!peer) return;
       if (signal.kind === "hello") {
@@ -109,15 +130,21 @@ function DuelVoiceComponent({
         const answer = await peer.createAnswer();
         await peer.setLocalDescription(answer);
         linkRef.current?.send({ from: selfId, kind: "answer", data: answer });
+        await flushIce(peer);
         return;
       }
       if (signal.kind === "answer") {
         if (peer.signalingState === "have-local-offer") {
           await peer.setRemoteDescription(signal.data as RTCSessionDescriptionInit);
+          await flushIce(peer);
         }
         return;
       }
       if (signal.kind === "ice") {
+        if (!peer.remoteDescription) {
+          pendingIce.push(signal.data as RTCIceCandidateInit);
+          return;
+        }
         try {
           await peer.addIceCandidate(signal.data as RTCIceCandidateInit);
         } catch {
@@ -133,7 +160,8 @@ function DuelVoiceComponent({
 
     async function makeOffer() {
       const peer = pcRef.current;
-      if (!peer) return;
+      if (!peer || offered) return;
+      offered = true;
       const offer = await peer.createOffer();
       await peer.setLocalDescription(offer);
       linkRef.current?.send({ from: selfId, kind: "offer", data: offer });
