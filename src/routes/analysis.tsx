@@ -85,10 +85,11 @@ function cpText(cp: number) {
   return `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
 }
 
-function matchResult(match: { outcome: string | null; you: string }, lang: "zh" | "en") {
-  const zh = !match.outcome ? "进行中" : match.outcome === "draw" ? "和棋" : match.outcome === (match.you === "w" ? "white" : "black") ? "胜" : "负";
-  const en = !match.outcome ? "In progress" : match.outcome === "draw" ? "Draw" : match.outcome === (match.you === "w" ? "white" : "black") ? "Win" : "Loss";
-  return lang === "zh" ? zh : en;
+function matchResult(match: { outcome: string | null; reason?: string | null; you: string }, lang: "zh" | "en") {
+  const label = (zh: string, en: string) => (lang === "zh" ? zh : en);
+  if (!match.outcome) return match.reason === "abort" ? label("已中止", "Aborted") : label("进行中", "In progress");
+  if (match.outcome === "draw") return label("和棋", "Draw");
+  return match.outcome === (match.you === "w" ? "white" : "black") ? label("胜", "Win") : label("负", "Loss");
 }
 
 function Analysis() {
