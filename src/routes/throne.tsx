@@ -136,9 +136,9 @@ function ThronePage() {
         {/* S1 · Hero */}
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col items-center gap-space-sm text-center">
           <div className="flex items-end justify-center gap-2" aria-hidden="true">
-            <img src={OBSIDIAN.wq} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
-            <img src={OBSIDIAN.wk} alt="" className="h-24 w-24 sm:h-32 sm:w-32 object-contain drop-shadow-[0_0_24px_rgba(233,195,73,0.35)]" decoding="async" />
-            <img src={OBSIDIAN.wn} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
+            <img src={OBSIDIAN["wq"]} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
+            <img src={OBSIDIAN["wk"]} alt="" className="h-24 w-24 sm:h-32 sm:w-32 object-contain drop-shadow-[0_0_24px_rgba(233,195,73,0.35)]" decoding="async" />
+            <img src={OBSIDIAN["wn"]} alt="" className="h-16 w-16 sm:h-20 sm:w-20 object-contain opacity-80" loading="lazy" decoding="async" />
           </div>
           <h2 className="font-headline-lg text-headline-lg tracking-wider text-on-surface">
             <Bi zh="王座" en="THE THRONE" />
