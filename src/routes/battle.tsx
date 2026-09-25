@@ -454,7 +454,7 @@ function Battle() {
           {ranked && session.state.status === "over" && (
             <div className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
               <p className="cjk font-body-sm text-body-sm text-on-surface">{t("本局已结束，棋谱已存档，可在复盘页查看。", "Game over — the record is saved and available in Review.")}</p>
-              <Link to="/arena" className="home-glass-action shrink-0 inline-flex h-11 items-center rounded-[12px] bg-secondary px-4 cjk font-label-sm text-label-sm text-on-surface">{t("回到联网大厅", "Back to Arena")}</Link>
+              <Link to="/arena" className="home-glass-action shrink-0 inline-flex h-11 items-center rounded-[12px] border border-secondary bg-surface-container-highest px-4 cjk font-label-sm text-label-sm text-secondary">{t("回到联网大厅", "Back to Arena")}</Link>
             </div>
           )}
           {session.notice && (
