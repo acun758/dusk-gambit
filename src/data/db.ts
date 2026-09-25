@@ -98,6 +98,10 @@ export const analyzeMind = gateway.analyzeMind;
 export const recordMatchReport = gateway.recordMatchReport;
 /** 名人堂榜单（库内月度快照，客户端不直连外部榜单站点）。 */
 export const fetchFideRatings = gateway.fetchFideRatings;
+/** 王座年度候选公示榜（服务端计算后存档）。 */
+export const fetchThroneCandidates = gateway.fetchThroneCandidates;
+/** 重算自己的王座资格与评分并存档。 */
+export const refreshMyThrone = gateway.refreshMyThrone;
 
 type SubmitMoveArgs = Parameters<typeof gateway.submitMove>[0];
 type SubmitMoveResult = Awaited<ReturnType<typeof gateway.submitMove>>;
