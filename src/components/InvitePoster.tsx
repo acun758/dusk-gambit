@@ -7,7 +7,7 @@ import { rankOf } from "@/lib/ranks";
 import { useT } from "@/lib/i18n";
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
-export function InvitePoster({ className = "" }: { compact?: boolean; className?: string }) {
+export function InvitePoster({ showThrone = false, className = "" }: { showThrone?: boolean; compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
   const t = useT();
   const rank = rankOf(profile.elo);
@@ -43,13 +43,25 @@ export function InvitePoster({ className = "" }: { compact?: boolean; className?
           {t("免费对弈 · 胜负实时结算天梯积分", "Free to play · ratings settle after every game")}
         </p>
         <p className="cjk font-body-sm text-body-sm text-on-surface-variant sm:text-body-md lg:text-body-lg">{t("系统按段位就近匹配，段位相近者优先。", "Matchmaking pairs you with the closest ratings first.")}</p>
-        <Link
-          to="/battle"
-          className="home-glass-action cjk mt-1 inline-flex min-h-11 w-fit items-center gap-1 px-4 text-on-primary-container font-label-sm text-label-sm sm:mt-2 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:mt-3 lg:min-h-14 lg:px-8 lg:text-label-lg"
-        >
-          {t("选择赛制发起约战", "Choose a time control")}
-          <UiIcon name="shield" className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
-        </Link>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <Link
+            to="/battle"
+            className="home-glass-action cjk inline-flex min-h-11 w-fit items-center gap-1 px-4 text-on-primary-container font-label-sm text-label-sm sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:min-h-14 lg:px-8 lg:text-label-lg"
+          >
+            {t("选择赛制发起约战", "Choose a time control")}
+            <UiIcon name="shield" className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
+          </Link>
+          {showThrone && (
+            <Link
+              to="/throne"
+              aria-label={t("玄弈年度尊享 · 王座年度荣誉奖励规则", "The Throne · annual honor award rules")}
+              className="cjk pulse-glow-crimson inline-flex min-h-11 w-fit items-center gap-1 rounded-xl border border-crimson-700 bg-crimson-glow px-4 text-on-primary-container font-label-sm text-label-sm transition-colors hover:bg-crimson-700 sm:min-h-12 sm:gap-2 sm:px-6 sm:text-label-md lg:min-h-14 lg:px-8 lg:text-label-lg"
+            >
+              {t("玄弈年度尊享", "The Throne · Annual Honor")}
+              <UiIcon name="crown" className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+            </Link>
+          )}
+        </div>
       </div>
     </section>
   );
