@@ -989,7 +989,17 @@ export type Database = {
           gate_rank: boolean
           king_reached_at: string | null
           name: string
+          pts_daily: number
+          pts_games: number
+          pts_review: number
+          pts_win: number
+          q_draws: number
+          q_games: number
+          q_losses: number
+          q_points: number
+          q_wins: number
           qualified: boolean
+          qualified_at: string | null
           review_count: number
           score: number
           season: number
@@ -997,6 +1007,7 @@ export type Database = {
           user_id: string
           valid_games: number
           win_rate: number
+          window_end: string | null
           wins: number
         }
         Insert: {
@@ -1008,7 +1019,17 @@ export type Database = {
           gate_rank?: boolean
           king_reached_at?: string | null
           name?: string
+          pts_daily?: number
+          pts_games?: number
+          pts_review?: number
+          pts_win?: number
+          q_draws?: number
+          q_games?: number
+          q_losses?: number
+          q_points?: number
+          q_wins?: number
           qualified?: boolean
+          qualified_at?: string | null
           review_count?: number
           score?: number
           season: number
@@ -1016,6 +1037,7 @@ export type Database = {
           user_id: string
           valid_games?: number
           win_rate?: number
+          window_end?: string | null
           wins?: number
         }
         Update: {
@@ -1027,7 +1049,17 @@ export type Database = {
           gate_rank?: boolean
           king_reached_at?: string | null
           name?: string
+          pts_daily?: number
+          pts_games?: number
+          pts_review?: number
+          pts_win?: number
+          q_draws?: number
+          q_games?: number
+          q_losses?: number
+          q_points?: number
+          q_wins?: number
           qualified?: boolean
+          qualified_at?: string | null
           review_count?: number
           score?: number
           season?: number
@@ -1035,6 +1067,7 @@ export type Database = {
           user_id?: string
           valid_games?: number
           win_rate?: number
+          window_end?: string | null
           wins?: number
         }
         Relationships: []
@@ -1103,7 +1136,17 @@ export type Database = {
           gate_rank: boolean
           king_reached_at: string | null
           name: string
+          pts_daily: number
+          pts_games: number
+          pts_review: number
+          pts_win: number
+          q_draws: number
+          q_games: number
+          q_losses: number
+          q_points: number
+          q_wins: number
           qualified: boolean
+          qualified_at: string | null
           review_count: number
           score: number
           season: number
@@ -1111,6 +1154,7 @@ export type Database = {
           user_id: string
           valid_games: number
           win_rate: number
+          window_end: string | null
           wins: number
         }
         SetofOptions: {
@@ -1219,6 +1263,7 @@ export type Database = {
         }
         Returns: Json
       }
+      refresh_throne_all: { Args: { p_season?: number }; Returns: number }
       remove_friendship: {
         Args: { p_friendship_id: string; p_user_id: string }
         Returns: boolean
