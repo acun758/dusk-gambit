@@ -19,7 +19,7 @@ import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
 import { DuelVoice } from "@/components/DuelVoice";
 import { currentUserId } from "@/data/db";
-import { subscribeAuditAlerts } from "@/data/realtime";
+import { subscribeAuditAlerts, watchOutboundDrops } from "@/data/realtime";
 import { toast } from "sonner";
 import { auditAlertText } from "@/lib/audit-alerts";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
