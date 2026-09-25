@@ -124,6 +124,26 @@ export function clearOutbound(kind?: string) {
   persist();
 }
 
+/* ------------------------------ 补传失败通知 ------------------------------ */
+
+const dropWatchers = new Set<(item: OutboundItem) => void>();
+
+/** 某条动作补传连续失败被丢弃时通知界面——绝不静默丢着。 */
+export function watchOutboundDrops(cb: (item: OutboundItem) => void): Unsubscribe {
+  dropWatchers.add(cb);
+  return () => dropWatchers.delete(cb);
+}
+
+function notifyDrop(item: OutboundItem) {
+  dropWatchers.forEach((w) => {
+    try {
+      w(item);
+    } catch {
+      /* 通知失败不影响队列 */
+    }
+  });
+}
+
 /** 按入队顺序补传；任一条失败立即停下，保持顺序不乱。 */
 export async function flushOutbound(): Promise<{ sent: number; left: number }> {
   if (flushing) return { sent: 0, left: queue.length };
@@ -147,10 +167,11 @@ export async function flushOutbound(): Promise<{ sent: number; left: number }> {
       } catch {
         item.tries += 1;
         persist();
-        // 连续失败 5 次判为无法补传（多半已被服务端拒绝），丢弃后继续
+        // 连续失败 5 次判为无法补传（多半已被服务端拒绝），丢弃但必须通知玩家
         if (item.tries >= 5) {
           queue.shift();
           persist();
+          notifyDrop(item);
           continue;
         }
         setPhase("offline");

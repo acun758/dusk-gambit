@@ -19,7 +19,7 @@ import { Bi, LangToggle, useLang, useT } from "@/lib/i18n";
 import { useProfile, placementLabel } from "@/lib/profile";
 import { DuelVoice } from "@/components/DuelVoice";
 import { currentUserId } from "@/data/db";
-import { subscribeAuditAlerts } from "@/data/realtime";
+import { subscribeAuditAlerts, watchOutboundDrops } from "@/data/realtime";
 import { toast } from "sonner";
 import { auditAlertText } from "@/lib/audit-alerts";
 import { toPgn, resultTag, type Outcome } from "@/core/pgn";
@@ -102,6 +102,19 @@ function Battle() {
     });
 
   }, [lang, myUserId]);
+
+  // 断网补传失败：落子连续补传失败被丢弃时明确提示，绝不静默丢着
+  useEffect(() => {
+    return watchOutboundDrops(() => {
+      toast.error(t("这一步棋没能送到服务器", "This move could not reach the server"), {
+        description: t(
+          "网络恢复后多次重试仍失败，该手未生效。请刷新页面对齐棋局，确认局面后再继续。",
+          "Retries after reconnect all failed and the move was not applied. Refresh to resync the board before continuing.",
+        ),
+        duration: 10000,
+      });
+    });
+  }, [t]);
 
   const waiting = session.state.status === "waiting";
   const myTurn = session.state.turn === session.state.you && session.state.status === "live" && !session.movePending;
