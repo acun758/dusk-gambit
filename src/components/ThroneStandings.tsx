@@ -214,12 +214,13 @@ export function ThroneStandings() {
 
 function Board({ rows, metric }: { rows: ThroneRow[]; metric: (r: ThroneRow) => string }) {
   const t = useT();
+  const [opened, setOpened] = useState<Record<string, boolean>>({});
   if (!rows.length) return null;
   return (
     <ol className="flex flex-col gap-1">
       {rows.map((r, i) => (
         <li key={r.userId}>
-          <details className="rounded-lg bg-surface-container px-space-sm py-2">
+          <details onToggle={(e) => e.currentTarget.open && setOpened((o) => ({ ...o, [r.userId]: true }))} className="rounded-lg bg-surface-container px-space-sm py-2">
             <summary className="flex min-w-0 cursor-pointer items-center gap-2 list-none">
               <span className="w-6 shrink-0 tabular-nums font-label-sm text-label-sm text-on-surface-variant">{i + 1}</span>
               <span className="cjk min-w-0 flex-1 truncate font-body-sm text-body-sm text-on-surface">{r.name || t("棋手", "Player")}</span>
@@ -228,7 +229,7 @@ function Board({ rows, metric }: { rows: ThroneRow[]; metric: (r: ThroneRow) => 
               <span className="w-14 shrink-0 text-right tabular-nums font-label-sm text-label-sm text-secondary">{metric(r)}</span>
             </summary>
             <div className="mt-2 border-t border-outline-variant/40 pt-2">
-              <Lazy r={r} />
+              <Breakdown r={r} live={Boolean(opened[r.userId])} />
             </div>
           </details>
         </li>
@@ -237,9 +238,3 @@ function Board({ rows, metric }: { rows: ThroneRow[]; metric: (r: ThroneRow) => 
   );
 }
 
-/** 展开时才加载逐局积分，避免榜单一次拉取全部人的对局。 */
-function Lazy({ r }: { r: ThroneRow }) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(true), []);
-  return <Breakdown r={r} live={open} />;
-}
