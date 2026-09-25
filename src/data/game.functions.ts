@@ -749,7 +749,7 @@ export const listMyMatches = createServerFn({ method: "POST" })
       .select("*")
       .or(`white_id.eq.${context.userId},black_id.eq.${context.userId}`)
       .order("last_move_at", { ascending: false })
-      .limit(20);
+      .limit(50);
     const rows = (data ?? []) as MatchRow[];
     return rows.map<MatchSummary>((m) => {
       const you = m.white_id === context.userId ? ("w" as const) : ("b" as const);
