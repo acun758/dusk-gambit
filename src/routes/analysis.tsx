@@ -363,7 +363,7 @@ function Analysis() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                  <Button onClick={() => setIndex(0)} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="spinner" className="h-5 w-5" />{t("起始", "Start")}</Button>
                  <Button onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="play-motion" className="h-5 w-5 rotate-180" />{t("上一手", "Previous")}</Button>
-                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="home-glass-action h-12 bg-secondary text-on-surface"><UiIcon name="play-motion" className="h-5 w-5" />{t("下一手", "Next")}</Button>
+                 <Button onClick={() => setIndex((i) => Math.min(steps.length, i + 1))} disabled={index >= steps.length} className="home-glass-action h-12 border border-secondary bg-surface-container-highest text-secondary"><UiIcon name="play-motion" className="h-5 w-5" />{t("下一手", "Next")}</Button>
                  <Button onClick={() => setIndex(steps.length)} disabled={index >= steps.length} className="home-glass-control h-12 bg-surface-container text-on-surface"><UiIcon name="seal" className="h-5 w-5" />{t("终局", "Final")}</Button>
               </div>
               </div>
