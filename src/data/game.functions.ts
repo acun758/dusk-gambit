@@ -523,11 +523,16 @@ export const submitEndgame = createServerFn({ method: "POST" })
 
     const { data: level } = await supabaseAdmin
       .from("endgame_levels")
-      .select("fen, elo_reward, diamond_reward, elo_required, explanation_zh, explanation_en, move_annotations")
+      .select("fen, elo_reward, diamond_reward, elo_required")
       .eq("id", data.levelId)
       .maybeSingle();
-
     if (!level) throw new Error("level not found");
+    // 提示/讲解/着法标注已拆至服务端专用表 endgame_answers
+    const { data: answers } = await supabaseAdmin
+      .from("endgame_answers")
+      .select("explanation_zh, explanation_en, move_annotations")
+      .eq("level_id", data.levelId)
+      .maybeSingle();
     const legal = candidates.some((line) => {
       if (line.length !== given.length || !line.every((m, i) => m === given[i])) return false;
       try {
@@ -555,7 +560,7 @@ export const submitEndgame = createServerFn({ method: "POST" })
       expectedLength: expected.length,
       reward: firstSolve ? { trainingPoints: level?.elo_reward ?? 0, diamonds: level?.diamond_reward ?? 0 } : null,
       profile: profile as ProfileRow | null,
-      explanation: { zh: level.explanation_zh, en: level.explanation_en, annotations: level.move_annotations },
+      explanation: { zh: answers?.explanation_zh ?? "", en: answers?.explanation_en ?? "", annotations: answers?.move_annotations ?? [] },
     };
   });
 
@@ -627,9 +632,24 @@ export const listEndgameLevels = createServerFn({ method: "GET" }).handler(async
   });
   const { data } = await client
     .from("endgame_levels")
-    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward, depth, theme_zh, theme_en, hint_zh, hint_en, explanation_zh, explanation_en")
+    .select("id, code, name_zh, name_en, brief_zh, brief_en, fen, objective_zh, objective_en, moves_to_mate, elo_required, elo_reward, diamond_reward, depth, theme_zh, theme_en")
     .order("id");
-  return data ?? [];
+  // 提示与讲解在服务端专用表，由服务端拼好再发给玩家（客户端无法直接访问该表）
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: answers } = await supabaseAdmin
+    .from("endgame_answers")
+    .select("level_id, hint_zh, hint_en, explanation_zh, explanation_en");
+  const byId = new Map((answers ?? []).map((a) => [a.level_id as number, a]));
+  return (data ?? []).map((l) => {
+    const a = byId.get(l.id as number);
+    return {
+      ...l,
+      hint_zh: a?.hint_zh ?? "",
+      hint_en: a?.hint_en ?? "",
+      explanation_zh: a?.explanation_zh ?? "",
+      explanation_en: a?.explanation_en ?? "",
+    };
+  });
 });
 
 /* -------------------------------- friends -------------------------------- */
