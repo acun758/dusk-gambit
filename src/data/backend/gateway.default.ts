@@ -10,6 +10,7 @@ import * as puzzleRemote from "@/data/puzzle.functions";
 import * as mindRemote from "@/data/mind.functions";
 import * as hallRemote from "@/data/hall.functions";
 import * as arenaRemote from "@/data/arena.functions";
+import * as throneRemote from "@/data/throne.functions";
 import type { AuthResult, SessionInfo } from "./types";
 import { STORAGE_CONFIG } from "@/config/app-config";
 
@@ -128,4 +129,6 @@ export const defaultGateway = {
   analyzeMind: mindRemote.analyzeMind,
   recordMatchReport: mindRemote.recordMatchReport,
   fetchFideRatings: hallRemote.listFideRatings,
+  fetchThroneCandidates: throneRemote.listThroneCandidates,
+  refreshMyThrone: throneRemote.refreshMyThrone,
 };

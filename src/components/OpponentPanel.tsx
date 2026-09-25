@@ -52,16 +52,15 @@ function OpponentPanelComponent({
   }, []);
 
 
-  // 从登录页跳转过来（/battle?lobby=1）：直接进大厅并自动按段位就近排队
+  // 从登录页跳转过来（/battle?lobby=1）：只切到「系统匹配」分页，排队必须玩家显式点击「开始匹配」
   const [autoQueued, setAutoQueued] = useState(false);
   useEffect(() => {
     if (autoQueued || signedIn !== true) return;
     if (!new URLSearchParams(window.location.search).has("lobby")) return;
     setAutoQueued(true);
     setTab("auto");
-    setNotice(t("正在为你匹配段位相近的对手…", "Finding an opponent near your rating…"));
-    if (!ranked) onStartRanked(DEFAULT_TIME_CONTROL);
-  }, [autoQueued, signedIn, ranked, onStartRanked]);
+    setNotice(t("选好赛制后点「开始匹配」进入真人对局。", "Pick a time control and tap Find match to play a real opponent."));
+  }, [autoQueued, signedIn]);
 
   const invitesQ = useQuery({
     queryKey: ["duel-invites", signedIn],

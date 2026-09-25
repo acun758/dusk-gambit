@@ -979,6 +979,66 @@ export type Database = {
           },
         ]
       }
+      throne_candidates: {
+        Row: {
+          avatar_key: string
+          created_at: string
+          daily_rate: number
+          elo: number
+          gate_games: boolean
+          gate_rank: boolean
+          king_reached_at: string | null
+          name: string
+          qualified: boolean
+          review_count: number
+          score: number
+          season: number
+          updated_at: string
+          user_id: string
+          valid_games: number
+          win_rate: number
+          wins: number
+        }
+        Insert: {
+          avatar_key?: string
+          created_at?: string
+          daily_rate?: number
+          elo?: number
+          gate_games?: boolean
+          gate_rank?: boolean
+          king_reached_at?: string | null
+          name?: string
+          qualified?: boolean
+          review_count?: number
+          score?: number
+          season: number
+          updated_at?: string
+          user_id: string
+          valid_games?: number
+          win_rate?: number
+          wins?: number
+        }
+        Update: {
+          avatar_key?: string
+          created_at?: string
+          daily_rate?: number
+          elo?: number
+          gate_games?: boolean
+          gate_rank?: boolean
+          king_reached_at?: string | null
+          name?: string
+          qualified?: boolean
+          review_count?: number
+          score?: number
+          season?: number
+          updated_at?: string
+          user_id?: string
+          valid_games?: number
+          win_rate?: number
+          wins?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1031,6 +1091,34 @@ export type Database = {
       close_arena_room: {
         Args: { p_room_id: string; p_user_id: string }
         Returns: boolean
+      }
+      compute_throne_candidate: {
+        Args: { p_season?: number; p_user: string }
+        Returns: {
+          avatar_key: string
+          created_at: string
+          daily_rate: number
+          elo: number
+          gate_games: boolean
+          gate_rank: boolean
+          king_reached_at: string | null
+          name: string
+          qualified: boolean
+          review_count: number
+          score: number
+          season: number
+          updated_at: string
+          user_id: string
+          valid_games: number
+          win_rate: number
+          wins: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "throne_candidates"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_arena_room: {
         Args: {

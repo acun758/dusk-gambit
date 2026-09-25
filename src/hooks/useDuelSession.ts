@@ -506,7 +506,18 @@ export function useDuelSession(): DuelSession {
   }, []);
 
   /** 重新开始：仅本地陪练可用，清空棋谱与时钟重开一局 */
+  // 真人对局进行中（或排队中）绝不静默切回本地 AI：否则玩家以为在下真人局，
+  // 实际着法只进了本地陪练，服务端棋谱永远停在第 0 手（38 号终审 P0 根因）。
+  const cloudBusy = () => {
+    const s = matchRef.current?.status;
+    return s === "live";
+  };
+
   const restart = useCallback(() => {
+    if (cloudBusy()) {
+      setNotice("真人对局进行中，不能重开；如需结束请认输或提和。");
+      return;
+    }
     clientRef.current?.disconnect();
     clientRef.current = null;
     setLocalState(null);
@@ -518,6 +529,10 @@ export function useDuelSession(): DuelSession {
   }, []);
 
   const setAiLevel = useCallback((id: AiLevelId) => {
+    if (cloudBusy()) {
+      setNotice("真人对局进行中，结束后再切换 AI 陪练。");
+      return;
+    }
     setLevelId(id);
     clientRef.current?.setLevel(id);
     const waitingId = matchRef.current?.status === "waiting" ? matchRef.current.id : null;

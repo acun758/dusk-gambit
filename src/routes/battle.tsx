@@ -365,7 +365,7 @@ function Battle() {
               <UiIcon name="skull" className="h-6 w-6" />
               {t("结束本局", "End game")}
             </Button>
-             <Button onClick={session.restart} variant="ghost" className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm">
+             <Button onClick={session.restart} disabled={ranked && session.state.status === "live"} variant="ghost" className="home-glass-control h-12 text-secondary cjk font-label-sm text-label-sm disabled:opacity-40">
               <UiIcon name="spinner" className="h-6 w-6" />
               {t("重新开始", "Restart")}
             </Button>
@@ -448,8 +448,14 @@ function Battle() {
             </p>
           )}
 
-          {!session.canPause && (
-            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">{t("真人天梯由服务端仲裁时钟，不能暂停；「重新开始」会退出当前真人局回到 AI 陪练。", "Ranked clocks are arbitrated by the server and cannot be paused; Restart leaves the live game and returns to AI practice.")}</p>
+          {!session.canPause && session.state.status === "live" && (
+            <p className="battle-core-width cjk font-body-sm text-body-sm text-on-surface-variant">{t("真人天梯由服务端仲裁时钟，不能暂停或重开；结束对局请认输或提和。", "Ranked clocks are arbitrated by the server and cannot be paused or restarted; resign or offer a draw to end the game.")}</p>
+          )}
+          {ranked && session.state.status === "over" && (
+            <div className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">
+              <p className="cjk font-body-sm text-body-sm text-on-surface">{t("本局已结束，棋谱已存档，可在复盘页查看。", "Game over — the record is saved and available in Review.")}</p>
+              <Link to="/arena" className="home-glass-action shrink-0 inline-flex h-11 items-center rounded-[12px] border border-secondary bg-surface-container-highest px-4 cjk font-label-sm text-label-sm text-secondary">{t("回到联网大厅", "Back to Arena")}</Link>
+            </div>
           )}
           {session.notice && (
              <div role="status" className="battle-core-width home-glass-panel px-space-sm py-3 flex items-center justify-between gap-3">

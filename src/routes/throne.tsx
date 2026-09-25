@@ -4,6 +4,7 @@ import { SovereignPageHeader } from "@/components/SovereignPageHeader";
 import { UiIcon } from "@/components/UiIcon";
 import { Bi, currentLang, useT } from "@/lib/i18n";
 import { pieceSet } from "@/lib/piece-sets";
+import { ThroneStandings } from "@/components/ThroneStandings";
 
 export const Route = createFileRoute("/throne")({
   staticData: { sitemap: true },
@@ -212,6 +213,8 @@ function ThronePage() {
             )}
           </p>
         </section>
+
+        <ThroneStandings />
 
         {/* S5 · 反作弊条款 */}
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col gap-space-sm">
