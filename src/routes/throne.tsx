@@ -140,7 +140,7 @@ function ThronePage() {
         <section className="home-glass-panel relative min-w-0 overflow-hidden rounded-2xl">
           <picture aria-hidden="true">
             <source media="(min-width: 768px)" srcSet={heroDesk.url} />
-            <img src={heroMob.url} alt="" className="block aspect-[4/3] w-full object-cover md:aspect-[1920/620] md:object-[center_40%]" decoding="async" fetchPriority="high" />
+            <img src={heroMob.url} alt="" className="block aspect-[4/3] w-full object-cover md:aspect-[16/7] md:object-[center_35%]" decoding="async" fetchPriority="high" />
           </picture>
           <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 bg-gradient-to-t from-background via-background/70 to-transparent px-space-md pb-space-sm pt-space-lg text-center">
             <h2 className="font-headline-lg text-headline-lg tracking-wider text-on-surface">
@@ -150,13 +150,13 @@ function ThronePage() {
               {t("一年 · 一套 · 一人", "One Year · One Set · One Player")}
             </p>
           </div>
-        </section>
-        <p className="cjk -mt-1 px-1 text-center font-body-sm text-body-sm text-on-surface-variant">
+          <p className="cjk px-space-md pb-space-sm pt-1 text-center font-body-sm text-body-sm text-on-surface-variant">
           {t(
             "每个王，都曾是一个兵。王座不奖励冲得快的人，奖励守得住的人。",
             "Every king was once a pawn. The Throne does not reward those who rush — it rewards those who hold.",
           )}
         </p>
+        </section>
 
         {/* S2 · 奖品展示 */}
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col gap-space-sm">
