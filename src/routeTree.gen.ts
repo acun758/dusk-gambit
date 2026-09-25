@@ -23,6 +23,7 @@ import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as OpsRouteImport } from './routes/ops'
 import { Route as PuzzlesRouteImport } from './routes/puzzles'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ThroneRouteImport } from './routes/throne'
 import { Route as ApiPublicCronFideSyncRouteImport } from './routes/api/public/cron/fide-sync'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +96,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThroneRoute = ThroneRouteImport.update({
+  id: '/throne',
+  path: '/throne',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicCronFideSyncRoute = ApiPublicCronFideSyncRouteImport.update({
   id: '/api/public/cron/fide-sync',
   path: '/api/public/cron/fide-sync',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/throne': typeof ThroneRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRoutesByTo {
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/throne': typeof ThroneRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRoutesById {
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/ops': typeof OpsRoute
   '/puzzles': typeof PuzzlesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/throne': typeof ThroneRoute
   '/api/public/cron/fide-sync': typeof ApiPublicCronFideSyncRoute
 }
 export interface FileRouteTypes {
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/throne'
     | '/api/public/cron/fide-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/throne'
     | '/api/public/cron/fide-sync'
   id:
     | '__root__'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/ops'
     | '/puzzles'
     | '/sitemap.xml'
+    | '/throne'
     | '/api/public/cron/fide-sync'
   fileRoutesById: FileRoutesById
 }
@@ -222,6 +234,7 @@ export interface RootRouteChildren {
   OpsRoute: typeof OpsRoute
   PuzzlesRoute: typeof PuzzlesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ThroneRoute: typeof ThroneRoute
   ApiPublicCronFideSyncRoute: typeof ApiPublicCronFideSyncRoute
 }
 
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/throne': {
+      id: '/throne'
+      path: '/throne'
+      fullPath: '/throne'
+      preLoaderRoute: typeof ThroneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/cron/fide-sync': {
       id: '/api/public/cron/fide-sync'
       path: '/api/public/cron/fide-sync'
@@ -350,6 +370,7 @@ const rootRouteChildren: RootRouteChildren = {
   OpsRoute: OpsRoute,
   PuzzlesRoute: PuzzlesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ThroneRoute: ThroneRoute,
   ApiPublicCronFideSyncRoute: ApiPublicCronFideSyncRoute,
 }
 export const routeTree = rootRouteImport

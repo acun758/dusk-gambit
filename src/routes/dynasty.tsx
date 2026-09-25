@@ -277,6 +277,14 @@ function Dynasty() {
               </div>
             </div>
 
+            <Link
+              to="/throne"
+              className="cjk flex min-h-11 items-center gap-1.5 font-body-sm text-body-sm text-secondary hover:text-primary transition-colors"
+            >
+              <UiIcon name="crown" className="h-5 w-5 shrink-0" />
+              {t("了解王座奖励 →", "Learn about the Throne award →")}
+            </Link>
+
             {!signedIn && (
               <Link to="/auth" className="home-glass-action cjk min-h-11 px-3 font-body-sm text-body-sm text-secondary flex items-center gap-2">
                 <GameIcon name="auth-google" className="h-7 w-7 shrink-0" />
