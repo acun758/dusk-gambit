@@ -144,7 +144,10 @@ function PanelBody({ tab, session }: { tab: TabKey; session?: DuelSession | unde
               {t("测试断线追帧", "Test resync")}
             </Button>}
             <Button
-              onClick={session.resign}
+              onClick={() => {
+                if (session.state.status !== "live") return;
+                if (window.confirm(t("确认认输？本局将立即结算。", "Resign this game? It will be settled immediately."))) session.resign();
+              }}
               variant="ghost"
               className={`home-glass-control ${import.meta.env.DEV ? "" : "col-span-3"} h-11 bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-widest`}
             >
