@@ -137,7 +137,8 @@ function ThronePage() {
 
       <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm md:pb-space-lg">
         {/* S1 · Hero */}
-        <section className="home-glass-panel relative min-w-0 overflow-hidden rounded-2xl">
+        <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl">
+          <div className="relative">
           <picture aria-hidden="true">
             <source media="(min-width: 768px)" srcSet={heroDesk.url} />
             <img src={heroMob.url} alt="" className="block aspect-[4/3] w-full object-cover md:aspect-[16/7] md:object-[center_35%]" decoding="async" fetchPriority="high" />
@@ -149,6 +150,7 @@ function ThronePage() {
             <p className="cjk font-label-md text-label-md tracking-[0.3em] text-secondary">
               {t("一年 · 一套 · 一人", "One Year · One Set · One Player")}
             </p>
+          </div>
           </div>
           <p className="cjk px-space-md pb-space-sm pt-1 text-center font-body-sm text-body-sm text-on-surface-variant">
           {t(
