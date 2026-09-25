@@ -69,6 +69,25 @@ function toCard(row: PuzzleRow, prog?: { solved: boolean; attempts: number; best
   };
 }
 
+/** 谜面（公开表 puzzles）+ 提示/讲解（仅服务端可读表 puzzle_answers） */
+function mergeAnswer(row: object, ans?: { hint_zh: string; hint_en: string; explanation_zh: string; explanation_en: string } | null): PuzzleRow {
+  return {
+    ...(row as PuzzleRow),
+    hint_zh: ans?.hint_zh ?? "",
+    hint_en: ans?.hint_en ?? "",
+    explanation_zh: ans?.explanation_zh ?? "",
+    explanation_en: ans?.explanation_en ?? "",
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function loadPuzzle(admin: any, id: number): Promise<PuzzleRow | null> {
+  const { data: row } = await admin.from("puzzles").select("*").eq("id", id).maybeSingle();
+  if (!row) return null;
+  const { data: ans } = await admin.from("puzzle_answers").select("*").eq("puzzle_id", id).maybeSingle();
+  return mergeAnswer(row, ans);
+}
+
 /** 今天（UTC+8，与国内玩家的自然日一致） */
 function todayKey(): string {
   const now = new Date(Date.now() + 8 * 3600_000);
@@ -109,7 +128,7 @@ export const getDailyPuzzle = createServerFn({ method: "POST" })
     const { data: puzzleId, error } = await supabaseAdmin.rpc("pick_daily_puzzle", { p_day: day });
     if (error) throw new Error(error.message);
     if (!puzzleId) return { day, puzzle: null, streak: 0, bestStreak: 0, solvedToday: false };
-    const { data: row } = await supabaseAdmin.from("puzzles").select("*").eq("id", puzzleId).single();
+    const row = await loadPuzzle(supabaseAdmin, puzzleId);
     const { data: prog } = await supabaseAdmin
       .from("puzzle_progress")
       .select("solved, attempts, best_ms")
@@ -155,9 +174,8 @@ export const submitPuzzleMove = createServerFn({ method: "POST" })
   }))
   .handler(async ({ data, context }): Promise<PuzzleMoveResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row } = await supabaseAdmin.from("puzzles").select("*").eq("id", data.puzzleId).maybeSingle();
-    if (!row) throw new Error("puzzle not found");
-    const puzzle = row as PuzzleRow;
+    const puzzle = await loadPuzzle(supabaseAdmin, data.puzzleId);
+    if (!puzzle) throw new Error("puzzle not found");
     const { data: sol } = await supabaseAdmin
       .from("puzzle_solutions")
       .select("solution")
