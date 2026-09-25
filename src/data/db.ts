@@ -118,7 +118,9 @@ const MOVE_KIND = "move";
 // 恢复联网后由 realtime.ts 按原顺序补传；服务端仍是唯一权威，
 // 迟到的落子若已不合法会被服务端拒绝，界面随后靠实时帧回到最新局面。
 registerOutboundSender<SubmitMoveArgs>(MOVE_KIND, async (args) => {
-  await gateway.submitMove(args);
+  const res = (await gateway.submitMove(args)) as { code?: string };
+  // 服务端回了拒收码（棋局已结束/已超时/不合法），这一手补不上了，必须告知玩家
+  if (res && res.code && res.code !== "ok") throw Object.assign(new Error(res.code), { rejected: true });
 });
 
 function looksOffline(): boolean {
