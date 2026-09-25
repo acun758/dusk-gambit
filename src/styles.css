@@ -93,6 +93,7 @@
   --color-home-glass: oklch(0.105 0.008 80);
   --color-home-glass-deep: oklch(0.075 0.006 80);
   --color-home-glass-gold: oklch(0.68 0.105 82);
+  --color-dawnGold: #d9a441;
   --color-home-glass-warm: oklch(0.91 0.035 83);
   --spacing-gutter: 1rem;
   --spacing-gutter-desktop: 1.5rem;
