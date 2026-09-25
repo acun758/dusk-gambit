@@ -79,7 +79,9 @@ function DuelVoiceComponent({
         void el.play().catch(() => {});
       }
     };
+    pc.oniceconnectionstatechange = () => console.debug("[voice] ice", pc.iceConnectionState, pc.signalingState);
     pc.onconnectionstatechange = () => {
+      console.debug("[voice] conn", pc.connectionState);
       if (pc.connectionState === "connected") setPhase("connected");
       else if (pc.connectionState === "failed") setPhase("failed");
     };
@@ -109,6 +111,7 @@ function DuelVoiceComponent({
     };
 
     function handleSignal(signal: VoiceSignal) {
+      console.debug("[voice] recv", signal.kind);
       // 串行处理，保证 offer/answer 与候选的先后顺序
       chain = chain.then(() => handleSignalInner(signal)).catch(() => undefined);
       return chain;
