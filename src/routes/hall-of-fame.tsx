@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeBackdrop } from "@/components/ThemeBackdrop";
@@ -54,6 +54,21 @@ function HallOfFame() {
       <SovereignPageHeader icon="nav-review" titleZh="名人堂" titleEn="Hall of Fame" />
 
       <main className="page-main-compact desktop-page-container px-margin-mobile grid gap-space-sm md:pb-space-lg">
+        <Link
+          to="/throne"
+          className="home-glass-panel flex min-w-0 items-center gap-space-sm rounded-2xl p-space-md transition-colors hover:bg-surface-container-high"
+        >
+          <UiIcon name="crown" className="h-8 w-8 shrink-0 text-secondary" />
+          <span className="flex min-w-0 flex-col">
+            <span className="font-headline-sm text-headline-sm tracking-wider text-on-surface">
+              {t("王座 THE THRONE", "THE THRONE 王座")}
+            </span>
+            <span className="cjk font-body-sm text-body-sm text-on-surface-variant">
+              {t("一年 · 一套 · 一人 —— 年度荣誉奖励规则", "One Year · One Set · One Player — annual honor award rules")}
+            </span>
+          </span>
+          <span className="ml-auto shrink-0 font-headline-sm text-headline-sm text-secondary" aria-hidden="true">→</span>
+        </Link>
         <section className="home-glass-panel min-w-0 overflow-hidden rounded-2xl p-space-md flex flex-col gap-space-sm">
           <div className="grid grid-cols-4 gap-1">
             {BOARDS.map((b) => (
