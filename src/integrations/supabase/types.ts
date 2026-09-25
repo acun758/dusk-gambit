@@ -702,6 +702,44 @@ export type Database = {
         }
         Relationships: []
       }
+      puzzle_answers: {
+        Row: {
+          created_at: string
+          explanation_en: string
+          explanation_zh: string
+          hint_en: string
+          hint_zh: string
+          puzzle_id: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          explanation_en?: string
+          explanation_zh?: string
+          hint_en?: string
+          hint_zh?: string
+          puzzle_id: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          explanation_en?: string
+          explanation_zh?: string
+          hint_en?: string
+          hint_zh?: string
+          puzzle_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "puzzle_answers_puzzle_id_fkey"
+            columns: ["puzzle_id"]
+            isOneToOne: true
+            referencedRelation: "puzzles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       puzzle_daily: {
         Row: {
           created_at: string
@@ -813,11 +851,7 @@ export type Database = {
           created_at: string
           diamond_reward: number
           difficulty: number
-          explanation_en: string
-          explanation_zh: string
           fen: string
-          hint_en: string
-          hint_zh: string
           id: number
           moves_required: number
           rating: number
@@ -833,11 +867,7 @@ export type Database = {
           created_at?: string
           diamond_reward?: number
           difficulty?: number
-          explanation_en?: string
-          explanation_zh?: string
           fen: string
-          hint_en?: string
-          hint_zh?: string
           id?: number
           moves_required?: number
           rating?: number
@@ -853,11 +883,7 @@ export type Database = {
           created_at?: string
           diamond_reward?: number
           difficulty?: number
-          explanation_en?: string
-          explanation_zh?: string
           fen?: string
-          hint_en?: string
-          hint_zh?: string
           id?: number
           moves_required?: number
           rating?: number
