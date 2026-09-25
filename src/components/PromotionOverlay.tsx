@@ -50,11 +50,14 @@ export function PromotionOverlay({
   event: { tier: TierMark; kind: "up" | "down" } | null;
   onDismiss: () => void;
 }) {
+  // onDismiss 常是内联函数，每次时钟刷新都会变；若放进依赖，计时器会被反复重置、遮罩永不消失并挡住棋盘
+  const dismissRef = useRef(onDismiss);
+  dismissRef.current = onDismiss;
   useEffect(() => {
     if (!event) return;
-    const t = setTimeout(onDismiss, 5200);
+    const t = setTimeout(() => dismissRef.current(), 5200);
     return () => clearTimeout(t);
-  }, [event, onDismiss]);
+  }, [event]);
 
   if (!event) return null;
   const up = event.kind === "up";
