@@ -24,7 +24,7 @@ export function useTactileTilt<T extends HTMLElement>() {
     const node = ref.current;
     if (!node) return;
     pressed.current = false;
-    node.dataset.tactileActive = "false";
+    node.dataset["tactileActive"] = "false";
     node.style.setProperty("--tilt-x", "0deg");
     node.style.setProperty("--tilt-y", "0deg");
   };
@@ -33,7 +33,7 @@ export function useTactileTilt<T extends HTMLElement>() {
     ref,
     onPointerDown: (event: React.PointerEvent<T>) => {
       pressed.current = true;
-      event.currentTarget.dataset.tactileActive = "true";
+      event.currentTarget.dataset["tactileActive"] = "true";
       event.currentTarget.setPointerCapture(event.pointerId);
       update(event.clientX, event.clientY);
     },
