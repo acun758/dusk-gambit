@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- UI physical motion is opt-in on featured cards, while shared controls may use low-cost press feedback; avoid persistent blur/rotation so chess input and touch scrolling remain responsive.

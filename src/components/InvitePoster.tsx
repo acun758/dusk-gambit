@@ -5,16 +5,24 @@ import { RankBadge } from "@/components/RankBadge";
 import { UiIcon } from "@/components/UiIcon";
 import { rankOf } from "@/lib/ranks";
 import { useT } from "@/lib/i18n";
+import { useTactileTilt } from "@/hooks/useTactileTilt";
 
 /** 邀请对弈海报：段位徽章 + 当前积分，首页与天梯页共用。 */
 export function InvitePoster({ showThrone = false, className = "" }: { showThrone?: boolean; compact?: boolean; className?: string }) {
   const { profile, winRate } = useProfile();
   const t = useT();
   const rank = rankOf(profile.elo);
+  const tactile = useTactileTilt<HTMLElement>();
   return (
     <section
+      ref={tactile.ref}
+      onPointerDown={tactile.onPointerDown}
+      onPointerMove={tactile.onPointerMove}
+      onPointerUp={tactile.onPointerUp}
+      onPointerCancel={tactile.onPointerCancel}
+      onPointerLeave={tactile.onPointerLeave}
       aria-label={t("邀请对弈", "Challenge invitation")}
-      className={`home-media-frame relative w-full overflow-hidden bg-surface-container-lowest sm:aspect-[16/9] ${className}`}
+      className={`tactile-feature-card home-media-frame relative w-full overflow-hidden bg-surface-container-lowest sm:aspect-[16/9] ${className}`}
     >
       {/* 图片始终铺满整张卡片，文字压在图上（手机 / iPad / 桌面一致） */}
       <div className="aged-print-frame" style={{ position: "absolute", inset: 0 }}>
