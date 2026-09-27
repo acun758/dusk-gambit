@@ -462,6 +462,102 @@
   background-color: color-mix(in oklab, var(--color-surface) 78%, transparent);
 }
 
+/* Selected motion direction: restrained drawer-like physicality. The effect is
+   opt-in for featured cards so ordinary panels and the chessboard stay cheap. */
+.tactile-feature-card {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --touch-x: 50%;
+  --touch-y: 50%;
+  transform: perspective(1100px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transform-style: preserve-3d;
+  transition:
+    transform 520ms cubic-bezier(0.16, 1.12, 0.3, 1),
+    border-color 220ms ease,
+    box-shadow 420ms ease;
+  will-change: transform;
+}
+
+.tactile-feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle 17rem at var(--touch-x) var(--touch-y),
+    color-mix(in oklab, var(--color-secondary) 14%, transparent),
+    transparent 68%
+  );
+  transition: opacity 240ms ease;
+}
+
+.tactile-feature-card[data-tactile-active="true"] {
+  border-color: color-mix(in oklab, var(--color-dawnGold) 52%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 16%, transparent),
+    0 18px 42px color-mix(in oklab, var(--color-dawnGold) 12%, transparent),
+    0 30px 70px color-mix(in oklab, var(--color-surface-dim) 44%, transparent);
+  transition-duration: 90ms;
+}
+
+.tactile-feature-card[data-tactile-active="true"]::before {
+  opacity: 1;
+}
+
+.tactile-button,
+.home-glass-control:is(button, a),
+.home-glass-action:is(button, a) {
+  transform: scale(1);
+  transition:
+    transform 360ms cubic-bezier(0.2, 1.45, 0.35, 1),
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.tactile-button:not(:disabled):active,
+.home-glass-control:is(button, a):not([aria-disabled="true"]):active,
+.home-glass-action:is(button, a):not([aria-disabled="true"]):active {
+  transform: scale(0.96);
+  box-shadow:
+    inset 0 3px 8px color-mix(in oklab, var(--color-surface-dim) 42%, transparent),
+    0 3px 10px color-mix(in oklab, var(--color-surface-dim) 20%, transparent);
+  transition-duration: 80ms;
+}
+
+.tactile-bottom-sheet {
+  border-top-color: color-mix(in oklab, var(--color-dawnGold) 32%, var(--home-glass-line-soft));
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 14%, transparent),
+    0 -12px 34px color-mix(in oklab, var(--color-surface-dim) 74%, transparent);
+  contain: layout paint;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tactile-feature-card {
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .tactile-feature-card::before,
+  .tactile-button,
+  .home-glass-control:is(button, a),
+  .home-glass-action:is(button, a) {
+    transition: none;
+  }
+
+  .tactile-button:not(:disabled):active,
+  .home-glass-control:is(button, a):not([aria-disabled="true"]):active,
+  .home-glass-action:is(button, a):not([aria-disabled="true"]):active {
+    transform: none;
+  }
+}
+
 /* 浮层（对话框）自身依赖 fixed 居中，纸面样式不得把它改回 relative。 */
 [role="dialog"].home-glass-panel,
 [role="alertdialog"].home-glass-panel {

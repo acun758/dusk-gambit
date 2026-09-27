@@ -241,23 +241,37 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
   const [open, setOpen] = useState(false);
   const [drag, setDrag] = useState(0);
   const startY = useRef<number | null>(null);
+  const lastY = useRef(0);
+  const lastMoveAt = useRef(0);
+  const velocityY = useRef(0);
   const sheetRef = useRef<HTMLDivElement>(null);
 
   const evalText = session ? cpLabel(session.cp) : "+1.84";
 
   const onPointerDown = (e: React.PointerEvent) => {
     startY.current = e.clientY;
+    lastY.current = e.clientY;
+    lastMoveAt.current = e.timeStamp;
+    velocityY.current = 0;
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (startY.current === null) return;
+    const elapsed = Math.max(1, e.timeStamp - lastMoveAt.current);
+    velocityY.current = (e.clientY - lastY.current) / elapsed;
+    lastY.current = e.clientY;
+    lastMoveAt.current = e.timeStamp;
     const dy = e.clientY - startY.current;
-    setDrag(open ? Math.max(0, dy) : Math.min(0, dy));
+    const resisted = open ? (dy < 0 ? dy * 0.18 : dy) : (dy > 0 ? dy * 0.18 : dy);
+    setDrag(resisted);
   };
   const onPointerUp = () => {
     if (startY.current === null) return;
-    if (open && drag > 56) setOpen(false);
-    if (!open && drag < -40) setOpen(true);
+    const projectedDrag = drag + velocityY.current * 140;
+    if (open && projectedDrag > 48) setOpen(false);
+    if (!open && projectedDrag < -36) setOpen(true);
     startY.current = null;
+    velocityY.current = 0;
     setDrag(0);
   };
 
@@ -292,11 +306,11 @@ export function DuelPanel({ variant = "duel", session }: { variant?: PanelVarian
           ref={sheetRef}
           style={{
             transform: `translate3d(0, ${drag}px, 0)`,
-            transition: startY.current === null ? "transform 220ms cubic-bezier(0.22,1,0.36,1)" : "none",
+            transition: startY.current === null ? "transform 420ms cubic-bezier(0.16,1.18,0.32,1)" : "none",
             willChange: "transform",
             touchAction: "pan-y",
           }}
-          className="home-glass-panel shadow-[0_-10px_30px_rgba(0,0,0,0.85)]"
+          className="tactile-bottom-sheet home-glass-panel"
         >
           <button
             onClick={() => setOpen((v) => !v)}
