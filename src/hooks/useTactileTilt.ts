@@ -32,6 +32,9 @@ export function useTactileTilt<T extends HTMLElement>() {
   return {
     ref,
     onPointerDown: (event: React.PointerEvent<T>) => {
+      // 点在链接/按钮上时不抢指针，否则子元素收不到 click
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("a,button,input,select,textarea,[role=button]")) return;
       pressed.current = true;
       event.currentTarget.dataset["tactileActive"] = "true";
       event.currentTarget.setPointerCapture(event.pointerId);
