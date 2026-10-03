@@ -529,6 +529,13 @@
   transition-duration: 80ms;
 }
 
+/* 链接按下时保持命中区域不动，避免边缘点击因缩放而被浏览器取消。 */
+a.tactile-button:not([aria-disabled="true"]):active,
+.home-glass-control:is(a):not([aria-disabled="true"]):active,
+.home-glass-action:is(a):not([aria-disabled="true"]):active {
+  transform: none;
+}
+
 .tactile-bottom-sheet {
   border-top-color: color-mix(in oklab, var(--color-dawnGold) 32%, var(--home-glass-line-soft));
   box-shadow:
