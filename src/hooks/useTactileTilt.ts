@@ -41,7 +41,8 @@ export function useTactileTilt<T extends HTMLElement>() {
       update(event.clientX, event.clientY);
     },
     onPointerMove: (event: React.PointerEvent<T>) => {
-      if (event.pointerType !== "mouse" && !pressed.current) return;
+      // 只在卡片本身被按住时跟随，避免鼠标经过内部链接时移动整张卡片。
+      if (!pressed.current) return;
       update(event.clientX, event.clientY);
     },
     onPointerUp: reset,
