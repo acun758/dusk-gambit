@@ -376,6 +376,23 @@
   backdrop-filter: blur(10px);
 }
 
+.game-entrance-health {
+  position: absolute;
+  right: 1rem;
+  bottom: max(0.75rem, calc(env(safe-area-inset-bottom, 0px) + 0.5rem));
+  left: 1rem;
+  z-index: 2;
+  margin-inline: auto;
+  max-width: 34rem;
+  pointer-events: none;
+  color: color-mix(in oklab, var(--color-secondary-fixed) 62%, transparent);
+  font-size: 0.65rem;
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-wrap: balance;
+}
+
 @keyframes entrance-breathe {
   from { transform: scale(1); }
   to { transform: scale(1.012); }
