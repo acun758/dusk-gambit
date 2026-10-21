@@ -95,10 +95,7 @@ export function GameEntrance({ onEntered }: { onEntered: () => void }) {
         onClick={(event) => event.stopPropagation()}
       >
         <span className="cjk">
-          {t(
-            "健康游戏忠告：抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。",
-            "Healthy play advisory: Reject pirated and harmful games. Protect yourself and stay alert to scams. Play in moderation — excess gaming harms. Manage your time well and enjoy a healthy life."
-          )}
+          健康游戏忠告：抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活。
         </span>
       </p>
     </section>
