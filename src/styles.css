@@ -218,21 +218,11 @@
     z-index: 60;
     background:
       radial-gradient(120% 80% at 50% 0%, rgba(217, 164, 65, 0.06), transparent 60%),
-      radial-gradient(100% 100% at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+      radial-gradient(100% 100% at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.55) 100%),
+      radial-gradient(rgb(218 195 147 / 1.5%) 0.55px, transparent 0.8px) 0 0 / 4px 4px;
     transform: translateZ(0);
   }
 
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 61;
-    opacity: 0.045;
-    background-image: radial-gradient(rgb(218 195 147 / 32%) 0.55px, transparent 0.8px);
-    background-size: 4px 4px;
-    transform: translateZ(0);
-  }
 
   h1, h2, h3 {
     font-family: var(--font-headline-md);
