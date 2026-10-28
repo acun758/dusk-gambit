@@ -1,12 +1,12 @@
-import heroThrone from "@/assets/hero-throne.jpg";
-import heroPortrait from "@/assets/hero-throne-portrait.jpg";
+import heroThrone from "@/assets/hero-throne.webp";
+import heroPortrait from "@/assets/hero-throne-portrait.webp";
 import heroVideo from "@/assets/hero_bg_muted.mp4";
 import logoEmblem from "@/assets/logo-emblem.png";
-import matchArena from "@/assets/match-arena.jpg";
-import reviewBoard from "@/assets/review-board.jpg";
-import classicSet from "@/assets/skin-classic.png";
-import gildedSet from "@/assets/skin-gilded.png";
-import shadowSet from "@/assets/skin-shadow.png";
+import matchArena from "@/assets/match-arena.webp";
+import reviewBoard from "@/assets/review-board.webp";
+import classicSet from "@/assets/skin-classic.webp";
+import gildedSet from "@/assets/skin-gilded.webp";
+import shadowSet from "@/assets/skin-shadow.webp";
 
 export const GAME_ART = {
   hero: heroThrone,
