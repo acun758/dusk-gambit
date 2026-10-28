@@ -277,13 +277,24 @@
   background: var(--color-surface-container-lowest);
   isolation: isolate;
   opacity: 1;
-  transition: opacity 520ms ease, visibility 520ms ease;
+  transition: opacity 180ms ease-out, visibility 180ms ease-out;
 }
 
 .game-entrance-leaving {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* 退场时立即停掉高开销的大面积模糊与呼吸动画，让淡出一帧即开始 */
+.game-entrance-leaving .game-entrance-backdrop,
+.game-entrance-leaving .game-entrance-photo-frame::before,
+.game-entrance-leaving .game-entrance-photo-frame::after {
+  display: none;
+}
+
+.game-entrance-leaving .game-entrance-photo-frame {
+  animation: none;
 }
 
 .game-entrance-backdrop {

@@ -47,7 +47,7 @@ export function GameEntrance({ onEntered }: { onEntered: () => void }) {
   const enter = useCallback(() => {
     if (leaving) return;
     setLeaving(true);
-    timerRef.current = setTimeout(onEntered, 220);
+    timerRef.current = setTimeout(onEntered, 180);
   }, [leaving, onEntered]);
 
   useEffect(() => {
