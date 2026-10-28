@@ -1429,12 +1429,12 @@ a.tactile-button:not([aria-disabled="true"]):active,
 @media (orientation: landscape) and (max-height: 520px) {
   .battle-column,
   .crucible-column {
-    --battle-core-width: min(100%, max(15rem, calc(100dvh - 7.5rem)));
-    --crucible-core-width: min(100%, max(15rem, calc(100dvh - 7.5rem)));
+    --battle-core-width: min(100%, max(12rem, calc(100dvh - 9.75rem)));
+    --crucible-core-width: min(100%, max(12rem, calc(100dvh - 9.75rem)));
   }
 
   .battle-stage > .battle-column {
-    width: min(56vw, max(15rem, calc(100dvh - 7.5rem)));
+    width: min(56vw, max(12rem, calc(100dvh - 9.75rem)));
   }
 
   .battle-stage > .duel-live-panel {
@@ -1442,12 +1442,20 @@ a.tactile-button:not([aria-disabled="true"]):active,
   }
 
   .review-layout {
-    grid-template-columns: minmax(15rem, calc(100dvh - 7.5rem)) minmax(15rem, 1fr);
+    grid-template-columns: minmax(12rem, calc(100dvh - 9.75rem)) minmax(12rem, 1fr);
   }
 
   .review-playback,
   .review-history {
-    --review-core-width: min(100%, max(15rem, calc(100dvh - 7.5rem)));
+    --review-core-width: min(100%, max(12rem, calc(100dvh - 9.75rem)));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 599px) {
+  .battle-column,
+  .crucible-column {
+    --battle-core-width: min(100%, max(11rem, calc(100dvh - 13rem)));
+    --crucible-core-width: min(100%, max(11rem, calc(100dvh - 13rem)));
   }
 }
 
