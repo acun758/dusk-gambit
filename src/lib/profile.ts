@@ -159,19 +159,27 @@ function useProfileStore() {
       const row = (await loadProfile()) as CloudRow;
       setProfile(fromCloud(row));
     } catch {
-      setProfile(read());
+      // Never replace an authenticated rating with an unrelated local/demo profile.
+      setLoading(false);
+      throw new Error("个人积分同步失败，请检查网络后重试。");
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    void refresh();
+    const reload = () => void refresh().catch(() => {});
+    reload();
     const sync = (e: Event) => setProfile((e as CustomEvent<PlayerProfile>).detail);
     window.addEventListener("bs:profile", sync);
-    const stopAuth = onSessionChange(() => void refresh());
-    const stopProfile = subscribeMyProfile(() => void refresh());
+    const onVisible = () => { if (document.visibilityState === "visible") reload(); };
+    window.addEventListener("online", reload);
+    document.addEventListener("visibilitychange", onVisible);
+    const stopAuth = onSessionChange(reload);
+    const stopProfile = subscribeMyProfile(reload);
     return () => {
       window.removeEventListener("bs:profile", sync);
+      window.removeEventListener("online", reload);
+      document.removeEventListener("visibilitychange", onVisible);
       stopAuth();
       stopProfile();
     };
