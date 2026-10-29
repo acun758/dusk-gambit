@@ -1900,17 +1900,23 @@ a.tactile-button:not([aria-disabled="true"]):active,
   .board-ambient { display: none; }
 }
 
-/* iOS Safari floating toolbar: extend bottom nav backdrop below its box so
-   scrolling content never peeks through the gap between bar and screen edge. */
+/* iOS Safari: status bar and floating toolbar float over the page. Extend the
+   fixed header/nav backdrop past their boxes with an opaque layer so scrolling
+   content never peeks through. Overrides the decorative paper ::after/::before. */
 @media (max-width: 1023px) {
-  .home-glass-header.fixed.bottom-0::after {
+  .home-glass-header.fixed.bottom-0::after,
+  .home-glass-header.fixed.top-0::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%;
     height: 50vh;
-    background-color: var(--color-surface);
+    opacity: 1;
+    mix-blend-mode: normal;
+    transform: none;
+    background: var(--color-surface);
     pointer-events: none;
   }
+  .home-glass-header.fixed.bottom-0::after { top: 100%; bottom: auto; }
+  .home-glass-header.fixed.top-0::before { bottom: 100%; top: auto; }
 }
