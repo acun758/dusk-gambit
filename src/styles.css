@@ -1910,7 +1910,7 @@ a.tactile-button:not([aria-disabled="true"]):active,
     right: 0;
     top: 100%;
     height: 50vh;
-    background: var(--background);
+    background-color: var(--color-surface);
     pointer-events: none;
   }
 }
