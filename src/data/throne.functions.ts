@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { throneSeason } from "@/lib/throne-schedule";
 
 /**
  * 王座资格、资格赛与公示：计算只在数据库函数里做（服务端权威）。
@@ -69,7 +70,7 @@ const map = (r: Raw): ThroneRow => ({
   updatedAt: String(r["updated_at"] ?? ""),
 });
 
-const season = () => new Date().getUTCFullYear();
+const season = throneSeason;
 
 /** 公示榜：全体候选人（公开）。榜单超过 10 分钟未更新时由服务端批量重算一次。 */
 export const listThroneCandidates = createServerFn({ method: "GET" }).handler(async () => {
@@ -110,7 +111,7 @@ export const refreshMyThrone = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin.rpc("compute_throne_candidate" as never, { p_user: context.userId } as never);
+    const { data, error } = await supabaseAdmin.rpc("compute_throne_candidate" as never, { p_user: context.userId, p_season: season() } as never);
     if (error) throw new Error((error as { message: string }).message);
     return map(data as unknown as Raw);
   });

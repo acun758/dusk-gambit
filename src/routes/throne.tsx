@@ -19,7 +19,7 @@ export const Route = createFileRoute("/throne")({
           name: "description",
           content: zh
             ? "王座：每年一套创始人亲手精修的限量国际象棋，授予年度综合评分第一的王段守擂者。规则全公开，与任何付费无关。"
-            : "The Throne: one hand-finished limited chess set per year, awarded to the top-rated Sovereign who holds the tier at year-end. Fully transparent rules, never pay-related.",
+            : "The Throne: a hand-finished limited chess set awarded to the leading Sovereign. Inaugural settlement: October 1, 2027 (UTC+8). Fully transparent rules, never pay-related.",
         },
         { property: "og:title", content: zh ? "王座 · 年度荣誉奖励 | 玄弈棋竞" : "The Throne · Annual Honor Award | DUSK GAMBIT" },
         {
@@ -77,14 +77,14 @@ function ThronePage() {
     {
       zh: "王段守擂",
       en: "Hold the Sovereign Tier",
-      descZh: "年度结算日（12 月 31 日 24:00 UTC+8）段位仍为王段（2500+）。",
-      descEn: "On the annual settlement day (Dec 31, 24:00 UTC+8), your tier must still be Sovereign (2500+).",
+      descZh: "首届结算日为 2027 年 10 月 1 日（北京时间，当日结束时截止），段位仍须为王段（2500+）。",
+      descEn: "At inaugural settlement on October 1, 2027 (end of day, UTC+8), your tier must still be Sovereign (2500+).",
     },
     {
       zh: "局数门槛",
       en: "Game Threshold",
-      descZh: "当年度有效对局 ≥ 50 局（有效对局 = 真人排位完成局，含胜/负/和，不含 AI 陪练与残局试炼）。",
-      descEn: "At least 50 valid games in the year (valid games = completed rated human matches, win/loss/draw; AI sparring and endgame trials excluded).",
+      descZh: "首届保留 2026 年记录，延续累计至 2027 年 10 月 1 日，有效对局 ≥ 50 局（真人排位完成局，含胜/负/和，不含 AI 陪练与残局试炼）。",
+      descEn: "The inaugural cycle retains 2026 records and accumulates through October 1, 2027: at least 50 valid completed rated human games (win/loss/draw; AI and endgame trials excluded).",
     },
     {
       zh: "综合评分制胜出",
@@ -95,11 +95,11 @@ function ThronePage() {
   ];
 
   const timeline = [
-    { zh: "12 月 31 日年度结算", en: "Annual settlement on Dec 31" },
-    { zh: "候选名单审计（1 月上旬）", en: "Candidate audit (early January)" },
+    { zh: "2027 年 10 月 1 日首届结算（北京时间，当日结束时截止）", en: "Inaugural settlement: October 1, 2027 (end of day, UTC+8)" },
+    { zh: "候选名单审计（结算后）", en: "Candidate audit (after settlement)" },
     { zh: "公示 7 天", en: "7-day public notice" },
-    { zh: "创始人制作实物与证书", en: "Founder crafts the set and certificate" },
-    { zh: "邮寄颁授（收货信息仅此时收集，寄出即删）", en: "Delivery (shipping info collected only now, deleted after dispatch)" },
+    { zh: "实物与证书制作安排延期至 2027 年 10 月 1 日奖项周期", en: "Set and certificate production moved to the October 1, 2027 award cycle" },
+    { zh: "审计与公示完成后邮寄颁授（收货信息仅此时收集，寄出即删）", en: "Delivery after audit and public notice (shipping info collected only now, deleted after dispatch)" },
     { zh: "荣誉墙铭刻，全网公告", en: "Engraved on the Wall of Honor, announced site-wide" },
   ];
 
@@ -280,7 +280,7 @@ function ThronePage() {
             )}
           </p>
           <p className="cjk font-label-sm text-label-sm tracking-widest text-secondary">
-            {t("首届评定：2026 年度", "Inaugural award: 2026 season")}
+            {t("首届结算及奖品安排：2027 年 10 月 1 日 · 保留 2026 年记录延续累计", "Inaugural settlement & prize schedule: October 1, 2027 · 2026 records retained and accumulated")}
           </p>
         </section>
       </main>
