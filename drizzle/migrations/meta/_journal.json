@@ -8,6 +8,13 @@
       "when": 1793263805723,
       "tag": "0000_extend_inaugural_throne_award_cycle",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793286181760,
+      "tag": "0001_arena_private_code_enforce",
+      "breakpoints": true
     }
   ]
 }

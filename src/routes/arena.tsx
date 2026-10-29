@@ -760,6 +760,15 @@ function Arena() {
                             {t("入场对弈", "Take the seat")}
                           </Button>
                         ) : null}
+                        {!room.mine && room.status === "playing" && room.visibility === "public" && !room.targetId ? (
+                          <Link
+                            to="/watch/$roomId"
+                            params={{ roomId: room.id }}
+                            className="home-glass-action cjk flex h-10 items-center px-4 font-label-md text-label-md text-on-primary-container"
+                          >
+                            {t("观战", "Watch")}
+                          </Link>
+                        ) : null}
                         {room.mine && room.status === "playing" ? (
                           <Link
                             to="/battle"

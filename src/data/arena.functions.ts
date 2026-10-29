@@ -185,3 +185,71 @@ export const closeArenaRoom = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: Boolean(ok) };
   });
+
+export interface SpectateView {
+  status: "live" | "over";
+  outcome: string | null;
+  reason: string | null;
+  fen: string;
+  turn: "w" | "b";
+  clockW: number;
+  clockB: number;
+  lastMoveAt: string;
+  serverNow: string;
+  whiteName: string;
+  blackName: string;
+  whiteElo: number;
+  blackElo: number;
+  whiteAvatarKey: string;
+  blackAvatarKey: string;
+  whitePieceSet: string;
+  sans: string[];
+  initialMs: number;
+  incrementMs: number;
+}
+
+/**
+ * 观战：仅公开且非定向的房间可看，只读。不返回玩家 ID，也没有任何发言/走子入口，
+ * 对局双方不受影响。
+ */
+export const spectateArenaRoom = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { roomId: string }) => ({ roomId: String(input.roomId).slice(0, 64) }))
+  .handler(async ({ data }): Promise<SpectateView | { code: "not_found" | "not_started" }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: room } = await supabaseAdmin
+      .from("rooms")
+      .select("visibility,target_id,match_id,initial_ms,increment_ms")
+      .eq("id", data.roomId)
+      .maybeSingle();
+    if (!room || room.visibility !== "public" || room.target_id) return { code: "not_found" };
+    if (!room.match_id) return { code: "not_started" };
+    const { data: m } = await supabaseAdmin.from("matches").select("*").eq("id", room.match_id).maybeSingle();
+    if (!m) return { code: "not_started" };
+    const { data: moves } = await supabaseAdmin
+      .from("match_moves")
+      .select("san,seq")
+      .eq("match_id", room.match_id)
+      .order("seq", { ascending: true });
+    return {
+      status: m.status === "over" ? "over" : "live",
+      outcome: m.outcome,
+      reason: m.reason,
+      fen: m.fen,
+      turn: m.turn as "w" | "b",
+      clockW: m.clock_w,
+      clockB: m.clock_b,
+      lastMoveAt: m.last_move_at,
+      serverNow: new Date().toISOString(),
+      whiteName: m.white_name,
+      blackName: m.black_name,
+      whiteElo: m.white_elo,
+      blackElo: m.black_elo,
+      whiteAvatarKey: m.white_avatar_key,
+      blackAvatarKey: m.black_avatar_key,
+      whitePieceSet: m.white_piece_set,
+      sans: (moves ?? []).map((x) => x.san),
+      initialMs: room.initial_ms,
+      incrementMs: room.increment_ms,
+    };
+  });
