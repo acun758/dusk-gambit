@@ -12,3 +12,4 @@
 - UI physical motion is opt-in on featured cards, while shared controls may use low-cost press feedback; avoid persistent blur/rotation so chess input and touch scrolling remain responsive.
 - Bundled background/poster images are capped to real screen widths (phone 1080, iPad 1640, desktop 1920) as WebP q≈82; large originals live in the asset library — keeps page decode cost low on mobile.
 - Ranked terminal UI must read confirmed server deltas and explicitly refresh the shared profile and ladder queries with retry; realtime alone cannot guarantee settlement visibility.
+- Throne award-cycle selection must agree between the shared schedule selector and database period helpers; extending awards must retain the inaugural candidate key and scoring history.
