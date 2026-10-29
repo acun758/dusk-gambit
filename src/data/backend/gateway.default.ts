@@ -110,6 +110,7 @@ export const defaultGateway = {
   createArenaRoom: arenaRemote.createArenaRoom,
   joinArenaRoom: arenaRemote.joinArenaRoom,
   closeArenaRoom: arenaRemote.closeArenaRoom,
+  spectateArenaRoom: arenaRemote.spectateArenaRoom,
 
   /* -------------------------------- 天梯与残局 -------------------------------- */
   fetchLadder: remote.listLadder,

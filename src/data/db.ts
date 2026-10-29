@@ -176,6 +176,8 @@ export const createArenaRoom = gateway.createArenaRoom;
 export const joinArenaRoom = gateway.joinArenaRoom;
 /** 房主取消尚未开始的房间。 */
 export const closeArenaRoom = gateway.closeArenaRoom;
+/** 观战公开房（只读）。 */
+export const spectateArenaRoom = gateway.spectateArenaRoom;
 
 /* -------------------------------- 天梯与残局 -------------------------------- */
 
