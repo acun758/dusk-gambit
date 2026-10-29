@@ -10,6 +10,7 @@ import { useT } from "@/lib/i18n";
 import { useProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/watch/$roomId")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "观战 · 公开对局场 | 玄弈棋竞" },
