@@ -1297,6 +1297,9 @@ export type Database = {
         Args: { p_fen: string; p_side: string }
         Returns: boolean
       }
+      throne_award_season: { Args: { p_at?: string }; Returns: number }
+      throne_period_end: { Args: { p_season: number }; Returns: string }
+      throne_period_start: { Args: { p_season: number }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
