@@ -282,13 +282,17 @@ export function useDuelSession(): DuelSession {
     const matchId = cloud?.match.id;
     if (!matchId || mode !== "cloud") return;
     let cancelled = false;
-    void getMatchRatings({ data: { matchId } })
+    const updateRatings = () => getMatchRatings({ data: { matchId } })
       .then((r) => {
         if (!cancelled) setRatings(r as DuelRatings);
       })
       .catch(() => {});
+    void updateRatings();
+    // Retry terminal reads too: a missed profile push must not strand the result at +0.
+    const retry = cloud.match.status === "over" ? setInterval(() => void updateRatings(), 5000) : null;
     return () => {
       cancelled = true;
+      if (retry) clearInterval(retry);
     };
   }, [cloud?.match.id, cloud?.match.status, cloud?.match.seq, moves.length, mode, avatarTick]);
 
@@ -551,6 +555,7 @@ export function useDuelSession(): DuelSession {
     clientRef.current = null;
     setLocalState(null);
     setNotice(null);
+    setRatings(null);
     setMode("cloud");
     setPhase("connecting");
     setMatchmakingKey((key) => key + 1);
@@ -630,7 +635,15 @@ export function useDuelSession(): DuelSession {
       return;
     }
     const m = matchRef.current;
-    if (m) void resignMatch({ data: { matchId: m.id } });
+    if (!m || m.status !== "live") return;
+    void resignMatch({ data: { matchId: m.id } })
+      .then(() => getMatch({ data: { matchId: m.id, lastSeq: 0 } }))
+      .then((fresh) => {
+        matchRef.current = fresh.match as unknown as MatchRowLite;
+        setCloud((prev) => (prev ? { ...prev, match: fresh.match as unknown as MatchRowLite } : prev));
+        setMoves(fresh.moves as unknown as MoveRowLite[]);
+      })
+      .catch(() => setNotice("认输结果尚未确认，请检查网络后重试；积分以服务器结果为准。"));
   }, [mode]);
 
   const simulateDrop = useCallback(() => {

@@ -36,6 +36,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { PlayerAvatar } from "@/components/PlayerAvatar";
 import { SoundToggle } from "@/components/SoundToggle";
+import { useQueryClient } from "@tanstack/react-query";
+import { hasRankedSettlement } from "@/lib/ranked-sync";
 
 export const Route = createFileRoute("/battle")({
   staticData: { sitemap: false },
@@ -75,7 +77,9 @@ function Battle() {
   }, []);
 
   const session = useDuelSession();
-  const { profile, signedIn } = useProfile();
+  const { profile, signedIn, refresh } = useProfile();
+  const queryClient = useQueryClient();
+  const [syncedMatch, setSyncedMatch] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
@@ -125,6 +129,26 @@ function Battle() {
   const opponent = session.state.you === "w" ? session.state.players.b : session.state.players.w;
   const me = session.state.players[session.state.you];
   const ranked = session.transport === "cloud";
+  const settlementReady = hasRankedSettlement(session.transport, session.state.status, session.ratings?.ratingDelta);
+  useEffect(() => {
+    const matchId = session.state.matchId;
+    if (!signedIn || !settlementReady || !matchId) return;
+    let stopped = false;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    const sync = async () => {
+      try {
+        await refresh();
+        await Promise.all(["ladder-board", "promotion-series", "promotion-rivals", "my-matches"].map(
+          (key) => queryClient.invalidateQueries({ queryKey: [key] }),
+        ));
+        if (!stopped) setSyncedMatch(matchId);
+      } catch {
+        if (!stopped) retry = setTimeout(() => void sync(), 5000);
+      }
+    };
+    void sync();
+    return () => { stopped = true; if (retry) clearTimeout(retry); };
+  }, [signedIn, settlementReady, session.state.matchId, refresh, queryClient]);
   // 每次时钟刷新都重算教练提示会新建一副棋盘，这里按局面缓存。
   const coach = useMemo(() => getCoachInsight(session.state.fen, session.moves, ranked), [session.state.fen, session.moves, ranked]);
   const oppSide = session.state.you === "w" ? "b" : "w";
@@ -483,7 +507,7 @@ function Battle() {
 
           {ranked && session.state.status === "over" && (
              <section role="status" aria-live="polite" className="battle-core-width home-glass-panel p-space-md text-center">
-              <p className="cjk font-label-sm text-label-sm text-secondary">{t("天梯结算完成", "Ladder settled")}</p>
+              <p className="cjk font-label-sm text-label-sm text-secondary">{settlementReady ? t("天梯结算完成", "Ladder settled") : t("正在读取服务器结算…", "Loading server settlement…")}</p>
               <p className="cjk mt-1 font-headline-md text-headline-md text-on-surface">
                 {session.state.outcome === "draw"
                   ? t("和棋", "Draw")
@@ -492,9 +516,9 @@ function Battle() {
                     : t("败北", "Defeat")}
               </p>
               <p className={`mt-1 font-label-lg text-label-lg tabular-nums ${ratingDelta >= 0 ? "text-secondary" : "text-primary"}`}>
-                {ratingDelta >= 0 ? "+" : ""}{ratingDelta} ELO · {t("当前", "now")} {myElo}
+                {settlementReady ? `${ratingDelta >= 0 ? "+" : ""}${ratingDelta} ELO` : "…"} · {t("当前", "now")} {myElo}
               </p>
-              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{t("积分、段位徽章与战绩已同步到首页和天梯榜。", "Rating, tier badge and record are synced to the home page and the ladder.")}</p>
+              <p className="cjk mt-1 font-body-sm text-body-sm text-on-surface-variant">{syncedMatch === session.state.matchId ? t("积分、段位徽章与战绩已同步到首页和天梯榜。", "Rating, tier badge and record are synced to the home page and the ladder.") : t("正在同步个人积分和段位，网络恢复后会自动重试。", "Syncing your rating and tier; retries continue when the connection recovers.")}</p>
               <Link to="/dynasty" className="cjk mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("查看段位变化", "See tier change")} →</Link>
               <Link to="/analysis" className="cjk ml-4 mt-2 inline-flex min-h-11 items-center text-secondary font-label-sm text-label-sm">{t("复盘本局", "Review this game")} →</Link>
               <div className="mt-3">
