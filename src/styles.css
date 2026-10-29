@@ -1899,3 +1899,18 @@ a.tactile-button:not([aria-disabled="true"]):active,
   .board-stage::before { animation: none; opacity: 0; }
   .board-ambient { display: none; }
 }
+
+/* iOS Safari floating toolbar: extend bottom nav backdrop below its box so
+   scrolling content never peeks through the gap between bar and screen edge. */
+@media (max-width: 1023px) {
+  .home-glass-header.fixed.bottom-0::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 50vh;
+    background-color: var(--color-surface);
+    pointer-events: none;
+  }
+}
